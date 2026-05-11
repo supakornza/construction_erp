@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{% if form.instance.pk %}Edit{% else %}New{% endif %} Rock Record – Construction ERP{% endblock %}
+{% block page_title %}{% if form.instance.pk %}Edit Rock Record{% else %}New Rock Daily Record{% endif %}{% endblock %}
+
+{% block extra_head %}
+<style>
+  .formset-row td { vertical-align: middle; padding: 4px; }
+  .formset-row input, .formset-row select { font-size:0.85rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+  <a href="{% url 'project_controls:rock_list' %}" class="btn btn-sm btn-outline-secondary me-3">
+    <i class="fas fa-arrow-left"></i>
+  </a>
+  <h5 class="mb-0">{% if form.instance.pk %}Edit Rock Record – {{ form.instance.record_date }}{% else %}New Rock Daily Record{% endif %}</h5>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+
+  <div class="card mb-3">
+    <div class="card-header"><i class="fas fa-mountain me-2"></i>Rock at TCT Port & Placement</div>
+    <div class="card-body">
+      {% crispy form %}
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span><i class="fas fa-ship me-2"></i>Barge Placement</span>
+      <button type="button" class="btn btn-sm btn-outline-success add-row-btn" data-formset="barge">
+        <i class="fas fa-plus me-1"></i>Add Barge
+      </button>
+    </div>
+    <div class="card-body p-0">
+      {{ barge_formset.management_form }}
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="min-width:180px">Barge</th>
+              <th style="width:120px">Qty (Ton)</th>
+              <th style="width:80px">Trips</th>
+              <th style="min-width:200px">Station</th>
+              <th style="min-width:160px">Remarks</th>
+              <th style="width:40px">Del</th>
+            </tr>
+          </thead>
+          <tbody id="barge-tbody">
+            {% for bf in barge_formset %}
+            <tr class="formset-row" data-formset="barge">
+              <td>{{ bf.barge }}{{ bf.id }}</td>
+              <td>{{ bf.quantity_ton }}</td>
+              <td>{{ bf.trips }}</td>
+              <td>{{ bf.station }}</td>
+              <td>{{ bf.remarks }}</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                {{ bf.DELETE }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2 mb-5">
+    <button type="submit" class="btn btn-primary btn-lg px-5">
+      <i class="fas fa-save me-2"></i>Save Record
+    </button>
+    <a href="{% url 'project_controls:rock_list' %}" class="btn btn-outline-secondary btn-lg">Cancel</a>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.querySelectorAll('.add-row-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tbody = document.getElementById('barge-tbody');
+    const rows = tbody.querySelectorAll('tr.formset-row');
+    if (!rows.length) return;
+    const prefix = 'rockbargeplacement_set';
+    const total = parseInt(document.getElementById(`id_${prefix}-TOTAL_FORMS`).value);
+    const tmpl = rows[rows.length-1].cloneNode(true);
+    const old = total - 1;
+    tmpl.querySelectorAll('[id],[name]').forEach(el => {
+      if (el.id) el.id = el.id.replace(`-${old}-`, `-${total}-`);
+      if (el.name) el.name = el.name.replace(`-${old}-`, `-${total}-`);
+      if (el.tagName==='INPUT' && el.type!=='checkbox' && el.type!=='hidden') el.value='';
+      if (el.tagName==='SELECT') el.selectedIndex=0;
+      if (el.type==='checkbox') el.checked=false;
+    });
+    const idField = tmpl.querySelector(`[name$="-id"]`);
+    if (idField) idField.value='';
+    tbody.appendChild(tmpl);
+    document.getElementById(`id_${prefix}-TOTAL_FORMS`).value = total+1;
+  });
+});
+document.querySelectorAll('.formset-row input:not([type=checkbox]), .formset-row select').forEach(el => {
+  el.classList.add('form-control', 'form-control-sm');
+});
+</script>
+{% endblock %}

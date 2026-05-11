@@ -1,0 +1,418 @@
+﻿{% extends "base.html" %}
+{% block title %}Project Controls Dashboard - Construction ERP{% endblock %}
+{% block page_title %}Project Controls Dashboard{% endblock %}
+
+{% block extra_head %}
+<style>
+  .pc-menu-grid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  }
+  .pc-menu-card {
+    background: #fff;
+    border: 1px solid #d9e1ea;
+    border-radius: 8px;
+    color: #1f2d3d;
+    display: flex;
+    gap: 0.75rem;
+    min-height: 88px;
+    padding: 0.9rem;
+    text-decoration: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  }
+  .pc-menu-card:hover {
+    border-color: #0d6efd;
+    box-shadow: 0 6px 16px rgba(13, 110, 253, 0.12);
+    color: #1f2d3d;
+    transform: translateY(-1px);
+  }
+  .pc-menu-icon {
+    align-items: center;
+    border-radius: 8px;
+    display: inline-flex;
+    flex: 0 0 40px;
+    height: 40px;
+    justify-content: center;
+    width: 40px;
+  }
+  .pc-chart-card,
+  .pc-panel {
+    border: 1px solid #d9e1ea;
+    border-radius: 8px;
+  }
+  .pc-chart-wrap {
+    height: 230px;
+    position: relative;
+  }
+  .pc-section-title {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .pc-kpi-card {
+    border-radius: 8px;
+    height: 100%;
+    padding: 1rem;
+  }
+  .pc-mini-action {
+    font-size: 0.75rem;
+    line-height: 1;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <h4 class="mb-0"><i class="fas fa-chart-bar me-2 text-primary"></i>Project Controls</h4>
+  <div class="d-flex gap-2 flex-wrap">
+    <select class="form-select form-select-sm" onchange="location.href='?project='+this.value" style="width:auto">
+      {% for p in projects %}
+      <option value="{{ p.pk }}" {% if selected_project.pk == p.pk %}selected{% endif %}>{{ p.project_name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+
+{% if selected_project %}
+<div class="card pc-panel mb-4">
+  <div class="card-body">
+    <div class="pc-section-title">
+      <i class="fas fa-compass text-primary"></i>
+      <h6 class="mb-0 fw-semibold">Project Controls Menu</h6>
+    </div>
+    <div class="pc-menu-grid">
+      <a href="{% url 'project_controls:rock_list' %}?project={{ selected_project.pk }}" class="pc-menu-card">
+        <span class="pc-menu-icon bg-secondary bg-opacity-10 text-secondary"><i class="fas fa-mountain"></i></span>
+        <span>
+          <strong>Rock Summary</strong>
+          <span class="d-block text-muted small mt-1">Daily delivery, placement, and stock balance</span>
+          <span class="d-inline-flex gap-2 mt-2">
+            <span class="badge text-bg-light pc-mini-action">Records</span>
+            <span class="badge text-bg-primary pc-mini-action">New entry</span>
+          </span>
+        </span>
+      </a>
+      <a href="{% url 'project_controls:sand_list' %}?project={{ selected_project.pk }}" class="pc-menu-card">
+        <span class="pc-menu-icon bg-info bg-opacity-10 text-info"><i class="fas fa-water"></i></span>
+        <span>
+          <strong>Sand Summary</strong>
+          <span class="d-block text-muted small mt-1">Transport source, placement, and remaining stock</span>
+          <span class="d-inline-flex gap-2 mt-2">
+            <span class="badge text-bg-light pc-mini-action">Records</span>
+            <span class="badge text-bg-primary pc-mini-action">New entry</span>
+          </span>
+        </span>
+      </a>
+      <a href="{% url 'project_controls:revetment_dashboard' %}?project={{ selected_project.pk }}" class="pc-menu-card">
+        <span class="pc-menu-icon bg-success bg-opacity-10 text-success"><i class="fas fa-layer-group"></i></span>
+        <span>
+          <strong>Revetment Progress</strong>
+          <span class="d-block text-muted small mt-1">Daily quantity entries, station matrix, and activity progress</span>
+          <span class="d-inline-flex gap-2 mt-2">
+            <span class="badge text-bg-light pc-mini-action">Matrix</span>
+            <span class="badge text-bg-primary pc-mini-action">Daily entry</span>
+          </span>
+        </span>
+      </a>
+      <a href="{% url 'project_controls:recovery_plan_list' %}?project={{ selected_project.pk }}" class="pc-menu-card">
+        <span class="pc-menu-icon bg-warning bg-opacity-10 text-warning"><i class="fas fa-calendar-check"></i></span>
+        <span>
+          <strong>Recovery Plans</strong>
+          <span class="d-block text-muted small mt-1">14-day plans and daily updates</span>
+          <span class="d-inline-flex gap-2 mt-2">
+            <span class="badge text-bg-light pc-mini-action">Plans</span>
+            <span class="badge text-bg-primary pc-mini-action">Create</span>
+          </span>
+        </span>
+      </a>
+      <a href="{% url 'project_controls:rap_list' %}?project={{ selected_project.pk }}" class="pc-menu-card">
+        <span class="pc-menu-icon bg-danger bg-opacity-10 text-danger"><i class="fas fa-tasks"></i></span>
+        <span>
+          <strong>Action Plans</strong>
+          <span class="d-block text-muted small mt-1">Recovery action tracking and approvals</span>
+          <span class="d-inline-flex gap-2 mt-2">
+            <span class="badge text-bg-light pc-mini-action">Items</span>
+            <span class="badge text-bg-primary pc-mini-action">New plan</span>
+          </span>
+        </span>
+      </a>
+      <a href="{% url 'project_controls:logistics_list' %}?project={{ selected_project.pk }}" class="pc-menu-card">
+        <span class="pc-menu-icon bg-success bg-opacity-10 text-success"><i class="fas fa-truck"></i></span>
+        <span>
+          <strong>Logistics</strong>
+          <span class="d-block text-muted small mt-1">Truck cycle, tonnage, and scenarios</span>
+          <span class="d-inline-flex gap-2 mt-2">
+            <span class="badge text-bg-light pc-mini-action">Scenarios</span>
+            <span class="badge text-bg-primary pc-mini-action">Calculator</span>
+          </span>
+        </span>
+      </a>
+      <a href="{% url 'project_controls:import' %}?project={{ selected_project.pk }}" class="pc-menu-card">
+        <span class="pc-menu-icon bg-primary bg-opacity-10 text-primary"><i class="fas fa-file-import"></i></span>
+        <span>
+          <strong>Import Data</strong>
+          <span class="d-block text-muted small mt-1">Load Rock, Sand, Revetment, and recovery records from Excel</span>
+          <span class="d-inline-flex gap-2 mt-2">
+            <span class="badge text-bg-light pc-mini-action">Excel</span>
+            <span class="badge text-bg-primary pc-mini-action">Upload</span>
+          </span>
+        </span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-lg-6">
+    <div class="card pc-chart-card h-100">
+      <div class="card-header bg-white fw-semibold d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-chart-pie me-2 text-secondary"></i>Rock Progress</span>
+        <a href="{% url 'project_controls:rock_dashboard' %}?project={{ selected_project.pk }}" class="btn btn-sm btn-outline-secondary">Open Rock</a>
+      </div>
+      <div class="card-body">
+        <div class="row g-3 align-items-center">
+          <div class="col-md-6">
+            <div class="pc-chart-wrap"><canvas id="rockProgressChart"></canvas></div>
+          </div>
+          <div class="col-md-6">
+            <div class="d-flex justify-content-between border-bottom py-2">
+              <span class="text-muted">Delivered</span>
+              <strong>{{ rock_data.total_delivered|default:0|floatformat:0|intcomma }} T</strong>
+            </div>
+            <div class="d-flex justify-content-between border-bottom py-2">
+              <span class="text-muted">Placed</span>
+              <strong class="text-primary">{{ rock_data.total_placed|default:0|floatformat:0|intcomma }} T</strong>
+            </div>
+            <div class="d-flex justify-content-between py-2">
+              <span class="text-muted">Stock balance</span>
+              <strong class="{% if rock_data.stock_balance < 0 %}text-danger{% else %}text-warning{% endif %}">{{ rock_data.stock_balance|default:0|floatformat:0|intcomma }} T</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card pc-chart-card h-100">
+      <div class="card-header bg-white fw-semibold d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-chart-pie me-2 text-info"></i>Sand Progress</span>
+        <a href="{% url 'project_controls:sand_dashboard' %}?project={{ selected_project.pk }}" class="btn btn-sm btn-outline-info">Open Sand</a>
+      </div>
+      <div class="card-body">
+        <div class="row g-3 align-items-center">
+          <div class="col-md-6">
+            <div class="pc-chart-wrap"><canvas id="sandProgressChart"></canvas></div>
+          </div>
+          <div class="col-md-6">
+            <div class="d-flex justify-content-between border-bottom py-2">
+              <span class="text-muted">Delivered</span>
+              <strong>{{ sand_data.total_delivered|default:0|floatformat:0|intcomma }} T</strong>
+            </div>
+            <div class="d-flex justify-content-between border-bottom py-2">
+              <span class="text-muted">Offshore placed</span>
+              <strong class="text-success">{{ sand_data.total_offshore|default:0|floatformat:0|intcomma }} T</strong>
+            </div>
+            <div class="d-flex justify-content-between border-bottom py-2">
+              <span class="text-muted">Onshore placed</span>
+              <strong class="text-warning">{{ sand_data.total_onshore|default:0|floatformat:0|intcomma }} T</strong>
+            </div>
+            <div class="d-flex justify-content-between py-2">
+              <span class="text-muted">Remaining stock</span>
+              <strong class="text-danger">{{ sand_data.total_remaining|default:0|floatformat:0|intcomma }} T</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h6 class="text-muted fw-semibold mb-2"><i class="fas fa-mountain me-2"></i>Rock KPIs</h6>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-3">
+    <div class="card pc-kpi-card border-start border-4 border-secondary">
+      <div class="text-muted small">Rock Delivered (TCT)</div>
+      <div class="fs-3 fw-bold">{{ rock_data.total_delivered|default:0|floatformat:0|intcomma }}</div>
+      <div class="text-muted small">Ton (Accum.)</div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="card pc-kpi-card border-start border-4 border-primary">
+      <div class="text-muted small">Rock Placed</div>
+      <div class="fs-3 fw-bold">{{ rock_data.total_placed|default:0|floatformat:0|intcomma }}</div>
+      <div class="text-muted small">Ton (Accum.)</div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="card pc-kpi-card border-start border-4 border-warning">
+      <div class="text-muted small">Stock Balance</div>
+      <div class="fs-3 fw-bold {% if rock_data.stock_balance < 0 %}text-danger{% endif %}">{{ rock_data.stock_balance|default:0|floatformat:0|intcomma }}</div>
+      <div class="text-muted small">Ton</div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="card pc-kpi-card border-start border-4 border-info">
+      <div class="text-muted small">Days Recorded</div>
+      <div class="fs-3 fw-bold">{{ rock_data.record_count|default:0 }}</div>
+      <div class="text-muted small">Latest: {{ rock_data.latest_date|default:"-" }}</div>
+    </div>
+  </div>
+</div>
+
+<h6 class="text-muted fw-semibold mb-2"><i class="fas fa-water me-2"></i>Sand KPIs</h6>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-2">
+    <div class="card pc-kpi-card border-start border-4 border-info">
+      <div class="text-muted small">Sand TCT</div>
+      <div class="fs-4 fw-bold">{{ sand_data.total_tct|default:0|floatformat:0|intcomma }}</div>
+      <div class="text-muted small">Ton</div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-2">
+    <div class="card pc-kpi-card border-start border-4 border-primary">
+      <div class="text-muted small">Sand MTP3</div>
+      <div class="fs-4 fw-bold">{{ sand_data.total_mtp3|default:0|floatformat:0|intcomma }}</div>
+      <div class="text-muted small">Ton</div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-2">
+    <div class="card pc-kpi-card border-start border-4 border-success">
+      <div class="text-muted small">Offshore Placed</div>
+      <div class="fs-4 fw-bold">{{ sand_data.total_offshore|default:0|floatformat:0|intcomma }}</div>
+      <div class="text-muted small">Ton</div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-2">
+    <div class="card pc-kpi-card border-start border-4 border-warning">
+      <div class="text-muted small">Onshore Placed</div>
+      <div class="fs-4 fw-bold">{{ sand_data.total_onshore|default:0|floatformat:0|intcomma }}</div>
+      <div class="text-muted small">Ton</div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-2">
+    <div class="card pc-kpi-card border-start border-4 border-danger">
+      <div class="text-muted small">Remaining TCT</div>
+      <div class="fs-4 fw-bold">{{ sand_data.remaining_tct|default:0|floatformat:0|intcomma }}</div>
+      <div class="text-muted small">Ton</div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-2">
+    <div class="card pc-kpi-card border-start border-4 border-secondary">
+      <div class="text-muted small">Remaining MTP3</div>
+      <div class="fs-4 fw-bold">{{ sand_data.remaining_mtp3|default:0|floatformat:0|intcomma }}</div>
+      <div class="text-muted small">Ton</div>
+    </div>
+  </div>
+</div>
+
+<h6 class="text-muted fw-semibold mb-2"><i class="fas fa-tasks me-2"></i>Recovery Action Plan</h6>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-3">
+    <div class="card pc-kpi-card border-start border-4 border-primary">
+      <div class="text-muted small">Overall Progress</div>
+      <div class="fs-3 fw-bold">{{ rap_data.overall_percent|default:0|floatformat:1|intcomma }}%</div>
+      <div class="progress mt-2" style="height:6px">
+        <div class="progress-bar bg-primary" style="width:{{ rap_data.overall_percent|default:0 }}%"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="card pc-kpi-card border-start border-4 border-danger">
+      <div class="text-muted small">Delayed Items</div>
+      <div class="fs-3 fw-bold text-danger">{{ rap_data.delayed_items|default:0 }}</div>
+      <div class="text-muted small">of {{ rap_data.total_items|default:0 }} items</div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="card pc-kpi-card border-start border-4 border-success">
+      <div class="text-muted small">Ahead / On Track</div>
+      <div class="fs-3 fw-bold text-success">{{ rap_data.ahead_items|default:0 }} / {{ rap_data.on_track_items|default:0 }}</div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="card pc-kpi-card border-start border-4 border-warning">
+      <div class="text-muted small">Deviation</div>
+      <div class="fs-3 fw-bold {% if rap_data.deviation < 0 %}text-danger{% else %}text-success{% endif %}">
+        {% if rap_data.deviation %}{{ rap_data.deviation|floatformat:0|intcomma }}{% else %}0{% endif %}
+      </div>
+      <div class="text-muted small">Actual - Plan</div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="alert alert-info">No active projects found. Please create a project first.</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+{% if selected_project %}
+<script>
+function toNumber(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function makeDoughnut(canvasId, labels, values, colors) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas || typeof Chart === 'undefined') return;
+
+  const cleaned = values.map(value => Math.max(toNumber(value), 0));
+  const total = cleaned.reduce((sum, value) => sum + value, 0);
+  const data = total > 0 ? cleaned : [1];
+  const chartLabels = total > 0 ? labels : ['No data'];
+  const chartColors = total > 0 ? colors : ['#dee2e6'];
+
+  new Chart(canvas, {
+    type: 'doughnut',
+    data: {
+      labels: chartLabels,
+      datasets: [{
+        data,
+        backgroundColor: chartColors,
+        borderColor: '#fff',
+        borderWidth: 3,
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '62%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { boxWidth: 12, usePointStyle: true }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              if (total === 0) return 'No data';
+              const value = context.parsed || 0;
+              const percent = total ? (value / total * 100).toFixed(1) : '0.0';
+              return `${context.label}: ${value.toLocaleString()} T (${percent}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+makeDoughnut(
+  'rockProgressChart',
+  ['Placed', 'Stock balance'],
+  ['{{ rock_data.total_placed|default:0 }}', '{{ rock_data.stock_balance|default:0 }}'],
+  ['#0d6efd', '#ffc107']
+);
+
+makeDoughnut(
+  'sandProgressChart',
+  ['Offshore placed', 'Onshore placed', 'Remaining stock'],
+  ['{{ sand_data.total_offshore|default:0 }}', '{{ sand_data.total_onshore|default:0 }}', '{{ sand_data.total_remaining|default:0 }}'],
+  ['#198754', '#ffc107', '#dc3545']
+);
+</script>
+{% endif %}
+{% endblock %}

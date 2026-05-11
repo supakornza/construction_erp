@@ -1,0 +1,28 @@
+<nav id="topbar" class="navbar navbar-expand-lg navbar-light px-3 d-flex align-items-center">
+    <button class="btn btn-sm btn-outline-secondary d-md-none me-2" id="sidebar-toggler">
+        <i class="fas fa-bars"></i>
+    </button>
+    <span class="navbar-brand mb-0 h1 fs-6 text-muted d-none d-md-block">
+        {% block page_title %}{% endblock %}
+    </span>
+    <div class="ms-auto d-flex align-items-center gap-3">
+        <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="fas fa-user-circle me-1"></i>{{ user.get_full_name_or_username }}
+                <span class="badge bg-secondary ms-1 fw-normal" style="font-size:0.65rem;">{{ user.get_role_display }}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="fas fa-id-card me-2"></i>Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <form method="post" action="{% url 'accounts:logout' %}">
+                        {% csrf_token %}
+                        <button class="dropdown-item text-danger" type="submit">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

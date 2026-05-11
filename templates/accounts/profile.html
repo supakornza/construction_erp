@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}My Profile – Construction ERP{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card text-center p-4">
+            {% if user.profile_photo %}
+            <img src="{{ user.profile_photo.url }}" class="rounded-circle mx-auto mb-3" style="width:80px;height:80px;object-fit:cover;">
+            {% else %}
+            <div class="rounded-circle mx-auto mb-3 bg-primary d-flex align-items-center justify-content-center text-white" style="width:80px;height:80px;font-size:2rem;">
+                {{ user.username|first|upper }}
+            </div>
+            {% endif %}
+            <h5>{{ user.get_full_name|default:user.username }}</h5>
+            <span class="badge bg-secondary">{{ user.get_role_display }}</span>
+            <div class="text-muted small mt-2">{{ user.email }}</div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header"><h6 class="mb-0">Edit Profile</h6></div>
+            <div class="card-body">
+                {% crispy form %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

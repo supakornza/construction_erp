@@ -1,0 +1,106 @@
+﻿{% extends "base.html" %}
+{% block title %}Rock Summary โ€“ Construction ERP{% endblock %}
+{% block page_title %}Rock Summary{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h5 class="mb-0"><i class="fas fa-mountain me-2 text-secondary"></i>Rock Daily Records</h5>
+  <div class="d-flex gap-2 flex-wrap">
+    <a href="{% url 'project_controls:rock_dashboard' %}" class="btn btn-sm btn-outline-secondary">
+      <i class="fas fa-chart-bar me-1"></i>Dashboard
+    </a>
+    <a href="{% url 'project_controls:rock_create' %}" class="btn btn-sm btn-primary">
+      <i class="fas fa-plus me-1"></i>New Record
+    </a>
+    {% if request.GET.project %}
+    <a href="{% url 'project_controls:rock_export_excel' request.GET.project %}" class="btn btn-sm btn-outline-success">
+      <i class="fas fa-file-excel me-1"></i>Export Excel
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card mb-3">
+  <div class="card-body py-2">
+    <form method="get" class="row g-2 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label small">Project</label>
+        <select name="project" class="form-select form-select-sm">
+          <option value="">All Projects</option>
+          {% for p in projects %}
+          <option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.project_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small">From</label>
+        <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="form-control form-control-sm">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small">To</label>
+        <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control form-control-sm">
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-sm btn-primary w-100">Filter</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-sm table-hover mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>Date</th><th>Day</th>
+          <th class="text-end">TCT Daily (T)</th>
+          <th class="text-end">TCT Accum (T)</th>
+          <th class="text-end">Trips</th>
+          <th class="text-end">Trucks</th>
+          <th class="text-end">Placed Daily (T)</th>
+          <th class="text-end">Placed Accum (T)</th>
+          <th class="text-end">Stock Balance</th>
+          <th>Station</th>
+          <th>Remarks</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rec in records %}
+        <tr>
+          <td><a href="{% url 'project_controls:rock_detail' rec.pk %}">{{ rec.record_date }}</a></td>
+          <td class="text-muted small">{{ rec.day_name }}</td>
+          <td class="text-end">{{ rec.tct_daily_ton|floatformat:2|intcomma }}</td>
+          <td class="text-end fw-semibold">{{ rec.tct_accum_ton|floatformat:2|intcomma }}</td>
+          <td class="text-end">{{ rec.tct_trips }}</td>
+          <td class="text-end">{{ rec.tct_trucks }}</td>
+          <td class="text-end">{{ rec.placed_daily_ton|floatformat:2|intcomma }}</td>
+          <td class="text-end fw-semibold">{{ rec.placed_accum_ton|floatformat:2|intcomma }}</td>
+          <td class="text-end {% if rec.stock_balance < 0 %}text-danger{% else %}text-success{% endif %}">
+            {{ rec.stock_balance|floatformat:2|intcomma }}
+          </td>
+          <td class="small">{{ rec.station_of_core|truncatechars:30 }}</td>
+          <td class="small text-muted">{{ rec.remarks|truncatechars:30 }}</td>
+          <td class="text-nowrap">
+            <a href="{% url 'project_controls:rock_update' rec.pk %}" class="btn btn-xs btn-outline-secondary" title="Edit"><i class="fas fa-edit"></i></a>
+            {% if request.user.is_superuser or request.user.role == 'admin' %}
+            <form method="post" action="{% url 'project_controls:rock_delete' rec.pk %}" class="d-inline" onsubmit="return confirm('Delete rock record for {{ rec.record_date }}?')">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-xs btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="12" class="text-center text-muted py-4">No rock records found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if page_obj.has_other_pages %}
+  <div class="card-footer">
+    {% include "includes/pagination.html" %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

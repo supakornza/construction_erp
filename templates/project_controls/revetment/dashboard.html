@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}Revetment Progress - Construction ERP{% endblock %}
+{% block page_title %}Revetment Progress{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <div class="d-flex align-items-center gap-2">
+    <a href="{% url 'project_controls:dashboard' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left"></i></a>
+    <h5 class="mb-0"><i class="fas fa-layer-group me-2 text-success"></i>Revetment Progress Dashboard</h5>
+  </div>
+  <div class="d-flex gap-2 flex-wrap">
+    <select class="form-select form-select-sm" onchange="location.href='?project='+this.value" style="width:auto">
+      {% for p in projects %}
+      <option value="{{ p.pk }}" {% if selected_project.pk == p.pk %}selected{% endif %}>{{ p.project_name }}</option>
+      {% endfor %}
+    </select>
+    {% if selected_project %}
+    <a href="{% url 'project_controls:revetment_list' %}?project={{ selected_project.pk }}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-list me-1"></i>Records</a>
+    <a href="{% url 'project_controls:revetment_create' %}?project={{ selected_project.pk }}" class="btn btn-sm btn-primary"><i class="fas fa-plus me-1"></i>Daily Entry</a>
+    <a href="{% url 'project_controls:revetment_setup' %}?project={{ selected_project.pk }}" class="btn btn-sm btn-outline-success"><i class="fas fa-sliders-h me-1"></i>Setup</a>
+    <a href="{% url 'project_controls:revetment_export_excel' selected_project.pk %}" class="btn btn-sm btn-outline-success"><i class="fas fa-file-excel me-1"></i>Export</a>
+    {% endif %}
+  </div>
+</div>
+
+{% if selected_project %}
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-xl-3">
+    <div class="card h-100 border-success">
+      <div class="card-body">
+        <div class="text-muted small">Total Quantity Recorded</div>
+        <div class="fs-3 fw-bold">{{ data.total_quantity|default:0|floatformat:3|intcomma }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="text-muted small">Daily Records</div>
+        <div class="fs-3 fw-bold">{{ data.record_count|default:0|intcomma }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="text-muted small">Stations</div>
+        <div class="fs-3 fw-bold">{{ data.stations|length|intcomma }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="text-muted small">Latest Date</div>
+        <div class="fs-5 fw-bold">{% if data.latest_date %}{{ data.latest_date }}{% else %}-{% endif %}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-lg-7">
+    <div class="card h-100">
+      <div class="card-header fw-semibold"><i class="fas fa-chart-line me-2 text-primary"></i>Daily / Cumulative Quantity</div>
+      <div class="card-body"><canvas id="revetmentDailyChart" height="120"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card h-100">
+      <div class="card-header fw-semibold"><i class="fas fa-chart-bar me-2 text-success"></i>Quantity by Activity</div>
+      <div class="card-body"><canvas id="revetmentActivityChart" height="120"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span class="fw-semibold"><i class="fas fa-table me-2 text-success"></i>Station x Activity Matrix</span>
+    <span class="text-muted small">Quantity cells show cumulative values; inspection cells show latest status/date.</span>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-sm table-bordered align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th style="min-width:80px">SOP</th>
+          <th style="min-width:90px">STA.</th>
+          {% for activity in data.activities %}
+          <th class="text-center" style="min-width:130px">
+            <div class="small text-muted">{{ activity.group_name }}</div>
+            <div>{{ activity.name }}</div>
+            <div class="small text-muted">{{ activity.display_unit }}</div>
+          </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in data.matrix_rows %}
+        <tr>
+          <td>{{ row.station.sop|default:"-" }}</td>
+          <td class="fw-semibold">{{ row.station.station }}</td>
+          {% for cell in row.cells %}
+          <td class="text-center {{ cell.css }}">{{ cell.value }}</td>
+          {% endfor %}
+        </tr>
+        {% empty %}
+        <tr><td colspan="20" class="text-center text-muted py-4">No station/activity setup yet. Import the Revetment workbook or add setup data first.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header fw-semibold"><i class="fas fa-clock me-2 text-secondary"></i>Recent Revetment Records</div>
+  <div class="table-responsive">
+    <table class="table table-sm table-hover mb-0">
+      <thead class="table-light"><tr><th>Date</th><th>Items</th><th class="text-end">Total Qty</th><th>Remarks</th></tr></thead>
+      <tbody>
+        {% for record in data.recent_records %}
+        <tr>
+          <td><a href="{% url 'project_controls:revetment_detail' record.pk %}">{{ record.record_date }}</a></td>
+          <td>{{ record.items.count|intcomma }}</td>
+          <td class="text-end fw-semibold">{{ record.total_quantity|floatformat:3|intcomma }}</td>
+          <td>{{ record.remarks|default:"-" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-center text-muted py-3">No daily records yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="alert alert-info">No active project found.</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const revetmentData = {{ data.chart_data|default:"{}"|safe }};
+if (typeof Chart !== 'undefined' && revetmentData.labels) {
+  new Chart(document.getElementById('revetmentDailyChart'), {
+    type: 'bar',
+    data: {
+      labels: revetmentData.labels,
+      datasets: [
+        { label: 'Daily Qty', data: revetmentData.daily, backgroundColor: 'rgba(25, 135, 84, 0.55)', yAxisID: 'y' },
+        { label: 'Cumulative Qty', data: revetmentData.accum, type: 'line', borderColor: '#0d6efd', backgroundColor: '#0d6efd', tension: 0.25, yAxisID: 'y1' }
+      ]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true }, y1: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false } } } }
+  });
+  new Chart(document.getElementById('revetmentActivityChart'), {
+    type: 'bar',
+    data: {
+      labels: revetmentData.activity_labels,
+      datasets: [{ label: 'Cumulative Qty', data: revetmentData.activity_totals, backgroundColor: 'rgba(25, 135, 84, 0.65)' }]
+    },
+    options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } }
+  });
+}
+</script>
+{% endblock %}

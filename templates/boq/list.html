@@ -1,0 +1,59 @@
+﻿{% extends "base.html" %}
+{% block title %}BOQ โ€“ Construction ERP{% endblock %}
+{% block page_title %}Bill of Quantities{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0"><i class="fas fa-chart-line me-2 text-primary"></i>BOQ Items</h4>
+    <div class="d-flex gap-2">
+        <a href="{% url 'boq:progress_list' %}" class="btn btn-outline-secondary">Daily Progress</a>
+        <a href="{% url 'boq:claim_list' %}" class="btn btn-outline-secondary">Payment Claims</a>
+        <a href="{% url 'boq:create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Add Item</a>
+    </div>
+</div>
+<div class="card mb-3"><div class="card-body py-2">
+    <form method="get" class="d-flex gap-2">
+        <select name="project" class="form-select form-select-sm" style="width:auto;">
+            <option value="">All Projects</option>
+            {% for p in projects %}<option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.contract_no }}</option>{% endfor %}
+        </select>
+        <button class="btn btn-sm btn-outline-secondary" type="submit">Filter</button>
+    </form>
+</div></div>
+<div class="card"><div class="table-responsive">
+    <table class="table table-hover mb-0">
+        <thead class="table-light"><tr><th>Item No</th><th>Description</th><th>Unit</th><th>Contract Qty</th><th>Cumulative</th><th>% Complete</th><th>Contract Amt</th><th>Earned Value</th><th></th></tr></thead>
+        <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.item_no }}</td>
+            <td>{{ item.description }}</td>
+            <td>{{ item.unit }}</td>
+            <td>{{ item.contract_quantity|floatformat:3|intcomma }}</td>
+            <td>{{ item.cumulative_quantity|floatformat:3|intcomma }}</td>
+            <td>
+                <div class="d-flex align-items-center gap-2">
+                    <div class="progress flex-fill" style="height:8px;min-width:60px;">
+                        <div class="progress-bar bg-primary" style="width:{{ item.percent_complete|floatformat:1 }}%"></div>
+                    </div>
+                    <span class="small">{{ item.percent_complete|floatformat:1|intcomma }}%</span>
+                </div>
+            </td>
+            <td>{{ item.contract_amount|floatformat:0|intcomma }}</td>
+            <td>{{ item.earned_value|floatformat:0|intcomma }}</td>
+            <td>
+                <a href="{% url 'boq:update' item.pk %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a>
+                {% if request.user.is_superuser or request.user.role == 'admin' %}
+                <form method="post" action="{% url 'boq:delete' item.pk %}" class="d-inline" onsubmit="return confirm('Delete BOQ item {{ item.item_no }}?')">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="9" class="text-center text-muted py-4">No BOQ items. <a href="{% url 'boq:create' %}">Add the first one.</a></td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div></div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Safety – Construction ERP{% endblock %}
+{% block page_title %}Safety{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0"><i class="fas fa-shield-alt me-2 text-primary"></i>Toolbox Meetings</h4>
+    <div class="d-flex gap-2">
+        <a href="{% url 'safety:inspection_list' %}" class="btn btn-outline-secondary">Inspections</a>
+        <a href="{% url 'safety:incident_list' %}" class="btn btn-outline-secondary">Incidents</a>
+        <a href="{% url 'safety:jsea_list' %}" class="btn btn-outline-secondary">JSEA</a>
+        <a href="{% url 'safety:toolbox_create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>New Meeting</a>
+    </div>
+</div>
+<div class="card"><div class="table-responsive">
+    <table class="table table-hover mb-0">
+        <thead class="table-light"><tr><th>Date</th><th>Project</th><th>Topic</th><th>Location</th><th>Conducted By</th><th>Attendees</th><th></th></tr></thead>
+        <tbody>
+        {% for m in meetings %}
+        <tr>
+            <td>{{ m.meeting_date }}</td>
+            <td>{{ m.project.contract_no }}</td>
+            <td>{{ m.topic }}</td>
+            <td>{{ m.location }}</td>
+            <td>{{ m.conducted_by.get_full_name|default:'-' }}</td>
+            <td>{{ m.attendee_count }}</td>
+            <td>
+                <a href="{% url 'safety:toolbox_update' m.pk %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a>
+                {% if request.user.is_superuser or request.user.role == 'admin' %}
+                <form method="post" action="{% url 'safety:toolbox_delete' m.pk %}" class="d-inline" onsubmit="return confirm('Delete this toolbox meeting?')">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-4">No toolbox meetings.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div></div>
+{% endblock %}

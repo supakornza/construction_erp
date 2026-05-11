@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Inspection Requests - Construction ERP{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Inspection Requests</h4>
+    <a href="{% url 'quality:inspection_create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>New Inspection</a>
+</div>
+{% include "quality/_tabs.html" %}
+<div class="card mb-3"><div class="card-body py-2">
+    <form method="get" class="d-flex gap-2">
+        <select name="status" class="form-select form-select-sm" style="width:auto;">
+            <option value="">All Status</option>
+            <option value="Draft" {% if request.GET.status == 'Draft' %}selected{% endif %}>Draft</option>
+            <option value="Submitted" {% if request.GET.status == 'Submitted' %}selected{% endif %}>Submitted</option>
+            <option value="Approved" {% if request.GET.status == 'Approved' %}selected{% endif %}>Approved</option>
+            <option value="Rejected" {% if request.GET.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+            <option value="Closed" {% if request.GET.status == 'Closed' %}selected{% endif %}>Closed</option>
+        </select>
+        <button class="btn btn-sm btn-outline-secondary" type="submit">Filter</button>
+    </form>
+</div></div>
+<div class="card"><div class="table-responsive"><table class="table table-hover mb-0">
+    <thead class="table-light"><tr><th>Date</th><th>Project</th><th>Type</th><th>Location</th><th>Status</th><th>Result</th><th></th></tr></thead>
+    <tbody>
+    {% for i in inspections %}
+    <tr>
+        <td>{{ i.inspection_date }}</td><td>{{ i.project.contract_no }}</td><td>{{ i.inspection_type }}</td><td>{{ i.location }}</td><td>{{ i.status }}</td><td>{{ i.result }}</td>
+        <td class="text-end"><a href="{% url 'quality:inspection_update' i.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit"></i></a></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="7" class="text-center text-muted py-4">No inspection requests.</td></tr>
+    {% endfor %}
+    </tbody>
+</table></div></div>
+{% endblock %}

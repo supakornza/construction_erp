@@ -1,0 +1,165 @@
+﻿{% extends "base.html" %}
+{% block title %}Sand Dashboard โ€“ Construction ERP{% endblock %}
+{% block page_title %}Sand Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h5 class="mb-0"><i class="fas fa-water me-2 text-info"></i>Sand Progress Dashboard</h5>
+  <div class="d-flex gap-2 flex-wrap">
+    <form method="get" class="d-flex gap-2">
+      <select name="project" class="form-select form-select-sm" style="min-width:200px" onchange="this.form.submit()">
+        <option value="">All Projects</option>
+        {% for p in projects %}
+        <option value="{{ p.pk }}" {% if selected_project and selected_project.pk == p.pk %}selected{% endif %}>{{ p.project_name }}</option>
+        {% endfor %}
+      </select>
+    </form>
+    <a href="{% url 'project_controls:sand_list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-list me-1"></i>Records</a>
+    <a href="{% url 'project_controls:sand_create' %}" class="btn btn-sm btn-primary"><i class="fas fa-plus me-1"></i>New Record</a>
+  </div>
+</div>
+
+{# KPI Row 1 โ€“ Sources #}
+<div class="row g-3 mb-3">
+  <div class="col-md-3">
+    <div class="card border-info">
+      <div class="card-body text-center">
+        <div class="fs-2 fw-bold text-info">{{ data.tct_accum|floatformat:0|intcomma }}</div>
+        <div class="text-muted small">TCT Total Delivered (T)</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-primary">
+      <div class="card-body text-center">
+        <div class="fs-2 fw-bold text-primary">{{ data.mtp3_accum|floatformat:0|intcomma }}</div>
+        <div class="text-muted small">MTP3 Total Delivered (T)</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-success">
+      <div class="card-body text-center">
+        <div class="fs-2 fw-bold text-success">{{ data.other_source_accum|floatformat:0|intcomma }}</div>
+        <div class="text-muted small">{{ data.other_source_label }} Total (T)</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <div class="fs-2 fw-bold">{{ data.total_accum|floatformat:0|intcomma }}</div>
+        <div class="text-muted small">Grand Total Delivered (T)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{# KPI Row 2 โ€“ Placement #}
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <div class="fs-2 fw-bold text-primary">{{ data.offshore_accum|floatformat:0|intcomma }}</div>
+        <div class="text-muted small">Offshore Placed (T)</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <div class="fs-2 fw-bold text-secondary">{{ data.onshore_accum|floatformat:0|intcomma }}</div>
+        <div class="text-muted small">Onshore Placed (T)</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-warning">
+      <div class="card-body text-center">
+        <div class="fs-2 fw-bold text-warning">{{ data.remaining_tct|floatformat:0|intcomma }}</div>
+        <div class="text-muted small">Remaining TCT (T)</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-warning">
+      <div class="card-body text-center">
+        <div class="fs-2 fw-bold text-warning">{{ data.remaining_mtp3|floatformat:0|intcomma }}</div>
+        <div class="text-muted small">Remaining MTP3 (T)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-8">
+    <div class="card h-100">
+      <div class="card-header fw-semibold"><i class="fas fa-chart-bar me-2"></i>Daily Sand by Source (Last 30 Days)</div>
+      <div class="card-body">
+        <canvas id="sandDailyChart" height="90"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-header fw-semibold"><i class="fas fa-ship me-2"></i>Barge Placement Totals</div>
+      <div class="card-body p-0">
+        <table class="table table-sm mb-0">
+          <thead class="table-light"><tr><th>Barge</th><th class="text-end">Total (T)</th><th class="text-end">Trips</th></tr></thead>
+          <tbody>
+            {% for b in data.barge_totals %}
+            <tr>
+              <td>{{ b.barge__name }}</td>
+              <td class="text-end fw-bold">{{ b.total_qty|floatformat:2|intcomma }}</td>
+              <td class="text-end">{{ b.total_trips }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-muted text-center py-3">No barge data</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header fw-semibold"><i class="fas fa-chart-line me-2"></i>Accumulative Sand Delivered</div>
+  <div class="card-body">
+    <canvas id="sandAccumChart" height="60"></canvas>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+const chartData = {{ data.chart_data|safe }};
+
+new Chart(document.getElementById('sandDailyChart'), {
+  type: 'bar',
+  data: {
+    labels: chartData.labels,
+    datasets: [
+      { label: 'TCT', data: chartData.tct_daily, backgroundColor: 'rgba(13,202,240,0.7)' },
+      { label: 'MTP3', data: chartData.mtp3_daily, backgroundColor: 'rgba(13,110,253,0.7)' },
+      { label: '{{ data.other_source_label|escapejs }}', data: chartData.other_daily, backgroundColor: 'rgba(25,135,84,0.7)' }
+    ]
+  },
+  options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { x: { stacked: true }, y: { stacked: true } } }
+});
+
+new Chart(document.getElementById('sandAccumChart'), {
+  type: 'line',
+  data: {
+    labels: chartData.labels,
+    datasets: [
+      { label: 'TCT Accum', data: chartData.tct_accum, borderColor: '#0dcaf0', tension: 0.3, fill: false },
+      { label: 'MTP3 Accum', data: chartData.mtp3_accum, borderColor: '#0d6efd', tension: 0.3, fill: false },
+      { label: 'Total Accum', data: chartData.total_accum, borderColor: '#212529', tension: 0.3, borderWidth: 2, fill: false }
+    ]
+  },
+  options: { responsive: true, plugins: { legend: { position: 'top' } } }
+});
+</script>
+{% endblock %}

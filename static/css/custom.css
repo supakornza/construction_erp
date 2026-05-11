@@ -1,0 +1,144 @@
+:root {
+    --sidebar-width: 260px;
+    --sidebar-bg: #1a2634;
+    --sidebar-text: #c8d6e5;
+    --sidebar-hover: #2d3f55;
+    --sidebar-active: #2980b9;
+    --topbar-height: 56px;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+}
+
+/* Sidebar */
+#sidebar {
+    width: var(--sidebar-width);
+    min-height: 100vh;
+    background-color: var(--sidebar-bg);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    overflow-y: auto;
+    transition: all 0.3s;
+}
+
+#sidebar .sidebar-brand {
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid #2d3f55;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    display: block;
+}
+
+#sidebar .nav-link {
+    color: var(--sidebar-text);
+    padding: 0.5rem 1.2rem;
+    font-size: 0.875rem;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.2s;
+}
+
+#sidebar .nav-link:hover {
+    background-color: var(--sidebar-hover);
+    color: #fff;
+}
+
+#sidebar .nav-link.active {
+    background-color: var(--sidebar-active);
+    color: #fff;
+}
+
+#sidebar .nav-section {
+    padding: 0.75rem 1.2rem 0.25rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6c8ebf;
+}
+
+/* Main content */
+#main-content {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#topbar {
+    height: var(--topbar-height);
+    background: #fff;
+    border-bottom: 1px solid #dee2e6;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.page-content {
+    flex: 1;
+    padding: 1.5rem;
+}
+
+/* Status badges */
+.badge-draft { background-color: #6c757d; color: #fff; }
+.badge-submitted { background-color: #0d6efd; color: #fff; }
+.badge-approved { background-color: #198754; color: #fff; }
+.badge-rejected { background-color: #dc3545; color: #fff; }
+.badge-planning { background-color: #6f42c1; color: #fff; }
+.badge-active { background-color: #198754; color: #fff; }
+.badge-suspended { background-color: #fd7e14; color: #fff; }
+.badge-completed { background-color: #0dcaf0; color: #000; }
+.badge-closed { background-color: #6c757d; color: #fff; }
+.badge-open { background-color: #dc3545; color: #fff; }
+.badge-inprogress { background-color: #ffc107; color: #000; }
+.badge-closed-safety { background-color: #198754; color: #fff; }
+
+/* Cards */
+.stat-card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.stat-card .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+
+/* Progress bars */
+.progress { height: 8px; border-radius: 4px; }
+
+/* Tables */
+.table-hover tbody tr:hover { background-color: rgba(41, 128, 185, 0.05); }
+
+/* Responsive */
+@media (max-width: 768px) {
+    #sidebar { transform: translateX(-100%); }
+    #sidebar.show { transform: translateX(0); }
+    #main-content { margin-left: 0; }
+}
+
+/* ── Formset delete button ──────────────────────────────────────────────── */
+tr.formset-row input[name$="-DELETE"] { display: none !important; }
+
+tr.formset-row-deleted td {
+    text-decoration: line-through;
+    opacity: 0.45;
+    background-color: #fff3f3 !important;
+}
+
+.formset-delete-btn { line-height: 1; padding: 3px 7px; }
+/* ─────────────────────────────────────────────────────────────────────────── */

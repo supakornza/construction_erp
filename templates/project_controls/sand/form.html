@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{% if form.instance.pk %}Edit{% else %}New{% endif %} Sand Record{% endblock %}
+{% block page_title %}{% if form.instance.pk %}Edit Sand Record{% else %}New Sand Daily Record{% endif %}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+  <a href="{% url 'project_controls:sand_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+  <h5 class="mb-0">{% if form.instance.pk %}Edit Sand Record{% else %}New Sand Daily Record{% endif %}</h5>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+
+  <div class="card mb-3">
+    <div class="card-header"><i class="fas fa-water me-2"></i>Sand Transport & Placement Details</div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">{{ form.project.label_tag }}{{ form.project }}</div>
+        <div class="col-md-4">{{ form.record_date.label_tag }}{{ form.record_date }}</div>
+        <div class="col-md-4">{{ form.day_name.label_tag }}{{ form.day_name }}</div>
+      </div>
+      <hr>
+      <h6 class="text-info"><i class="fas fa-truck me-2"></i>Sand at TCT Port</h6>
+      <div class="row g-2">
+        <div class="col-md-3">{{ form.tct_daily_ton.label_tag }}{{ form.tct_daily_ton }}</div>
+        <div class="col-md-3">{{ form.tct_trips.label_tag }}{{ form.tct_trips }}</div>
+        <div class="col-md-3">{{ form.tct_trucks.label_tag }}{{ form.tct_trucks }}</div>
+      </div>
+      <hr>
+      <h6 class="text-primary"><i class="fas fa-warehouse me-2"></i>Sand Stock MTP3</h6>
+      <div class="row g-2">
+        <div class="col-md-3">{{ form.mtp3_daily_ton.label_tag }}{{ form.mtp3_daily_ton }}</div>
+        <div class="col-md-3">{{ form.mtp3_trips.label_tag }}{{ form.mtp3_trips }}</div>
+        <div class="col-md-3">{{ form.mtp3_trucks.label_tag }}{{ form.mtp3_trucks }}</div>
+      </div>
+      <hr>
+      <h6 class="text-success"><i class="fas fa-anchor me-2"></i>Other Sand Source</h6>
+      <div class="row g-2">
+        <div class="col-md-3">{{ form.sand_source.label_tag }}{{ form.sand_source }}</div>
+        <div class="col-md-3">{{ form.oswald_daily_ton.label_tag }}{{ form.oswald_daily_ton }}</div>
+        <div class="col-md-3">{{ form.oswald_trips.label_tag }}{{ form.oswald_trips }}</div>
+        <div class="col-md-3">{{ form.oswald_trucks.label_tag }}{{ form.oswald_trucks }}</div>
+      </div>
+      <hr>
+      <h6><i class="fas fa-water me-2"></i>Offshore Placement</h6>
+      <div class="row g-2">
+        <div class="col-md-4">{{ form.offshore_daily_ton.label_tag }}{{ form.offshore_daily_ton }}</div>
+        <div class="col-md-8">{{ form.offshore_station.label_tag }}{{ form.offshore_station }}</div>
+      </div>
+      <hr>
+      <h6><i class="fas fa-road me-2"></i>Onshore Placement</h6>
+      <div class="row g-2">
+        <div class="col-md-3">{{ form.onshore_daily_ton.label_tag }}{{ form.onshore_daily_ton }}</div>
+        <div class="col-md-3">{{ form.onshore_trips.label_tag }}{{ form.onshore_trips }}</div>
+        <div class="col-md-3">{{ form.onshore_trucks.label_tag }}{{ form.onshore_trucks }}</div>
+      </div>
+      <hr>
+      <h6><i class="fas fa-border-all me-2"></i>Plot Tank Quantities</h6>
+      <div class="row g-2">
+        <div class="col-md-3">{{ form.inside_plot_daily.label_tag }}{{ form.inside_plot_daily }}</div>
+        <div class="col-md-3">{{ form.outside_plot_daily.label_tag }}{{ form.outside_plot_daily }}</div>
+      </div>
+      <hr>
+      <h6 class="text-warning"><i class="fas fa-cubes me-2"></i>Remaining Stock</h6>
+      <div class="row g-2">
+        <div class="col-md-3">{{ form.remaining_tct.label_tag }}{{ form.remaining_tct }}</div>
+        <div class="col-md-3">{{ form.remaining_mtp3.label_tag }}{{ form.remaining_mtp3 }}</div>
+      </div>
+      <hr>
+      <div class="row g-2">
+        <div class="col-12">{{ form.remarks.label_tag }}{{ form.remarks }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span><i class="fas fa-ship me-2"></i>Offshore Barge Placements</span>
+      <button type="button" class="btn btn-sm btn-outline-success" id="add-barge-btn"><i class="fas fa-plus me-1"></i>Add</button>
+    </div>
+    <div class="card-body p-0">
+      {{ barge_formset.management_form }}
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered mb-0">
+          <thead class="table-light">
+            <tr><th>Barge</th><th style="width:120px">Qty (Ton)</th><th style="width:80px">Trips</th><th>Station</th><th style="width:40px">Del</th></tr>
+          </thead>
+          <tbody id="sand-barge-tbody">
+            {% for bf in barge_formset %}
+            <tr class="formset-row">
+              <td>{{ bf.barge }}{{ bf.id }}</td>
+              <td>{{ bf.quantity_ton }}</td>
+              <td>{{ bf.trips }}</td>
+              <td>{{ bf.station }}</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                {{ bf.DELETE }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2 mb-5">
+    <button type="submit" class="btn btn-primary btn-lg px-5"><i class="fas fa-save me-2"></i>Save Record</button>
+    <a href="{% url 'project_controls:sand_list' %}" class="btn btn-outline-secondary btn-lg">Cancel</a>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.querySelectorAll('input,select,textarea').forEach(el => {
+  if (!el.classList.contains('form-control') && !el.classList.contains('form-select')) {
+    if (el.tagName === 'SELECT') el.classList.add('form-select','form-select-sm');
+    else if (el.type !== 'checkbox') el.classList.add('form-control','form-control-sm');
+  }
+});
+document.getElementById('add-barge-btn')?.addEventListener('click', () => {
+  const tbody = document.getElementById('sand-barge-tbody');
+  const rows = tbody.querySelectorAll('tr.formset-row');
+  const prefix = 'sandbargeplacement_set';
+  const total = parseInt(document.getElementById(`id_${prefix}-TOTAL_FORMS`).value);
+  if (!rows.length) return;
+  const tmpl = rows[rows.length-1].cloneNode(true);
+  const old = total - 1;
+  tmpl.querySelectorAll('[id],[name]').forEach(el => {
+    if (el.id) el.id = el.id.replace(`-${old}-`, `-${total}-`);
+    if (el.name) el.name = el.name.replace(`-${old}-`, `-${total}-`);
+    if (el.tagName==='INPUT' && el.type!=='checkbox' && el.type!=='hidden') el.value='';
+    if (el.tagName==='SELECT') el.selectedIndex=0;
+    if (el.type==='checkbox') el.checked=false;
+  });
+  const idField = tmpl.querySelector('[name$="-id"]');
+  if (idField) idField.value='';
+  tbody.appendChild(tmpl);
+  document.getElementById(`id_${prefix}-TOTAL_FORMS`).value = total+1;
+});
+</script>
+{% endblock %}

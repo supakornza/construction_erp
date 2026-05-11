@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{% if form.instance.pk %}Edit{% else %}New{% endif %} Daily Report – Construction ERP{% endblock %}
+{% block page_title %}{% if form.instance.pk %}Edit Daily Report{% else %}Create Daily Report{% endif %}{% endblock %}
+
+{% block extra_head %}
+<style>
+  .formset-row td { vertical-align: middle; padding: 6px 4px; }
+  .formset-row input, .formset-row select, .formset-row textarea {
+    font-size: 0.875rem;
+  }
+  .delete-col { width: 36px; text-align: center; }
+  .add-row-btn { font-size: 0.8rem; }
+  .problem-card { border: 1px solid #dee2e6; border-radius: 6px; padding: 12px; margin-bottom: 10px; background: #fafafa; }
+  .problem-card .card-remove { float: right; }
+  .section-card .card-header { background: #f8f9fa; font-weight: 600; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+  <a href="{% url 'daily_reports:list' %}" class="btn btn-sm btn-outline-secondary me-3">
+    <i class="fas fa-arrow-left"></i>
+  </a>
+  <h4 class="mb-0">{% if form.instance.pk %}Edit Daily Report{% else %}Create Daily Report{% endif %}</h4>
+</div>
+
+<form method="post" enctype="multipart/form-data" id="daily-report-form">
+  {% csrf_token %}
+
+  {# ── Report Details ── #}
+  <div class="card mb-3 section-card">
+    <div class="card-header"><i class="fas fa-file-alt me-2"></i>Report Details</div>
+    <div class="card-body">
+      {% crispy form %}
+    </div>
+  </div>
+
+  {# ── Work Activities ── #}
+  <div class="card mb-3 section-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span><i class="fas fa-hard-hat me-2"></i>Work Activities</span>
+      <button type="button" class="btn btn-sm btn-outline-success add-row-btn" data-formset="activity">
+        <i class="fas fa-plus me-1"></i>Add Row
+      </button>
+    </div>
+    <div class="card-body p-0">
+      {{ activity_formset.management_form }}
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="min-width:180px">Work Area</th>
+              <th style="min-width:200px">Description <span class="text-danger">*</span></th>
+              <th style="width:90px">Qty</th>
+              <th style="width:80px">Unit</th>
+              <th style="width:90px">% Complete</th>
+              <th style="min-width:140px">Remarks</th>
+              <th class="delete-col">Del</th>
+            </tr>
+          </thead>
+          <tbody id="activity-tbody">
+            {% for af in activity_formset %}
+            <tr class="formset-row" data-formset="activity">
+              <td>{{ af.work_area }}{{ af.id }}</td>
+              <td>{{ af.description }}</td>
+              <td>{{ af.quantity }}</td>
+              <td>{{ af.unit }}</td>
+              <td>{{ af.percent_complete }}</td>
+              <td>{{ af.remarks }}</td>
+              <td class="delete-col">
+                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                {{ af.DELETE }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  {# ── Lookahead ── #}
+  <div class="card mb-3 section-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span><i class="fas fa-calendar-alt me-2"></i>Lookahead (Next Steps)</span>
+      <button type="button" class="btn btn-sm btn-outline-success add-row-btn" data-formset="lookahead">
+        <i class="fas fa-plus me-1"></i>Add Row
+      </button>
+    </div>
+    <div class="card-body p-0">
+      {{ lookahead_formset.management_form }}
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Planned Activity <span class="text-danger">*</span></th>
+              <th style="width:160px">Planned Date</th>
+              <th style="width:200px">Responsible Person</th>
+              <th class="delete-col">Del</th>
+            </tr>
+          </thead>
+          <tbody id="lookahead-tbody">
+            {% for lf in lookahead_formset %}
+            <tr class="formset-row" data-formset="lookahead">
+              <td>{{ lf.planned_activity }}{{ lf.id }}</td>
+              <td>{{ lf.planned_date }}</td>
+              <td>{{ lf.responsible_person }}</td>
+              <td class="delete-col">
+                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                {{ lf.DELETE }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  {# ── Problems / Remarks ── #}
+  <div class="card mb-3 section-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span><i class="fas fa-exclamation-triangle me-2"></i>Problems / Remarks</span>
+      <button type="button" class="btn btn-sm btn-outline-success add-row-btn" data-formset="problem">
+        <i class="fas fa-plus me-1"></i>Add Problem
+      </button>
+    </div>
+    <div class="card-body">
+      {{ problem_formset.management_form }}
+      <div id="problem-container">
+        {% for pf in problem_formset %}
+        <div class="problem-card" data-formset="problem">
+          {{ pf.id }}
+          <div class="d-flex justify-content-between mb-2">
+            <strong class="text-muted small">Problem #{{ forloop.counter }}</strong>
+            <div class="form-check form-switch card-remove" title="Mark to delete">
+              <label class="form-check-label small text-danger">Delete {{ pf.DELETE }}</label>
+            </div>
+          </div>
+          <div class="row g-2">
+            <div class="col-md-3">
+              <label class="form-label small fw-semibold">Category</label>
+              {{ pf.category }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label small fw-semibold">Status</label>
+              {{ pf.status }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Description</label>
+              {{ pf.description }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Impact</label>
+              {{ pf.impact }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Corrective Action</label>
+              {{ pf.corrective_action }}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {# ── Photos ── #}
+  <div class="card mb-3 section-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span><i class="fas fa-camera me-2"></i>Photos</span>
+      <button type="button" class="btn btn-sm btn-outline-success add-row-btn" data-formset="photo">
+        <i class="fas fa-plus me-1"></i>Add Photo
+      </button>
+    </div>
+    <div class="card-body">
+      {{ photo_formset.management_form }}
+      <div id="photo-container">
+        {% for phf in photo_formset %}
+        <div class="problem-card" data-formset="photo">
+          {{ phf.id }}
+          <div class="d-flex justify-content-between mb-2">
+            <strong class="text-muted small">Photo #{{ forloop.counter }}</strong>
+            <div class="form-check card-remove" title="Mark to delete">
+              <label class="form-check-label small text-danger">Delete {{ phf.DELETE }}</label>
+            </div>
+          </div>
+          <div class="row g-2">
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold">Caption</label>
+              {{ phf.caption }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold">Location</label>
+              {{ phf.location }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold">Taken At</label>
+              {{ phf.taken_at }}
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-semibold">Photo File</label>
+              {{ phf.photo }}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {# ── Submit ── #}
+  <div class="d-flex gap-2 mb-5">
+    <button type="submit" class="btn btn-primary btn-lg px-5">
+      <i class="fas fa-save me-2"></i>Save Report
+    </button>
+    <a href="{% url 'daily_reports:list' %}" class="btn btn-outline-secondary btn-lg">Cancel</a>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// ── Dynamic "Add Row" for table-based formsets (activity, lookahead) ──────────
+const tableFormsets = {
+  activity: { tbody: 'activity-tbody', prefix: 'activities' },
+  lookahead: { tbody: 'lookahead-tbody', prefix: 'lookaheads' },
+};
+
+// ── Dynamic "Add Row" for card-based formsets (problem, photo) ────────────────
+const cardFormsets = {
+  problem: { container: 'problem-container', prefix: 'problems' },
+  photo:   { container: 'photo-container',   prefix: 'photos' },
+};
+
+function styleFormControls(scope) {
+  scope.querySelectorAll('.formset-row input:not([type=checkbox]), .formset-row select, .formset-row textarea').forEach(el => {
+    el.classList.add('form-control', 'form-control-sm');
+  });
+  scope.querySelectorAll('.problem-card input:not([type=checkbox]), .problem-card select, .problem-card textarea').forEach(el => {
+    if (!el.classList.contains('form-check-input')) el.classList.add('form-control', 'form-control-sm');
+  });
+}
+
+function getTotalForms(prefix) {
+  return parseInt(document.getElementById(`id_${prefix}-TOTAL_FORMS`).value, 10);
+}
+
+function setTotalForms(prefix, val) {
+  document.getElementById(`id_${prefix}-TOTAL_FORMS`).value = val;
+}
+
+// Clone a table row, update indices, clear values
+function addTableRow(formsetKey) {
+  const cfg = tableFormsets[formsetKey];
+  const tbody = document.getElementById(cfg.tbody);
+  const rows = tbody.querySelectorAll('tr.formset-row');
+  if (rows.length === 0) return;
+
+  const total = getTotalForms(cfg.prefix);
+  const template = rows[rows.length - 1].cloneNode(true);
+
+  // Update all id/name attributes
+  template.querySelectorAll('[id],[name]').forEach(el => {
+    const oldIdx = total - 1;
+    if (el.id)   el.id   = el.id.replace(`-${oldIdx}-`,   `-${total}-`);
+    if (el.name) el.name = el.name.replace(`-${oldIdx}-`, `-${total}-`);
+    // Clear values
+    if (el.tagName === 'INPUT' && el.type !== 'checkbox' && el.type !== 'hidden') el.value = '';
+    if (el.tagName === 'SELECT') el.selectedIndex = 0;
+    if (el.tagName === 'TEXTAREA') el.value = '';
+    if (el.type === 'checkbox') el.checked = false;
+  });
+
+  // Clear hidden id field (new row has no pk)
+  const idField = template.querySelector(`[name$="-id"]`);
+  if (idField) idField.value = '';
+
+  tbody.appendChild(template);
+  styleFormControls(template);
+  setTotalForms(cfg.prefix, total + 1);
+}
+
+// Clone a card div, update indices, clear values
+function addCardRow(formsetKey) {
+  const cfg = cardFormsets[formsetKey];
+  const container = document.getElementById(cfg.container);
+  const cards = container.querySelectorAll(`[data-formset="${formsetKey}"]`);
+  if (cards.length === 0) return;
+
+  const total = getTotalForms(cfg.prefix);
+  const template = cards[cards.length - 1].cloneNode(true);
+  const oldIdx = total - 1;
+
+  template.querySelectorAll('[id],[name]').forEach(el => {
+    if (el.id)   el.id   = el.id.replace(`-${oldIdx}-`,   `-${total}-`);
+    if (el.name) el.name = el.name.replace(`-${oldIdx}-`, `-${total}-`);
+    if (el.tagName === 'INPUT' && el.type !== 'checkbox' && el.type !== 'hidden') el.value = '';
+    if (el.tagName === 'SELECT') el.selectedIndex = 0;
+    if (el.tagName === 'TEXTAREA') el.value = '';
+    if (el.type === 'checkbox') el.checked = false;
+  });
+
+  const idField = template.querySelector(`[name$="-id"]`);
+  if (idField) idField.value = '';
+
+  // Update card header number
+  const header = template.querySelector('strong.text-muted');
+  if (header) header.textContent = `${formsetKey.charAt(0).toUpperCase() + formsetKey.slice(1)} #${total + 1}`;
+
+  container.appendChild(template);
+  styleFormControls(template);
+  setTotalForms(cfg.prefix, total + 1);
+}
+
+// Wire up all "Add Row" buttons
+document.querySelectorAll('.add-row-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const key = btn.dataset.formset;
+    if (tableFormsets[key]) addTableRow(key);
+    else if (cardFormsets[key]) addCardRow(key);
+  });
+});
+
+// Style all formset inputs consistently
+styleFormControls(document);
+</script>
+{% endblock %}

@@ -1,0 +1,71 @@
+﻿{% extends "base.html" %}
+{% block title %}Logistics Scenarios โ€“ Construction ERP{% endblock %}
+{% block page_title %}Logistics Scenarios{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h5 class="mb-0"><i class="fas fa-truck me-2 text-secondary"></i>Truck Cycle Calculator</h5>
+  <div class="d-flex gap-2">
+    <a href="{% url 'project_controls:logistics_compare' %}" class="btn btn-sm btn-outline-info">
+      <i class="fas fa-balance-scale me-1"></i>Compare
+    </a>
+    <a href="{% url 'project_controls:logistics_create' %}" class="btn btn-sm btn-primary">
+      <i class="fas fa-plus me-1"></i>New Scenario
+    </a>
+  </div>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-sm table-hover mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>Name</th>
+          <th>Project</th>
+          <th>Material</th>
+          <th class="text-end">Dist (km)</th>
+          <th class="text-end">Speed (km/h)</th>
+          <th class="text-end">Load+Unload (min)</th>
+          <th class="text-end">Cycle (min)</th>
+          <th class="text-end">Trips/Truck</th>
+          <th class="text-end">Trucks</th>
+          <th class="text-end">Cap (T)</th>
+          <th class="text-end">Total (T/day)</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in scenarios %}
+        <tr>
+          <td><a href="{% url 'project_controls:logistics_detail' s.pk %}">{{ s.scenario_name }}</a></td>
+          <td>{{ s.project.project_name }}</td>
+          <td><span class="badge bg-secondary">{{ s.material_type }}</span></td>
+          <td class="text-end">{{ s.route_distance_km|floatformat:1|intcomma }}</td>
+          <td class="text-end">{{ s.average_speed_kmph|floatformat:1|intcomma }}</td>
+          <td class="text-end">{{ s.loading_time_min|floatformat:0|intcomma }}+{{ s.unloading_time_min|floatformat:0|intcomma }}</td>
+          <td class="text-end fw-bold">{{ s.cycle_time_min|floatformat:1|intcomma }}</td>
+          <td class="text-end text-primary fw-bold">{{ s.trips_per_truck_per_day }}</td>
+          <td class="text-end">{{ s.number_of_trucks }}</td>
+          <td class="text-end">{{ s.truck_capacity_ton|floatformat:1|intcomma }}</td>
+          <td class="text-end text-success fw-bold">{{ s.total_tonnage_per_day|floatformat:1|intcomma }}</td>
+          <td>
+            <div class="d-flex gap-1">
+              <a href="{% url 'project_controls:logistics_detail' s.pk %}" class="btn btn-xs btn-outline-secondary"><i class="fas fa-eye"></i></a>
+              <a href="{% url 'project_controls:logistics_update' s.pk %}" class="btn btn-xs btn-outline-secondary"><i class="fas fa-edit"></i></a>
+              {% if request.user.is_superuser or request.user.role == 'admin' %}
+              <form method="post" action="{% url 'project_controls:logistics_delete' s.pk %}" class="d-inline" onsubmit="return confirm('Delete scenario {{ s.scenario_name }}?')">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-xs btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
+              </form>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="12" class="text-center text-muted py-4">No scenarios found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

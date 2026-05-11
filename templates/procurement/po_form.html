@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Purchase Order Form – Construction ERP{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'procurement:po_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="mb-0">Create Purchase Order</h4>
+</div>
+<form method="post">{% csrf_token %}
+<div class="card mb-3"><div class="card-header"><h6 class="mb-0">PO Details</h6></div><div class="card-body">{% crispy form %}</div></div>
+<div class="card mb-3">
+    <div class="card-header"><h6 class="mb-0">Items</h6></div>
+    <div class="card-body">
+        {{ item_formset.management_form }}
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead class="table-light"><tr><th>Material</th><th>Qty</th><th>Unit Price</th><th>Delivered Qty</th><th></th></tr></thead>
+                <tbody>
+                {% for f in item_formset %}<tr><td>{{ f.material }}{{ f.id }}</td><td>{{ f.quantity }}</td><td>{{ f.unit_price }}</td><td>{{ f.delivered_quantity }}</td><td>{{ f.DELETE }}</td></tr>{% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Save PO</button>
+</form>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Revetment Setup - Construction ERP{% endblock %}
+{% block page_title %}Revetment Setup{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <div class="d-flex align-items-center gap-2">
+    <a href="{% url 'project_controls:revetment_dashboard' %}{% if selected_project %}?project={{ selected_project.pk }}{% endif %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left"></i></a>
+    <h5 class="mb-0"><i class="fas fa-sliders-h me-2 text-success"></i>Revetment Station / Activity Setup</h5>
+  </div>
+  <select class="form-select form-select-sm" onchange="location.href='?project='+this.value" style="width:auto">
+    {% for p in projects %}
+    <option value="{{ p.pk }}" {% if selected_project.pk == p.pk %}selected{% endif %}>{{ p.project_name }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+{% if selected_project %}
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-semibold">Stations</span>
+        <a href="{% url 'project_controls:revetment_station_create' %}?project={{ selected_project.pk }}" class="btn btn-sm btn-outline-success"><i class="fas fa-plus"></i></a>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-sm table-hover mb-0 align-middle">
+          <thead class="table-light"><tr><th>SOP</th><th>STA.</th><th>Order</th><th></th></tr></thead>
+          <tbody>
+            {% for station in stations %}
+            <tr class="{% if not station.is_active %}table-secondary{% endif %}">
+              <td>{{ station.sop|default:"-" }}</td>
+              <td class="fw-semibold">{{ station.station }}</td>
+              <td>{{ station.sort_order }}</td>
+              <td class="text-end"><a href="{% url 'project_controls:revetment_station_update' station.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit"></i></a></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center text-muted py-3">No stations yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-semibold">Activities</span>
+        <a href="{% url 'project_controls:revetment_activity_create' %}?project={{ selected_project.pk }}" class="btn btn-sm btn-outline-success"><i class="fas fa-plus"></i></a>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-sm table-hover mb-0 align-middle">
+          <thead class="table-light"><tr><th>Group</th><th>Activity</th><th>Col</th><th>Unit</th><th>Inspection</th><th>Order</th><th></th></tr></thead>
+          <tbody>
+            {% for activity in activities %}
+            <tr class="{% if not activity.is_active %}table-secondary{% endif %}">
+              <td>{{ activity.group_name|default:"-" }}</td>
+              <td class="fw-semibold">{{ activity.name }}</td>
+              <td>{{ activity.template_column|default:"-" }}</td>
+              <td>{{ activity.display_unit }}</td>
+              <td>{% if activity.is_inspection %}<span class="badge bg-info">Yes</span>{% else %}<span class="badge bg-light text-dark">No</span>{% endif %}</td>
+              <td>{{ activity.sort_order }}</td>
+              <td class="text-end"><a href="{% url 'project_controls:revetment_activity_update' activity.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit"></i></a></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" class="text-center text-muted py-3">No activities yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="alert alert-info">No active project found.</div>
+{% endif %}
+{% endblock %}

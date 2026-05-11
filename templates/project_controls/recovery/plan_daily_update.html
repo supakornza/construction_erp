@@ -1,0 +1,46 @@
+﻿{% extends "base.html" %}
+{% block title %}Update Actuals โ€“ Construction ERP{% endblock %}
+{% block page_title %}Update Daily Actuals{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+  <a href="{% url 'project_controls:recovery_plan_detail' plan.pk %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+  <h5 class="mb-0">Update Actuals โ€“ {{ plan.start_date }} to {{ plan.end_date }}</h5>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+  {{ formset.management_form }}
+  <div class="card mb-3">
+    <div class="card-header fw-semibold"><i class="fas fa-pen me-2"></i>Enter Actual Quantities</div>
+    <div class="table-responsive">
+      <table class="table table-sm table-bordered mb-0">
+        <thead class="table-light">
+          <tr><th>Date</th><th>Day</th><th style="width:150px">Plan (T)</th><th style="width:150px">Actual (T)</th></tr>
+        </thead>
+        <tbody>
+          {% for pf in formset %}
+          {{ pf.id }}
+          <tr>
+            <td class="align-middle">{{ pf.instance.plan_date }}</td>
+            <td class="align-middle">{{ pf.instance.day_name }}</td>
+            <td class="align-middle text-end fw-bold">{{ pf.instance.plan_quantity|floatformat:2|intcomma }}</td>
+            <td>{{ pf.actual_quantity }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="d-flex gap-2 mb-5">
+    <button type="submit" class="btn btn-primary btn-lg px-5"><i class="fas fa-save me-2"></i>Save Actuals</button>
+    <a href="{% url 'project_controls:recovery_plan_detail' plan.pk %}" class="btn btn-outline-secondary btn-lg">Cancel</a>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.querySelectorAll('input[type=number]').forEach(el => el.classList.add('form-control','form-control-sm'));
+</script>
+{% endblock %}

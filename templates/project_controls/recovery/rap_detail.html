@@ -1,0 +1,114 @@
+﻿{% extends "base.html" %}
+{% block title %}RAP โ€“ {{ rap.title }} โ€“ Construction ERP{% endblock %}
+{% block page_title %}Recovery Action Plan{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4 flex-wrap gap-2">
+  <a href="{% url 'project_controls:rap_list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left"></i></a>
+  <h5 class="mb-0">{{ rap.title }}</h5>
+  <div class="ms-auto d-flex gap-2 flex-wrap">
+    {% if rap.status == 'Draft' %}
+    <a href="{% url 'project_controls:rap_update' rap.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit me-1"></i>Edit</a>
+    <form method="post" action="{% url 'project_controls:rap_submit' rap.pk %}" class="d-inline">
+      {% csrf_token %}<button class="btn btn-sm btn-info">Submit for Review</button>
+    </form>
+    {% elif rap.status == 'Submitted' or rap.status == 'Reviewed' %}
+    <form method="post" action="{% url 'project_controls:rap_approve' rap.pk %}" class="d-inline">
+      {% csrf_token %}<button class="btn btn-sm btn-success">Approve</button>
+    </form>
+    <form method="post" action="{% url 'project_controls:rap_reject' rap.pk %}" class="d-inline">
+      {% csrf_token %}<button class="btn btn-sm btn-danger">Reject</button>
+    </form>
+    {% endif %}
+    <a href="{% url 'project_controls:rap_export_excel' rap.pk %}" class="btn btn-sm btn-outline-success"><i class="fas fa-file-excel me-1"></i>Excel</a>
+    <a href="{% url 'project_controls:rap_export_pdf' rap.pk %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-file-pdf me-1"></i>PDF</a>
+  </div>
+</div>
+
+{# Status Badge #}
+<div class="mb-3">
+  {% if rap.status == 'Approved' %}<span class="badge bg-success fs-6">Approved</span>
+  {% elif rap.status == 'Submitted' %}<span class="badge bg-info fs-6">Submitted</span>
+  {% elif rap.status == 'Reviewed' %}<span class="badge bg-primary fs-6">Reviewed</span>
+  {% elif rap.status == 'Rejected' %}<span class="badge bg-danger fs-6">Rejected</span>
+  {% else %}<span class="badge bg-warning text-dark fs-6">Draft</span>{% endif %}
+  <span class="text-muted ms-3 small">{{ rap.project.project_name }} | {{ rap.start_date }} โ€“ {{ rap.end_date }}</span>
+</div>
+
+{# Header Info #}
+<div class="row g-3 mb-4">
+  <div class="col-md-8">
+    <div class="card h-100">
+      <div class="card-header fw-semibold">Objective</div>
+      <div class="card-body">{{ rap.objective|default:'โ€“' }}</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-header fw-semibold">Info</div>
+      <div class="card-body">
+        <dl class="row mb-0 small">
+          <dt class="col-6">Prepared By</dt><dd class="col-6">{{ rap.prepared_by|default:'โ€“' }}</dd>
+          <dt class="col-6">Approved By</dt><dd class="col-6">{{ rap.approved_by|default:'โ€“' }}</dd>
+          <dt class="col-6">Approval Date</dt><dd class="col-6">{{ rap.approval_date|default:'โ€“' }}</dd>
+          <dt class="col-6">Overall %</dt>
+          <dd class="col-6">
+            <div class="progress" style="height:18px">
+              <div class="progress-bar bg-success" style="width:{{ rap.overall_completion|floatformat:0 }}%">{{ rap.overall_completion|floatformat:1 }}%</div>
+            </div>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+{# Action Items #}
+<div class="card mb-3">
+  <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+    <span><i class="fas fa-list-check me-2"></i>Action Items</span>
+    {% if rap.status == 'Approved' %}
+    <a href="{% url 'project_controls:progress_create' rap.pk %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-plus me-1"></i>Log Progress</a>
+    {% endif %}
+  </div>
+  <div class="table-responsive">
+    <table class="table table-sm mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>#</th><th>Work Item</th><th>Unit</th>
+          <th class="text-end">Plan Qty</th>
+          <th class="text-end">Actual Qty</th>
+          <th class="text-end">Remaining</th>
+          <th class="text-end">% Done</th>
+          <th>Responsible</th>
+          <th>Target Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in rap.action_items.all %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ item.work_item }}</td>
+          <td>{{ item.unit }}</td>
+          <td class="text-end">{{ item.planned_quantity|floatformat:2|intcomma }}</td>
+          <td class="text-end fw-bold">{{ item.actual_quantity|floatformat:2|intcomma }}</td>
+          <td class="text-end {% if item.remaining_quantity < 0 %}text-danger{% endif %}">{{ item.remaining_quantity|floatformat:2|intcomma }}</td>
+          <td class="text-end">
+            <div class="progress" style="height:16px;min-width:60px">
+              <div class="progress-bar {% if item.percent_complete >= 100 %}bg-success{% elif item.percent_complete >= 60 %}bg-warning{% else %}bg-danger{% endif %}"
+                style="width:{% if item.percent_complete > 100 %}100{% else %}{{ item.percent_complete|floatformat:0 }}{% endif %}%">
+                {{ item.percent_complete|floatformat:0|intcomma }}%
+              </div>
+            </div>
+          </td>
+          <td>{{ item.responsible_party|default:'โ€“' }}</td>
+          <td>{{ item.target_date|default:'โ€“' }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="9" class="text-center text-muted py-3">No action items</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

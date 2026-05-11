@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}JSEA Form – Construction ERP{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'safety:jsea_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="mb-0">New JSEA Record</h4>
+</div>
+<div class="card"><div class="card-body">{% crispy form %}</div></div>
+{% endblock %}

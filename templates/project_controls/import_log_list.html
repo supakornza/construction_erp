@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Import Logs - Construction ERP{% endblock %}
+{% block page_title %}Import Logs{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0"><i class="fas fa-history me-2"></i>Import History</h5>
+  <a href="{% url 'project_controls:import' %}" class="btn btn-sm btn-primary"><i class="fas fa-file-import me-1"></i>New Import</a>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-sm table-hover mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>Date/Time</th>
+          <th>Type</th>
+          <th>Project</th>
+          <th>File</th>
+          <th>Status</th>
+          <th class="text-end">Success</th>
+          <th class="text-end">Failed</th>
+          <th>Imported By</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td>{{ log.imported_at|date:"d/m/Y H:i" }}</td>
+          <td><span class="badge bg-secondary">{{ log.get_import_type_display }}</span></td>
+          <td>{{ log.project.project_name }}</td>
+          <td class="text-truncate" style="max-width:180px" title="{{ log.file.name }}">{{ log.file.name }}</td>
+          <td>
+            {% if log.status == 'success' %}<span class="badge bg-success">Success</span>
+            {% elif log.status == 'partial' %}<span class="badge bg-warning text-dark">Partial</span>
+            {% else %}<span class="badge bg-danger">Failed</span>{% endif %}
+          </td>
+          <td class="text-end text-success">{{ log.success_rows|intcomma }}</td>
+          <td class="text-end {% if log.failed_rows > 0 %}text-danger fw-bold{% endif %}">{{ log.failed_rows|intcomma }}</td>
+          <td>{{ log.imported_by|default:"-" }}</td>
+          <td class="text-end">
+            <a href="{% url 'project_controls:import_log_detail' log.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-eye"></i></a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="9" class="text-center text-muted py-4">No import logs found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if page_obj.has_other_pages %}
+  <div class="card-footer">{% include "includes/pagination.html" %}</div>
+  {% endif %}
+</div>
+{% endblock %}

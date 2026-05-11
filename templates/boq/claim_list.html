@@ -1,0 +1,29 @@
+﻿{% extends "base.html" %}
+{% block title %}Payment Claims โ€“ Construction ERP{% endblock %}
+{% block page_title %}Payment Claims{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">Payment Claims</h4>
+    <a href="{% url 'boq:claim_create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>New Claim</a>
+</div>
+<div class="card"><div class="table-responsive">
+    <table class="table table-hover mb-0">
+        <thead class="table-light"><tr><th>Claim No</th><th>Project</th><th>Date</th><th>Period</th><th>Amount</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        {% for c in claims %}
+        <tr>
+            <td><a href="{% url 'boq:claim_detail' c.pk %}">{{ c.claim_no }}</a></td>
+            <td>{{ c.project.contract_no }}</td>
+            <td>{{ c.claim_date }}</td>
+            <td>{{ c.period_from }} โ€“ {{ c.period_to }}</td>
+            <td>{{ c.total_claimed_amount|floatformat:2|intcomma }}</td>
+            <td><span class="badge badge-{{ c.status|lower }}">{{ c.status }}</span></td>
+            <td><a href="{% url 'boq:claim_detail' c.pk %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-4">No payment claims.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div></div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% load static %}
+<nav id="sidebar">
+    <a href="{% url 'dashboard:index' %}" class="sidebar-brand">
+        <i class="fas fa-hard-hat me-2"></i>Construction ERP
+    </a>
+
+    <div class="nav-section">Dashboard</div>
+    <a href="{% url 'dashboard:index' %}" class="nav-link {% if request.resolver_match.namespace == 'dashboard' %}active{% endif %}">
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+    </a>
+
+    <div class="nav-section">Projects</div>
+    <a href="{% url 'projects:list' %}" class="nav-link {% if request.resolver_match.namespace == 'projects' %}active{% endif %}">
+        <i class="fas fa-building"></i> Projects
+    </a>
+
+    <div class="nav-section">Daily Reports</div>
+    <a href="{% url 'daily_reports:list' %}" class="nav-link {% if request.resolver_match.namespace == 'daily_reports' %}active{% endif %}">
+        <i class="fas fa-clipboard-list"></i> Daily Reports
+    </a>
+
+    <div class="nav-section">Resources</div>
+    <a href="{% url 'manpower:list' %}" class="nav-link {% if request.resolver_match.namespace == 'manpower' %}active{% endif %}">
+        <i class="fas fa-users"></i> Manpower
+    </a>
+    <a href="{% url 'equipment:list' %}" class="nav-link {% if request.resolver_match.namespace == 'equipment' %}active{% endif %}">
+        <i class="fas fa-truck-monster"></i> Equipment
+    </a>
+    <a href="{% url 'materials:delivery_list' %}" class="nav-link {% if request.resolver_match.namespace == 'materials' %}active{% endif %}">
+        <i class="fas fa-boxes"></i> Materials
+    </a>
+
+    <div class="nav-section">Procurement</div>
+    <a href="{% url 'procurement:pr_list' %}" class="nav-link {% if request.resolver_match.namespace == 'procurement' %}active{% endif %}">
+        <i class="fas fa-shopping-cart"></i> Procurement
+    </a>
+
+    <div class="nav-section">BOQ & Progress</div>
+    <a href="{% url 'boq:list' %}" class="nav-link {% if request.resolver_match.namespace == 'boq' %}active{% endif %}">
+        <i class="fas fa-chart-line"></i> BOQ & Progress
+    </a>
+
+    <div class="nav-section">Project Controls</div>
+    {% with vn=request.resolver_match.view_name %}
+    <a href="{% url 'project_controls:dashboard' %}" class="nav-link {% if vn == 'project_controls:dashboard' or vn|slice:':21' == 'project_controls:rock' or vn|slice:':21' == 'project_controls:sand' %}active{% endif %}">
+        <i class="fas fa-water"></i> Material Control
+    </a>
+    <a href="{% url 'project_controls:revetment_dashboard' %}" class="nav-link {% if 'project_controls:revetment' in vn %}active{% endif %}">
+        <i class="fas fa-layer-group"></i> Revetment Progress
+    </a>
+    <a href="{% url 'project_controls:recovery_plan_list' %}" class="nav-link {% if 'project_controls:recovery_plan' in vn %}active{% endif %}">
+        <i class="fas fa-calendar-check"></i> Recovery Plans
+    </a>
+    <a href="{% url 'project_controls:rap_list' %}" class="nav-link {% if 'project_controls:rap' in vn or 'project_controls:progress' in vn %}active{% endif %}">
+        <i class="fas fa-tasks"></i> Action Plans
+    </a>
+    <a href="{% url 'project_controls:logistics_list' %}" class="nav-link {% if 'project_controls:logistics' in vn %}active{% endif %}">
+        <i class="fas fa-truck"></i> Logistics
+    </a>
+    {% endwith %}
+
+    <div class="nav-section">Cost Control</div>
+    <a href="{% url 'cost_control:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'cost_control' %}active{% endif %}">
+        <i class="fas fa-coins"></i> Cost Control
+    </a>
+
+    <div class="nav-section">Safety</div>
+    <a href="{% url 'safety:toolbox_list' %}" class="nav-link {% if request.resolver_match.namespace == 'safety' %}active{% endif %}">
+        <i class="fas fa-shield-alt"></i> Safety
+    </a>
+
+    <div class="nav-section">Quality</div>
+    <a href="{% url 'quality:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'quality' %}active{% endif %}">
+        <i class="fas fa-clipboard-check"></i> Quality Control
+    </a>
+
+    <div class="nav-section">Documents</div>
+    <a href="{% url 'documents:list' %}" class="nav-link {% if request.resolver_match.namespace == 'documents' %}active{% endif %}">
+        <i class="fas fa-folder-open"></i> Documents
+    </a>
+
+    {% if user.role == 'admin' or user.is_superuser %}
+    <div class="nav-section">Admin</div>
+    <a href="{% url 'accounts:user_list' %}" class="nav-link {% if request.resolver_match.namespace == 'accounts' %}active{% endif %}">
+        <i class="fas fa-user-cog"></i> Users
+    </a>
+    <a href="{% url 'admin:index' %}" class="nav-link">
+        <i class="fas fa-cog"></i> Django Admin
+    </a>
+    {% endif %}
+</nav>

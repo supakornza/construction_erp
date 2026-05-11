@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Revetment Station{% endblock %}
+{% block page_title %}Revetment Station{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+  <a href="{% url 'project_controls:revetment_setup' %}{% if form.instance.project_id %}?project={{ form.instance.project_id }}{% endif %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+  <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2 text-success"></i>{% if form.instance.pk %}Edit Station{% else %}New Station{% endif %}</h5>
+</div>
+
+<form method="post" class="card">
+  {% csrf_token %}
+  <div class="card-body">
+    {{ form.non_field_errors }}
+    <div class="row g-3">
+      <div class="col-md-6"><label class="form-label">Project</label>{{ form.project }}{{ form.project.errors }}</div>
+      <div class="col-md-3"><label class="form-label">SOP</label>{{ form.sop }}{{ form.sop.errors }}</div>
+      <div class="col-md-3"><label class="form-label">Station</label>{{ form.station }}{{ form.station.errors }}</div>
+      <div class="col-md-3"><label class="form-label">Sort order</label>{{ form.sort_order }}{{ form.sort_order.errors }}</div>
+      <div class="col-md-3 d-flex align-items-end">
+        <label class="form-check mb-2">{{ form.is_active }} <span class="form-check-label">Active</span></label>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Save</button>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('select,input').forEach(function(element) {
+  if (element.type === 'checkbox') element.classList.add('form-check-input');
+  else if (element.tagName === 'SELECT') element.classList.add('form-select');
+  else element.classList.add('form-control');
+});
+</script>
+{% endblock %}

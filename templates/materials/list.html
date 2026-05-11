@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Materials – Construction ERP{% endblock %}
+{% block page_title %}Materials{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0"><i class="fas fa-boxes me-2 text-primary"></i>Materials</h4>
+    <div class="d-flex gap-2">
+        <a href="{% url 'materials:delivery_list' %}" class="btn btn-outline-secondary">Deliveries</a>
+        <a href="{% url 'materials:usage_list' %}" class="btn btn-outline-secondary">Usage</a>
+        <a href="{% url 'materials:stock' %}" class="btn btn-outline-info">Stock Balance</a>
+        <a href="{% url 'materials:create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Add Material</a>
+    </div>
+</div>
+<div class="card"><div class="table-responsive">
+    <table class="table table-hover mb-0">
+        <thead class="table-light"><tr><th>Name</th><th>Category</th><th>Unit</th><th>Unit Weight</th><th>Actions</th></tr></thead>
+        <tbody>
+        {% for m in materials %}
+        <tr>
+            <td>{{ m.name }}</td>
+            <td>{{ m.category }}</td>
+            <td>{{ m.unit }}</td>
+            <td>{{ m.unit_weight|default:'-' }}</td>
+            <td><a href="{% url 'materials:update' m.pk %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-center text-muted py-4">No materials defined.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div></div>
+{% endblock %}

@@ -1,0 +1,88 @@
+﻿{% extends "base.html" %}
+{% block title %}Scenario Comparison โ€“ Construction ERP{% endblock %}
+{% block page_title %}Logistics Comparison{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h5 class="mb-0"><i class="fas fa-balance-scale me-2 text-info"></i>Scenario Comparison</h5>
+  <a href="{% url 'project_controls:logistics_list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i>Back to List</a>
+</div>
+
+<div class="card mb-3">
+  <div class="card-body py-2">
+    <form method="get" class="row g-2 align-items-center">
+      <div class="col-auto"><small class="text-muted fw-semibold">Select scenarios:</small></div>
+      {% for s in all_scenarios %}
+      <div class="col-auto">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="s" value="{{ s.pk }}" id="s{{ s.pk }}"
+            {% if s.pk|stringformat:"s" in selected_ids %}checked{% endif %}>
+          <label class="form-check-label small" for="s{{ s.pk }}">{{ s.scenario_name }}</label>
+        </div>
+      </div>
+      {% endfor %}
+      <div class="col-auto"><button class="btn btn-sm btn-primary">Compare</button></div>
+    </form>
+  </div>
+</div>
+
+{% if scenarios %}
+<div class="card mb-4">
+  <div class="table-responsive">
+    <table class="table table-sm table-bordered mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>Parameter</th>
+          {% for s in scenarios %}<th class="text-center">{{ s.scenario_name }}</th>{% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-light"><td>Project</td>{% for s in scenarios %}<td class="text-center">{{ s.project.project_name }}</td>{% endfor %}</tr>
+        <tr><td>Material</td>{% for s in scenarios %}<td class="text-center"><span class="badge bg-secondary">{{ s.material_type }}</span></td>{% endfor %}</tr>
+        <tr><td>Distance (km)</td>{% for s in scenarios %}<td class="text-center">{{ s.route_distance_km|floatformat:2|intcomma }}</td>{% endfor %}</tr>
+        <tr><td>Avg Speed (km/h)</td>{% for s in scenarios %}<td class="text-center">{{ s.average_speed_kmph|floatformat:1|intcomma }}</td>{% endfor %}</tr>
+        <tr><td>Loading Time (min)</td>{% for s in scenarios %}<td class="text-center">{{ s.loading_time_min|floatformat:0|intcomma }}</td>{% endfor %}</tr>
+        <tr><td>Unloading Time (min)</td>{% for s in scenarios %}<td class="text-center">{{ s.unloading_time_min|floatformat:0|intcomma }}</td>{% endfor %}</tr>
+        <tr><td>Working Hours/Day</td>{% for s in scenarios %}<td class="text-center">{{ s.working_hours }}</td>{% endfor %}</tr>
+        <tr><td>Number of Trucks</td>{% for s in scenarios %}<td class="text-center">{{ s.number_of_trucks }}</td>{% endfor %}</tr>
+        <tr><td>Truck Capacity (T)</td>{% for s in scenarios %}<td class="text-center">{{ s.truck_capacity_ton|floatformat:2|intcomma }}</td>{% endfor %}</tr>
+        <tr class="table-info fw-bold"><td>One-way Travel (min)</td>{% for s in scenarios %}<td class="text-center">{{ s.one_way_travel_time_min|floatformat:1|intcomma }}</td>{% endfor %}</tr>
+        <tr class="table-info fw-bold"><td>Cycle Time (min)</td>{% for s in scenarios %}<td class="text-center">{{ s.cycle_time_min|floatformat:1|intcomma }}</td>{% endfor %}</tr>
+        <tr class="table-primary fw-bold"><td>Trips/Truck/Day</td>{% for s in scenarios %}<td class="text-center">{{ s.trips_per_truck_per_day }}</td>{% endfor %}</tr>
+        <tr class="table-success fw-bold fs-6"><td>Total Tonnage (T/day)</td>{% for s in scenarios %}<td class="text-center text-success">{{ s.total_tonnage_per_day|floatformat:1|intcomma }}</td>{% endfor %}</tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header fw-semibold"><i class="fas fa-chart-bar me-2"></i>Total Tonnage Comparison</div>
+  <div class="card-body">
+    <canvas id="compChart" height="50"></canvas>
+  </div>
+</div>
+{% else %}
+<div class="alert alert-info">Select one or more scenarios above to compare them.</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+{% if scenarios %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+new Chart(document.getElementById('compChart'), {
+  type: 'bar',
+  data: {
+    labels: [{% for s in scenarios %}"{{ s.scenario_name }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+    datasets: [{
+      label: 'Total Tonnage (T/day)',
+      data: [{% for s in scenarios %}{{ s.total_tonnage_per_day|floatformat:2 }}{% if not forloop.last %},{% endif %}{% endfor %}],
+      backgroundColor: ['#0d6efd','#198754','#dc3545','#fd7e14','#6f42c1','#0dcaf0'],
+      borderRadius: 6
+    }]
+  },
+  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+</script>
+{% endif %}
+{% endblock %}

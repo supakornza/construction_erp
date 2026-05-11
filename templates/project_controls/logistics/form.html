@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% block title %}Logistics Scenario – Construction ERP{% endblock %}
+{% block page_title %}Logistics Scenario{% endblock %}
+
+{% block extra_head %}
+<style>
+  .result-card { border-radius: 0.5rem; }
+  .result-value { font-size: 2rem; font-weight: 700; line-height: 1.1; }
+  .result-label { font-size: 0.78rem; color: #6c757d; margin-top: 0.2rem; }
+  .result-divider { border-top: 1px solid rgba(255,255,255,0.2); margin: 0.75rem 0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+  <a href="{% url 'project_controls:logistics_list' %}" class="btn btn-sm btn-outline-secondary me-3">
+    <i class="fas fa-arrow-left"></i>
+  </a>
+  <h5 class="mb-0">
+    {% if form.instance.pk %}Edit Scenario – {{ form.instance.scenario_name }}
+    {% else %}New Logistics Scenario{% endif %}
+  </h5>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="row g-3">
+    {# ── Left column: inputs ── #}
+    <div class="col-lg-8">
+
+      <div class="card mb-3">
+        <div class="card-header fw-semibold"><i class="fas fa-tag me-2"></i>Scenario Info</div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-8">
+              <label class="form-label small fw-semibold">Scenario Name <span class="text-danger">*</span></label>
+              {{ form.scenario_name }}
+              {% if form.scenario_name.errors %}<div class="text-danger small">{{ form.scenario_name.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold">Project <span class="text-danger">*</span></label>
+              {{ form.project }}
+              {% if form.project.errors %}<div class="text-danger small">{{ form.project.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold">Material Type</label>
+              {{ form.material_type }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-header fw-semibold text-info"><i class="fas fa-road me-2"></i>Route</div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Distance (km) <span class="text-danger">*</span></label>
+              {{ form.route_distance_km }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Average Speed (km/h) <span class="text-danger">*</span></label>
+              {{ form.average_speed_kmph }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-header fw-semibold text-secondary"><i class="fas fa-clock me-2"></i>Time Parameters</div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold">Loading Time (min)</label>
+              {{ form.loading_time_min }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold">Unloading Time (min)</label>
+              {{ form.unloading_time_min }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold">Working Hours/Day</label>
+              {{ form.working_hours }}
+            </div>
+          </div>
+          <hr class="my-3">
+          <p class="small text-muted mb-2"><i class="fas fa-ban me-1"></i>Restricted Hours (optional)</p>
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label small">Start 1</label>
+              {{ form.allowed_start_time_1 }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label small">End 1</label>
+              {{ form.allowed_end_time_1 }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label small">Start 2</label>
+              {{ form.allowed_start_time_2 }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label small">End 2</label>
+              {{ form.allowed_end_time_2 }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-header fw-semibold text-success"><i class="fas fa-truck-loading me-2"></i>Fleet</div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Number of Trucks</label>
+              {{ form.number_of_trucks }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Truck Capacity (ton)</label>
+              {{ form.truck_capacity_ton }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <label class="form-label small fw-semibold">Remarks</label>
+          {{ form.remarks }}
+        </div>
+      </div>
+
+    </div>
+
+    {# ── Right column: live results ── #}
+    <div class="col-lg-4">
+      <div class="card bg-success text-white sticky-top result-card" style="top:80px">
+        <div class="card-header fw-semibold border-0 pb-0">
+          <i class="fas fa-calculator me-2"></i>Live Results
+        </div>
+        <div class="card-body pt-2">
+          <div class="text-center mb-3">
+            <div class="result-value text-white-50" id="r-travel">–</div>
+            <div class="result-label text-white-50">One-way Travel (min)</div>
+          </div>
+          <div class="result-divider"></div>
+          <div class="text-center mb-3">
+            <div class="result-value" id="r-cycle">–</div>
+            <div class="result-label text-white-50">Cycle Time (min)</div>
+          </div>
+          <div class="result-divider"></div>
+          <div class="text-center mb-3">
+            <div class="result-value" id="r-trips">–</div>
+            <div class="result-label text-white-50">Trips / Truck / Day</div>
+          </div>
+          <div class="result-divider"></div>
+          <div class="text-center">
+            <div class="result-value fs-1" id="r-total">–</div>
+            <div class="result-label text-white-50">Total Tonnage (T/day)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2 mb-5 mt-2">
+    <button type="submit" class="btn btn-primary btn-lg px-5">
+      <i class="fas fa-save me-2"></i>Save Scenario
+    </button>
+    <a href="{% url 'project_controls:logistics_list' %}" class="btn btn-outline-secondary btn-lg">Cancel</a>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+/* Style all form widgets */
+document.querySelectorAll('input,select,textarea').forEach(el => {
+  if (el.type === 'checkbox') return;
+  if (el.classList.contains('form-control') || el.classList.contains('form-select')) return;
+  el.classList.add(el.tagName === 'SELECT' ? 'form-select' : 'form-control', 'form-control-sm');
+});
+
+/* Live calculation */
+function recalc() {
+  const dist   = parseFloat(document.getElementById('id_route_distance_km')?.value)   || 0;
+  const speed  = parseFloat(document.getElementById('id_average_speed_kmph')?.value)  || 0;
+  const load   = parseFloat(document.getElementById('id_loading_time_min')?.value)    || 0;
+  const unload = parseFloat(document.getElementById('id_unloading_time_min')?.value)  || 0;
+  const hours  = parseFloat(document.getElementById('id_working_hours')?.value)       || 0;
+  const trucks = parseFloat(document.getElementById('id_number_of_trucks')?.value)    || 0;
+  const cap    = parseFloat(document.getElementById('id_truck_capacity_ton')?.value)  || 0;
+
+  const travel = speed > 0 ? (dist / speed) * 60 : 0;
+  const cycle  = travel * 2 + load + unload;
+  const trips  = cycle > 0 ? Math.floor((hours * 60) / cycle) : 0;
+  const total  = trips * trucks * cap;
+
+  document.getElementById('r-travel').textContent = travel > 0 ? travel.toFixed(1) : '–';
+  document.getElementById('r-cycle').textContent  = cycle  > 0 ? cycle.toFixed(1)  : '–';
+  document.getElementById('r-trips').textContent  = trips  > 0 ? trips              : '–';
+  document.getElementById('r-total').textContent  = total  > 0 ? total.toFixed(1)  : '–';
+}
+
+[
+  'id_route_distance_km','id_average_speed_kmph',
+  'id_loading_time_min','id_unloading_time_min',
+  'id_working_hours','id_number_of_trucks','id_truck_capacity_ton'
+].forEach(id => document.getElementById(id)?.addEventListener('input', recalc));
+
+recalc();   /* run once on load in case editing an existing record */
+</script>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Recovery Plan – Construction ERP{% endblock %}
+{% block page_title %}Recovery Plan{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+  <a href="{% url 'project_controls:recovery_plan_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+  <h5 class="mb-0">{% if form.instance.pk %}Edit Recovery Plan{% else %}New 14-Day Recovery Plan{% endif %}</h5>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="card mb-3">
+    <div class="card-header"><i class="fas fa-calendar-check me-2"></i>Plan Header</div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">{{ form.project.label_tag }}{{ form.project }}</div>
+        <div class="col-md-4">{{ form.plan_name.label_tag }}{{ form.plan_name }}</div>
+        <div class="col-md-2">{{ form.material_type.label_tag }}{{ form.material_type }}</div>
+        <div class="col-md-2">{{ form.status.label_tag }}{{ form.status }}</div>
+        <div class="col-md-3">{{ form.start_date.label_tag }}{{ form.start_date }}</div>
+        <div class="col-md-3">{{ form.end_date.label_tag }}{{ form.end_date }}</div>
+        <div class="col-md-3">{{ form.prepared_by.label_tag }}{{ form.prepared_by }}</div>
+        <div class="col-md-3">{{ form.approved_by.label_tag }}{{ form.approved_by }}</div>
+        <div class="col-12">{{ form.description.label_tag }}{{ form.description }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span><i class="fas fa-table me-2"></i>Daily Plan Items (14 Days)</span>
+      <button type="button" class="btn btn-sm btn-outline-success" id="add-item-btn"><i class="fas fa-plus me-1"></i>Add Day</button>
+    </div>
+    <div class="card-body p-0">
+      {{ item_formset.management_form }}
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="width:150px">Date</th>
+              <th style="width:120px">Day</th>
+              <th style="width:140px">Plan (T)</th>
+              <th style="width:140px">Actual (T)</th>
+              <th style="width:40px">Del</th>
+            </tr>
+          </thead>
+          <tbody id="plan-item-tbody">
+            {% for pf in item_formset %}
+            <tr class="formset-row {% if pf.errors %}table-danger{% endif %}">
+              <td>{{ pf.plan_date }}{{ pf.id }}</td>
+              <td>{{ pf.day_name }}</td>
+              <td>{{ pf.planned_quantity }}</td>
+              <td>{{ pf.actual_quantity }}</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                {{ pf.DELETE }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2 mb-5">
+    <button type="submit" class="btn btn-primary btn-lg px-5"><i class="fas fa-save me-2"></i>Save Plan</button>
+    <a href="{% url 'project_controls:recovery_plan_list' %}" class="btn btn-outline-secondary btn-lg">Cancel</a>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.querySelectorAll('input,select,textarea').forEach(el => {
+  if (!el.classList.contains('form-control') && !el.classList.contains('form-select') && el.type !== 'checkbox') {
+    el.classList.add(el.tagName === 'SELECT' ? 'form-select' : 'form-control', el.tagName === 'SELECT' ? 'form-select-sm' : 'form-control-sm');
+  }
+});
+
+document.getElementById('add-item-btn')?.addEventListener('click', () => {
+  const tbody = document.getElementById('plan-item-tbody');
+  const rows = tbody.querySelectorAll('tr.formset-row');
+  const prefix = 'daily_items';
+  const totalInput = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+  const total = parseInt(totalInput.value);
+  if (!rows.length) return;
+  const tmpl = rows[rows.length - 1].cloneNode(true);
+  const old = total - 1;
+  tmpl.querySelectorAll('[id],[name]').forEach(el => {
+    if (el.id) el.id = el.id.replace(`-${old}-`, `-${total}-`);
+    if (el.name) el.name = el.name.replace(`-${old}-`, `-${total}-`);
+    if (el.tagName === 'INPUT' && el.type !== 'checkbox' && el.type !== 'hidden') el.value = '';
+    if (el.tagName === 'SELECT') el.selectedIndex = 0;
+    if (el.tagName === 'TEXTAREA') el.value = '';
+    if (el.type === 'checkbox') el.checked = false;
+  });
+  const idInput = tmpl.querySelector('[name$="-id"]');
+  if (idInput) idInput.value = '';
+  tmpl.classList.remove('table-danger');
+  tbody.appendChild(tmpl);
+  totalInput.value = total + 1;
+});
+</script>
+{% endblock %}

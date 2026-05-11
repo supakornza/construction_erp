@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Import Log - Construction ERP{% endblock %}
+{% block page_title %}Import Log Detail{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+  <a href="{% url 'project_controls:import_log_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+  <h5 class="mb-0">Import Log #{{ log.pk }}</h5>
+  <div class="ms-3">
+    {% if log.status == 'success' %}<span class="badge bg-success fs-6">Success</span>
+    {% elif log.status == 'partial' %}<span class="badge bg-warning text-dark fs-6">Partial</span>
+    {% else %}<span class="badge bg-danger fs-6">Failed</span>{% endif %}
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header fw-semibold">Import Details</div>
+      <div class="card-body">
+        <dl class="row mb-0">
+          <dt class="col-5">Import Type</dt><dd class="col-7">{{ log.get_import_type_display }}</dd>
+          <dt class="col-5">Project</dt><dd class="col-7">{{ log.project.project_name }}</dd>
+          <dt class="col-5">File</dt><dd class="col-7 text-break">{{ log.file.name }}</dd>
+          <dt class="col-5">Imported At</dt><dd class="col-7">{{ log.imported_at|date:"d/m/Y H:i:s" }}</dd>
+          <dt class="col-5">Imported By</dt><dd class="col-7">{{ log.imported_by|default:"-" }}</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header fw-semibold">Results</div>
+      <div class="card-body">
+        <div class="row g-3 text-center">
+          <div class="col-4">
+            <div class="fs-2 fw-bold">{{ log.total_rows|intcomma }}</div>
+            <div class="small text-muted">Total Rows</div>
+          </div>
+          <div class="col-4">
+            <div class="fs-2 fw-bold text-success">{{ log.success_rows|intcomma }}</div>
+            <div class="small text-muted">Success</div>
+          </div>
+          <div class="col-4">
+            <div class="fs-2 fw-bold {% if log.failed_rows > 0 %}text-danger{% else %}text-muted{% endif %}">{{ log.failed_rows|intcomma }}</div>
+            <div class="small text-muted">Failed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if log.error_message %}
+<div class="card mb-3 border-danger">
+  <div class="card-header fw-semibold text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Error Details</div>
+  <div class="card-body">
+    <pre class="mb-0 small">{{ log.error_message }}</pre>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

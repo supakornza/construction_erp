@@ -1,0 +1,49 @@
+﻿{% extends "base.html" %}
+{% block title %}Projects โ€“ Construction ERP{% endblock %}
+{% block page_title %}Projects{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0"><i class="fas fa-building me-2 text-primary"></i>Projects</h4>
+    <a href="{% url 'projects:create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>New Project</a>
+</div>
+
+<div class="d-flex gap-2 mb-4 flex-wrap">
+    <a href="?" class="btn btn-sm {% if not current_status %}btn-primary{% else %}btn-outline-secondary{% endif %}">All</a>
+    {% for val, label in status_choices %}
+    <a href="?status={{ val }}" class="btn btn-sm {% if current_status == val %}btn-primary{% else %}btn-outline-secondary{% endif %}">{{ label }}</a>
+    {% endfor %}
+</div>
+
+<div class="row g-3">
+{% for project in projects %}
+<div class="col-md-6 col-xl-4">
+    <div class="card h-100">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <h6 class="fw-bold mb-0">{{ project.project_name }}</h6>
+                <span class="badge badge-{{ project.status|lower }}">{{ project.status }}</span>
+            </div>
+            <div class="text-muted small mb-2">{{ project.contract_no }}</div>
+            <dl class="row small mb-2">
+                <dt class="col-5 text-muted">Owner</dt><dd class="col-7">{{ project.owner }}</dd>
+                <dt class="col-5 text-muted">Contractor</dt><dd class="col-7">{{ project.contractor }}</dd>
+                <dt class="col-5 text-muted">Contract Value</dt><dd class="col-7">{{ project.contract_value|floatformat:0|intcomma }} THB</dd>
+                <dt class="col-5 text-muted">Period</dt><dd class="col-7">{{ project.start_date }} โ€“ {{ project.finish_date }}</dd>
+            </dl>
+        </div>
+        <div class="card-footer bg-transparent d-flex gap-2">
+            <a href="{% url 'projects:detail' project.pk %}" class="btn btn-sm btn-outline-primary flex-fill">
+                <i class="fas fa-eye me-1"></i>View
+            </a>
+            <a href="{% url 'projects:update' project.pk %}" class="btn btn-sm btn-outline-secondary flex-fill">
+                <i class="fas fa-edit me-1"></i>Edit
+            </a>
+        </div>
+    </div>
+</div>
+{% empty %}
+<div class="col-12"><div class="alert alert-info">No projects found. <a href="{% url 'projects:create' %}">Create the first one.</a></div></div>
+{% endfor %}
+</div>
+{% endblock %}

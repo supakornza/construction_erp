@@ -1,0 +1,176 @@
+// ── Universal formset delete-row button ──────────────────────────────────────
+function _formsetGetPrefix(row) {
+    const el = row.querySelector('[name*="-"]');
+    if (!el) return null;
+    const parts = el.name.split('-');
+    return parts.length >= 3 ? parts.slice(0, -2).join('-') : null;
+}
+
+function _formsetRenumber(tbody, prefix) {
+    const re = new RegExp('(' + prefix.replace(/-/g, '\\-') + '-)\\d+(-)');
+    tbody.querySelectorAll('tr.formset-row').forEach(function(row, idx) {
+        row.querySelectorAll('[id],[name]').forEach(function(el) {
+            if (el.id)   el.id   = el.id.replace(re,   '$1' + idx + '$2');
+            if (el.name) el.name = el.name.replace(re, '$1' + idx + '$2');
+        });
+    });
+    const totalEl = document.getElementById('id_' + prefix + '-TOTAL_FORMS');
+    if (totalEl) totalEl.value = tbody.querySelectorAll('tr.formset-row').length;
+}
+
+document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.formset-delete-btn');
+    if (!btn) return;
+    const row = btn.closest('tr.formset-row');
+    if (!row) return;
+    const checkbox = row.querySelector('input[type="checkbox"][name$="-DELETE"]');
+    const idInput  = row.querySelector('input[name$="-id"]');
+    const isMarked = btn.dataset.deleted === '1';
+
+    if (isMarked) {
+        if (checkbox) checkbox.checked = false;
+        row.classList.remove('formset-row-deleted');
+        btn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+        btn.classList.remove('btn-secondary');
+        btn.classList.add('btn-outline-danger');
+        delete btn.dataset.deleted;
+    } else if (idInput && idInput.value) {
+        if (checkbox) checkbox.checked = true;
+        row.classList.add('formset-row-deleted');
+        btn.innerHTML = '<i class="fas fa-undo fa-sm"></i>';
+        btn.classList.remove('btn-outline-danger');
+        btn.classList.add('btn-secondary');
+        btn.dataset.deleted = '1';
+        btn.title = 'Undo';
+    } else {
+        const tbody = row.closest('tbody');
+        const prefix = _formsetGetPrefix(row);
+        row.remove();
+        if (tbody && prefix) _formsetRenumber(tbody, prefix);
+    }
+});
+// ─────────────────────────────────────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Auto-dismiss alerts after 4 seconds
+    document.querySelectorAll('.alert-dismissible').forEach(function (alert) {
+        setTimeout(function () {
+            var bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+            if (bsAlert) bsAlert.close();
+        }, 4000);
+    });
+
+    // Sidebar toggle for mobile
+    var toggler = document.getElementById('sidebar-toggler');
+    var sidebar = document.getElementById('sidebar');
+    if (toggler && sidebar) {
+        toggler.addEventListener('click', function () {
+            sidebar.classList.toggle('show');
+        });
+    }
+
+    // Confirm delete dialogs
+    document.querySelectorAll('[data-confirm]').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+            if (!confirm(el.dataset.confirm || 'Are you sure?')) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    // Dashboard chart loader
+    var chartContainer = document.getElementById('dashboard-charts');
+    if (chartContainer) {
+        var projectId = document.getElementById('project-selector')?.value || '';
+        fetchChartData(projectId);
+        document.getElementById('project-selector')?.addEventListener('change', function () {
+            fetchChartData(this.value);
+        });
+    }
+});
+
+function fetchChartData(projectId) {
+    var url = '/chart-data/?project_id=' + projectId;
+    fetch(url)
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            renderManpowerChart(data.labels, data.manpower_histogram);
+            renderMaterialChart(data.labels, data.material_delivery_chart);
+            if (data.progress_curve && data.progress_curve.length) {
+                renderProgressChart(data.labels, data.progress_curve);
+            }
+        })
+        .catch(function (e) { console.error('Chart data error:', e); });
+}
+
+function renderManpowerChart(labels, data) {
+    var ctx = document.getElementById('manpowerChart');
+    if (!ctx) return;
+    if (window._manpowerChart) window._manpowerChart.destroy();
+    window._manpowerChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Daily Manpower',
+                data: data,
+                backgroundColor: 'rgba(41, 128, 185, 0.7)',
+                borderColor: 'rgba(41, 128, 185, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+}
+
+function renderMaterialChart(labels, data) {
+    var ctx = document.getElementById('materialChart');
+    if (!ctx) return;
+    if (window._materialChart) window._materialChart.destroy();
+    window._materialChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Material Delivery (qty)',
+                data: data,
+                fill: true,
+                backgroundColor: 'rgba(39, 174, 96, 0.15)',
+                borderColor: 'rgba(39, 174, 96, 1)',
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+}
+
+function renderProgressChart(labels, data) {
+    var ctx = document.getElementById('progressChart');
+    if (!ctx) return;
+    if (window._progressChart) window._progressChart.destroy();
+    window._progressChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '% Complete',
+                data: data,
+                fill: false,
+                borderColor: 'rgba(231, 76, 60, 1)',
+                tension: 0.2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true, max: 100 } }
+        }
+    });
+}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Quality Control - Construction ERP{% endblock %}
+{% block page_title %}Quality Control{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Quality Control</h4>
+    <a href="{% url 'quality:inspection_create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>New Inspection Request</a>
+</div>
+{% include "quality/_tabs.html" %}
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card"><div class="card-body"><div class="text-muted small">Pending Inspection</div><h3>{{ metrics.pending_inspection }}</h3></div></div></div>
+    <div class="col-md-3"><div class="card"><div class="card-body"><div class="text-muted small">NCR Open</div><h3>{{ metrics.ncr_open }}</h3></div></div></div>
+    <div class="col-md-3"><div class="card"><div class="card-body"><div class="text-muted small">Punch List Open</div><h3>{{ metrics.punch_list_open }}</h3></div></div></div>
+    <div class="col-md-3"><div class="card"><div class="card-body"><div class="text-muted small">Approval Rate</div><h3>{{ metrics.quality_approval_rate }}%</h3></div></div></div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header fw-semibold">Overdue NCR</div>
+            <div class="table-responsive">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>NCR</th><th>Project</th><th>Due</th><th>Severity</th></tr></thead>
+                    <tbody>
+                    {% for ncr in tables.overdue_ncr %}
+                    <tr><td>{{ ncr.ncr_no }}</td><td>{{ ncr.project.contract_no }}</td><td>{{ ncr.due_date }}</td><td>{{ ncr.severity }}</td></tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="text-muted text-center py-3">No overdue NCR</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header fw-semibold">Pending Inspections</div>
+            <div class="table-responsive">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Date</th><th>Project</th><th>Type</th><th>Status</th></tr></thead>
+                    <tbody>
+                    {% for inspection in tables.pending_inspections %}
+                    <tr><td>{{ inspection.inspection_date }}</td><td>{{ inspection.project.contract_no }}</td><td>{{ inspection.inspection_type }}</td><td>{{ inspection.status }}</td></tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="text-muted text-center py-3">No pending inspections</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
