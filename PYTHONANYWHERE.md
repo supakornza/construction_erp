@@ -10,6 +10,8 @@ https://github.com/supakornza/construction_erp
 
 Open a PythonAnywhere **Bash** console:
 
+Do not use a Python console. If you see `>>>`, type `exit()` first, then open a new **Bash** console from the PythonAnywhere Consoles page.
+
 ```bash
 cd ~
 git clone https://github.com/supakornza/construction_erp.git
@@ -21,8 +23,14 @@ cd construction_erp
 Django 6 requires Python 3.12 or newer. Use Python 3.12 or 3.13 on PythonAnywhere:
 
 ```bash
-mkvirtualenv --python=/usr/bin/python3.12 construction_erp_env
+mkvirtualenv --python=/usr/bin/python3.13 construction_erp_env
 pip install -r requirements.txt
+```
+
+If Python 3.13 is not available on your PythonAnywhere account, use:
+
+```bash
+mkvirtualenv --python=/usr/bin/python3.12 construction_erp_env
 ```
 
 ## 3. Create Production `.env`
@@ -135,4 +143,3 @@ python manage.py collectstatic --settings=config.settings.production
 ```
 
 Then click **Reload** on the PythonAnywhere Web tab.
-
