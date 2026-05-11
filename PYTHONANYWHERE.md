@@ -35,7 +35,7 @@ mkvirtualenv --python=/usr/bin/python3.12 construction_erp_env
 
 ## 3. Create Production `.env`
 
-Create `/home/supakornza/construction_erp/.env`:
+Create `/home/supakorn1997/construction_erp/.env`:
 
 ```bash
 nano .env
@@ -46,9 +46,9 @@ Example:
 ```env
 SECRET_KEY=replace-with-a-long-random-secret-key
 DEBUG=False
-DATABASE_URL=sqlite:////home/supakornza/construction_erp/db.sqlite3
-ALLOWED_HOSTS=supakornza.pythonanywhere.com
-CSRF_TRUSTED_ORIGINS=https://supakornza.pythonanywhere.com
+DATABASE_URL=sqlite:////home/supakorn1997/construction_erp/db.sqlite3
+ALLOWED_HOSTS=supakorn1997.pythonanywhere.com
+CSRF_TRUSTED_ORIGINS=https://supakorn1997.pythonanywhere.com
 SECURE_SSL_REDIRECT=True
 ```
 
@@ -79,13 +79,13 @@ On PythonAnywhere:
 5. Set virtualenv:
 
 ```text
-/home/supakornza/.virtualenvs/construction_erp_env
+/home/supakorn1997/.virtualenvs/construction_erp_env
 ```
 
 Set source code / working directory:
 
 ```text
-/home/supakornza/construction_erp
+/home/supakorn1997/construction_erp
 ```
 
 ## 6. WSGI File
@@ -93,7 +93,7 @@ Set source code / working directory:
 Edit the WSGI file from the PythonAnywhere Web tab, usually:
 
 ```text
-/var/www/supakornza_pythonanywhere_com_wsgi.py
+/var/www/supakorn1997_pythonanywhere_com_wsgi.py
 ```
 
 Use:
@@ -102,7 +102,7 @@ Use:
 import os
 import sys
 
-path = '/home/supakornza/construction_erp'
+path = '/home/supakorn1997/construction_erp'
 if path not in sys.path:
     sys.path.insert(0, path)
 
@@ -118,14 +118,14 @@ In the PythonAnywhere Web tab, add:
 
 ```text
 URL: /static/
-Directory: /home/supakornza/construction_erp/staticfiles
+Directory: /home/supakorn1997/construction_erp/staticfiles
 ```
 
 Optional, for uploaded files:
 
 ```text
 URL: /media/
-Directory: /home/supakornza/construction_erp/media
+Directory: /home/supakorn1997/construction_erp/media
 ```
 
 Reload the web app after saving.
@@ -135,7 +135,7 @@ Reload the web app after saving.
 After pushing new code to GitHub:
 
 ```bash
-cd /home/supakornza/construction_erp
+cd /home/supakorn1997/construction_erp
 git pull
 pip install -r requirements.txt
 python manage.py migrate --settings=config.settings.production
