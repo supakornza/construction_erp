@@ -20,7 +20,7 @@
     </a>
 
     <div class="nav-section">Resources</div>
-    <a href="{% url 'manpower:list' %}" class="nav-link {% if request.resolver_match.namespace == 'manpower' %}active{% endif %}">
+    <a href="{% url 'manpower:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'manpower' %}active{% endif %}">
         <i class="fas fa-users"></i> Manpower
     </a>
     <a href="{% url 'equipment:list' %}" class="nav-link {% if request.resolver_match.namespace == 'equipment' %}active{% endif %}">

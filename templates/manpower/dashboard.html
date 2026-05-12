@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+{% block title %}Manpower Dashboard - Construction ERP{% endblock %}
+{% block page_title %}Manpower Dashboard{% endblock %}
+{% block extra_head %}
+<style>
+    .mp-shell { display: grid; gap: 1rem; }
+    .mp-toolbar {
+        background: #fff;
+        border: 1px solid #dde5ee;
+        border-radius: 8px;
+        padding: 1rem;
+    }
+    .mp-kpi {
+        background: #fff;
+        border: 1px solid #dde5ee;
+        border-left: 4px solid #0d6efd;
+        border-radius: 8px;
+        min-height: 132px;
+        padding: 1rem;
+        box-shadow: 0 8px 18px rgba(25, 38, 52, 0.06);
+    }
+    .mp-kpi .label {
+        color: #6c757d;
+        font-size: .76rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+    .mp-kpi .value {
+        color: #182536;
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-top: .45rem;
+    }
+    .mp-kpi .meta { color: #5d7188; font-size: .86rem; margin-top: .45rem; }
+    .mp-kpi.accent-green { border-left-color: #198754; }
+    .mp-kpi.accent-amber { border-left-color: #f59f00; }
+    .mp-kpi.accent-cyan { border-left-color: #0dcaf0; }
+    .mp-panel {
+        background: #fff;
+        border: 1px solid #dde5ee;
+        border-radius: 8px;
+        box-shadow: 0 8px 18px rgba(25, 38, 52, 0.05);
+    }
+    .mp-panel-header {
+        align-items: center;
+        border-bottom: 1px solid #edf1f5;
+        display: flex;
+        justify-content: space-between;
+        padding: .9rem 1rem;
+    }
+    .mp-panel-title {
+        color: #182536;
+        font-size: .9rem;
+        font-weight: 800;
+        letter-spacing: .04em;
+        margin: 0;
+        text-transform: uppercase;
+    }
+    .mp-chart-box { height: 320px; padding: 1rem; }
+    .mp-share-track {
+        background: #e9eef5;
+        border-radius: 999px;
+        height: 8px;
+        overflow: hidden;
+        width: 120px;
+    }
+    .mp-share-fill { background: #0d6efd; height: 100%; }
+    .mp-role-pill {
+        background: #eef5ff;
+        border: 1px solid #cfe2ff;
+        border-radius: 999px;
+        color: #0b5ed7;
+        display: inline-flex;
+        font-size: .78rem;
+        font-weight: 700;
+        padding: .24rem .55rem;
+    }
+    @media (max-width: 768px) {
+        .mp-chart-box { height: 260px; }
+        .mp-toolbar form { align-items: stretch !important; flex-direction: column; }
+        .mp-toolbar .form-select, .mp-toolbar .form-control { width: 100% !important; }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="mp-shell">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h4 class="mb-1"><i class="fas fa-users me-2 text-primary"></i>Manpower Dashboard</h4>
+            <div class="text-muted small">Role breakdown from daily manpower records</div>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'manpower:list' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-table me-1"></i>Records
+            </a>
+            <a href="{% url 'manpower:create' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i>Add Record
+            </a>
+        </div>
+    </div>
+
+    <div class="mp-toolbar">
+        <form method="get" class="d-flex align-items-end gap-2 flex-wrap">
+            <div>
+                <label class="form-label small text-muted mb-1">Project</label>
+                <select name="project" class="form-select" style="width: 260px;">
+                    <option value="">All Active Projects</option>
+                    {% for project in projects %}
+                    <option value="{{ project.pk }}" {% if selected_project_id == project.pk|stringformat:"s" %}selected{% endif %}>
+                        {{ project.contract_no }} - {{ project.project_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="form-label small text-muted mb-1">Start</label>
+                <input type="date" name="start" value="{{ metrics.start_date|date:'Y-m-d' }}" class="form-control" style="width: 170px;">
+            </div>
+            <div>
+                <label class="form-label small text-muted mb-1">End</label>
+                <input type="date" name="end" value="{{ metrics.end_date|date:'Y-m-d' }}" class="form-control" style="width: 170px;">
+            </div>
+            <button class="btn btn-dark" type="submit"><i class="fas fa-filter me-1"></i>Apply</button>
+        </form>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-xl-3 col-md-6">
+            <div class="mp-kpi">
+                <div class="label">Total Manpower</div>
+                <div class="value">{{ metrics.total_manpower|intcomma }}</div>
+                <div class="meta">{{ metrics.start_date|date:"d M Y" }} - {{ metrics.end_date|date:"d M Y" }}</div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="mp-kpi accent-green">
+                <div class="label">Average Per Work Day</div>
+                <div class="value">{{ metrics.average_daily|floatformat:1 }}</div>
+                <div class="meta">{{ metrics.active_days }} active day{{ metrics.active_days|pluralize }}</div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="mp-kpi accent-amber">
+                <div class="label">Peak Role</div>
+                <div class="value">{% if metrics.peak_role %}{{ metrics.peak_role.role }}{% else %}-{% endif %}</div>
+                <div class="meta">{% if metrics.peak_role %}{{ metrics.peak_role.total|intcomma }} total headcount{% else %}No manpower data{% endif %}</div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="mp-kpi accent-cyan">
+                <div class="label">Active Roles</div>
+                <div class="value">{{ metrics.active_roles }}</div>
+                <div class="meta">Roles with recorded manpower</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-xl-7">
+            <div class="mp-panel h-100">
+                <div class="mp-panel-header">
+                    <h5 class="mp-panel-title">Manpower by Role</h5>
+                    <span class="text-muted small">Total in selected period</span>
+                </div>
+                <div class="mp-chart-box"><canvas id="roleChart"></canvas></div>
+            </div>
+        </div>
+        <div class="col-xl-5">
+            <div class="mp-panel h-100">
+                <div class="mp-panel-header">
+                    <h5 class="mp-panel-title">Daily Trend</h5>
+                    <span class="text-muted small">Headcount per report date</span>
+                </div>
+                <div class="mp-chart-box"><canvas id="trendChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-xl-8">
+            <div class="mp-panel">
+                <div class="mp-panel-header">
+                    <h5 class="mp-panel-title">Role Summary</h5>
+                    <span class="text-muted small">{{ metrics.role_rows|length }} role{{ metrics.role_rows|length|pluralize }}</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Role</th>
+                            <th class="text-end">Total</th>
+                            <th class="text-end">End Date</th>
+                            <th class="text-end">Avg / Day</th>
+                            <th>Share</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for row in metrics.role_rows %}
+                        <tr>
+                            <td><span class="mp-role-pill">{{ row.role }}</span></td>
+                            <td class="text-end fw-bold">{{ row.total|intcomma }}</td>
+                            <td class="text-end">{{ row.today_total|intcomma }}</td>
+                            <td class="text-end">{{ row.average_daily|floatformat:1 }}</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="mp-share-track">
+                                        <div class="mp-share-fill" style="width: {{ row.share }}%;"></div>
+                                    </div>
+                                    <span class="small text-muted">{{ row.share|floatformat:1 }}%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" class="text-center text-muted py-4">No manpower roles found.</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div class="mp-panel h-100">
+                <div class="mp-panel-header">
+                    <h5 class="mp-panel-title">Top Companies</h5>
+                    <span class="text-muted small">By manpower total</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead class="table-light"><tr><th>Company</th><th class="text-end">Total</th></tr></thead>
+                        <tbody>
+                        {% for company in metrics.company_rows %}
+                        <tr>
+                            <td>{{ company.company|default:"-" }}</td>
+                            <td class="text-end fw-semibold">{{ company.total|intcomma }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="2" class="text-center text-muted py-4">No company data.</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+(() => {
+    const roleLabels = {{ role_chart_labels|safe }};
+    const roleValues = {{ role_chart_values|safe }};
+    const trendLabels = {{ trend_chart_labels|safe }};
+    const trendValues = {{ trend_chart_values|safe }};
+
+    const roleCanvas = document.getElementById('roleChart');
+    const trendCanvas = document.getElementById('trendChart');
+
+    if (roleCanvas) {
+        new Chart(roleCanvas, {
+            type: 'bar',
+            data: {
+                labels: roleLabels,
+                datasets: [{
+                    data: roleValues,
+                    backgroundColor: ['#0d6efd', '#198754', '#f59f00', '#0dcaf0', '#6f42c1', '#dc3545', '#20c997', '#6c757d'],
+                    borderRadius: 6,
+                    maxBarThickness: 44
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, ticks: { precision: 0 } }
+                }
+            }
+        });
+    }
+
+    if (trendCanvas) {
+        new Chart(trendCanvas, {
+            type: 'line',
+            data: {
+                labels: trendLabels,
+                datasets: [{
+                    data: trendValues,
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13, 110, 253, .12)',
+                    fill: true,
+                    tension: .32,
+                    pointRadius: 2
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { maxTicksLimit: 7 }, grid: { display: false } },
+                    y: { beginAtZero: true, ticks: { precision: 0 } }
+                }
+            }
+        });
+    }
+})();
+</script>
+{% endblock %}

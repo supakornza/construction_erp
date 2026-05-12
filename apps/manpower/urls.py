@@ -4,6 +4,7 @@ from . import views
 app_name = 'manpower'
 
 urlpatterns = [
+    path('dashboard/', views.ManpowerDashboardView.as_view(), name='dashboard'),
     path('', views.DailyManpowerRecordListView.as_view(), name='list'),
     path('create/', views.DailyManpowerRecordCreateView.as_view(), name='create'),
     path('<int:pk>/edit/', views.DailyManpowerRecordUpdateView.as_view(), name='update'),
