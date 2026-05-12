@@ -52,20 +52,54 @@ document.addEventListener('click', function(e) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Auto-dismiss alerts after 4 seconds
-    document.querySelectorAll('.alert-dismissible').forEach(function (alert) {
+    // Auto-dismiss alerts after 5 seconds
+    document.querySelectorAll('.alert-dismissible').forEach(function (el) {
         setTimeout(function () {
-            var bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+            var bsAlert = bootstrap.Alert.getOrCreateInstance(el);
             if (bsAlert) bsAlert.close();
-        }, 4000);
+        }, 5000);
     });
 
-    // Sidebar toggle for mobile
-    var toggler = document.getElementById('sidebar-toggler');
-    var sidebar = document.getElementById('sidebar');
-    if (toggler && sidebar) {
+    // ── Sidebar mobile toggle + backdrop ─────────────────────
+    var toggler  = document.getElementById('sidebar-toggler');
+    var sidebar  = document.getElementById('sidebar');
+    var backdrop = document.getElementById('sidebar-backdrop');
+
+    function openMobileSidebar() {
+        if (sidebar)  sidebar.classList.add('show');
+        if (backdrop) backdrop.classList.add('show');
+        document.body.style.overflow = 'hidden';   // prevent background scroll
+    }
+    function closeMobileSidebar() {
+        if (sidebar)  sidebar.classList.remove('show');
+        if (backdrop) backdrop.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    if (toggler) {
         toggler.addEventListener('click', function () {
-            sidebar.classList.toggle('show');
+            if (sidebar && sidebar.classList.contains('show')) {
+                closeMobileSidebar();
+            } else {
+                openMobileSidebar();
+            }
+        });
+    }
+    if (backdrop) {
+        backdrop.addEventListener('click', closeMobileSidebar);
+    }
+    // Close on Escape key
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && sidebar && sidebar.classList.contains('show')) {
+            closeMobileSidebar();
+        }
+    });
+    // Close sidebar when navigating on mobile (link click inside sidebar)
+    if (sidebar) {
+        sidebar.querySelectorAll('.nav-link').forEach(function (link) {
+            link.addEventListener('click', function () {
+                if (window.innerWidth < 768) closeMobileSidebar();
+            });
         });
     }
 

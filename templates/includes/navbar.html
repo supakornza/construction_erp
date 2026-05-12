@@ -1,27 +1,56 @@
-<nav id="topbar" class="navbar navbar-expand-lg navbar-light px-3 d-flex align-items-center">
-    <button class="btn btn-sm btn-outline-secondary d-md-none me-2" id="sidebar-toggler">
+<nav id="topbar" class="navbar navbar-expand-lg navbar-light px-3 d-flex align-items-center gap-2">
+    <!-- Hamburger (mobile only) -->
+    <button class="btn btn-sm btn-outline-secondary d-md-none flex-shrink-0" id="sidebar-toggler" aria-label="Toggle menu">
         <i class="fas fa-bars"></i>
     </button>
-    <button type="button" class="btn btn-sm btn-outline-secondary me-2 no-print" id="page-back-btn" data-fallback-url="{% url 'dashboard:index' %}" title="Back">
-        <i class="fas fa-arrow-left me-1"></i>Back
+
+    <!-- Back button -->
+    <button type="button" class="btn btn-sm btn-outline-secondary no-print flex-shrink-0" id="page-back-btn"
+            data-fallback-url="{% url 'dashboard:index' %}" title="Back" aria-label="Go back">
+        <i class="fas fa-arrow-left"></i>
+        <span class="d-none d-sm-inline ms-1">Back</span>
     </button>
-    <span class="navbar-brand mb-0 h1 fs-6 text-muted d-none d-md-block">
+
+    <!-- Page title (desktop) -->
+    <span class="navbar-brand mb-0 fs-6 fw-semibold text-secondary d-none d-md-block me-auto">
         {% block page_title %}{% endblock %}
     </span>
-    <div class="ms-auto d-flex align-items-center gap-3">
+
+    <!-- Right side -->
+    <div class="ms-auto d-flex align-items-center gap-2 flex-shrink-0">
         <div class="dropdown">
-            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                <i class="fas fa-user-circle me-1"></i>{{ user.get_full_name_or_username }}
-                <span class="badge bg-secondary ms-1 fw-normal" style="font-size:0.65rem;">{{ user.get_role_display }}</span>
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2"
+                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <!-- Avatar initial circle -->
+                <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white fw-bold flex-shrink-0"
+                      style="width:26px;height:26px;font-size:.72rem;">
+                    {{ user.get_full_name_or_username|first|upper }}
+                </span>
+                <span class="d-none d-sm-inline text-truncate" style="max-width:120px;">
+                    {{ user.get_full_name_or_username }}
+                </span>
+                <span class="badge bg-secondary fw-normal user-role-badge" style="font-size:.6rem;">
+                    {{ user.get_role_display }}
+                </span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="fas fa-id-card me-2"></i>Profile</a></li>
+                <!-- Name shown on mobile since it's truncated in button -->
+                <li class="px-3 py-2 d-sm-none">
+                    <div class="fw-semibold" style="font-size:.82rem;">{{ user.get_full_name_or_username }}</div>
+                    <div class="text-muted" style="font-size:.72rem;">{{ user.get_role_display }}</div>
+                </li>
+                <li class="d-sm-none"><hr class="dropdown-divider"></li>
+                <li>
+                    <a class="dropdown-item" href="{% url 'accounts:profile' %}">
+                        <i class="fas fa-id-card me-2 text-muted fa-fw"></i>Profile
+                    </a>
+                </li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <form method="post" action="{% url 'accounts:logout' %}">
                         {% csrf_token %}
                         <button class="dropdown-item text-danger" type="submit">
-                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            <i class="fas fa-sign-out-alt me-2 fa-fw"></i>Logout
                         </button>
                     </form>
                 </li>
