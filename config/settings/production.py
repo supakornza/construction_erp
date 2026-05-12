@@ -38,9 +38,23 @@ _LOG_LEVEL = env('LOG_LEVEL', default='WARNING')
 _LOG_DIR = env('LOG_DIR', default='')
 
 _handlers = ['console']
+_log_handlers = {
+    'console': {
+        'class': 'logging.StreamHandler',
+        'formatter': 'verbose',
+    },
+}
+
 if _LOG_DIR:
     os.makedirs(_LOG_DIR, exist_ok=True)
     _handlers.append('file')
+    _log_handlers['file'] = {
+        'class': 'logging.handlers.RotatingFileHandler',
+        'filename': os.path.join(_LOG_DIR, 'django.log'),
+        'maxBytes': 10 * 1024 * 1024,  # 10 MB
+        'backupCount': 5,
+        'formatter': 'verbose',
+    }
 
 LOGGING = {
     'version': 1,
@@ -51,19 +65,7 @@ LOGGING = {
             'style': '{',
         },
     },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-        'file': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(_LOG_DIR, 'django.log') if _LOG_DIR else '/dev/null',
-            'maxBytes': 10 * 1024 * 1024,  # 10 MB
-            'backupCount': 5,
-            'formatter': 'verbose',
-        },
-    },
+    'handlers': _log_handlers,
     'loggers': {
         'django': {
             'handlers': _handlers,
