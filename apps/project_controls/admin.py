@@ -40,10 +40,11 @@ class SandBargePlacementInline(admin.TabularInline):
 @admin.register(SandDailyRecord)
 class SandDailyRecordAdmin(admin.ModelAdmin):
     list_display = ['project', 'record_date', 'tct_daily_ton', 'mtp3_daily_ton',
-                    'sand_source', 'oswald_daily_ton', 'total_daily_ton', 'remaining_tct', 'remaining_mtp3']
+                    'chalothon_daily_ton', 'khlong_bang_phai_daily_ton',
+                    'total_daily_ton', 'remaining_tct', 'remaining_mtp3']
     list_filter = ['project']
     date_hierarchy = 'record_date'
-    search_fields = ['project__contract_no', 'remarks']
+    search_fields = ['project__contract_no', 'sand_source', 'remarks']
     inlines = [SandBargePlacementInline]
 
 

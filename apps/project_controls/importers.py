@@ -180,22 +180,23 @@ def _import_sand(project, file_content, duplicate_action):
             mtp3_accum = _to_decimal(row[7] if len(row) > 7 else None)
             mtp3_trips = _to_int(row[8] if len(row) > 8 else None)
             mtp3_trucks = _to_int(row[9] if len(row) > 9 else None)
-            oswald_daily = _to_decimal(row[10] if len(row) > 10 else None)
-            total_daily = tct_daily + mtp3_daily + oswald_daily
-            barge1 = _to_decimal(row[11] if len(row) > 11 else None)
-            barge2 = _to_decimal(row[12] if len(row) > 12 else None)
-            barge3 = _to_decimal(row[13] if len(row) > 13 else None)
-            barge4 = _to_decimal(row[14] if len(row) > 14 else None)
+            chalothon_daily = _to_decimal(row[10] if len(row) > 10 else None)
+            khlong_bang_phai_daily = _to_decimal(row[11] if len(row) > 11 else None)
+            total_daily = tct_daily + mtp3_daily
+            barge1 = _to_decimal(row[12] if len(row) > 12 else None)
+            barge2 = _to_decimal(row[13] if len(row) > 13 else None)
+            barge3 = _to_decimal(row[14] if len(row) > 14 else None)
+            barge4 = _to_decimal(row[15] if len(row) > 15 else None)
             offshore_daily = barge1 + barge2 + barge3 + barge4
-            offshore_station = str(row[15] or '') if len(row) > 15 else ''
-            onshore_daily = _to_decimal(row[16] if len(row) > 16 else None)
-            onshore_trips = _to_int(row[17] if len(row) > 17 else None)
-            onshore_trucks = _to_int(row[18] if len(row) > 18 else None)
-            inside_daily = _to_decimal(row[19] if len(row) > 19 else None)
-            outside_daily = _to_decimal(row[20] if len(row) > 20 else None)
-            remaining_tct = _to_decimal(row[21] if len(row) > 21 else None)
-            remaining_mtp3 = _to_decimal(row[22] if len(row) > 22 else None)
-            remarks = str(row[23] or '') if len(row) > 23 else ''
+            offshore_station = str(row[16] or '') if len(row) > 16 else ''
+            onshore_daily = _to_decimal(row[17] if len(row) > 17 else None)
+            onshore_trips = _to_int(row[18] if len(row) > 18 else None)
+            onshore_trucks = _to_int(row[19] if len(row) > 19 else None)
+            inside_daily = _to_decimal(row[20] if len(row) > 20 else None)
+            outside_daily = _to_decimal(row[21] if len(row) > 21 else None)
+            remaining_tct = _to_decimal(row[22] if len(row) > 22 else None)
+            remaining_mtp3 = _to_decimal(row[23] if len(row) > 23 else None)
+            remarks = str(row[24] or '') if len(row) > 24 else ''
 
             defaults = dict(
                 day_name=day_name[:10],
@@ -203,8 +204,10 @@ def _import_sand(project, file_content, duplicate_action):
                 tct_trips=tct_trips, tct_trucks=tct_trucks,
                 mtp3_daily_ton=mtp3_daily, mtp3_accum_ton=mtp3_accum,
                 mtp3_trips=mtp3_trips, mtp3_trucks=mtp3_trucks,
-                oswald_daily_ton=oswald_daily,
-                sand_source='Oswald',
+                chalothon_daily_ton=chalothon_daily,
+                khlong_bang_phai_daily_ton=khlong_bang_phai_daily,
+                oswald_daily_ton=khlong_bang_phai_daily,
+                sand_source='Khlong Bang Phai (Oswald)',
                 total_daily_ton=total_daily,
                 offshore_daily_ton=offshore_daily, offshore_station=offshore_station[:300],
                 onshore_daily_ton=onshore_daily,

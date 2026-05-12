@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 
 from apps.projects.models import Project
+from apps.project_controls.models import SandDailyRecord
+from apps.project_controls.services import get_sand_dashboard_data, recalculate_sand_accumulatives
 
 
 User = get_user_model()
@@ -50,3 +52,21 @@ class ProjectControlsDashboardTests(TestCase):
         self.assertTemplateUsed(response, 'project_controls/sand/dashboard.html')
         self.assertIn('data', response.context)
         self.assertEqual(response.context['data']['chart_data'], '{}')
+
+    def test_sand_destinations_and_sources_are_calculated_separately(self):
+        SandDailyRecord.objects.create(
+            project=self.project,
+            record_date=date(2026, 5, 1),
+            tct_daily_ton=Decimal('100.00'),
+            mtp3_daily_ton=Decimal('200.00'),
+            chalothon_daily_ton=Decimal('120.00'),
+            khlong_bang_phai_daily_ton=Decimal('180.00'),
+        )
+        recalculate_sand_accumulatives(self.project)
+
+        metrics = get_sand_dashboard_data(self.project)
+
+        self.assertEqual(metrics['total_accum'], 300.0)
+        self.assertEqual(metrics['total_source_accum'], 300.0)
+        self.assertEqual(metrics['total_chalothon'], 120.0)
+        self.assertEqual(metrics['total_khlong_bang_phai'], 180.0)

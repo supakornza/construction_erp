@@ -25,11 +25,14 @@ def recalculate_rock_accumulatives(project):
 
 def recalculate_sand_accumulatives(project):
     records = SandDailyRecord.objects.filter(project=project).order_by('record_date')
-    tct = mtp3 = oswald = total = offshore = onshore = inside = outside = Decimal('0')
+    tct = mtp3 = chalothon = khlong_bang_phai = oswald = total = offshore = onshore = inside = outside = Decimal('0')
     for rec in records:
         tct += rec.tct_daily_ton
         mtp3 += rec.mtp3_daily_ton
+        chalothon += rec.chalothon_daily_ton
+        khlong_bang_phai += rec.khlong_bang_phai_daily_ton
         oswald += rec.oswald_daily_ton
+        rec.total_daily_ton = rec.tct_daily_ton + rec.mtp3_daily_ton
         total += rec.total_daily_ton
         offshore += rec.offshore_daily_ton
         onshore += rec.onshore_daily_ton
@@ -37,6 +40,8 @@ def recalculate_sand_accumulatives(project):
         outside += rec.outside_plot_daily
         rec.tct_accum_ton = tct
         rec.mtp3_accum_ton = mtp3
+        rec.chalothon_accum_ton = chalothon
+        rec.khlong_bang_phai_accum_ton = khlong_bang_phai
         rec.oswald_accum_ton = oswald
         rec.total_accum_ton = total
         rec.offshore_accum_ton = offshore
@@ -44,7 +49,8 @@ def recalculate_sand_accumulatives(project):
         rec.inside_plot_accum = inside
         rec.outside_plot_accum = outside
         rec.save(update_fields=[
-            'tct_accum_ton', 'mtp3_accum_ton', 'oswald_accum_ton', 'total_accum_ton',
+            'tct_accum_ton', 'mtp3_accum_ton', 'oswald_accum_ton', 'total_daily_ton', 'total_accum_ton',
+            'chalothon_accum_ton', 'khlong_bang_phai_accum_ton',
             'offshore_accum_ton', 'onshore_accum_ton', 'inside_plot_accum', 'outside_plot_accum',
         ])
     return records.count()
@@ -126,9 +132,13 @@ def get_sand_dashboard_data(project):
         'labels': [str(rec.record_date) for rec in chart_records],
         'tct_daily': [float(rec.tct_daily_ton) for rec in chart_records],
         'mtp3_daily': [float(rec.mtp3_daily_ton) for rec in chart_records],
+        'chalothon_daily': [float(rec.chalothon_daily_ton) for rec in chart_records],
+        'khlong_bang_phai_daily': [float(rec.khlong_bang_phai_daily_ton) for rec in chart_records],
         'other_daily': [float(rec.oswald_daily_ton) for rec in chart_records],
         'tct_accum': [float(rec.tct_accum_ton) for rec in chart_records],
         'mtp3_accum': [float(rec.mtp3_accum_ton) for rec in chart_records],
+        'chalothon_accum': [float(rec.chalothon_accum_ton) for rec in chart_records],
+        'khlong_bang_phai_accum': [float(rec.khlong_bang_phai_accum_ton) for rec in chart_records],
         'total_accum': [float(rec.total_accum_ton) for rec in chart_records],
         'offshore_daily': [float(rec.offshore_daily_ton) for rec in chart_records],
         'onshore_daily': [float(rec.onshore_daily_ton) for rec in chart_records],
@@ -145,15 +155,20 @@ def get_sand_dashboard_data(project):
     return {
         'tct_accum': float(latest.tct_accum_ton),
         'mtp3_accum': float(latest.mtp3_accum_ton),
+        'chalothon_accum': float(latest.chalothon_accum_ton),
+        'khlong_bang_phai_accum': float(latest.khlong_bang_phai_accum_ton),
         'other_source_label': other_source_label,
         'other_source_names': ', '.join(other_sources),
         'other_source_accum': float(latest.oswald_accum_ton),
+        'total_source_accum': float(latest.total_source_accum_ton),
         'total_accum': float(latest.total_accum_ton),
         'offshore_accum': float(latest.offshore_accum_ton),
         'onshore_accum': float(latest.onshore_accum_ton),
         'barge_totals': barge_totals,
         'total_tct': float(latest.tct_accum_ton),
         'total_mtp3': float(latest.mtp3_accum_ton),
+        'total_chalothon': float(latest.chalothon_accum_ton),
+        'total_khlong_bang_phai': float(latest.khlong_bang_phai_accum_ton),
         'total_oswald': float(latest.oswald_accum_ton),
         'total_delivered': float(latest.total_accum_ton),
         'total_offshore': float(latest.offshore_accum_ton),

@@ -268,8 +268,7 @@ class SandCreateView(LoginRequiredMixin, CreateView):
                 # Auto-compute total_daily_ton
                 tct = form.cleaned_data.get('tct_daily_ton', Decimal('0')) or Decimal('0')
                 mtp3 = form.cleaned_data.get('mtp3_daily_ton', Decimal('0')) or Decimal('0')
-                oswald = form.cleaned_data.get('oswald_daily_ton', Decimal('0')) or Decimal('0')
-                form.instance.total_daily_ton = tct + mtp3 + oswald
+                form.instance.total_daily_ton = tct + mtp3
                 self.object = form.save()
                 barge_fs.instance = self.object
                 barge_fs.save()
@@ -312,8 +311,7 @@ class SandUpdateView(LoginRequiredMixin, UpdateView):
             with transaction.atomic():
                 tct = form.cleaned_data.get('tct_daily_ton', Decimal('0')) or Decimal('0')
                 mtp3 = form.cleaned_data.get('mtp3_daily_ton', Decimal('0')) or Decimal('0')
-                oswald = form.cleaned_data.get('oswald_daily_ton', Decimal('0')) or Decimal('0')
-                form.instance.total_daily_ton = tct + mtp3 + oswald
+                form.instance.total_daily_ton = tct + mtp3
                 self.object = form.save()
                 barge_fs.instance = self.object
                 barge_fs.save()

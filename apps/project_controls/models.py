@@ -94,11 +94,21 @@ class SandDailyRecord(models.Model):
     mtp3_trips = models.IntegerField(default=0)
     mtp3_trucks = models.IntegerField(default=0)
 
+    chalothon_daily_ton = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    chalothon_accum_ton = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    chalothon_trips = models.IntegerField(default=0)
+    chalothon_trucks = models.IntegerField(default=0)
+
+    khlong_bang_phai_daily_ton = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    khlong_bang_phai_accum_ton = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    khlong_bang_phai_trips = models.IntegerField(default=0)
+    khlong_bang_phai_trucks = models.IntegerField(default=0)
+
     oswald_daily_ton = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     oswald_accum_ton = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     oswald_trips = models.IntegerField(default=0)
     oswald_trucks = models.IntegerField(default=0)
-    sand_source = models.CharField(max_length=200, default='Oswald', blank=True)
+    sand_source = models.CharField(max_length=200, default='Khlong Bang Phai (Oswald)', blank=True)
 
     total_daily_ton = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     total_accum_ton = models.DecimalField(max_digits=12, decimal_places=2, default=0)
@@ -145,7 +155,23 @@ class SandDailyRecord(models.Model):
 
     @property
     def sand_source_display(self):
-        return self.sand_source or 'Other source'
+        return self.sand_source or 'Khlong Bang Phai (Oswald)'
+
+    @property
+    def tct_destination_label(self):
+        return 'TCT Pier'
+
+    @property
+    def mtp3_destination_label(self):
+        return 'Stockpile Sand MTP3'
+
+    @property
+    def total_source_daily_ton(self):
+        return self.chalothon_daily_ton + self.khlong_bang_phai_daily_ton
+
+    @property
+    def total_source_accum_ton(self):
+        return self.chalothon_accum_ton + self.khlong_bang_phai_accum_ton
 
 
 class SandBargePlacement(models.Model):

@@ -22,8 +22,8 @@
           <dt class="col-6">Target Daily (T)</dt><dd class="col-6 fw-bold fs-5">{{ alloc.target_daily_ton|floatformat:2|intcomma }}</dd>
           <dt class="col-6">Truck Capacity (T)</dt><dd class="col-6">{{ alloc.truck_capacity_ton|floatformat:2|intcomma }}</dd>
           <dt class="col-6">Trucks Available</dt><dd class="col-6">{{ alloc.trucks_available }}</dd>
-          <dt class="col-6">TCT %</dt><dd class="col-6 text-info fw-bold">{{ alloc.tct_percentage|floatformat:1|intcomma }}%</dd>
-          <dt class="col-6">MTP3 %</dt><dd class="col-6 text-primary fw-bold">{{ alloc.mtp3_percentage|floatformat:1|intcomma }}%</dd>
+          <dt class="col-6">TCT Pier %</dt><dd class="col-6 text-info fw-bold">{{ alloc.tct_percentage|floatformat:1|intcomma }}%</dd>
+          <dt class="col-6">MTP3 Stock %</dt><dd class="col-6 text-primary fw-bold">{{ alloc.mtp3_percentage|floatformat:1|intcomma }}%</dd>
         </dl>
       </div>
     </div>
@@ -35,19 +35,19 @@
         <div class="row g-3 text-center">
           <div class="col-6">
             <div class="fs-3 fw-bold text-info">{{ alloc.calculated_tct_quantity|floatformat:2|intcomma }}</div>
-            <div class="small text-muted">TCT Qty (T/day)</div>
+            <div class="small text-muted">TCT Pier Qty (T/day)</div>
           </div>
           <div class="col-6">
             <div class="fs-3 fw-bold text-primary">{{ alloc.calculated_mtp3_quantity|floatformat:2|intcomma }}</div>
-            <div class="small text-muted">MTP3 Qty (T/day)</div>
+            <div class="small text-muted">Stockpile Sand MTP3 Qty (T/day)</div>
           </div>
           <div class="col-6">
             <div class="fs-3 fw-bold">{{ alloc.calculated_tct_trips }}</div>
-            <div class="small text-muted">TCT Trips/day</div>
+            <div class="small text-muted">TCT Pier Trips/day</div>
           </div>
           <div class="col-6">
             <div class="fs-3 fw-bold">{{ alloc.calculated_mtp3_trips }}</div>
-            <div class="small text-muted">MTP3 Trips/day</div>
+            <div class="small text-muted">MTP3 Stock Trips/day</div>
           </div>
         </div>
       </div>

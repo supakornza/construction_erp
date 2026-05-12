@@ -265,42 +265,42 @@
 <div class="row g-3 mb-4">
   <div class="col-6 col-xl-2">
     <div class="card pc-kpi-card border-start border-4 border-info">
-      <div class="text-muted small">Sand TCT</div>
+      <div class="text-muted small">TCT Pier Stock</div>
       <div class="fs-4 fw-bold">{{ sand_data.total_tct|default:0|floatformat:0|intcomma }}</div>
       <div class="text-muted small">Ton</div>
     </div>
   </div>
   <div class="col-6 col-xl-2">
     <div class="card pc-kpi-card border-start border-4 border-primary">
-      <div class="text-muted small">Sand MTP3</div>
+      <div class="text-muted small">Stockpile Sand MTP3</div>
       <div class="fs-4 fw-bold">{{ sand_data.total_mtp3|default:0|floatformat:0|intcomma }}</div>
       <div class="text-muted small">Ton</div>
     </div>
   </div>
   <div class="col-6 col-xl-2">
     <div class="card pc-kpi-card border-start border-4 border-success">
-      <div class="text-muted small">Offshore Placed</div>
-      <div class="fs-4 fw-bold">{{ sand_data.total_offshore|default:0|floatformat:0|intcomma }}</div>
+      <div class="text-muted small">Chalothon Source</div>
+      <div class="fs-4 fw-bold">{{ sand_data.total_chalothon|default:0|floatformat:0|intcomma }}</div>
       <div class="text-muted small">Ton</div>
     </div>
   </div>
   <div class="col-6 col-xl-2">
     <div class="card pc-kpi-card border-start border-4 border-warning">
-      <div class="text-muted small">Onshore Placed</div>
-      <div class="fs-4 fw-bold">{{ sand_data.total_onshore|default:0|floatformat:0|intcomma }}</div>
+      <div class="text-muted small">Khlong Bang Phai Source</div>
+      <div class="fs-4 fw-bold">{{ sand_data.total_khlong_bang_phai|default:0|floatformat:0|intcomma }}</div>
       <div class="text-muted small">Ton</div>
     </div>
   </div>
   <div class="col-6 col-xl-2">
     <div class="card pc-kpi-card border-start border-4 border-danger">
-      <div class="text-muted small">Remaining TCT</div>
+      <div class="text-muted small">Remaining TCT Pier</div>
       <div class="fs-4 fw-bold">{{ sand_data.remaining_tct|default:0|floatformat:0|intcomma }}</div>
       <div class="text-muted small">Ton</div>
     </div>
   </div>
   <div class="col-6 col-xl-2">
     <div class="card pc-kpi-card border-start border-4 border-secondary">
-      <div class="text-muted small">Remaining MTP3</div>
+      <div class="text-muted small">Remaining MTP3 Stock</div>
       <div class="fs-4 fw-bold">{{ sand_data.remaining_mtp3|default:0|floatformat:0|intcomma }}</div>
       <div class="text-muted small">Ton</div>
     </div>

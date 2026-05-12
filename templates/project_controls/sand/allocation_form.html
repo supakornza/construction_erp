@@ -38,15 +38,15 @@
             </div>
           </div>
           <hr>
-          <h6 class="text-warning"><i class="fas fa-percent me-2"></i>Source Split (TCT + MTP3 = 1.0)</h6>
+          <h6 class="text-warning"><i class="fas fa-percent me-2"></i>Stock Destination Split (TCT Pier + MTP3 = 1.0)</h6>
           <div class="row g-3">
             <div class="col-md-4">
-              <label class="form-label small fw-semibold">TCT Ratio (0–1)</label>
+              <label class="form-label small fw-semibold">TCT Pier Ratio (0-1)</label>
               {{ form.tct_percentage }}
               <div class="form-text">e.g. 0.464 = 46.4%</div>
             </div>
             <div class="col-md-4">
-              <label class="form-label small fw-semibold">MTP3 Ratio (0–1)</label>
+              <label class="form-label small fw-semibold">Stockpile Sand MTP3 Ratio (0-1)</label>
               {{ form.mtp3_percentage }}
               <div class="form-text">e.g. 0.536 = 53.6%</div>
             </div>
@@ -81,20 +81,20 @@
         <div class="card-body text-center">
           <div class="mb-3">
             <div class="fs-3 fw-bold text-info" id="calc-tct-qty">–</div>
-            <div class="small text-muted">TCT Quantity (T)</div>
+            <div class="small text-muted">TCT Pier Quantity (T)</div>
           </div>
           <div class="mb-3">
             <div class="fs-3 fw-bold text-primary" id="calc-mtp3-qty">–</div>
-            <div class="small text-muted">MTP3 Quantity (T)</div>
+            <div class="small text-muted">Stockpile Sand MTP3 Quantity (T)</div>
           </div>
           <hr>
           <div class="mb-3">
             <div class="fs-3 fw-bold" id="calc-tct-trips">–</div>
-            <div class="small text-muted">TCT Trips</div>
+            <div class="small text-muted">TCT Pier Trips</div>
           </div>
           <div>
             <div class="fs-3 fw-bold" id="calc-mtp3-trips">–</div>
-            <div class="small text-muted">MTP3 Trips</div>
+            <div class="small text-muted">Stockpile Sand MTP3 Trips</div>
           </div>
         </div>
       </div>

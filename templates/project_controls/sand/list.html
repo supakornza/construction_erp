@@ -45,12 +45,12 @@
       <thead class="table-dark">
         <tr>
           <th>Date</th>
-          <th class="text-end">TCT Daily (T)</th>
-          <th class="text-end">TCT Accum</th>
-          <th class="text-end">MTP3 Daily (T)</th>
-          <th class="text-end">MTP3 Accum</th>
-          <th>Other Source</th>
-          <th class="text-end">Other Daily (T)</th>
+          <th class="text-end">TCT Pier Daily (T)</th>
+          <th class="text-end">TCT Pier Accum</th>
+          <th class="text-end">MTP3 Stock Daily (T)</th>
+          <th class="text-end">MTP3 Stock Accum</th>
+          <th class="text-end">Chalothon Daily (T)</th>
+          <th class="text-end">Khlong Bang Phai Daily (T)</th>
           <th class="text-end">Total Daily</th>
           <th class="text-end">Total Accum</th>
           <th class="text-end">Offshore (T)</th>
@@ -68,8 +68,8 @@
           <td class="text-end fw-semibold">{{ rec.tct_accum_ton|floatformat:2|intcomma }}</td>
           <td class="text-end">{{ rec.mtp3_daily_ton|floatformat:2|intcomma }}</td>
           <td class="text-end fw-semibold">{{ rec.mtp3_accum_ton|floatformat:2|intcomma }}</td>
-          <td>{{ rec.sand_source_display }}</td>
-          <td class="text-end">{{ rec.oswald_daily_ton|floatformat:2|intcomma }}</td>
+          <td class="text-end">{{ rec.chalothon_daily_ton|floatformat:2|intcomma }}</td>
+          <td class="text-end">{{ rec.khlong_bang_phai_daily_ton|floatformat:2|intcomma }}</td>
           <td class="text-end fw-semibold">{{ rec.total_daily_ton|floatformat:2|intcomma }}</td>
           <td class="text-end fw-semibold text-primary">{{ rec.total_accum_ton|floatformat:2|intcomma }}</td>
           <td class="text-end">{{ rec.offshore_daily_ton|floatformat:2|intcomma }}</td>

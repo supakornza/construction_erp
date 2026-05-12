@@ -95,7 +95,7 @@ def export_sand_excel(project):
     ws = wb.active
     ws.title = 'Sand Summary'
 
-    ws.merge_cells('A1:U1')
+    ws.merge_cells('A1:V1')
     title_cell = ws['A1']
     title_cell.value = f'SAND SUMMARY – {project.project_name} ({project.contract_no})'
     title_cell.font = Font(bold=True, size=12)
@@ -103,13 +103,14 @@ def export_sand_excel(project):
 
     headers = [
         'Day', 'Date',
-        'TCT Daily', 'TCT Accum', 'TCT Trips', 'TCT Trucks',
-        'MTP3 Daily', 'MTP3 Accum', 'MTP3 Trips', 'MTP3 Trucks',
-        'Other Source', 'Other Daily', 'Other Accum',
+        'TCT Pier Daily', 'TCT Pier Accum', 'TCT Pier Trips', 'TCT Pier Trucks',
+        'Stockpile Sand MTP3 Daily', 'Stockpile Sand MTP3 Accum', 'MTP3 Trips', 'MTP3 Trucks',
+        'Chalothon Sand Pit Daily', 'Chalothon Sand Pit Accum',
+        'Khlong Bang Phai (Oswald) Daily', 'Khlong Bang Phai (Oswald) Accum',
         'Total Daily', 'Total Accum',
         'Offshore Daily', 'Offshore Accum',
         'Onshore Daily', 'Onshore Accum',
-        'Remaining TCT', 'Remaining MTP3',
+        'Remaining TCT Pier', 'Remaining Stockpile Sand MTP3',
     ]
     for col, h in enumerate(headers, 1):
         _apply_header(ws, 2, col, h, HEADER_FILL, HEADER_FONT, Alignment(horizontal='center', wrap_text=True))
@@ -120,7 +121,8 @@ def export_sand_excel(project):
             rec.day_name, str(rec.record_date),
             float(rec.tct_daily_ton), float(rec.tct_accum_ton), rec.tct_trips, rec.tct_trucks,
             float(rec.mtp3_daily_ton), float(rec.mtp3_accum_ton), rec.mtp3_trips, rec.mtp3_trucks,
-            rec.sand_source_display, float(rec.oswald_daily_ton), float(rec.oswald_accum_ton),
+            float(rec.chalothon_daily_ton), float(rec.chalothon_accum_ton),
+            float(rec.khlong_bang_phai_daily_ton), float(rec.khlong_bang_phai_accum_ton),
             float(rec.total_daily_ton), float(rec.total_accum_ton),
             float(rec.offshore_daily_ton), float(rec.offshore_accum_ton),
             float(rec.onshore_daily_ton), float(rec.onshore_accum_ton),
