@@ -5,191 +5,296 @@
 
 {% block extra_head %}
 <style>
-  .rock-dashboard { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
-  .rock-titlebar {
-    background: #0f7f9f;
+  /* ── Layout ──────────────────────────────────────────────────── */
+  .rdb { display: grid; grid-template-columns: minmax(0,1fr); gap: 16px; }
+  .rdb-layout { display: grid; grid-template-columns: minmax(0,1fr) 268px; gap: 16px; align-items: start; min-width: 0; }
+
+  /* ── Header ──────────────────────────────────────────────────── */
+  .rdb-header {
+    background: linear-gradient(135deg, #0c7a9a 0%, #075e77 55%, #053f52 100%);
+    border-radius: 10px;
     color: #fff;
-    border-radius: 2px;
-    padding: 14px 18px;
-    text-align: center;
-    box-shadow: 0 8px 18px rgba(15, 127, 159, .16);
+    padding: 22px 28px 18px;
+    box-shadow: 0 10px 30px rgba(12,122,154,.30);
+    position: relative;
+    overflow: hidden;
   }
-  .rock-titlebar h2 { font-size: 2rem; font-weight: 800; margin: 0; }
-  .rock-layout { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 14px; align-items: start; min-width: 0; }
-  .rock-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-  .rock-kpi {
+  .rdb-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='52' height='52' viewBox='0 0 52 52' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='26' cy='26' r='4'/%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .rdb-header-top { align-items: flex-start; display: flex; gap: 16px; justify-content: space-between; position: relative; }
+  .rdb-header-title h2 { font-size: 1.85rem; font-weight: 900; letter-spacing: -.5px; margin: 0; text-shadow: 0 2px 6px rgba(0,0,0,.22); }
+  .rdb-header-title .sub { font-size: .86rem; margin-top: 5px; opacity: .82; }
+  .rdb-header-badge { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); border-radius: 8px; flex-shrink: 0; padding: 8px 16px; text-align: right; }
+  .rdb-header-badge .blabel { font-size: .68rem; letter-spacing: .05em; opacity: .75; text-transform: uppercase; }
+  .rdb-header-badge .bvalue { font-size: 1.7rem; font-weight: 900; line-height: 1.15; }
+  .rdb-prog-wrap { margin-top: 14px; position: relative; }
+  .rdb-prog-track { background: rgba(255,255,255,.18); border-radius: 999px; height: 10px; overflow: hidden; }
+  .rdb-prog-fill { background: linear-gradient(90deg, #34d399, #10b981); border-radius: 999px; height: 100%; transition: width .7s ease; }
+  .rdb-prog-labels { display: flex; font-size: .73rem; justify-content: space-between; margin-top: 5px; opacity: .78; }
+
+  /* ── KPI grid ────────────────────────────────────────────────── */
+  .rdb-kpis { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
+  .rdb-kpi {
     background: #fff;
-    border-top: 7px solid #2563eb;
-    border-radius: 0 0 10px 10px;
-    box-shadow: 0 3px 9px rgba(15, 23, 42, .16);
-    min-height: 118px;
-    padding: 14px 12px;
-    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(15,23,42,.08);
+    padding: 15px 13px 13px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .15s ease, box-shadow .15s ease;
   }
-  .rock-kpi.green { border-top-color: #059669; }
-  .rock-kpi.orange { border-top-color: #f59e0b; }
-  .rock-kpi.purple { border-top-color: #7c3aed; }
-  .rock-kpi.cyan { border-top-color: #0891b2; }
-  .rock-kpi.warn { border-top-color: #dc2626; }
-  .rock-kpi .label { color: #111827; font-size: .92rem; font-weight: 800; }
-  .rock-kpi .value { color: #0f1f3d; font-size: 1.65rem; font-weight: 900; margin-top: 10px; }
-  .rock-kpi .sub { color: #64748b; font-size: .76rem; margin-top: 5px; }
-  .rock-panel {
-    background: #fff;
-    border: 1px solid #e8edf4;
-    min-height: 100%;
-    padding: 14px;
-  }
-  .rock-panel h6 { color: #211019; font-size: .9rem; font-weight: 900; margin-bottom: 12px; text-align: center; }
-  .rock-chart { height: 305px; }
-  .rock-wide-chart { height: 330px; }
-  .rock-side-card { background: #fff; border: 1px solid #15a7d1; margin-bottom: 12px; padding: 10px; }
-  .rock-side-title { align-items: center; display: flex; font-size: 1rem; font-weight: 900; justify-content: space-between; margin-bottom: 8px; }
-  .rock-side-actions { display: grid; gap: 6px; }
-  .rock-side-actions .btn { border-radius: 4px; justify-content: flex-start; text-align: left; }
-  .rock-filter-grid { display: grid; gap: 8px; }
-  .rock-filter-label { color: #475569; display: block; font-size: .72rem; font-weight: 700; letter-spacing: .04em; margin-bottom: 3px; text-transform: uppercase; }
-  .rock-empty { background: #fff; border: 1px dashed #b6c2d2; color: #64748b; padding: 32px; text-align: center; }
-  .rock-warning { background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; border-radius: 6px; padding: 10px 12px; }
-  .status-pill { border-radius: 999px; display: inline-flex; font-size: .75rem; font-weight: 800; padding: .18rem .55rem; }
-  .status-completed { background: #dcfce7; color: #166534; }
-  .status-inprogress { background: #e0f2fe; color: #075985; }
-  .status-notstarted { background: #f1f5f9; color: #475569; }
-  .comparison-row { display: grid; gap: 8px; }
-  .comparison-label { align-items: center; display: flex; font-size: .82rem; font-weight: 800; justify-content: space-between; }
-  .comparison-track { background: #e5e7eb; border-radius: 999px; height: 14px; overflow: hidden; }
-  .comparison-fill { height: 100%; }
+  .rdb-kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--c, #2563eb); border-radius: 10px 10px 0 0; }
+  .rdb-kpi:hover { box-shadow: 0 8px 22px rgba(15,23,42,.14); transform: translateY(-3px); }
+  .rdb-kpi .ki { align-items: center; background: var(--cb, #eff6ff); border-radius: 8px; color: var(--c, #2563eb); display: flex; font-size: .88rem; height: 32px; justify-content: center; margin-bottom: 8px; width: 32px; }
+  .rdb-kpi .kl { color: #64748b; font-size: .72rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
+  .rdb-kpi .kv { color: #0f172a; font-size: 1.7rem; font-weight: 900; line-height: 1.1; margin: 4px 0 2px; }
+  .rdb-kpi .ks { color: #94a3b8; font-size: .71rem; }
+  .rdb-kpi.blue   { --c:#2563eb; --cb:#eff6ff; }
+  .rdb-kpi.green  { --c:#059669; --cb:#ecfdf5; }
+  .rdb-kpi.orange { --c:#d97706; --cb:#fffbeb; }
+  .rdb-kpi.purple { --c:#7c3aed; --cb:#f5f3ff; }
+  .rdb-kpi.cyan   { --c:#0891b2; --cb:#ecfeff; }
+  .rdb-kpi.teal   { --c:#0f7f9f; --cb:#e0f4f9; }
+  .rdb-kpi.warn   { --c:#dc2626; --cb:#fef2f2; }
+
+  /* ── Panels ──────────────────────────────────────────────────── */
+  .rdb-panel { background: #fff; border: 1px solid #e8edf4; border-radius: 8px; box-shadow: 0 2px 8px rgba(15,23,42,.06); height: 100%; padding: 16px 16px 12px; }
+  .rdb-pt { align-items: center; border-bottom: 1px solid #f1f5f9; display: flex; gap: 9px; margin-bottom: 14px; padding-bottom: 11px; }
+  .rdb-pt .ico { align-items: center; background: #e0f4f9; border-radius: 6px; color: #0f7f9f; display: flex; flex-shrink: 0; font-size: .8rem; height: 28px; justify-content: center; width: 28px; }
+  .rdb-pt h6 { color: #1e293b; font-size: .82rem; font-weight: 900; letter-spacing: .04em; margin: 0; text-transform: uppercase; }
+  .rdb-chart { height: 300px; }
+  .rdb-wide-chart { height: 320px; }
+
+  /* ── Stock bars ──────────────────────────────────────────────── */
+  .rdb-bar-row { margin-bottom: 14px; }
+  .rdb-bar-lbl { align-items: center; color: #334155; display: flex; font-size: .82rem; font-weight: 700; justify-content: space-between; margin-bottom: 5px; }
+  .rdb-bar-track { background: #f1f5f9; border-radius: 999px; height: 13px; overflow: hidden; }
+  .rdb-bar-fill { border-radius: 999px; height: 100%; transition: width .5s ease; }
+
+  /* ── Tables ──────────────────────────────────────────────────── */
+  .rdb-tbl { font-size: .82rem; width: 100%; }
+  .rdb-tbl thead th { background: #f8fafc; border-bottom: 2px solid #e8edf4; color: #475569; font-size: .69rem; font-weight: 800; letter-spacing: .06em; padding: 8px 10px; text-transform: uppercase; white-space: nowrap; }
+  .rdb-tbl tbody td { border-bottom: 1px solid #f1f5f9; color: #1e293b; padding: 9px 10px; vertical-align: middle; }
+  .rdb-tbl tbody tr:last-child td { border-bottom: none; }
+  .rdb-tbl tbody tr:hover td { background: #f8fafc; }
+  .minibar { background: #e8edf4; border-radius: 999px; height: 5px; margin-top: 4px; overflow: hidden; width: 90px; }
+  .minibar-fill { border-radius: 999px; height: 100%; }
+
+  /* ── Status pills ────────────────────────────────────────────── */
+  .spill { align-items: center; border-radius: 999px; display: inline-flex; font-size: .7rem; font-weight: 800; gap: 4px; letter-spacing: .02em; padding: .2rem .65rem; }
+  .spill::before { background: currentColor; border-radius: 50%; content: ''; flex-shrink: 0; height: 5px; width: 5px; }
+  .sp-done { background: #dcfce7; color: #166534; }
+  .sp-prog { background: #dbeafe; color: #1d4ed8; }
+  .sp-wait { background: #f1f5f9; color: #475569; }
+
+  /* ── Alert banner ────────────────────────────────────────────── */
+  .rdb-alert { align-items: flex-start; background: #fff7ed; border: 1px solid #fed7aa; border-left: 4px solid #f97316; border-radius: 6px; color: #9a3412; display: flex; gap: 10px; padding: 12px 14px; }
+
+  /* ── Empty ───────────────────────────────────────────────────── */
+  .rdb-empty { background: #fff; border: 2px dashed #cbd5e1; border-radius: 8px; color: #94a3b8; padding: 52px 24px; text-align: center; }
+
+  /* ── Sidebar ─────────────────────────────────────────────────── */
+  .rdb-sc { background: #fff; border: 1px solid #e8edf4; border-radius: 8px; box-shadow: 0 2px 6px rgba(15,23,42,.05); margin-bottom: 12px; padding: 14px; }
+  .rdb-st { align-items: center; border-bottom: 1px solid #f1f5f9; color: #334155; display: flex; font-size: .76rem; font-weight: 900; gap: 6px; justify-content: space-between; letter-spacing: .05em; margin-bottom: 12px; padding-bottom: 8px; text-transform: uppercase; }
+  .rdb-st i { color: #0f7f9f; }
+  .rdb-fl { color: #64748b; display: block; font-size: .7rem; font-weight: 700; letter-spacing: .04em; margin-bottom: 3px; text-transform: uppercase; }
+  .rdb-fg { display: grid; gap: 9px; }
+  .rdb-actions { display: grid; gap: 7px; }
+  .rdb-btn { align-items: center; border-radius: 6px; display: flex; font-size: .82rem; font-weight: 700; gap: 8px; padding: 8px 12px; text-decoration: none; transition: opacity .15s; }
+  .rdb-btn:hover { opacity: .85; }
+  .rdb-btn-teal { background: #0f7f9f; color: #fff; }
+  .rdb-btn-out  { background: #f0f9fb; border: 1px solid #b6dce8; color: #0a5f78; }
+
+  /* ── Responsive ──────────────────────────────────────────────── */
   @media (max-width: 1240px) {
-    .rock-layout { grid-template-columns: minmax(0, 1fr); }
-    .rock-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .rdb-layout { grid-template-columns: minmax(0,1fr); }
+    .rdb-kpis   { grid-template-columns: repeat(2, minmax(0,1fr)); }
   }
   @media (max-width: 640px) {
-    .rock-titlebar h2 { font-size: 1.35rem; }
-    .rock-kpis { grid-template-columns: minmax(0, 1fr); }
+    .rdb-header-title h2 { font-size: 1.3rem; }
+    .rdb-header-badge    { display: none; }
+    .rdb-kpis            { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .rdb-kpi .kv         { font-size: 1.4rem; }
   }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="rock-dashboard">
-  <div class="rock-titlebar">
-    <h2>Rock Progress Dashboard</h2>
-    <div class="small mt-1">{{ selected_project.contract_no|default:"No active project" }}{% if selected_project %} · {{ selected_project.project_name }}{% endif %}</div>
+<div class="rdb">
+
+  <!-- ─── Header ────────────────────────────────────────────────── -->
+  <div class="rdb-header">
+    <div class="rdb-header-top">
+      <div class="rdb-header-title">
+        <h2><i class="fas fa-layer-group me-2" style="opacity:.75"></i>Rock Progress Dashboard</h2>
+        <div class="sub">
+          {% if selected_project %}
+            {{ selected_project.contract_no }} &nbsp;·&nbsp; {{ selected_project.project_name }}
+          {% else %}
+            No active project selected
+          {% endif %}
+          &nbsp;·&nbsp; As of {% now "d M Y" %}
+        </div>
+      </div>
+      {% if data.placement_completion_percent is not None %}
+      <div class="rdb-header-badge">
+        <div class="blabel">Completion</div>
+        <div class="bvalue">{{ data.placement_completion_percent|floatformat:1 }}%</div>
+      </div>
+      {% endif %}
+    </div>
+    {% if data.placement_completion_percent is not None %}
+    <div class="rdb-prog-wrap">
+      <div class="rdb-prog-track">
+        <div class="rdb-prog-fill" style="width:{% if data.placement_completion_percent > 100 %}100{% else %}{{ data.placement_completion_percent|floatformat:0 }}{% endif %}%"></div>
+      </div>
+      <div class="rdb-prog-labels">
+        <span>0%</span>
+        <span>{{ data.total_placed|default:0|floatformat:0|intcomma }} of {{ data.total_delivered|default:0|floatformat:0|intcomma }} tons placed</span>
+        <span>100%</span>
+      </div>
+    </div>
+    {% endif %}
   </div>
 
-  <div class="rock-layout">
-    <main class="rock-dashboard">
-      <section class="rock-kpis">
-        <div class="rock-kpi">
-          <div class="label">Total Delivered</div>
-          <div class="value">{{ data.total_delivered|default:0|floatformat:0|intcomma }}</div>
-          <div class="sub">tons delivered</div>
+  <div class="rdb-layout">
+    <main class="rdb">
+
+      <!-- ─── KPI Cards ─────────────────────────────────────────── -->
+      <section class="rdb-kpis">
+        <div class="rdb-kpi blue">
+          <div class="ki"><i class="fas fa-truck-ramp-box"></i></div>
+          <div class="kl">Total Delivered</div>
+          <div class="kv">{{ data.total_delivered|default:0|floatformat:0|intcomma }}</div>
+          <div class="ks">tons to site</div>
         </div>
-        <div class="rock-kpi green">
-          <div class="label">Total Placed</div>
-          <div class="value">{{ data.total_placed|default:0|floatformat:0|intcomma }}</div>
-          <div class="sub">tons placed</div>
+        <div class="rdb-kpi green">
+          <div class="ki"><i class="fas fa-layer-group"></i></div>
+          <div class="kl">Total Placed</div>
+          <div class="kv">{{ data.total_placed|default:0|floatformat:0|intcomma }}</div>
+          <div class="ks">tons placed</div>
         </div>
-        <div class="rock-kpi orange">
-          <div class="label">Available Stock Balance</div>
-          <div class="value">{{ data.available_stock_balance|default:0|floatformat:0|intcomma }}</div>
-          <div class="sub">Delivered - placed</div>
+        <div class="rdb-kpi orange">
+          <div class="ki"><i class="fas fa-warehouse"></i></div>
+          <div class="kl">Stock Balance</div>
+          <div class="kv">{{ data.available_stock_balance|default:0|floatformat:0|intcomma }}</div>
+          <div class="ks">delivered − placed</div>
         </div>
-        <div class="rock-kpi purple">
-          <div class="label">Placement Completion</div>
-          <div class="value">{% if data.placement_completion_percent is not None %}{{ data.placement_completion_percent|floatformat:1 }}%{% else %}N/A{% endif %}</div>
-          <div class="sub">Requires target quantity</div>
+        <div class="rdb-kpi purple">
+          <div class="ki"><i class="fas fa-chart-pie"></i></div>
+          <div class="kl">Placement Completion</div>
+          <div class="kv">{% if data.placement_completion_percent is not None %}{{ data.placement_completion_percent|floatformat:1 }}%{% else %}N/A{% endif %}</div>
+          <div class="ks">vs BOQ target</div>
         </div>
-        <div class="rock-kpi cyan">
-          <div class="label">Remaining Quantity to BOQ</div>
-          <div class="value">{% if data.remaining_quantity_to_boq is not None %}{{ data.remaining_quantity_to_boq|floatformat:0|intcomma }}{% else %}N/A{% endif %}</div>
-          <div class="sub">tons remaining</div>
+        <div class="rdb-kpi warn">
+          <div class="ki"><i class="fas fa-hourglass-half"></i></div>
+          <div class="kl">Remaining to BOQ</div>
+          <div class="kv">{% if data.remaining_quantity_to_boq is not None %}{{ data.remaining_quantity_to_boq|floatformat:0|intcomma }}{% else %}N/A{% endif %}</div>
+          <div class="ks">tons remaining</div>
         </div>
-        <div class="rock-kpi">
-          <div class="label">Average Daily Placement</div>
-          <div class="value">{% if data.average_daily_placement is not None %}{{ data.average_daily_placement|floatformat:0|intcomma }}{% else %}N/A{% endif %}</div>
-          <div class="sub">production days only</div>
+        <div class="rdb-kpi teal">
+          <div class="ki"><i class="fas fa-gauge-high"></i></div>
+          <div class="kl">Avg Daily Placement</div>
+          <div class="kv">{% if data.average_daily_placement is not None %}{{ data.average_daily_placement|floatformat:0|intcomma }}{% else %}N/A{% endif %}</div>
+          <div class="ks">production days only</div>
         </div>
-        <div class="rock-kpi">
-          <div class="label">Forecast Completion Date</div>
-          <div class="value">{% if data.forecast_completion_date %}{{ data.forecast_completion_date|date:"d M Y" }}{% else %}N/A{% endif %}</div>
-          <div class="sub">based on avg placement</div>
+        <div class="rdb-kpi cyan">
+          <div class="ki"><i class="fas fa-calendar-check"></i></div>
+          <div class="kl">Forecast Completion</div>
+          <div class="kv" style="font-size:1.2rem">{% if data.forecast_completion_date %}{{ data.forecast_completion_date|date:"d M Y" }}{% else %}N/A{% endif %}</div>
+          <div class="ks">based on avg placement</div>
         </div>
-        <div class="rock-kpi green">
-          <div class="label">Latest Daily Delivered</div>
-          <div class="value">{{ data.latest_daily_delivered|default:0|floatformat:0|intcomma }}</div>
-          <div class="sub">{{ data.latest_date|date:"d M Y"|default:"No data" }}</div>
+        <div class="rdb-kpi blue">
+          <div class="ki"><i class="fas fa-truck"></i></div>
+          <div class="kl">Latest Delivered</div>
+          <div class="kv">{{ data.latest_daily_delivered|default:0|floatformat:0|intcomma }}</div>
+          <div class="ks">{{ data.latest_date|date:"d M Y"|default:"No data" }}</div>
         </div>
-        <div class="rock-kpi green">
-          <div class="label">Latest Daily Placed</div>
-          <div class="value">{{ data.latest_daily_placed|default:0|floatformat:0|intcomma }}</div>
-          <div class="sub">{{ data.latest_date|date:"d M Y"|default:"No data" }}</div>
+        <div class="rdb-kpi green">
+          <div class="ki"><i class="fas fa-circle-down"></i></div>
+          <div class="kl">Latest Placed</div>
+          <div class="kv">{{ data.latest_daily_placed|default:0|floatformat:0|intcomma }}</div>
+          <div class="ks">{{ data.latest_date|date:"d M Y"|default:"No data" }}</div>
         </div>
       </section>
 
+      <!-- ─── Alert ─────────────────────────────────────────────── -->
       {% if data.core_outside_accum %}
-      <div class="rock-warning">
-        <strong>Core Rock Placed Outside Plot:</strong>
-        {{ data.core_outside_accum|floatformat:0|intcomma }} tons accumulated. Review if this is expected.
+      <div class="rdb-alert">
+        <i class="fas fa-triangle-exclamation mt-1 flex-shrink-0"></i>
+        <div><strong>Core Rock Placed Outside Plot:</strong> {{ data.core_outside_accum|floatformat:0|intcomma }} tons accumulated. Please review placement records.</div>
       </div>
       {% endif %}
 
       {% if data.has_data %}
+
+      <!-- ─── Charts row 1 ──────────────────────────────────────── -->
       <section class="row g-3">
         <div class="col-xl-7">
-          <div class="rock-panel">
-            <h6>Daily Delivered vs Placed</h6>
-            <div class="rock-chart"><canvas id="rockDailyChart"></canvas></div>
+          <div class="rdb-panel">
+            <div class="rdb-pt"><div class="ico"><i class="fas fa-chart-line"></i></div><h6>Daily Delivered vs Placed</h6></div>
+            <div class="rdb-chart"><canvas id="rockDailyChart"></canvas></div>
           </div>
         </div>
         <div class="col-xl-5">
-          <div class="rock-panel">
-            <h6>Placement by Barge</h6>
-            <div class="rock-chart"><canvas id="rockBargeChart"></canvas></div>
+          <div class="rdb-panel">
+            <div class="rdb-pt"><div class="ico"><i class="fas fa-ship"></i></div><h6>Placement by Barge</h6></div>
+            <div class="rdb-chart"><canvas id="rockBargeChart"></canvas></div>
           </div>
         </div>
       </section>
 
+      <!-- ─── Stock Balance + Barge Table ──────────────────────── -->
       <section class="row g-3">
-        <div class="col-xl-5">
-          <div class="rock-panel">
-            <h6>Stock Balance Summary</h6>
-            <div class="comparison-row">
-              <div>
-                <div class="comparison-label"><span>Total Delivered</span><span>{{ data.total_delivered|floatformat:0|intcomma }} tons</span></div>
-                <div class="comparison-track"><div class="comparison-fill" style="width:100%;background:#2563eb"></div></div>
-              </div>
-              <div>
-                <div class="comparison-label"><span>Total Placed</span><span>{{ data.total_placed|floatformat:0|intcomma }} tons</span></div>
-                <div class="comparison-track"><div class="comparison-fill" style="width:{% if data.total_delivered %}{% widthratio data.total_placed data.total_delivered 100 %}{% else %}0{% endif %}%;background:#059669"></div></div>
-              </div>
-              <div>
-                <div class="comparison-label"><span>Available Stock Balance</span><span>{{ data.available_stock_balance|floatformat:0|intcomma }} tons</span></div>
-                <div class="comparison-track"><div class="comparison-fill" style="width:{% if data.available_stock_balance > 0 and data.total_delivered %}{% widthratio data.available_stock_balance data.total_delivered 100 %}{% else %}0{% endif %}%;background:#f59e0b"></div></div>
-              </div>
-              <div class="text-muted small pt-2">
-                Stock percentage against delivered quantity:
-                {% if data.stock_percent is not None %}<strong>{{ data.stock_percent|floatformat:1 }}%</strong>{% else %}<strong>N/A</strong>{% endif %}
+        <div class="col-xl-4">
+          <div class="rdb-panel">
+            <div class="rdb-pt"><div class="ico"><i class="fas fa-scale-balanced"></i></div><h6>Stock Balance Summary</h6></div>
+            <div class="rdb-bar-row">
+              <div class="rdb-bar-lbl"><span>Total Delivered</span><span style="color:#2563eb">{{ data.total_delivered|floatformat:0|intcomma }} t</span></div>
+              <div class="rdb-bar-track"><div class="rdb-bar-fill" style="width:100%;background:#2563eb"></div></div>
+            </div>
+            <div class="rdb-bar-row">
+              <div class="rdb-bar-lbl"><span>Total Placed</span><span style="color:#059669">{{ data.total_placed|floatformat:0|intcomma }} t</span></div>
+              <div class="rdb-bar-track"><div class="rdb-bar-fill" style="width:{% if data.total_delivered %}{% widthratio data.total_placed data.total_delivered 100 %}{% else %}0{% endif %}%;background:#059669"></div></div>
+            </div>
+            <div class="rdb-bar-row">
+              <div class="rdb-bar-lbl"><span>Stock Balance</span><span style="color:#d97706">{{ data.available_stock_balance|floatformat:0|intcomma }} t</span></div>
+              <div class="rdb-bar-track"><div class="rdb-bar-fill" style="width:{% if data.available_stock_balance > 0 and data.total_delivered %}{% widthratio data.available_stock_balance data.total_delivered 100 %}{% else %}0{% endif %}%;background:#d97706"></div></div>
+            </div>
+            <div class="mt-3 p-3 rounded" style="background:#f0f9fb;border:1px solid #b6dce8">
+              <div class="text-muted" style="font-size:.75rem;margin-bottom:2px">Stock % of Delivered</div>
+              <div class="fw-black" style="font-size:1.65rem;color:#0f7f9f;font-weight:900">
+                {% if data.stock_percent is not None %}{{ data.stock_percent|floatformat:1 }}%{% else %}N/A{% endif %}
               </div>
             </div>
           </div>
         </div>
-        <div class="col-xl-7">
-          <div class="rock-panel">
-            <h6>Barge Trips & Quantity</h6>
+        <div class="col-xl-8">
+          <div class="rdb-panel">
+            <div class="rdb-pt"><div class="ico"><i class="fas fa-anchor"></i></div><h6>Barge Trips &amp; Quantity</h6></div>
             <div class="table-responsive">
-              <table class="table table-sm align-middle mb-0">
-                <thead class="table-light">
-                  <tr><th>Barge</th><th class="text-end">Total Tons</th><th class="text-end">Trips</th><th class="text-end">Avg Tons / Trip</th><th class="text-end">Latest Trip Date</th></tr>
+              <table class="rdb-tbl">
+                <thead>
+                  <tr>
+                    <th>Barge</th>
+                    <th class="text-end">Total (tons)</th>
+                    <th class="text-end">Trips</th>
+                    <th class="text-end">Avg / Trip</th>
+                    <th class="text-end">Latest Date</th>
+                  </tr>
                 </thead>
                 <tbody>
                   {% for b in data.barge_totals %}
                   <tr>
-                    <td>{{ b.barge__name }}</td>
-                    <td class="text-end fw-bold">{{ b.total_qty|floatformat:0|intcomma }}</td>
-                    <td class="text-end">{% if b.total_trips %}{{ b.total_trips }}{% else %}N/A{% endif %}</td>
-                    <td class="text-end">{% if b.average_tons_per_trip %}{{ b.average_tons_per_trip|floatformat:1|intcomma }}{% else %}N/A{% endif %}</td>
-                    <td class="text-end">{{ b.latest_trip_date|date:"d M Y"|default:"N/A" }}</td>
+                    <td class="fw-bold">{{ b.barge__name }}</td>
+                    <td class="text-end fw-bold" style="color:#2563eb">{{ b.total_qty|floatformat:0|intcomma }}</td>
+                    <td class="text-end">{% if b.total_trips %}{{ b.total_trips }}{% else %}<span class="text-muted">—</span>{% endif %}</td>
+                    <td class="text-end">{% if b.average_tons_per_trip %}{{ b.average_tons_per_trip|floatformat:1|intcomma }}{% else %}<span class="text-muted">—</span>{% endif %}</td>
+                    <td class="text-end text-muted">{{ b.latest_trip_date|date:"d M Y"|default:"—" }}</td>
                   </tr>
                   {% empty %}
                   <tr><td colspan="5" class="text-center text-muted py-4">No barge data for the selected filters.</td></tr>
@@ -201,49 +306,71 @@
         </div>
       </section>
 
-      <section class="rock-panel">
-        <h6>Accumulative Delivered vs Placed</h6>
-        <div class="rock-wide-chart"><canvas id="rockAccumChart"></canvas></div>
-      </section>
-
-      <section class="rock-panel">
-        <h6>Placement by Station</h6>
-        <div class="table-responsive">
-          <table class="table table-sm align-middle mb-0">
-            <thead class="table-light">
-              <tr><th>Station Range</th><th>Material Type</th><th class="text-end">Delivered Tons</th><th class="text-end">Placed Tons</th><th class="text-end">Completion</th><th>Status</th></tr>
-            </thead>
-            <tbody>
-              {% for row in data.station_rows %}
-              <tr>
-                <td>{{ row.station_range }}</td>
-                <td>{{ row.material_type }}</td>
-                <td class="text-end">{{ row.delivered_quantity_ton|floatformat:0|intcomma }}</td>
-                <td class="text-end fw-bold">{{ row.placed_quantity_ton|floatformat:0|intcomma }}</td>
-                <td class="text-end">{{ row.completion_percent|floatformat:1 }}%</td>
-                <td>
-                  <span class="status-pill {% if row.status == 'Completed' %}status-completed{% elif row.status == 'In Progress' %}status-inprogress{% else %}status-notstarted{% endif %}">
-                    {{ row.status }}
-                  </span>
-                </td>
-              </tr>
-              {% empty %}
-              <tr><td colspan="6" class="text-center text-muted py-4">No station progress records yet. Add station ranges in admin when station control data is ready.</td></tr>
-              {% endfor %}
-            </tbody>
-          </table>
+      <!-- ─── Accumulative Chart ────────────────────────────────── -->
+      <section>
+        <div class="rdb-panel">
+          <div class="rdb-pt"><div class="ico"><i class="fas fa-chart-area"></i></div><h6>Accumulative Delivered vs Placed</h6></div>
+          <div class="rdb-wide-chart"><canvas id="rockAccumChart"></canvas></div>
         </div>
       </section>
+
+      <!-- ─── Station Table ─────────────────────────────────────── -->
+      <section>
+        <div class="rdb-panel">
+          <div class="rdb-pt"><div class="ico"><i class="fas fa-map-pin"></i></div><h6>Placement Progress by Station</h6></div>
+          <div class="table-responsive">
+            <table class="rdb-tbl">
+              <thead>
+                <tr>
+                  <th>Station Range</th>
+                  <th>Material</th>
+                  <th class="text-end">Delivered (t)</th>
+                  <th class="text-end">Placed (t)</th>
+                  <th>Completion</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in data.station_rows %}
+                <tr>
+                  <td class="fw-bold">{{ row.station_range }}</td>
+                  <td><span class="badge bg-light text-dark border" style="font-size:.72rem">{{ row.material_type }}</span></td>
+                  <td class="text-end">{{ row.delivered_quantity_ton|floatformat:0|intcomma }}</td>
+                  <td class="text-end fw-bold">{{ row.placed_quantity_ton|floatformat:0|intcomma }}</td>
+                  <td>
+                    <div style="font-size:.78rem;font-weight:700;color:#334155;margin-bottom:3px">{{ row.completion_percent|floatformat:1 }}%</div>
+                    <div class="minibar"><div class="minibar-fill" style="width:{% if row.completion_percent > 100 %}100{% else %}{{ row.completion_percent|floatformat:0 }}{% endif %}%;background:{% if row.completion_percent >= 100 %}#059669{% elif row.completion_percent >= 50 %}#0891b2{% else %}#f59e0b{% endif %}"></div></div>
+                  </td>
+                  <td>
+                    <span class="spill {% if row.status == 'Completed' %}sp-done{% elif row.status == 'In Progress' %}sp-prog{% else %}sp-wait{% endif %}">
+                      {{ row.status }}
+                    </span>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center text-muted py-4">No station progress records yet. Add station ranges in admin when ready.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
       {% else %}
-      <div class="rock-empty">No rock progress data for this project and filter selection.</div>
+      <div class="rdb-empty">
+        <i class="fas fa-database fa-2x mb-3" style="color:#cbd5e1"></i>
+        <div class="fw-bold mb-1">No rock progress data</div>
+        <div class="small">Select a project or add daily records to see the dashboard.</div>
+      </div>
       {% endif %}
     </main>
 
+    <!-- ─── Sidebar ────────────────────────────────────────────── -->
     <aside>
-      <form method="get" class="rock-side-card rock-filter-grid">
-        <div class="rock-side-title"><span>Filters</span><i class="fas fa-filter text-muted"></i></div>
+      <form method="get" class="rdb-sc rdb-fg">
+        <div class="rdb-st"><span><i class="fas fa-filter"></i> Filters</span></div>
         <div>
-          <label class="rock-filter-label">Project</label>
+          <label class="rdb-fl">Project</label>
           <select name="project" class="form-select form-select-sm">
             <option value="">First Active Project</option>
             {% for p in projects %}
@@ -252,24 +379,24 @@
           </select>
         </div>
         <div>
-          <label class="rock-filter-label">Date Range</label>
+          <label class="rdb-fl">Date Range</label>
           <select name="range" class="form-select form-select-sm">
             <option value="">All Dates</option>
-            <option value="7" {% if request.GET.range == '7' %}selected{% endif %}>Last 7 Days</option>
+            <option value="7"  {% if request.GET.range == '7'  %}selected{% endif %}>Last 7 Days</option>
             <option value="14" {% if request.GET.range == '14' %}selected{% endif %}>Last 14 Days</option>
             <option value="30" {% if request.GET.range == '30' %}selected{% endif %}>Last 30 Days</option>
           </select>
         </div>
         <div>
-          <label class="rock-filter-label">From</label>
-          <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="form-control form-control-sm" aria-label="Date from">
+          <label class="rdb-fl">From</label>
+          <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="form-control form-control-sm">
         </div>
         <div>
-          <label class="rock-filter-label">To</label>
-          <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control form-control-sm" aria-label="Date to">
+          <label class="rdb-fl">To</label>
+          <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control form-control-sm">
         </div>
         <div>
-          <label class="rock-filter-label">Barge</label>
+          <label class="rdb-fl">Barge</label>
           <select name="barge" class="form-select form-select-sm">
             <option value="">All Barges</option>
             {% for barge in barges %}
@@ -278,7 +405,7 @@
           </select>
         </div>
         <div>
-          <label class="rock-filter-label">Material Type</label>
+          <label class="rdb-fl">Material Type</label>
           <select name="material_type" class="form-select form-select-sm">
             <option value="">All Material Types</option>
             {% for value, label in material_type_choices %}
@@ -287,37 +414,45 @@
           </select>
         </div>
         <div>
-          <label class="rock-filter-label">Station Range</label>
-          <input type="text" name="station_range" value="{{ request.GET.station_range }}" class="form-control form-control-sm" placeholder="e.g. 0+000 - 0+100">
+          <label class="rdb-fl">Station Range</label>
+          <input type="text" name="station_range" value="{{ request.GET.station_range }}" class="form-control form-control-sm" placeholder="e.g. 0+000 – 0+100">
         </div>
         <div>
-          <label class="rock-filter-label">Source / Quarry</label>
-          <input type="text" name="source_quarry" value="{{ request.GET.source_quarry }}" class="form-control form-control-sm" placeholder="Source or quarry name">
+          <label class="rdb-fl">Source / Quarry</label>
+          <input type="text" name="source_quarry" value="{{ request.GET.source_quarry }}" class="form-control form-control-sm" placeholder="Quarry name">
         </div>
         <div>
-          <label class="rock-filter-label">Destination / Area</label>
+          <label class="rdb-fl">Destination / Area</label>
           <input type="text" name="destination_area" value="{{ request.GET.destination_area }}" class="form-control form-control-sm" placeholder="Placement area">
         </div>
-        <button class="btn btn-info text-white btn-sm" type="submit"><i class="fas fa-filter me-1"></i>Apply Filters</button>
+        <button class="rdb-btn rdb-btn-teal w-100 mt-1 justify-content-center" type="submit">
+          <i class="fas fa-filter"></i> Apply Filters
+        </button>
       </form>
 
-      <div class="rock-side-card">
-        <div class="rock-side-title"><span>Actions</span><i class="fas fa-list-check text-muted"></i></div>
-        <div class="rock-side-actions">
-          <a href="{% url 'project_controls:rock_list' %}" class="btn btn-info text-white"><i class="fas fa-table me-2"></i>Records</a>
-          <a href="{% url 'project_controls:rock_create' %}" class="btn btn-info text-white"><i class="fas fa-plus me-2"></i>New Record</a>
+      <div class="rdb-sc">
+        <div class="rdb-st"><span><i class="fas fa-bolt"></i> Quick Actions</span></div>
+        <div class="rdb-actions">
+          <a href="{% url 'project_controls:rock_list' %}" class="rdb-btn rdb-btn-out"><i class="fas fa-table-list"></i>Records</a>
+          <a href="{% url 'project_controls:rock_create' %}" class="rdb-btn rdb-btn-teal"><i class="fas fa-plus"></i>New Record</a>
           {% if selected_project %}
-          <a href="{% url 'project_controls:rock_export_excel' selected_project.pk %}" class="btn btn-info text-white"><i class="fas fa-file-excel me-2"></i>Export Excel</a>
+          <a href="{% url 'project_controls:rock_export_excel' selected_project.pk %}" class="rdb-btn rdb-btn-out"><i class="fas fa-file-excel"></i>Export Excel</a>
           {% endif %}
         </div>
       </div>
 
-      <div class="rock-side-card">
-        <div class="rock-side-title"><span>Target Setup</span><i class="fas fa-bullseye text-muted"></i></div>
-        <div class="small text-muted">
-          Target quantity and daily target come from Rock Dashboard Settings in Django Admin.
-          {% if not data.settings %}<div class="mt-2 text-warning fw-semibold">No target settings configured.</div>{% endif %}
+      <div class="rdb-sc">
+        <div class="rdb-st"><span><i class="fas fa-bullseye"></i> Target Setup</span></div>
+        {% if not data.settings %}
+        <div class="small text-muted">Target quantity and daily target are configured in Django Admin under Rock Dashboard Settings.</div>
+        <div class="mt-2 small fw-semibold" style="color:#d97706"><i class="fas fa-circle-exclamation me-1"></i>No target configured.</div>
+        {% else %}
+        <div class="p-3 rounded" style="background:#f0f9fb;border:1px solid #b6dce8;text-align:center">
+          <div class="text-muted small">BOQ Target</div>
+          <div class="fw-bold mt-1" style="font-size:1.4rem;color:#0f7f9f">{{ data.settings.target_quantity_ton|floatformat:0|intcomma }}</div>
+          <div class="text-muted small">tons</div>
         </div>
+        {% endif %}
       </div>
     </aside>
   </div>
@@ -329,31 +464,31 @@
 const chartData = {{ data.chart_data|safe }};
 const bargeLabels = [{% for b in data.barge_totals %}'{{ b.barge__name|escapejs }}'{% if not forloop.last %},{% endif %}{% endfor %}];
 const bargeValues = [{% for b in data.barge_totals %}{{ b.total_qty|default:0 }}{% if not forloop.last %},{% endif %}{% endfor %}];
-const commonGrid = { color: '#dce3ec' };
+const grid = { color: '#f1f5f9' };
+const fmt = v => Number(v || 0).toLocaleString();
+const bargeColors = ['#0f7f9f','#2563eb','#059669','#7c3aed','#d97706','#dc2626','#0891b2','#065f46'];
 
-const valueLabelPlugin = {
-  id: 'valueLabelPlugin',
+const bargePlugin = {
+  id: 'bargePlugin',
   afterDatasetsDraw(chart) {
     const { ctx } = chart;
     ctx.save();
-    ctx.fillStyle = '#334155';
-    ctx.font = '11px Segoe UI';
-    chart.data.datasets.forEach((dataset, datasetIndex) => {
-      const meta = chart.getDatasetMeta(datasetIndex);
-      if (chart.config.type !== 'bar' || chart.options.indexAxis !== 'y') return;
-      meta.data.forEach((bar, index) => {
-        const value = dataset.data[index];
-        if (!value) return;
-        ctx.fillText(Number(value).toLocaleString() + ' tons', bar.x + 6, bar.y + 4);
+    ctx.fillStyle = '#475569';
+    ctx.font = '600 10px system-ui, sans-serif';
+    chart.data.datasets.forEach((ds, di) => {
+      chart.getDatasetMeta(di).data.forEach((bar, i) => {
+        const v = ds.data[i];
+        if (!v) return;
+        ctx.fillText(fmt(v) + ' t', bar.x + 6, bar.y + 4);
       });
     });
     ctx.restore();
   }
 };
 
-function makeChart(id, config) {
+function makeChart(id, cfg) {
   const el = document.getElementById(id);
-  if (el) new Chart(el, config);
+  if (el) new Chart(el, cfg);
 }
 
 makeChart('rockDailyChart', {
@@ -361,31 +496,47 @@ makeChart('rockDailyChart', {
   data: {
     labels: chartData.labels || [],
     datasets: [
-      { label: 'Delivered', data: chartData.daily_delivered || [], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.1)', tension: .25, fill: false },
-      { label: 'Placed', data: chartData.daily_placed || [], borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.1)', tension: .25, fill: false },
-      { label: 'Daily Target', data: chartData.daily_target || [], borderColor: '#f59e0b', borderDash: [6, 5], pointRadius: 0, tension: 0, fill: false }
+      { label: 'Delivered',    data: chartData.daily_delivered || [], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.08)',  borderWidth: 2, tension: .3, fill: true, pointRadius: 3, pointHoverRadius: 6 },
+      { label: 'Placed',       data: chartData.daily_placed    || [], borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.08)',   borderWidth: 2, tension: .3, fill: true, pointRadius: 3, pointHoverRadius: 6 },
+      { label: 'Daily Target', data: chartData.daily_target    || [], borderColor: '#f59e0b', borderDash: [7,4], borderWidth: 1.5, pointRadius: 0, tension: 0, fill: false }
     ]
   },
   options: {
     maintainAspectRatio: false,
-    plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${Number(ctx.raw || 0).toLocaleString()} tons` } } },
+    plugins: {
+      legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16, font: { size: 11 } } },
+      tooltip: { callbacks: { label: c => `${c.dataset.label}: ${fmt(c.raw)} tons` } }
+    },
     scales: {
-      y: { beginAtZero: true, title: { display: true, text: 'Quantity (tons)' }, grid: commonGrid },
-      x: { ticks: { maxTicksLimit: 8 }, grid: { display: false } }
+      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'Tons', font: { size: 11 } } },
+      x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } }
     }
   }
 });
 
 makeChart('rockBargeChart', {
   type: 'bar',
-  plugins: [valueLabelPlugin],
-  data: { labels: bargeLabels, datasets: [{ data: bargeValues, backgroundColor: '#2563eb', borderRadius: 2 }] },
+  plugins: [bargePlugin],
+  data: {
+    labels: bargeLabels,
+    datasets: [{
+      data: bargeValues,
+      backgroundColor: bargeLabels.map((_, i) => bargeColors[i % bargeColors.length]),
+      borderRadius: 4
+    }]
+  },
   options: {
     indexAxis: 'y',
     maintainAspectRatio: false,
-    layout: { padding: { right: 70 } },
-    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${Number(ctx.raw || 0).toLocaleString()} tons` } } },
-    scales: { x: { beginAtZero: true, title: { display: true, text: 'Quantity (tons)' }, grid: commonGrid }, y: { ticks: { autoSkip: false }, grid: { display: false } } }
+    layout: { padding: { right: 72 } },
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: c => `${fmt(c.raw)} tons` } }
+    },
+    scales: {
+      x: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'Tons', font: { size: 11 } } },
+      y: { grid: { display: false }, ticks: { autoSkip: false } }
+    }
   }
 });
 
@@ -394,31 +545,30 @@ makeChart('rockAccumChart', {
   data: {
     labels: chartData.labels || [],
     datasets: [
-      { label: 'Accum Delivered', data: chartData.accum_delivered || [], borderColor: '#2563eb', tension: .25, fill: false },
-      { label: 'Accum Placed', data: chartData.accum_placed || [], borderColor: '#059669', borderWidth: 3, tension: .25, fill: false },
-      { label: 'Planned Cumulative', data: chartData.planned_accum || [], borderColor: '#f59e0b', borderDash: [6, 5], tension: .2, fill: false },
-      { label: 'BOQ / Target', data: chartData.target_line || [], borderColor: '#7c3aed', borderDash: [3, 5], pointRadius: 0, tension: 0, fill: false }
+      { label: 'Accum Delivered',    data: chartData.accum_delivered || [], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.06)',  borderWidth: 2.5, tension: .25, fill: true },
+      { label: 'Accum Placed',       data: chartData.accum_placed    || [], borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.06)',   borderWidth: 2.5, tension: .25, fill: true },
+      { label: 'Planned Cumulative', data: chartData.planned_accum   || [], borderColor: '#f59e0b', borderDash: [7,4], borderWidth: 1.5, pointRadius: 0, tension: .2, fill: false },
+      { label: 'BOQ / Target',       data: chartData.target_line     || [], borderColor: '#7c3aed', borderDash: [3,4], borderWidth: 1.5, pointRadius: 0, tension: 0,   fill: false }
     ]
   },
   options: {
     maintainAspectRatio: false,
     plugins: {
-      legend: { position: 'bottom' },
+      legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16, font: { size: 11 } } },
       tooltip: {
         callbacks: {
           title: items => chartData.full_dates?.[items[0].dataIndex] || items[0].label,
           afterBody: items => {
-            const idx = items[0].dataIndex;
-            const variance = chartData.variance?.[idx];
-            return variance === null || variance === undefined ? 'Variance: N/A' : `Variance: ${Number(variance).toLocaleString()} tons`;
+            const v = chartData.variance?.[items[0].dataIndex];
+            return v == null ? 'Variance: N/A' : `Variance: ${fmt(v)} tons`;
           },
-          label: ctx => `${ctx.dataset.label}: ${ctx.raw === null ? 'N/A' : Number(ctx.raw || 0).toLocaleString() + ' tons'}`
+          label: c => `${c.dataset.label}: ${c.raw == null ? 'N/A' : fmt(c.raw) + ' tons'}`
         }
       }
     },
     scales: {
-      y: { beginAtZero: true, title: { display: true, text: 'Cumulative Quantity (tons)' }, grid: commonGrid },
-      x: { ticks: { maxTicksLimit: 10 }, grid: { display: false } }
+      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'Cumulative (tons)', font: { size: 11 } } },
+      x: { grid: { display: false }, ticks: { maxTicksLimit: 10 } }
     }
   }
 });
