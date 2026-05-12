@@ -143,3 +143,26 @@ python manage.py collectstatic --settings=config.settings.production
 ```
 
 Then click **Reload** on the PythonAnywhere Web tab.
+
+### Automated deploy
+
+Local machine:
+
+```powershell
+.\scripts\deploy-local.ps1 -Message "Update dashboard performance and production settings"
+```
+
+If SSH to PythonAnywhere is configured, run the full local-to-server flow:
+
+```powershell
+.\scripts\deploy-local.ps1 -Message "Update dashboard performance and production settings" -Remote
+```
+
+PythonAnywhere Bash console:
+
+```bash
+cd /home/supakorn1997/construction_erp
+bash scripts/deploy-pythonanywhere.sh
+```
+
+The PythonAnywhere script runs `git pull`, migrations, `collectstatic`, and reloads the web app. It uses `$API_TOKEN` for the PythonAnywhere reload API when available; otherwise it falls back to touching `/var/www/supakorn1997_pythonanywhere_com_wsgi.py`.
