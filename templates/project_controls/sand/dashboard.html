@@ -31,28 +31,28 @@
   .sdb-header-badge { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); border-radius: 8px; flex-shrink: 0; padding: 8px 16px; text-align: right; }
   .sdb-header-badge .blabel { font-size: .68rem; letter-spacing: .05em; opacity: .75; text-transform: uppercase; }
   .sdb-header-badge .bvalue { font-size: 1.7rem; font-weight: 900; line-height: 1.15; }
-  .sdb-prog-wrap { margin-top: 14px; }
+  .sdb-prog-wrap { margin-top: 14px; position: relative; }
   .sdb-prog-track { background: rgba(255,255,255,.18); border-radius: 999px; height: 10px; overflow: hidden; }
   .sdb-prog-fill { background: linear-gradient(90deg, #34d399, #10b981); border-radius: 999px; height: 100%; transition: width .7s ease; }
   .sdb-prog-labels { display: flex; font-size: .73rem; justify-content: space-between; margin-top: 5px; opacity: .78; }
 
-  /* ── KPI grid (5 cols for sand) ──────────────────────────────── */
-  .sdb-kpis { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; }
+  /* ── KPI grid ────────────────────────────────────────────────── */
+  .sdb-kpis { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
   .sdb-kpi {
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(15,23,42,.08);
-    padding: 14px 12px 12px;
+    padding: 15px 13px 13px;
     position: relative;
     overflow: hidden;
     transition: transform .15s ease, box-shadow .15s ease;
   }
   .sdb-kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--c, #2563eb); border-radius: 10px 10px 0 0; }
   .sdb-kpi:hover { box-shadow: 0 8px 22px rgba(15,23,42,.14); transform: translateY(-3px); }
-  .sdb-kpi .ki { align-items: center; background: var(--cb, #eff6ff); border-radius: 8px; color: var(--c, #2563eb); display: flex; font-size: .85rem; height: 30px; justify-content: center; margin-bottom: 7px; width: 30px; }
-  .sdb-kpi .kl { color: #64748b; font-size: .69rem; font-weight: 700; letter-spacing: .03em; min-height: 26px; text-transform: uppercase; }
-  .sdb-kpi .kv { color: #0f172a; font-size: 1.5rem; font-weight: 900; line-height: 1.1; margin: 4px 0 2px; }
-  .sdb-kpi .ks { color: #94a3b8; font-size: .68rem; }
+  .sdb-kpi .ki { align-items: center; background: var(--cb, #eff6ff); border-radius: 8px; color: var(--c, #2563eb); display: flex; font-size: .88rem; height: 32px; justify-content: center; margin-bottom: 8px; width: 32px; }
+  .sdb-kpi .kl { color: #64748b; font-size: .72rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
+  .sdb-kpi .kv { color: #0f172a; font-size: 1.7rem; font-weight: 900; line-height: 1.1; margin: 4px 0 2px; }
+  .sdb-kpi .ks { color: #94a3b8; font-size: .71rem; }
   .sdb-kpi.blue   { --c:#2563eb; --cb:#eff6ff; }
   .sdb-kpi.green  { --c:#059669; --cb:#ecfdf5; }
   .sdb-kpi.orange { --c:#d97706; --cb:#fffbeb; }
@@ -66,8 +66,8 @@
   .sdb-pt { align-items: center; border-bottom: 1px solid #f1f5f9; display: flex; gap: 9px; margin-bottom: 14px; padding-bottom: 11px; }
   .sdb-pt .ico { align-items: center; background: #e0f4f9; border-radius: 6px; color: #0f7f9f; display: flex; flex-shrink: 0; font-size: .8rem; height: 28px; justify-content: center; width: 28px; }
   .sdb-pt h6 { color: #1e293b; font-size: .82rem; font-weight: 900; letter-spacing: .04em; margin: 0; text-transform: uppercase; }
-  .sdb-chart { height: 290px; }
-  .sdb-wide-chart { height: 310px; }
+  .sdb-chart { height: 300px; }
+  .sdb-wide-chart { height: 320px; }
 
   /* ── Source bar ──────────────────────────────────────────────── */
   .src-bar { background: #e0f4f9; border-radius: 999px; height: 6px; margin-top: 4px; overflow: hidden; }
@@ -110,7 +110,7 @@
   .sdb-btn-out  { background: #f0f9fb; border: 1px solid #b6dce8; color: #0a5f78; }
 
   /* ── Responsive ──────────────────────────────────────────────── */
-  @media (max-width: 1280px) {
+  @media (max-width: 1240px) {
     .sdb-layout { grid-template-columns: minmax(0,1fr); }
     .sdb-kpis   { grid-template-columns: repeat(2, minmax(0,1fr)); }
   }
@@ -118,7 +118,7 @@
     .sdb-header-title h2 { font-size: 1.3rem; }
     .sdb-header-badge    { display: none; }
     .sdb-kpis            { grid-template-columns: repeat(2, minmax(0,1fr)); }
-    .sdb-kpi .kv         { font-size: 1.25rem; }
+    .sdb-kpi .kv         { font-size: 1.4rem; }
   }
 </style>
 {% endblock %}
