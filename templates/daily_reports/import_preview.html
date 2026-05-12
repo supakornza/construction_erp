@@ -11,9 +11,11 @@
 <div class="d-flex align-items-center mb-4 gap-2 small fw-semibold">
     <span class="badge bg-success rounded-pill px-3 py-2"><i class="fas fa-check me-1"></i>1 Upload</span>
     <i class="fas fa-chevron-right text-muted"></i>
-    <span class="badge bg-primary rounded-pill px-3 py-2">2 Preview</span>
+    <span class="badge bg-success rounded-pill px-3 py-2"><i class="fas fa-check me-1"></i>2 Edit / Review</span>
     <i class="fas fa-chevron-right text-muted"></i>
-    <span class="badge bg-light text-muted rounded-pill px-3 py-2 border">3 Confirm</span>
+    <span class="badge bg-primary rounded-pill px-3 py-2">3 Preview</span>
+    <i class="fas fa-chevron-right text-muted"></i>
+    <span class="badge bg-light text-muted rounded-pill px-3 py-2 border">4 Confirm</span>
 </div>
 
 <div class="alert alert-warning d-flex gap-2 align-items-start mb-4">
@@ -188,8 +190,11 @@
             <i class="fas fa-check me-1"></i>Confirm &amp; Save Import
         </button>
     </form>
-    <a href="{% url 'daily_reports:import_upload' %}" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-1"></i>Back / Upload Different File
+    <a href="{% url 'daily_reports:import_pdf_edit' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Back / Edit Data
+    </a>
+    <a href="{% url 'daily_reports:import_upload' %}" class="btn btn-link text-muted small">
+        Upload Different File
     </a>
 </div>
 {% endblock %}

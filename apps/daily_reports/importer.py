@@ -4,7 +4,7 @@ Parses the official template workbook and returns structured data.
 """
 import openpyxl
 from decimal import Decimal, InvalidOperation
-from datetime import date
+from datetime import date, datetime as _datetime
 
 
 WEATHER_MAP = {v.upper(): v for v in ['Clear', 'Cloudy', 'Windy', 'Raining', 'High Wave', 'Other']}
@@ -62,11 +62,20 @@ def parse_import_file(uploaded_file):
     ws = wb['Report Info']
 
     raw_date = ws.cell(3, 2).value
-    if isinstance(raw_date, date):
+    # openpyxl returns date cells as datetime objects (datetime subclasses date),
+    # so check datetime FIRST to avoid getting the time component in isoformat.
+    if isinstance(raw_date, _datetime):
+        report_date = raw_date.date()
+    elif isinstance(raw_date, date):
         report_date = raw_date
     elif raw_date:
         try:
-            report_date = date.fromisoformat(str(raw_date).strip())
+            s = str(raw_date).strip()
+            # Handle strings that include a time component (e.g. "2026-05-11T00:00:00")
+            if 'T' in s or (' ' in s and len(s) > 10):
+                report_date = _datetime.fromisoformat(s).date()
+            else:
+                report_date = date.fromisoformat(s)
         except ValueError:
             raise ValueError(
                 f"Invalid report date '{raw_date}'. "

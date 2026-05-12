@@ -18,6 +18,7 @@ urlpatterns = [
     path('import/', import_views.ImportListView.as_view(), name='import_list'),
     path('import/upload/', import_views.ImportUploadView.as_view(), name='import_upload'),
     path('import/preview/', import_views.ImportPreviewView.as_view(), name='import_preview'),
+    path('import/pdf-edit/', import_views.ImportPdfEditView.as_view(), name='import_pdf_edit'),
     path('import/template/', import_views.ImportTemplateDownloadView.as_view(), name='import_template'),
     path('import/<int:pk>/', import_views.ImportDetailView.as_view(), name='import_detail'),
     path('import/<int:pk>/create-report/', import_views.ImportCreateReportView.as_view(), name='import_create_report'),

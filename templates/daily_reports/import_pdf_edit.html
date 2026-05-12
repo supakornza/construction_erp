@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+{% block title %}Review &amp; Edit Import – Construction ERP{% endblock %}
+{% block page_title %}Review &amp; Edit Import Data{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center gap-3 mb-3">
+    <h4 class="mb-0">
+        {% if data.source_format == 'pdf' %}
+            <i class="fas fa-file-pdf me-2 text-danger"></i>Review &amp; Edit PDF Data
+        {% else %}
+            <i class="fas fa-file-excel me-2 text-success"></i>Review &amp; Edit Excel Data
+        {% endif %}
+    </h4>
+</div>
+
+<!-- Step indicator -->
+<div class="d-flex align-items-center mb-4 gap-2 small fw-semibold">
+    <span class="badge bg-success rounded-pill px-3 py-2"><i class="fas fa-check me-1"></i>1 Upload</span>
+    <i class="fas fa-chevron-right text-muted"></i>
+    <span class="badge bg-primary rounded-pill px-3 py-2">2 Edit / Review</span>
+    <i class="fas fa-chevron-right text-muted"></i>
+    <span class="badge bg-light text-muted rounded-pill px-3 py-2 border">3 Preview</span>
+    <i class="fas fa-chevron-right text-muted"></i>
+    <span class="badge bg-light text-muted rounded-pill px-3 py-2 border">4 Confirm</span>
+</div>
+
+<div class="alert {% if data.source_format == 'pdf' %}alert-warning{% else %}alert-info{% endif %} d-flex gap-2 mb-4">
+    <i class="fas fa-{% if data.source_format == 'pdf' %}exclamation-triangle{% else %}info-circle{% endif %} mt-1 flex-shrink-0"></i>
+    <div>
+        {% if data.source_format == 'pdf' %}
+            <strong>PDF parsing is automatic but not perfect.</strong>
+            Please check every field below and correct any errors before continuing.
+        {% else %}
+            <strong>Excel data loaded.</strong>
+            Review the fields below and make any corrections if needed.
+        {% endif %}
+        You can add or remove rows with the <i class="fas fa-plus-circle text-success"></i> / <i class="fas fa-times text-danger"></i> buttons.
+    </div>
+</div>
+
+<form method="post" id="pdf-edit-form">
+{% csrf_token %}
+
+<!-- ── Header ──────────────────────────────────────────────────────────────── -->
+<div class="card mb-3">
+    <div class="card-header fw-semibold"><i class="fas fa-info-circle me-2 text-primary"></i>Report Header</div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-sm-6 col-md-3">
+                <label class="form-label small fw-semibold">Project</label>
+                <input type="text" class="form-control form-control-sm" value="{{ data.contract_no }} – {{ data.project_name }}" disabled>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <label class="form-label small fw-semibold">Report Date <span class="text-danger">*</span></label>
+                <input type="date" name="report_date" class="form-control form-control-sm" value="{{ data.report_date }}" required>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <label class="form-label small fw-semibold">Contractor Name</label>
+                <input type="text" name="contractor_name" class="form-control form-control-sm" value="{{ data.contractor_name }}">
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <label class="form-label small fw-semibold">Total Manpower</label>
+                <input type="number" name="total_manpower" class="form-control form-control-sm" value="{{ data.total_manpower }}" min="0">
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <label class="form-label small fw-semibold">Weather – Day</label>
+                <select name="weather_day" class="form-select form-select-sm">
+                    {% for val, lbl in weather_choices %}
+                    <option value="{{ val }}" {% if data.weather_day == val %}selected{% endif %}>{{ lbl }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <label class="form-label small fw-semibold">Weather – Night</label>
+                <select name="weather_night" class="form-select form-select-sm">
+                    {% for val, lbl in weather_choices %}
+                    <option value="{{ val }}" {% if data.weather_night == val %}selected{% endif %}>{{ lbl }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <label class="form-label small fw-semibold">Wind Speed (km/hr)</label>
+                <input type="text" name="wind_speed" class="form-control form-control-sm" value="{{ data.wind_speed }}">
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <label class="form-label small fw-semibold">Prepared By</label>
+                <input type="text" name="prepared_by_name" class="form-control form-control-sm" value="{{ data.prepared_by_name }}">
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <label class="form-label small fw-semibold">Checked By</label>
+                <input type="text" name="checked_by_name" class="form-control form-control-sm" value="{{ data.checked_by_name }}">
+            </div>
+            <div class="col-12">
+                <label class="form-label small fw-semibold">Remarks</label>
+                <textarea name="remarks" class="form-control form-control-sm" rows="2">{{ data.remarks }}</textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Equipment ────────────────────────────────────────────────────────────── -->
+<div class="card mb-3">
+    <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-truck me-2 text-warning"></i>Equipment
+            <span class="badge bg-secondary ms-1" id="eq-count">{{ data.equipment_items|length }}</span>
+        </span>
+        <button type="button" class="btn btn-sm btn-outline-success" onclick="addRow('eq-tbody','eq-row-tpl')">
+            <i class="fas fa-plus me-1"></i>Add Row
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-sm mb-0">
+            <thead class="table-light"><tr><th style="width:46%">Equipment Name</th><th style="width:12%">Qty</th><th>Remarks</th><th style="width:3%"></th></tr></thead>
+            <tbody id="eq-tbody">
+            {% for eq in data.equipment_items %}
+            <tr>
+                <td><input type="text" name="eq_name" class="form-control form-control-sm" value="{{ eq.equipment_name }}"></td>
+                <td><input type="number" name="eq_qty" class="form-control form-control-sm" value="{{ eq.quantity }}" min="1"></td>
+                <td><input type="text" name="eq_remarks" class="form-control form-control-sm" value="{{ eq.remarks }}"></td>
+                <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times"></i></button></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ── Manpower ─────────────────────────────────────────────────────────────── -->
+<div class="card mb-3">
+    <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-users me-2 text-info"></i>Manpower
+            <span class="badge bg-secondary ms-1" id="mp-count">{{ data.manpower_items|length }}</span>
+        </span>
+        <button type="button" class="btn btn-sm btn-outline-success" onclick="addRow('mp-tbody','mp-row-tpl')">
+            <i class="fas fa-plus me-1"></i>Add Row
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-sm mb-0">
+            <thead class="table-light"><tr><th>Role / Position</th><th style="width:12%">Qty</th><th>Company</th><th style="width:3%"></th></tr></thead>
+            <tbody id="mp-tbody">
+            {% for mp in data.manpower_items %}
+            <tr>
+                <td><input type="text" name="mp_role" class="form-control form-control-sm" value="{{ mp.role }}"></td>
+                <td><input type="number" name="mp_qty" class="form-control form-control-sm" value="{{ mp.quantity }}" min="0"></td>
+                <td><input type="text" name="mp_company" class="form-control form-control-sm" value="{{ mp.company }}"></td>
+                <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times"></i></button></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ── Work Activities ───────────────────────────────────────────────────────── -->
+<div class="card mb-3">
+    <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-hard-hat me-2 text-primary"></i>Work Activities
+            <span class="badge bg-secondary ms-1" id="act-count">{{ data.activities|length }}</span>
+        </span>
+        <button type="button" class="btn btn-sm btn-outline-success" onclick="addRow('act-tbody','act-row-tpl')">
+            <i class="fas fa-plus me-1"></i>Add Row
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-sm mb-0" style="min-width:900px">
+            <thead class="table-light">
+                <tr><th style="width:4%">No.</th><th style="width:30%">Description</th><th style="width:14%">Location</th><th style="width:10%">Qty</th><th style="width:8%">Unit</th><th style="width:14%">Problem</th><th>Remarks</th><th style="width:3%"></th></tr>
+            </thead>
+            <tbody id="act-tbody">
+            {% for act in data.activities %}
+            <tr>
+                <td><input type="number" name="act_no" class="form-control form-control-sm" value="{{ act.item_no }}" min="1"></td>
+                <td><input type="text" name="act_desc" class="form-control form-control-sm" value="{{ act.description }}"></td>
+                <td><input type="text" name="act_loc" class="form-control form-control-sm" value="{{ act.location }}"></td>
+                <td><input type="text" name="act_qty" class="form-control form-control-sm" value="{{ act.quantity|default:'' }}"></td>
+                <td><input type="text" name="act_unit" class="form-control form-control-sm" value="{{ act.unit }}"></td>
+                <td><input type="text" name="act_problem" class="form-control form-control-sm" value="{{ act.problem }}"></td>
+                <td><input type="text" name="act_remarks" class="form-control form-control-sm" value="{{ act.remarks }}"></td>
+                <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times"></i></button></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ── Lookahead ─────────────────────────────────────────────────────────────── -->
+<div class="card mb-4">
+    <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-calendar-alt me-2 text-success"></i>Daily Lookahead
+            <span class="badge bg-secondary ms-1" id="la-count">{{ data.lookaheads|length }}</span>
+        </span>
+        <button type="button" class="btn btn-sm btn-outline-success" onclick="addRow('la-tbody','la-row-tpl')">
+            <i class="fas fa-plus me-1"></i>Add Row
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-sm mb-0" style="min-width:800px">
+            <thead class="table-light">
+                <tr><th style="width:4%">No.</th><th style="width:34%">Work Activity</th><th style="width:16%">Location</th><th style="width:10%">Qty</th><th style="width:8%">Unit</th><th>Remarks</th><th style="width:3%"></th></tr>
+            </thead>
+            <tbody id="la-tbody">
+            {% for la in data.lookaheads %}
+            <tr>
+                <td><input type="number" name="la_no" class="form-control form-control-sm" value="{{ la.item_no }}" min="1"></td>
+                <td><input type="text" name="la_desc" class="form-control form-control-sm" value="{{ la.description }}"></td>
+                <td><input type="text" name="la_loc" class="form-control form-control-sm" value="{{ la.location }}"></td>
+                <td><input type="text" name="la_qty" class="form-control form-control-sm" value="{{ la.quantity|default:'' }}"></td>
+                <td><input type="text" name="la_unit" class="form-control form-control-sm" value="{{ la.unit }}"></td>
+                <td><input type="text" name="la_remarks" class="form-control form-control-sm" value="{{ la.remarks }}"></td>
+                <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times"></i></button></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Action buttons -->
+<div class="d-flex gap-2 mb-5">
+    <button type="submit" class="btn btn-primary">
+        <i class="fas fa-arrow-right me-1"></i>Next: Preview &amp; Confirm
+    </button>
+    <a href="{% url 'daily_reports:import_upload' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Upload Different File
+    </a>
+</div>
+
+</form>
+
+<!-- ── Row templates (hidden) ──────────────────────────────────────────────── -->
+<template id="eq-row-tpl">
+    <tr>
+        <td><input type="text" name="eq_name" class="form-control form-control-sm" placeholder="Equipment name"></td>
+        <td><input type="number" name="eq_qty" class="form-control form-control-sm" value="1" min="1"></td>
+        <td><input type="text" name="eq_remarks" class="form-control form-control-sm"></td>
+        <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times"></i></button></td>
+    </tr>
+</template>
+
+<template id="mp-row-tpl">
+    <tr>
+        <td><input type="text" name="mp_role" class="form-control form-control-sm" placeholder="Role / Position"></td>
+        <td><input type="number" name="mp_qty" class="form-control form-control-sm" value="0" min="0"></td>
+        <td><input type="text" name="mp_company" class="form-control form-control-sm"></td>
+        <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times"></i></button></td>
+    </tr>
+</template>
+
+<template id="act-row-tpl">
+    <tr>
+        <td><input type="number" name="act_no" class="form-control form-control-sm" min="1"></td>
+        <td><input type="text" name="act_desc" class="form-control form-control-sm" placeholder="Description"></td>
+        <td><input type="text" name="act_loc" class="form-control form-control-sm"></td>
+        <td><input type="text" name="act_qty" class="form-control form-control-sm"></td>
+        <td><input type="text" name="act_unit" class="form-control form-control-sm"></td>
+        <td><input type="text" name="act_problem" class="form-control form-control-sm"></td>
+        <td><input type="text" name="act_remarks" class="form-control form-control-sm"></td>
+        <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times"></i></button></td>
+    </tr>
+</template>
+
+<template id="la-row-tpl">
+    <tr>
+        <td><input type="number" name="la_no" class="form-control form-control-sm" min="1"></td>
+        <td><input type="text" name="la_desc" class="form-control form-control-sm" placeholder="Work activity"></td>
+        <td><input type="text" name="la_loc" class="form-control form-control-sm"></td>
+        <td><input type="text" name="la_qty" class="form-control form-control-sm"></td>
+        <td><input type="text" name="la_unit" class="form-control form-control-sm"></td>
+        <td><input type="text" name="la_remarks" class="form-control form-control-sm"></td>
+        <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times"></i></button></td>
+    </tr>
+</template>
+
+<script>
+function addRow(tbodyId, tplId) {
+    var tpl = document.getElementById(tplId);
+    var tbody = document.getElementById(tbodyId);
+    var clone = tpl.content.cloneNode(true);
+    tbody.appendChild(clone);
+    updateCount(tbodyId);
+    // auto-number the No. field if present
+    var rows = tbody.querySelectorAll('tr');
+    var lastRow = rows[rows.length - 1];
+    var noInput = lastRow.querySelector('input[type=number]:first-child');
+    if (noInput && !noInput.value) noInput.value = rows.length;
+}
+
+function removeRow(btn) {
+    var row = btn.closest('tr');
+    var tbody = row.closest('tbody');
+    row.remove();
+    updateCount(tbody.id);
+}
+
+function updateCount(tbodyId) {
+    var tbody = document.getElementById(tbodyId);
+    if (!tbody) return;
+    var countMap = {
+        'eq-tbody': 'eq-count',
+        'mp-tbody': 'mp-count',
+        'act-tbody': 'act-count',
+        'la-tbody': 'la-count',
+    };
+    var countEl = document.getElementById(countMap[tbodyId]);
+    if (countEl) countEl.textContent = tbody.querySelectorAll('tr').length;
+}
+</script>
+{% endblock %}
