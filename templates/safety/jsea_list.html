@@ -12,7 +12,7 @@
         <tbody>
         {% for j in jsea_records %}
         <tr>
-            <td>{{ j.date }}</td>
+            <td>{{ j.date|thai_be_date }}</td>
             <td>{{ j.project.contract_no }}</td>
             <td>{{ j.work_activity }}</td>
             <td>{{ j.work_area }}</td>

@@ -53,7 +53,7 @@
     <div class="card h-100">
       <div class="card-body">
         <div class="text-muted small">Latest Date</div>
-        <div class="fs-5 fw-bold">{% if data.latest_date %}{{ data.latest_date }}{% else %}-{% endif %}</div>
+        <div class="fs-5 fw-bold">{% if data.latest_date %}{{ data.latest_date|thai_be_date }}{% else %}-{% endif %}</div>
       </div>
     </div>
   </div>
@@ -119,7 +119,7 @@
       <tbody>
         {% for record in data.recent_records %}
         <tr>
-          <td><a href="{% url 'project_controls:revetment_detail' record.pk %}">{{ record.record_date }}</a></td>
+          <td><a href="{% url 'project_controls:revetment_detail' record.pk %}">{{ record.record_date|thai_be_date }}</a></td>
           <td>{{ record.items.count|intcomma }}</td>
           <td class="text-end fw-semibold">{{ record.total_quantity|floatformat:3|intcomma }}</td>
           <td>{{ record.remarks|default:"-" }}</td>

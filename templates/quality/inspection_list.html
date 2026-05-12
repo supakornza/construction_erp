@@ -24,7 +24,7 @@
     <tbody>
     {% for i in inspections %}
     <tr>
-        <td>{{ i.inspection_date }}</td><td>{{ i.project.contract_no }}</td><td>{{ i.inspection_type }}</td><td>{{ i.location }}</td><td>{{ i.status }}</td><td>{{ i.result }}</td>
+        <td>{{ i.inspection_date|thai_be_date }}</td><td>{{ i.project.contract_no }}</td><td>{{ i.inspection_type }}</td><td>{{ i.location }}</td><td>{{ i.status }}</td><td>{{ i.result }}</td>
         <td class="text-end"><a href="{% url 'quality:inspection_update' i.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit"></i></a></td>
     </tr>
     {% empty %}

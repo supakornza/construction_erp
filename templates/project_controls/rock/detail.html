@@ -1,11 +1,11 @@
 ﻿{% extends "base.html" %}
-{% block title %}Rock Record {{ record.record_date }} โ€“ Construction ERP{% endblock %}
-{% block page_title %}Rock Daily Record โ€“ {{ record.record_date }}{% endblock %}
+{% block title %}Rock Record {{ record.record_date|thai_be_date }} - Construction ERP{% endblock %}
+{% block page_title %}Rock Daily Record - {{ record.record_date|thai_be_date }}{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-center mb-4 flex-wrap gap-2">
   <a href="{% url 'project_controls:rock_list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left"></i></a>
-  <h5 class="mb-0">Rock Record โ€“ {{ record.record_date }} ({{ record.day_name }})</h5>
+  <h5 class="mb-0">Rock Record - {{ record.record_date|thai_be_date }} ({{ record.day_name }})</h5>
   <div class="ms-auto d-flex gap-2">
     <a href="{% url 'project_controls:rock_update' record.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit me-1"></i>Edit</a>
     <a href="{% url 'project_controls:rock_export_pdf' record.pk %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-file-pdf me-1"></i>PDF</a>
@@ -19,7 +19,7 @@
       <div class="card-body">
         <dl class="row mb-0 small">
           <dt class="col-6">Project</dt><dd class="col-6">{{ record.project.project_name }}</dd>
-          <dt class="col-6">Date</dt><dd class="col-6">{{ record.record_date }}</dd>
+          <dt class="col-6">Date</dt><dd class="col-6">{{ record.record_date|thai_be_date }}</dd>
           <dt class="col-6">Material Type</dt><dd class="col-6">{{ record.material_type|default:'N/A' }}</dd>
           <dt class="col-6">Source / Quarry</dt><dd class="col-6">{{ record.source_quarry|default:'N/A' }}</dd>
           <dt class="col-6">Destination / Area</dt><dd class="col-6">{{ record.destination_area|default:'N/A' }}</dd>

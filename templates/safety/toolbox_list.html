@@ -17,7 +17,7 @@
         <tbody>
         {% for m in meetings %}
         <tr>
-            <td>{{ m.meeting_date }}</td>
+            <td>{{ m.meeting_date|thai_be_date }}</td>
             <td>{{ m.project.contract_no }}</td>
             <td>{{ m.topic }}</td>
             <td>{{ m.location }}</td>

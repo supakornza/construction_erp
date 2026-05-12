@@ -13,8 +13,8 @@
             <dl class="row small mb-0">
                 <dt class="col-5">Project</dt><dd class="col-7">{{ pr.project.contract_no }}</dd>
                 <dt class="col-5">Requested By</dt><dd class="col-7">{{ pr.requested_by.get_full_name|default:'-' }}</dd>
-                <dt class="col-5">Request Date</dt><dd class="col-7">{{ pr.request_date }}</dd>
-                <dt class="col-5">Required Date</dt><dd class="col-7">{{ pr.required_date }}</dd>
+                <dt class="col-5">Request Date</dt><dd class="col-7">{{ pr.request_date|thai_be_date }}</dd>
+                <dt class="col-5">Required Date</dt><dd class="col-7">{{ pr.required_date|thai_be_date }}</dd>
                 <dt class="col-5">Remarks</dt><dd class="col-7">{{ pr.remarks|default:'-' }}</dd>
             </dl>
         </div></div>

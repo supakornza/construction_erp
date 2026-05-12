@@ -13,8 +13,8 @@
             <dl class="row small mb-0">
                 <dt class="col-5">PR No</dt><dd class="col-7">{{ po.pr.pr_no }}</dd>
                 <dt class="col-5">Supplier</dt><dd class="col-7">{{ po.supplier.name }}</dd>
-                <dt class="col-5">Order Date</dt><dd class="col-7">{{ po.order_date }}</dd>
-                <dt class="col-5">Delivery Date</dt><dd class="col-7">{{ po.delivery_date }}</dd>
+                <dt class="col-5">Order Date</dt><dd class="col-7">{{ po.order_date|thai_be_date }}</dd>
+                <dt class="col-5">Delivery Date</dt><dd class="col-7">{{ po.delivery_date|thai_be_date }}</dd>
                 <dt class="col-5">Total Amount</dt><dd class="col-7 fw-bold">{{ po.total_amount|floatformat:2|intcomma }}</dd>
             </dl>
         </div></div>

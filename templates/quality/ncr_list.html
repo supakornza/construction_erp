@@ -11,7 +11,7 @@
     <tbody>
     {% for ncr in ncrs %}
     <tr>
-        <td>{{ ncr.ncr_no }}</td><td>{{ ncr.project.contract_no }}</td><td>{{ ncr.description|truncatechars:60 }}</td><td>{{ ncr.responsible_person|default:"-" }}</td><td>{{ ncr.due_date }}</td><td>{{ ncr.status }}</td><td>{{ ncr.severity }}</td>
+        <td>{{ ncr.ncr_no }}</td><td>{{ ncr.project.contract_no }}</td><td>{{ ncr.description|truncatechars:60 }}</td><td>{{ ncr.responsible_person|default:"-" }}</td><td>{{ ncr.due_date|thai_be_date }}</td><td>{{ ncr.status }}</td><td>{{ ncr.severity }}</td>
         <td>{% if ncr.attachment %}<a href="{{ ncr.attachment.url }}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-paperclip"></i></a>{% else %}<span class="text-muted">-</span>{% endif %}</td>
         <td class="text-end"><a href="{% url 'quality:ncr_update' ncr.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit"></i></a></td>
     </tr>

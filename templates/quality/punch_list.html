@@ -11,7 +11,7 @@
     <tbody>
     {% for item in punch_items %}
     <tr>
-        <td>{{ item.project.contract_no }}</td><td>{{ item.description|truncatechars:60 }}</td><td>{{ item.location }}</td><td>{{ item.responsible_person|default:"-" }}</td><td>{{ item.target_date }}</td><td>{{ item.status }}</td><td>{{ item.priority }}</td>
+        <td>{{ item.project.contract_no }}</td><td>{{ item.description|truncatechars:60 }}</td><td>{{ item.location }}</td><td>{{ item.responsible_person|default:"-" }}</td><td>{{ item.target_date|thai_be_date }}</td><td>{{ item.status }}</td><td>{{ item.priority }}</td>
         <td>{% if item.attachment %}<a href="{{ item.attachment.url }}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-paperclip"></i></a>{% else %}<span class="text-muted">-</span>{% endif %}</td>
         <td class="text-end"><a href="{% url 'quality:punch_update' item.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit"></i></a></td>
     </tr>

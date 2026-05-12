@@ -29,7 +29,7 @@
                 <dt class="col-5 text-muted">Owner</dt><dd class="col-7">{{ project.owner }}</dd>
                 <dt class="col-5 text-muted">Contractor</dt><dd class="col-7">{{ project.contractor }}</dd>
                 <dt class="col-5 text-muted">Contract Value</dt><dd class="col-7">{{ project.contract_value|floatformat:0|intcomma }} THB</dd>
-                <dt class="col-5 text-muted">Period</dt><dd class="col-7">{{ project.start_date }} โ€“ {{ project.finish_date }}</dd>
+                <dt class="col-5 text-muted">Period</dt><dd class="col-7">{{ project.start_date|thai_be_date }} - {{ project.finish_date|thai_be_date }}</dd>
             </dl>
         </div>
         <div class="card-footer bg-transparent d-flex gap-2">

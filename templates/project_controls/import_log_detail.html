@@ -22,7 +22,7 @@
           <dt class="col-5">Import Type</dt><dd class="col-7">{{ log.get_import_type_display }}</dd>
           <dt class="col-5">Project</dt><dd class="col-7">{{ log.project.project_name }}</dd>
           <dt class="col-5">File</dt><dd class="col-7 text-break">{{ log.file.name }}</dd>
-          <dt class="col-5">Imported At</dt><dd class="col-7">{{ log.imported_at|date:"d/m/Y H:i:s" }}</dd>
+          <dt class="col-5">Imported At</dt><dd class="col-7">{{ log.imported_at|thai_be_datetime_seconds }}</dd>
           <dt class="col-5">Imported By</dt><dd class="col-7">{{ log.imported_by|default:"-" }}</dd>
         </dl>
       </div>

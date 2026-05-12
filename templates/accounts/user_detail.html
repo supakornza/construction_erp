@@ -19,7 +19,7 @@
             <dt class="col-sm-4">Role</dt><dd class="col-sm-8"><span class="badge bg-primary">{{ viewed_user.get_role_display }}</span></dd>
             <dt class="col-sm-4">Phone</dt><dd class="col-sm-8">{{ viewed_user.phone|default:'-' }}</dd>
             <dt class="col-sm-4">Status</dt><dd class="col-sm-8">{% if viewed_user.is_active %}<span class="text-success">Active</span>{% else %}<span class="text-danger">Inactive</span>{% endif %}</dd>
-            <dt class="col-sm-4">Joined</dt><dd class="col-sm-8">{{ viewed_user.date_joined|date:"d M Y" }}</dd>
+            <dt class="col-sm-4">Joined</dt><dd class="col-sm-8">{{ viewed_user.date_joined|thai_be_date }}</dd>
         </dl>
     </div>
 </div>

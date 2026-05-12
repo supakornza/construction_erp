@@ -33,7 +33,7 @@
     <tbody>
     {% for cost in costs %}
     <tr>
-      <td>{{ cost.cost_date }}</td>
+      <td>{{ cost.cost_date|thai_be_date }}</td>
       <td>{{ cost.project.contract_no }}</td>
       <td><code>{{ cost.cost_code.code }}</code></td>
       <td>{{ cost.description|truncatechars:50 }}</td>

@@ -268,7 +268,7 @@
     <div class="card pc-kpi-card border-start border-4 border-info">
       <div class="text-muted small">Days Recorded</div>
       <div class="fs-3 fw-bold">{{ rock_data.record_count|default:0 }}</div>
-      <div class="text-muted small">Latest: {{ rock_data.latest_date|default:"-" }}</div>
+      <div class="text-muted small">Latest: {% if rock_data.latest_date %}{{ rock_data.latest_date|thai_be_date }}{% else %}-{% endif %}</div>
     </div>
   </div>
 </div>

@@ -63,7 +63,7 @@
       <tbody>
         {% for log in recent_logs %}
         <tr>
-          <td>{{ log.imported_at|date:"d/m/Y H:i" }}</td>
+          <td>{{ log.imported_at|thai_be_datetime }}</td>
           <td><span class="badge bg-secondary">{{ log.get_import_type_display }}</span></td>
           <td>{{ log.project.project_name }}</td>
           <td class="text-truncate" style="max-width:180px">{{ log.file.name }}</td>

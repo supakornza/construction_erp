@@ -15,8 +15,8 @@
             <td><a href="{% url 'procurement:po_detail' po.pk %}">{{ po.po_no }}</a></td>
             <td>{{ po.pr.pr_no }}</td>
             <td>{{ po.supplier.name }}</td>
-            <td>{{ po.order_date }}</td>
-            <td>{{ po.delivery_date }}</td>
+            <td>{{ po.order_date|thai_be_date }}</td>
+            <td>{{ po.delivery_date|thai_be_date }}</td>
             <td>{{ po.total_amount|floatformat:2|intcomma }}</td>
             <td><span class="badge bg-secondary">{{ po.status }}</span></td>
             <td><a href="{% url 'procurement:po_detail' po.pk %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a></td>

@@ -22,7 +22,7 @@
         <tbody>
         {% for r in records %}
         <tr>
-            <td>{{ r.report_date }}</td>
+            <td>{{ r.report_date|thai_be_date }}</td>
             <td>{{ r.project.contract_no }}</td>
             <td>{{ r.equipment.name }}</td>
             <td><span class="badge bg-{% if r.status == 'Working' %}success{% elif r.status == 'Standby' %}warning{% elif r.status == 'Breakdown' %}danger{% else %}secondary{% endif %}">{{ r.status }}</span></td>

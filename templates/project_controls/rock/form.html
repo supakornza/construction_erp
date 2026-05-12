@@ -15,7 +15,7 @@
   <a href="{% url 'project_controls:rock_list' %}" class="btn btn-sm btn-outline-secondary me-3">
     <i class="fas fa-arrow-left"></i>
   </a>
-  <h5 class="mb-0">{% if form.instance.pk %}Edit Rock Record – {{ form.instance.record_date }}{% else %}New Rock Daily Record{% endif %}</h5>
+  <h5 class="mb-0">{% if form.instance.pk %}Edit Rock Record - {{ form.instance.record_date|thai_be_date }}{% else %}New Rock Daily Record{% endif %}</h5>
 </div>
 
 <form method="post">

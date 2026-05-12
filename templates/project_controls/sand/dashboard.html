@@ -211,20 +211,20 @@
         <div class="sdb-kpi teal">
           <div class="ki"><i class="fas fa-calendar-check"></i></div>
           <div class="kl">Forecast Completion</div>
-          <div class="kv" style="font-size:1.1rem">{% if data.forecast_completion_date %}{{ data.forecast_completion_date|date:"d M Y" }}{% else %}N/A{% endif %}</div>
+          <div class="kv" style="font-size:1.1rem">{% if data.forecast_completion_date %}{{ data.forecast_completion_date|thai_be_date }}{% else %}N/A{% endif %}</div>
           <div class="ks">remaining ÷ avg placement</div>
         </div>
         <div class="sdb-kpi blue">
           <div class="ki"><i class="fas fa-truck"></i></div>
           <div class="kl">Latest Delivered</div>
           <div class="kv">{{ data.latest_daily_delivered|default:0|floatformat:0|intcomma }} tons</div>
-          <div class="ks">{{ data.latest_date|date:"d M Y"|default:"No data" }}</div>
+          <div class="ks">{% if data.latest_date %}{{ data.latest_date|thai_be_date }}{% else %}No data{% endif %}</div>
         </div>
         <div class="sdb-kpi green">
           <div class="ki"><i class="fas fa-circle-down"></i></div>
           <div class="kl">Latest Placed</div>
           <div class="kv">{{ data.latest_daily_placed|default:0|floatformat:0|intcomma }} tons</div>
-          <div class="ks">{{ data.latest_date|date:"d M Y"|default:"No data" }}</div>
+          <div class="ks">{% if data.latest_date %}{{ data.latest_date|thai_be_date }}{% else %}No data{% endif %}</div>
         </div>
       </section>
 
@@ -249,7 +249,7 @@
                   <tr>
                     <td>
                       <div class="fw-bold">{{ source.name }}</div>
-                      <div class="smuted">{{ source.latest_date|date:"d M Y"|default:source.status }}</div>
+                      <div class="smuted">{% if source.latest_date %}{{ source.latest_date|thai_be_date }}{% else %}{{ source.status }}{% endif %}</div>
                       <div class="src-bar"><span style="width:{{ source.percent|default:0 }}%"></span></div>
                     </td>
                     <td class="text-end fw-bold" style="color:#0f7f9f">{{ source.total_qty|floatformat:0|intcomma }} tons</td>
@@ -282,7 +282,7 @@
                     <td class="text-end">{% if b.total_trips is not None %}{{ b.total_trips|intcomma }} trips{% else %}<span class="text-muted">—</span>{% endif %}</td>
                     <td class="text-end">{% if b.average_tons_per_trip is not None %}{{ b.average_tons_per_trip|floatformat:0|intcomma }} tons/trip{% else %}<span class="text-muted">—</span>{% endif %}</td>
                     <td>
-                      <div>{{ b.latest_trip_date|date:"d M"|default:"—" }}</div>
+                      <div>{% if b.latest_trip_date %}{{ b.latest_trip_date|thai_be_date }}{% else %}—{% endif %}</div>
                       <div class="smuted">{{ b.status }}</div>
                     </td>
                   </tr>
@@ -477,7 +477,7 @@
         <div class="sdb-st"><span><i class="fas fa-calendar-days"></i> Latest Record</span></div>
         <div class="p-3 rounded text-center" style="background:#f0f9fb;border:1px solid #b6dce8">
           <div class="smuted">Last data entry</div>
-          <div class="fw-bold mt-1" style="color:#0f7f9f;font-size:1rem">{{ data.latest_date|date:"d M Y"|default:"No data" }}</div>
+          <div class="fw-bold mt-1" style="color:#0f7f9f;font-size:1rem">{% if data.latest_date %}{{ data.latest_date|thai_be_date }}{% else %}No data{% endif %}</div>
         </div>
       </div>
     </aside>

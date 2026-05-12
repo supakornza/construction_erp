@@ -12,7 +12,7 @@
         <tbody>
         {% for i in incidents %}
         <tr>
-            <td>{{ i.incident_date }}</td>
+            <td>{{ i.incident_date|thai_be_date }}</td>
             <td>{{ i.project.contract_no }}</td>
             <td><span class="badge bg-danger">{{ i.get_type_display }}</span></td>
             <td>{{ i.description|truncatechars:60 }}</td>

@@ -32,7 +32,7 @@
             <td>{{ d.revision }}</td>
             <td><span class="badge bg-{% if d.status == 'Current' %}success{% elif d.status == 'Superseded' %}warning{% else %}secondary{% endif %}">{{ d.status }}</span></td>
             <td>{{ d.project.contract_no }}</td>
-            <td>{{ d.uploaded_at|date:"d M Y" }}</td>
+            <td>{{ d.uploaded_at|thai_be_date }}</td>
             <td>
                 <a href="{{ d.file.url }}" class="btn btn-sm btn-outline-primary" target="_blank"><i class="fas fa-download"></i></a>
                 <a href="{% url 'documents:detail' d.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-eye"></i></a>

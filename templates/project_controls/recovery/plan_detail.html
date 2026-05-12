@@ -5,7 +5,7 @@
 {% block content %}
 <div class="d-flex align-items-center mb-4 flex-wrap gap-2">
   <a href="{% url 'project_controls:recovery_plan_list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left"></i></a>
-  <h5 class="mb-0">Recovery Plan โ€“ {{ plan.start_date }} to {{ plan.end_date }}</h5>
+  <h5 class="mb-0">Recovery Plan - {{ plan.start_date|thai_be_date }} to {{ plan.end_date|thai_be_date }}</h5>
   <div class="ms-auto d-flex gap-2">
     <span class="badge fs-6 {% if plan.status == 'Active' %}bg-success{% elif plan.status == 'Completed' %}bg-primary{% elif plan.status == 'Superseded' %}bg-secondary{% else %}bg-warning text-dark{% endif %}">
       {{ plan.status }}
@@ -82,7 +82,7 @@
       <tbody>
         {% for item in plan.daily_items.all %}
         <tr>
-          <td>{{ item.plan_date }}</td>
+          <td>{{ item.plan_date|thai_be_date }}</td>
           <td>{{ item.day_name }}</td>
           <td class="text-end">{{ item.plan_quantity|floatformat:2|intcomma }}</td>
           <td class="text-end fw-bold">{{ item.actual_quantity|floatformat:2|intcomma }}</td>
@@ -120,7 +120,7 @@
 {% block extra_scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-const labels = [{% for item in plan.daily_items.all %}"{{ item.plan_date }}"{% if not forloop.last %},{% endif %}{% endfor %}];
+const labels = [{% for item in plan.daily_items.all %}"{{ item.plan_date|thai_be_date }}"{% if not forloop.last %},{% endif %}{% endfor %}];
 const planData = [{% for item in plan.daily_items.all %}{{ item.plan_quantity }}{% if not forloop.last %},{% endif %}{% endfor %}];
 const actualData = [{% for item in plan.daily_items.all %}{{ item.actual_quantity }}{% if not forloop.last %},{% endif %}{% endfor %}];
 

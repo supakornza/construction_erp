@@ -39,7 +39,7 @@
             <tbody>
             {% for r in reports %}
             <tr>
-                <td><a href="{% url 'daily_reports:detail' r.pk %}">{{ r.report_date }}</a></td>
+                <td><a href="{% url 'daily_reports:detail' r.pk %}">{{ r.report_date|thai_be_date }}</a></td>
                 <td>{{ r.project.contract_no }}</td>
                 <td><i class="fas fa-sun text-warning me-1"></i>{{ r.weather_morning }} / {{ r.weather_afternoon }}</td>
                 <td>{{ r.prepared_by.get_full_name|default:r.prepared_by.username|default:'-' }}</td>
@@ -49,7 +49,7 @@
                     {% if r.status in 'Draft,Rejected' %}
                     <a href="{% url 'daily_reports:update' r.pk %}" class="btn btn-sm btn-outline-secondary" title="Edit"><i class="fas fa-edit"></i></a>
                     {% if request.user.is_superuser or request.user.role == 'admin' %}
-                    <form method="post" action="{% url 'daily_reports:delete' r.pk %}" class="d-inline" onsubmit="return confirm('Delete daily report for {{ r.report_date }}?')">
+                    <form method="post" action="{% url 'daily_reports:delete' r.pk %}" class="d-inline" onsubmit="return confirm('Delete daily report for {{ r.report_date|thai_be_date }}?')">
                       {% csrf_token %}
                       <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
                     </form>

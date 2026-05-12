@@ -53,7 +53,7 @@
         {% for alloc in allocations %}
         <tr>
           <td>{{ alloc.project.project_name }}</td>
-          <td><a href="{% url 'project_controls:sand_allocation_detail' alloc.pk %}">{{ alloc.calculation_date }}</a></td>
+          <td><a href="{% url 'project_controls:sand_allocation_detail' alloc.pk %}">{{ alloc.calculation_date|thai_be_date }}</a></td>
           <td class="text-end fw-bold">{{ alloc.total_sand_quantity|floatformat:2|intcomma }}</td>
           <td class="text-end text-info">{{ alloc.tct_percentage|floatformat:1|intcomma }}%</td>
           <td class="text-end text-primary">{{ alloc.mtp3_percentage|floatformat:1|intcomma }}%</td>

@@ -35,8 +35,8 @@
         {% for plan in plans %}
         <tr>
           <td>{{ plan.project.project_name }}</td>
-          <td><a href="{% url 'project_controls:recovery_plan_detail' plan.pk %}">{{ plan.start_date }}</a></td>
-          <td>{{ plan.end_date }}</td>
+          <td><a href="{% url 'project_controls:recovery_plan_detail' plan.pk %}">{{ plan.start_date|thai_be_date }}</a></td>
+          <td>{{ plan.end_date|thai_be_date }}</td>
           <td>
             {% if plan.status == 'Active' %}<span class="badge bg-success">Active</span>
             {% elif plan.status == 'Completed' %}<span class="badge bg-primary">Completed</span>

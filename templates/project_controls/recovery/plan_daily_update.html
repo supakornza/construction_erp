@@ -5,7 +5,7 @@
 {% block content %}
 <div class="d-flex align-items-center mb-4">
   <a href="{% url 'project_controls:recovery_plan_detail' plan.pk %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
-  <h5 class="mb-0">Update Actuals โ€“ {{ plan.start_date }} to {{ plan.end_date }}</h5>
+  <h5 class="mb-0">Update Actuals - {{ plan.start_date|thai_be_date }} to {{ plan.end_date|thai_be_date }}</h5>
 </div>
 
 <form method="post">
@@ -22,7 +22,7 @@
           {% for pf in formset %}
           {{ pf.id }}
           <tr>
-            <td class="align-middle">{{ pf.instance.plan_date }}</td>
+            <td class="align-middle">{{ pf.instance.plan_date|thai_be_date }}</td>
             <td class="align-middle">{{ pf.instance.day_name }}</td>
             <td class="align-middle text-end fw-bold">{{ pf.instance.plan_quantity|floatformat:2|intcomma }}</td>
             <td>{{ pf.actual_quantity }}</td>

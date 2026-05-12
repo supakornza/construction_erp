@@ -35,7 +35,7 @@
         <tr>
           <td>{{ rap.project.project_name }}</td>
           <td><a href="{% url 'project_controls:rap_detail' rap.pk %}">{{ rap.title }}</a></td>
-          <td>{{ rap.start_date }} โ€“ {{ rap.end_date }}</td>
+          <td>{{ rap.start_date|thai_be_date }} - {{ rap.end_date|thai_be_date }}</td>
           <td>
             {% if rap.status == 'Approved' %}<span class="badge bg-success">Approved</span>
             {% elif rap.status == 'Submitted' %}<span class="badge bg-info">Submitted</span>

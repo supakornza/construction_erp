@@ -57,7 +57,7 @@
       <tbody>
         {% for record in records %}
         <tr>
-          <td><a href="{% url 'project_controls:revetment_detail' record.pk %}">{{ record.record_date }}</a></td>
+          <td><a href="{% url 'project_controls:revetment_detail' record.pk %}">{{ record.record_date|thai_be_date }}</a></td>
           <td>{{ record.project.project_name }}</td>
           <td class="text-end">{{ record.items.count|intcomma }}</td>
           <td class="text-end fw-semibold">{{ record.total_quantity|floatformat:3|intcomma }}</td>

@@ -27,7 +27,7 @@
         <tbody>
         {% for r in records %}
         <tr>
-            <td>{{ r.report_date }}</td>
+            <td>{{ r.report_date|thai_be_date }}</td>
             <td>{{ r.project.contract_no }}</td>
             <td>{{ r.category }}</td>
             <td>{{ r.company }}</td>

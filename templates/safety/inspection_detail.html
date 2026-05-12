@@ -4,20 +4,20 @@
 {% block content %}
 <div class="d-flex align-items-center mb-4">
     <a href="{% url 'safety:inspection_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
-    <h4 class="mb-0">Safety Inspection – {{ inspection.inspection_date }}</h4>
+    <h4 class="mb-0">Safety Inspection – {{ inspection.inspection_date|thai_be_date }}</h4>
     <a href="{% url 'safety:inspection_update' inspection.pk %}" class="btn btn-sm btn-primary ms-auto">Edit</a>
 </div>
 <div class="card" style="max-width:700px;"><div class="card-body">
     <dl class="row small mb-0">
         <dt class="col-4">Project</dt><dd class="col-8">{{ inspection.project.project_name }}</dd>
-        <dt class="col-4">Date</dt><dd class="col-8">{{ inspection.inspection_date }}</dd>
+        <dt class="col-4">Date</dt><dd class="col-8">{{ inspection.inspection_date|thai_be_date }}</dd>
         <dt class="col-4">Location</dt><dd class="col-8">{{ inspection.location }}</dd>
         <dt class="col-4">Inspector</dt><dd class="col-8">{{ inspection.inspector.get_full_name|default:'-' }}</dd>
         <dt class="col-4">Category</dt><dd class="col-8">{{ inspection.category }}</dd>
         <dt class="col-4">Finding</dt><dd class="col-8">{{ inspection.finding }}</dd>
         <dt class="col-4">Action Required</dt><dd class="col-8">{{ inspection.action_required }}</dd>
         <dt class="col-4">Responsible</dt><dd class="col-8">{{ inspection.responsible_person }}</dd>
-        <dt class="col-4">Due Date</dt><dd class="col-8">{{ inspection.due_date }}</dd>
+        <dt class="col-4">Due Date</dt><dd class="col-8">{{ inspection.due_date|thai_be_date }}</dd>
         <dt class="col-4">Status</dt><dd class="col-8"><span class="badge bg-{% if inspection.status == 'Open' %}danger{% elif inspection.status == 'InProgress' %}warning{% else %}success{% endif %}">{{ inspection.status }}</span></dd>
     </dl>
 </div></div>

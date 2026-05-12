@@ -14,7 +14,7 @@
         <tr>
             <td><a href="{% url 'boq:claim_detail' c.pk %}">{{ c.claim_no }}</a></td>
             <td>{{ c.project.contract_no }}</td>
-            <td>{{ c.claim_date }}</td>
+            <td>{{ c.claim_date|thai_be_date }}</td>
             <td>{{ c.period_from }} โ€“ {{ c.period_to }}</td>
             <td>{{ c.total_claimed_amount|floatformat:2|intcomma }}</td>
             <td><span class="badge badge-{{ c.status|lower }}">{{ c.status }}</span></td>

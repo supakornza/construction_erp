@@ -24,7 +24,7 @@
                     <thead><tr><th>NCR</th><th>Project</th><th>Due</th><th>Severity</th></tr></thead>
                     <tbody>
                     {% for ncr in tables.overdue_ncr %}
-                    <tr><td>{{ ncr.ncr_no }}</td><td>{{ ncr.project.contract_no }}</td><td>{{ ncr.due_date }}</td><td>{{ ncr.severity }}</td></tr>
+                    <tr><td>{{ ncr.ncr_no }}</td><td>{{ ncr.project.contract_no }}</td><td>{{ ncr.due_date|thai_be_date }}</td><td>{{ ncr.severity }}</td></tr>
                     {% empty %}
                     <tr><td colspan="4" class="text-muted text-center py-3">No overdue NCR</td></tr>
                     {% endfor %}
@@ -41,7 +41,7 @@
                     <thead><tr><th>Date</th><th>Project</th><th>Type</th><th>Status</th></tr></thead>
                     <tbody>
                     {% for inspection in tables.pending_inspections %}
-                    <tr><td>{{ inspection.inspection_date }}</td><td>{{ inspection.project.contract_no }}</td><td>{{ inspection.inspection_type }}</td><td>{{ inspection.status }}</td></tr>
+                    <tr><td>{{ inspection.inspection_date|thai_be_date }}</td><td>{{ inspection.project.contract_no }}</td><td>{{ inspection.inspection_type }}</td><td>{{ inspection.status }}</td></tr>
                     {% empty %}
                     <tr><td colspan="4" class="text-muted text-center py-3">No pending inspections</td></tr>
                     {% endfor %}

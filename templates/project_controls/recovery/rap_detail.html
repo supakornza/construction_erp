@@ -32,7 +32,7 @@
   {% elif rap.status == 'Reviewed' %}<span class="badge bg-primary fs-6">Reviewed</span>
   {% elif rap.status == 'Rejected' %}<span class="badge bg-danger fs-6">Rejected</span>
   {% else %}<span class="badge bg-warning text-dark fs-6">Draft</span>{% endif %}
-  <span class="text-muted ms-3 small">{{ rap.project.project_name }} | {{ rap.start_date }} โ€“ {{ rap.end_date }}</span>
+  <span class="text-muted ms-3 small">{{ rap.project.project_name }} | {{ rap.start_date|thai_be_date }} - {{ rap.end_date|thai_be_date }}</span>
 </div>
 
 {# Header Info #}
@@ -50,7 +50,7 @@
         <dl class="row mb-0 small">
           <dt class="col-6">Prepared By</dt><dd class="col-6">{{ rap.prepared_by|default:'โ€“' }}</dd>
           <dt class="col-6">Approved By</dt><dd class="col-6">{{ rap.approved_by|default:'โ€“' }}</dd>
-          <dt class="col-6">Approval Date</dt><dd class="col-6">{{ rap.approval_date|default:'โ€“' }}</dd>
+          <dt class="col-6">Approval Date</dt><dd class="col-6">{% if rap.approval_date %}{{ rap.approval_date|thai_be_date }}{% else %}-{% endif %}</dd>
           <dt class="col-6">Overall %</dt>
           <dd class="col-6">
             <div class="progress" style="height:18px">
@@ -102,7 +102,7 @@
             </div>
           </td>
           <td>{{ item.responsible_party|default:'โ€“' }}</td>
-          <td>{{ item.target_date|default:'โ€“' }}</td>
+          <td>{% if item.target_date %}{{ item.target_date|thai_be_date }}{% else %}-{% endif %}</td>
         </tr>
         {% empty %}
         <tr><td colspan="9" class="text-center text-muted py-3">No action items</td></tr>

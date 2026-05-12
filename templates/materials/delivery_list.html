@@ -25,7 +25,7 @@
         <tbody>
         {% for d in deliveries %}
         <tr>
-            <td>{{ d.delivery_date }}</td>
+            <td>{{ d.delivery_date|thai_be_date }}</td>
             <td>{{ d.project.contract_no }}</td>
             <td>{{ d.material.name }}</td>
             <td>{{ d.delivery_note_no|default:'-' }}</td>

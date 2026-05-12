@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}Daily Report {{ report.report_date }} – Construction ERP{% endblock %}
-{% block page_title %}Daily Report – {{ report.report_date }}{% endblock %}
+{% block title %}Daily Report {{ report.report_date|thai_be_date }} – Construction ERP{% endblock %}
+{% block page_title %}Daily Report – {{ report.report_date|thai_be_date }}{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-center mb-4 flex-wrap gap-2">
     <a href="{% url 'daily_reports:list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left"></i></a>
-    <h4 class="mb-0">Daily Report – {{ report.report_date }}</h4>
+    <h4 class="mb-0">Daily Report – {{ report.report_date|thai_be_date }}</h4>
     <span class="badge badge-{{ report.status|lower }} fs-6">{{ report.status }}</span>
     <div class="ms-auto d-flex gap-2 flex-wrap">
         {% if report.status == 'Draft' %}
@@ -35,7 +35,7 @@
                 <dl class="row small mb-0">
                     <dt class="col-5">Project</dt><dd class="col-7">{{ report.project.project_name }}</dd>
                     <dt class="col-5">Contract No</dt><dd class="col-7">{{ report.project.contract_no }}</dd>
-                    <dt class="col-5">Date</dt><dd class="col-7">{{ report.report_date }}</dd>
+                    <dt class="col-5">Date</dt><dd class="col-7">{{ report.report_date|thai_be_date }}</dd>
                     <dt class="col-5">Weather AM</dt><dd class="col-7">{{ report.weather_morning }}</dd>
                     <dt class="col-5">Weather PM</dt><dd class="col-7">{{ report.weather_afternoon }}</dd>
                     <dt class="col-5">Prepared By</dt><dd class="col-7">{{ report.prepared_by.get_full_name|default:'-' }}</dd>
@@ -85,7 +85,7 @@
                 <table class="table table-sm mb-0">
                     <thead class="table-light"><tr><th>Activity</th><th>Planned Date</th><th>Responsible</th></tr></thead>
                     <tbody>
-                    {% for l in report.lookaheads.all %}<tr><td>{{ l.planned_activity }}</td><td>{{ l.planned_date }}</td><td>{{ l.responsible_person }}</td></tr>{% empty %}<tr><td colspan="3" class="text-muted">None</td></tr>{% endfor %}
+                    {% for l in report.lookaheads.all %}<tr><td>{{ l.planned_activity }}</td><td>{{ l.planned_date|thai_be_date }}</td><td>{{ l.responsible_person }}</td></tr>{% empty %}<tr><td colspan="3" class="text-muted">None</td></tr>{% endfor %}
                     </tbody>
                 </table>
             </div>

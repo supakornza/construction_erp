@@ -22,7 +22,7 @@
                 <dt class="col-5">Status</dt><dd class="col-7"><span class="badge bg-{% if document.status == 'Current' %}success{% elif document.status == 'Superseded' %}warning{% else %}secondary{% endif %}">{{ document.status }}</span></dd>
                 <dt class="col-5">Project</dt><dd class="col-7">{{ document.project.project_name }}</dd>
                 <dt class="col-5">Uploaded By</dt><dd class="col-7">{{ document.uploaded_by.get_full_name|default:'-' }}</dd>
-                <dt class="col-5">Uploaded At</dt><dd class="col-7">{{ document.uploaded_at|date:"d M Y H:i" }}</dd>
+                <dt class="col-5">Uploaded At</dt><dd class="col-7">{{ document.uploaded_at|thai_be_datetime }}</dd>
             </dl>
         </div></div>
     </div>
@@ -41,7 +41,7 @@
                         <td>{{ r.revision_no }}</td>
                         <td>{{ r.change_description|truncatechars:50 }}</td>
                         <td>{{ r.revised_by.get_full_name|default:'-' }}</td>
-                        <td>{{ r.revised_at|date:"d M Y" }}</td>
+                        <td>{{ r.revised_at|thai_be_date }}</td>
                         <td>{% if r.file %}<a href="{{ r.file.url }}" class="btn btn-sm btn-outline-primary" target="_blank"><i class="fas fa-download"></i></a>{% endif %}</td>
                     </tr>
                     {% empty %}

@@ -23,12 +23,12 @@
         <tbody>
         {% for i in inspections %}
         <tr>
-            <td>{{ i.inspection_date }}</td>
+            <td>{{ i.inspection_date|thai_be_date }}</td>
             <td>{{ i.project.contract_no }}</td>
             <td>{{ i.category }}</td>
             <td>{{ i.finding|truncatechars:50 }}</td>
             <td>{{ i.responsible_person }}</td>
-            <td>{{ i.due_date }}</td>
+            <td>{{ i.due_date|thai_be_date }}</td>
             <td><span class="badge bg-{% if i.status == 'Open' %}danger{% elif i.status == 'InProgress' %}warning{% else %}success{% endif %}">{{ i.status }}</span></td>
             <td>
                 <a href="{% url 'safety:inspection_detail' i.pk %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>

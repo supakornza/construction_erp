@@ -72,7 +72,7 @@
       <tbody>
         {% for rec in records %}
         <tr>
-          <td><a href="{% url 'project_controls:rock_detail' rec.pk %}">{{ rec.record_date }}</a></td>
+          <td><a href="{% url 'project_controls:rock_detail' rec.pk %}">{{ rec.record_date|thai_be_date }}</a></td>
           <td class="text-muted small">{{ rec.day_name }}</td>
           <td class="small">{{ rec.material_type|default:'N/A' }}</td>
           <td class="text-end">{{ rec.tct_daily_ton|floatformat:2|intcomma }}</td>
@@ -89,7 +89,7 @@
           <td class="text-nowrap">
             <a href="{% url 'project_controls:rock_update' rec.pk %}" class="btn btn-xs btn-outline-secondary" title="Edit"><i class="fas fa-edit"></i></a>
             {% if request.user.is_superuser or request.user.role == 'admin' %}
-            <form method="post" action="{% url 'project_controls:rock_delete' rec.pk %}" class="d-inline" onsubmit="return confirm('Delete rock record for {{ rec.record_date }}?')">
+            <form method="post" action="{% url 'project_controls:rock_delete' rec.pk %}" class="d-inline" onsubmit="return confirm('Delete rock record for {{ rec.record_date|thai_be_date }}?')">
               {% csrf_token %}
               <button type="submit" class="btn btn-xs btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
             </form>

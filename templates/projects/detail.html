@@ -39,8 +39,8 @@
                             <dt class="col-5">Contractor</dt><dd class="col-7">{{ project.contractor }}</dd>
                             <dt class="col-5">Consultant</dt><dd class="col-7">{{ project.consultant|default:'-' }}</dd>
                             <dt class="col-5">Location</dt><dd class="col-7">{{ project.location|default:'-' }}</dd>
-                            <dt class="col-5">Start Date</dt><dd class="col-7">{{ project.start_date }}</dd>
-                            <dt class="col-5">Finish Date</dt><dd class="col-7">{{ project.finish_date }}</dd>
+                            <dt class="col-5">Start Date</dt><dd class="col-7">{{ project.start_date|thai_be_date }}</dd>
+                            <dt class="col-5">Finish Date</dt><dd class="col-7">{{ project.finish_date|thai_be_date }}</dd>
                             <dt class="col-5">Duration</dt><dd class="col-7">{{ project.duration_days }} days</dd>
                             <dt class="col-5">Contract Value</dt><dd class="col-7 fw-bold">{{ project.contract_value|floatformat:2|intcomma }} THB</dd>
                         </dl>

@@ -349,7 +349,7 @@
     </div>
   </div>
   <div class="exec-meta">
-    <div class="exec-date"><i class="fas fa-calendar-alt" style="color:#f0a500"></i>{{ today|date:"d F Y" }}</div>
+    <div class="exec-date"><i class="fas fa-calendar-alt" style="color:#f0a500"></i>{{ today|thai_be_date }}</div>
     <div class="exec-date"><i class="fas fa-circle" style="color:#2ecc71;font-size:.5rem"></i>{{ active_projects_count }} Active Project{{ active_projects_count|pluralize }}</div>
     <button class="btn-exec-print no-print" onclick="window.print()"><i class="fas fa-print me-1"></i>Print</button>
   </div>
@@ -626,7 +626,7 @@
         </div>
       </div>
       <div class="d-flex justify-content-between align-items-center flex-wrap gap-2" style="border-top:1px solid rgba(255,255,255,.06);padding-top:.7rem">
-        <div style="font-size:.72rem;color:#8aa5c0"><i class="fas fa-calendar-check me-1" style="color:#f0a500"></i>{{ row.project.start_date }} → {{ row.project.finish_date }}</div>
+        <div style="font-size:.72rem;color:#8aa5c0"><i class="fas fa-calendar-check me-1" style="color:#f0a500"></i>{{ row.project.start_date|thai_be_date }} → {{ row.project.finish_date|thai_be_date }}</div>
         {% if row.schedule_status == 'on-track' %}<span class="sched-badge sched-on-track"><span class="status-dot dot-green"></span>{{ row.days_remaining }} days left</span>
         {% elif row.schedule_status == 'warning' %}<span class="sched-badge sched-warning"><span class="status-dot dot-yellow"></span>{{ row.days_remaining }} days left</span>
         {% elif row.schedule_status == 'critical' %}<span class="sched-badge sched-critical"><span class="status-dot dot-red"></span>{{ row.days_remaining }} days left</span>
@@ -744,7 +744,7 @@
     <div class="kpi-card c-gold">
       <div class="kpi-icon c-gold"><i class="fas fa-calendar-alt"></i></div>
       {% if forecast.forecast_date %}
-      <div class="kpi-value" style="font-size:1.3rem">{{ forecast.forecast_date|date:"d M Y" }}</div>
+      <div class="kpi-value" style="font-size:1.3rem">{{ forecast.forecast_date|thai_be_date }}</div>
       {% else %}
       <div class="kpi-value" style="font-size:1rem">–</div>
       {% endif %}
@@ -978,7 +978,7 @@
           <td>Latest NCR</td>
           <td><strong>{{ ncr.ncr_no }}</strong><div style="font-size:.72rem;color:#8aa5c0">{{ ncr.description|truncatechars:70 }}</div></td>
           <td style="color:#8aa5c0">{{ ncr.project.contract_no }}</td>
-          <td>{{ ncr.issued_date }}</td>
+          <td>{{ ncr.issued_date|thai_be_date }}</td>
           <td><span class="rpt-badge">{{ ncr.status }}</span></td>
         </tr>
         {% empty %}
@@ -990,7 +990,7 @@
           <td>Overdue NCR</td>
           <td><strong>{{ ncr.ncr_no }}</strong><div style="font-size:.72rem;color:#8aa5c0">{{ ncr.description|truncatechars:70 }}</div></td>
           <td style="color:#8aa5c0">{{ ncr.project.contract_no }}</td>
-          <td style="color:#e74c3c">{{ ncr.due_date }}</td>
+          <td style="color:#e74c3c">{{ ncr.due_date|thai_be_date }}</td>
           <td><span class="rpt-badge" style="background:rgba(231,76,60,.2);color:#e74c3c">{{ ncr.severity }}</span></td>
         </tr>
         {% empty %}
@@ -1002,7 +1002,7 @@
           <td>Pending Inspection</td>
           <td><strong>{{ inspection.inspection_type }}</strong><div style="font-size:.72rem;color:#8aa5c0">{{ inspection.location }} {{ inspection.station_or_chainage }}</div></td>
           <td style="color:#8aa5c0">{{ inspection.project.contract_no }}</td>
-          <td>{{ inspection.inspection_date }}</td>
+          <td>{{ inspection.inspection_date|thai_be_date }}</td>
           <td><span class="rpt-badge rpt-submitted">{{ inspection.status }}</span></td>
         </tr>
         {% empty %}
@@ -1014,7 +1014,7 @@
           <td>Critical Punch List</td>
           <td><strong>{{ item.location }}</strong><div style="font-size:.72rem;color:#8aa5c0">{{ item.description|truncatechars:70 }}</div></td>
           <td style="color:#8aa5c0">{{ item.project.contract_no }}</td>
-          <td>{{ item.target_date }}</td>
+          <td>{{ item.target_date|thai_be_date }}</td>
           <td><span class="rpt-badge" style="background:rgba(231,76,60,.2);color:#e74c3c">{{ item.status }}</span></td>
         </tr>
         {% empty %}
@@ -1039,7 +1039,7 @@
           <tbody>
             {% for r in latest_reports %}
             <tr>
-              <td><a href="{% url 'daily_reports:detail' r.pk %}" style="color:#c8d6e5;text-decoration:none">{{ r.report_date }}</a></td>
+              <td><a href="{% url 'daily_reports:detail' r.pk %}" style="color:#c8d6e5;text-decoration:none">{{ r.report_date|thai_be_date }}</a></td>
               <td style="color:#8aa5c0;font-size:.76rem">{{ r.project.contract_no }}</td>
               <td style="color:#8aa5c0;font-size:.76rem">{{ r.prepared_by.get_full_name|default:r.prepared_by.username }}</td>
               <td><span class="rpt-badge rpt-{{ r.status|lower }}">{{ r.status }}</span></td>
@@ -1064,7 +1064,7 @@
           <tbody>
             {% for d in recent_deliveries %}
             <tr>
-              <td>{{ d.delivery_date }}</td>
+              <td>{{ d.delivery_date|thai_be_date }}</td>
               <td>{{ d.material.name }}</td>
               <td style="color:#8aa5c0;font-size:.76rem">{{ d.source|default:"–" }}</td>
               <td class="text-end" style="color:#f0a500;font-weight:600">{{ d.quantity|floatformat:1|intcomma }} <span style="color:#8aa5c0;font-weight:400">{{ d.material.unit }}</span></td>
@@ -1170,7 +1170,7 @@
           <td>
             <span style="color:{% if item.is_overdue %}#e74c3c{% else %}#c8d6e5{% endif %};font-size:.8rem">
               {% if item.is_overdue %}<i class="fas fa-exclamation-triangle me-1 text-danger"></i>{% endif %}
-              {{ item.due_date }}
+              {{ item.due_date|thai_be_date }}
             </span>
           </td>
           <td>

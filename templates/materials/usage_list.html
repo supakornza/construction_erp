@@ -12,7 +12,7 @@
         <tbody>
         {% for u in usages %}
         <tr>
-            <td>{{ u.usage_date }}</td>
+            <td>{{ u.usage_date|thai_be_date }}</td>
             <td>{{ u.project.contract_no }}</td>
             <td>{{ u.material.name }}</td>
             <td>{{ u.work_area|default:'-' }}</td>

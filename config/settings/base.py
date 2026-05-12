@@ -66,7 +66,10 @@ TEMPLATES = [
         'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
-            'builtins': ['django.contrib.humanize.templatetags.humanize'],
+            'builtins': [
+                'django.contrib.humanize.templatetags.humanize',
+                'apps.project_controls.templatetags.project_control_tags',
+            ],
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -89,10 +92,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'accounts.User'
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'th'
 TIME_ZONE = 'Asia/Bangkok'
 USE_I18N = True
 USE_TZ = True
+DATE_FORMAT = 'd/m/Y'
+DATETIME_FORMAT = 'd/m/Y H:i'
+SHORT_DATE_FORMAT = 'd/m/Y'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
