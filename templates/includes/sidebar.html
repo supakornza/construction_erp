@@ -34,7 +34,7 @@
     <a href="{% url 'equipment:list' %}" class="nav-link {% if request.resolver_match.namespace == 'equipment' %}active{% endif %}">
         <i class="fas fa-truck-monster"></i> Equipment
     </a>
-    <a href="{% url 'materials:delivery_list' %}" class="nav-link {% if request.resolver_match.namespace == 'materials' %}active{% endif %}">
+    <a href="{% url 'materials:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'materials' %}active{% endif %}">
         <i class="fas fa-boxes"></i> Materials
     </a>
 

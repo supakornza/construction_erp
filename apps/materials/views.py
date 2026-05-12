@@ -1,10 +1,97 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count, DecimalField, ExpressionWrapper, F, Sum
+from django.db.models.functions import Coalesce
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.utils import timezone
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from apps.accounts.mixins import AdminRequiredMixin
+from apps.projects.models import Project
 from .models import Material, MaterialDelivery, MaterialUsage, get_stock_balance
 from .forms import MaterialForm, MaterialDeliveryForm, MaterialUsageForm
+
+
+def _delivery_filters(request):
+    today = timezone.localdate()
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
+    if not date_from:
+        date_from = (today - timezone.timedelta(days=29)).isoformat()
+    if not date_to:
+        date_to = today.isoformat()
+    return {
+        'project_id': request.GET.get('project') or '',
+        'material_id': request.GET.get('material') or '',
+        'date_from': date_from,
+        'date_to': date_to,
+    }
+
+
+def _filtered_deliveries(filters):
+    qs = MaterialDelivery.objects.select_related('project', 'material', 'material__category')
+    if filters['project_id']:
+        qs = qs.filter(project_id=filters['project_id'])
+    if filters['material_id']:
+        qs = qs.filter(material_id=filters['material_id'])
+    if filters['date_from']:
+        qs = qs.filter(delivery_date__gte=filters['date_from'])
+    if filters['date_to']:
+        qs = qs.filter(delivery_date__lte=filters['date_to'])
+    return qs
+
+
+class MaterialDeliveryDashboardView(LoginRequiredMixin, TemplateView):
+    template_name = 'materials/dashboard.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        filters = _delivery_filters(self.request)
+        deliveries = _filtered_deliveries(filters)
+        amount_expr = ExpressionWrapper(
+            Coalesce(F('quantity') * F('unit_price'), 0),
+            output_field=DecimalField(max_digits=18, decimal_places=2),
+        )
+        totals = deliveries.aggregate(
+            total_quantity=Coalesce(Sum('quantity'), 0, output_field=DecimalField()),
+            total_amount=Coalesce(Sum(amount_expr), 0, output_field=DecimalField(max_digits=18, decimal_places=2)),
+            delivery_count=Count('id'),
+        )
+        daily_rows = list(
+            deliveries.values('delivery_date')
+            .annotate(quantity=Coalesce(Sum('quantity'), 0, output_field=DecimalField()))
+            .order_by('delivery_date')
+        )
+        material_rows = list(
+            deliveries.values('material__name', 'material__unit')
+            .annotate(quantity=Coalesce(Sum('quantity'), 0, output_field=DecimalField()), count=Count('id'))
+            .order_by('-quantity')[:10]
+        )
+        source_rows = list(
+            deliveries.values('source')
+            .annotate(quantity=Coalesce(Sum('quantity'), 0, output_field=DecimalField()), count=Count('id'))
+            .order_by('-quantity')[:8]
+        )
+        project_rows = list(
+            deliveries.values('project__contract_no', 'project__project_name')
+            .annotate(quantity=Coalesce(Sum('quantity'), 0, output_field=DecimalField()), count=Count('id'))
+            .order_by('-quantity')[:8]
+        )
+        ctx.update({
+            'filters': filters,
+            'projects': Project.objects.filter(status='Active'),
+            'materials': Material.objects.select_related('category'),
+            'total_quantity': totals['total_quantity'],
+            'total_amount': totals['total_amount'],
+            'delivery_count': totals['delivery_count'],
+            'latest_delivery': deliveries.order_by('-delivery_date', '-id').first(),
+            'recent_deliveries': deliveries.order_by('-delivery_date', '-id')[:10],
+            'daily_labels': [row['delivery_date'].isoformat() for row in daily_rows],
+            'daily_quantities': [float(row['quantity'] or 0) for row in daily_rows],
+            'material_rows': material_rows,
+            'source_rows': source_rows,
+            'project_rows': project_rows,
+        })
+        return ctx
 
 
 class MaterialListView(LoginRequiredMixin, ListView):

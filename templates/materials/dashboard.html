@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% block title %}Material Deliveries Dashboard - Construction ERP{% endblock %}
+{% block page_title %}Material Deliveries Dashboard{% endblock %}
+
+{% block extra_head %}
+<style>
+  .material-kpi {
+    border: 1px solid #d9e1ea;
+    border-left-width: 4px;
+    border-radius: 8px;
+    height: 100%;
+  }
+  .material-chart {
+    height: 280px;
+    position: relative;
+  }
+  .mini-table td,
+  .mini-table th {
+    font-size: 0.85rem;
+    vertical-align: middle;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <div>
+    <h4 class="mb-1"><i class="fas fa-truck-loading me-2 text-primary"></i>Material Deliveries Dashboard</h4>
+    <div class="text-muted small">Delivery quantity, value, source, and recent material receiving activity</div>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'materials:delivery_list' %}" class="btn btn-outline-secondary"><i class="fas fa-list me-1"></i> Deliveries</a>
+    <a href="{% url 'materials:delivery_create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i> Record Delivery</a>
+  </div>
+</div>
+
+<div class="card mb-3">
+  <div class="card-body">
+    <form method="get" class="row g-2 align-items-end">
+      <div class="col-md-3">
+        <label class="form-label small text-muted">Project</label>
+        <select name="project" class="form-select form-select-sm">
+          <option value="">All Projects</option>
+          {% for p in projects %}
+          <option value="{{ p.pk }}" {% if filters.project_id == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.contract_no }} - {{ p.project_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small text-muted">Material</label>
+        <select name="material" class="form-select form-select-sm">
+          <option value="">All Materials</option>
+          {% for m in materials %}
+          <option value="{{ m.pk }}" {% if filters.material_id == m.pk|stringformat:"s" %}selected{% endif %}>{{ m.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label small text-muted">From</label>
+        <input type="date" name="date_from" value="{{ filters.date_from }}" class="form-control form-control-sm">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label small text-muted">To</label>
+        <input type="date" name="date_to" value="{{ filters.date_to }}" class="form-control form-control-sm">
+      </div>
+      <div class="col-md-2 d-grid">
+        <button class="btn btn-sm btn-outline-primary" type="submit"><i class="fas fa-filter me-1"></i> Apply</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card material-kpi border-primary">
+      <div class="card-body">
+        <div class="text-muted small">Total Delivered</div>
+        <div class="fs-3 fw-bold">{{ total_quantity|floatformat:3|intcomma }}</div>
+        <div class="text-muted small">quantity units</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card material-kpi border-success">
+      <div class="card-body">
+        <div class="text-muted small">Delivery Value</div>
+        <div class="fs-3 fw-bold">฿{{ total_amount|floatformat:2|intcomma }}</div>
+        <div class="text-muted small">from unit prices</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card material-kpi border-info">
+      <div class="card-body">
+        <div class="text-muted small">Delivery Records</div>
+        <div class="fs-3 fw-bold">{{ delivery_count|intcomma }}</div>
+        <div class="text-muted small">records</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card material-kpi border-warning">
+      <div class="card-body">
+        <div class="text-muted small">Latest Delivery</div>
+        <div class="fs-5 fw-bold">{% if latest_delivery %}{{ latest_delivery.delivery_date|thai_be_date }}{% else %}-{% endif %}</div>
+        <div class="text-muted small">{% if latest_delivery %}{{ latest_delivery.material.name }}{% else %}No data{% endif %}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-lg-8">
+    <div class="card h-100">
+      <div class="card-header bg-white fw-semibold"><i class="fas fa-chart-line me-2 text-primary"></i>Daily Delivery Quantity</div>
+      <div class="card-body">
+        <div class="material-chart"><canvas id="deliveryTrendChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header bg-white fw-semibold"><i class="fas fa-boxes me-2 text-success"></i>Top Materials</div>
+      <div class="table-responsive">
+        <table class="table table-sm mini-table mb-0">
+          <thead class="table-light"><tr><th>Material</th><th class="text-end">Qty</th><th class="text-end">Records</th></tr></thead>
+          <tbody>
+            {% for row in material_rows %}
+            <tr>
+              <td>{{ row.material__name }}</td>
+              <td class="text-end fw-semibold">{{ row.quantity|floatformat:3|intcomma }} {{ row.material__unit }}</td>
+              <td class="text-end">{{ row.count|intcomma }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-center text-muted py-4">No material data.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header bg-white fw-semibold">By Source</div>
+      <div class="table-responsive">
+        <table class="table table-sm mini-table mb-0">
+          <thead class="table-light"><tr><th>Source</th><th class="text-end">Qty</th><th class="text-end">Records</th></tr></thead>
+          <tbody>
+            {% for row in source_rows %}
+            <tr><td>{{ row.source|default:"-" }}</td><td class="text-end">{{ row.quantity|floatformat:3|intcomma }}</td><td class="text-end">{{ row.count|intcomma }}</td></tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-center text-muted py-4">No source data.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header bg-white fw-semibold">By Project</div>
+      <div class="table-responsive">
+        <table class="table table-sm mini-table mb-0">
+          <thead class="table-light"><tr><th>Project</th><th class="text-end">Qty</th><th class="text-end">Records</th></tr></thead>
+          <tbody>
+            {% for row in project_rows %}
+            <tr><td><span class="fw-semibold">{{ row.project__contract_no }}</span><div class="text-muted small">{{ row.project__project_name|truncatechars:32 }}</div></td><td class="text-end">{{ row.quantity|floatformat:3|intcomma }}</td><td class="text-end">{{ row.count|intcomma }}</td></tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-center text-muted py-4">No project data.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header bg-white fw-semibold">Recent Deliveries</div>
+      <div class="table-responsive">
+        <table class="table table-sm mini-table mb-0">
+          <thead class="table-light"><tr><th>Date</th><th>Material</th><th class="text-end">Qty</th></tr></thead>
+          <tbody>
+            {% for d in recent_deliveries %}
+            <tr><td>{{ d.delivery_date|thai_be_date }}</td><td>{{ d.material.name }}</td><td class="text-end">{{ d.quantity|floatformat:3|intcomma }} {{ d.material.unit }}</td></tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-center text-muted py-4">No recent deliveries.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const deliveryLabels = {{ daily_labels|safe }};
+const deliveryQuantities = {{ daily_quantities|safe }};
+const deliveryCanvas = document.getElementById('deliveryTrendChart');
+if (deliveryCanvas && typeof Chart !== 'undefined') {
+  new Chart(deliveryCanvas, {
+    type: 'bar',
+    data: {
+      labels: deliveryLabels,
+      datasets: [{
+        label: 'Delivered Quantity',
+        data: deliveryQuantities,
+        backgroundColor: '#0d6efd',
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${Number(context.parsed.y || 0).toLocaleString()} units`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { maxRotation: 0, autoSkip: true } },
+        y: { beginAtZero: true }
+      }
+    }
+  });
+}
+</script>
+{% endblock %}

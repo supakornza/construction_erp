@@ -4,6 +4,7 @@ from . import views
 app_name = 'materials'
 
 urlpatterns = [
+    path('dashboard/', views.MaterialDeliveryDashboardView.as_view(), name='dashboard'),
     path('', views.MaterialListView.as_view(), name='list'),
     path('create/', views.MaterialCreateView.as_view(), name='create'),
     path('<int:pk>/edit/', views.MaterialUpdateView.as_view(), name='update'),
