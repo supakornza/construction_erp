@@ -44,7 +44,7 @@ def export_rock_excel(project):
     ws.title = 'Rock Summary'
 
     # Title
-    ws.merge_cells('A1:N1')
+    ws.merge_cells('A1:Q1')
     title_cell = ws['A1']
     title_cell.value = f'ROCK SUMMARY – {project.project_name} ({project.contract_no})'
     title_cell.font = Font(bold=True, size=12)
@@ -52,6 +52,7 @@ def export_rock_excel(project):
 
     headers = [
         'Day', 'Date',
+        'Material Type', 'Source / Quarry', 'Destination / Placement Area',
         'TCT Daily (Ton)', 'TCT Accum (Ton)', 'Trips', 'Trucks',
         'Placed Daily (Ton)', 'Placed Accum (Ton)',
         'Station of Core',
@@ -65,6 +66,7 @@ def export_rock_excel(project):
     for r, rec in enumerate(records, 3):
         data = [
             rec.day_name, str(rec.record_date),
+            rec.material_type, rec.source_quarry, rec.destination_area,
             float(rec.tct_daily_ton), float(rec.tct_accum_ton), rec.tct_trips, rec.tct_trucks,
             float(rec.placed_daily_ton), float(rec.placed_accum_ton),
             rec.station_of_core,
@@ -79,7 +81,7 @@ def export_rock_excel(project):
                 cell.alignment = Alignment(horizontal='right')
 
     # Auto column widths
-    col_widths = [8, 12, 14, 14, 8, 8, 14, 14, 20, 14, 14, 14, 14, 30]
+    col_widths = [8, 12, 16, 20, 24, 14, 14, 8, 8, 14, 14, 20, 14, 14, 14, 14, 30]
     for i, w in enumerate(col_widths, 1):
         ws.column_dimensions[get_column_letter(i)].width = w
 

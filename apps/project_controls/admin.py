@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (
-    Barge, RockDailyRecord, RockBargePlacement,
+    Barge, RockDailyRecord, RockBargePlacement, RockDashboardSettings, RockStationProgress,
     SandDailyRecord, SandBargePlacement, SandAllocation,
     RecoveryPlan, RecoveryPlanDailyItem,
     RecoveryActionPlan, RecoveryActionItem, RecoveryActionDailyProgress,
@@ -25,11 +25,26 @@ class RockBargePlacementInline(admin.TabularInline):
 @admin.register(RockDailyRecord)
 class RockDailyRecordAdmin(admin.ModelAdmin):
     list_display = ['project', 'record_date', 'tct_daily_ton', 'tct_accum_ton',
-                    'placed_daily_ton', 'placed_accum_ton', 'station_of_core']
-    list_filter = ['project']
+                    'placed_daily_ton', 'placed_accum_ton', 'material_type', 'station_of_core']
+    list_filter = ['project', 'material_type']
     date_hierarchy = 'record_date'
-    search_fields = ['project__contract_no', 'remarks']
+    search_fields = ['project__contract_no', 'source_quarry', 'destination_area', 'remarks']
     inlines = [RockBargePlacementInline]
+
+
+@admin.register(RockDashboardSettings)
+class RockDashboardSettingsAdmin(admin.ModelAdmin):
+    list_display = ['project', 'target_quantity_ton', 'daily_target_placement_ton',
+                    'planned_start_date', 'planned_finish_date', 'updated_at']
+    search_fields = ['project__contract_no', 'project__project_name']
+
+
+@admin.register(RockStationProgress)
+class RockStationProgressAdmin(admin.ModelAdmin):
+    list_display = ['project', 'station_range', 'material_type', 'delivered_quantity_ton',
+                    'placed_quantity_ton', 'target_quantity_ton', 'completion_percent', 'status']
+    list_filter = ['project', 'material_type']
+    search_fields = ['project__contract_no', 'station_range', 'remarks']
 
 
 class SandBargePlacementInline(admin.TabularInline):

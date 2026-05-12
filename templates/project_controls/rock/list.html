@@ -53,13 +53,14 @@
       <thead class="table-dark">
         <tr>
           <th>Date</th><th>Day</th>
+          <th>Material</th>
           <th class="text-end">TCT Daily (T)</th>
           <th class="text-end">TCT Accum (T)</th>
           <th class="text-end">Trips</th>
           <th class="text-end">Trucks</th>
           <th class="text-end">Placed Daily (T)</th>
           <th class="text-end">Placed Accum (T)</th>
-          <th class="text-end">Stock Balance</th>
+          <th class="text-end">Available Stock</th>
           <th>Station</th>
           <th>Remarks</th>
           <th></th>
@@ -70,6 +71,7 @@
         <tr>
           <td><a href="{% url 'project_controls:rock_detail' rec.pk %}">{{ rec.record_date }}</a></td>
           <td class="text-muted small">{{ rec.day_name }}</td>
+          <td class="small">{{ rec.material_type|default:'N/A' }}</td>
           <td class="text-end">{{ rec.tct_daily_ton|floatformat:2|intcomma }}</td>
           <td class="text-end fw-semibold">{{ rec.tct_accum_ton|floatformat:2|intcomma }}</td>
           <td class="text-end">{{ rec.tct_trips }}</td>
@@ -92,7 +94,7 @@
           </td>
         </tr>
         {% empty %}
-        <tr><td colspan="12" class="text-center text-muted py-4">No rock records found.</td></tr>
+        <tr><td colspan="13" class="text-center text-muted py-4">No rock records found.</td></tr>
         {% endfor %}
       </tbody>
     </table>

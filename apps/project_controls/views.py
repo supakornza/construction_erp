@@ -8,6 +8,7 @@ from django.db.models import Sum, Avg
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.utils.dateparse import parse_date
 from django.views.generic import (
     ListView, CreateView, DetailView, UpdateView, DeleteView, TemplateView, View, FormView
 )
@@ -183,10 +184,29 @@ class RockDashboardView(LoginRequiredMixin, TemplateView):
         projects = Project.objects.filter(status='Active')
         project_id = self.request.GET.get('project')
         selected = projects.filter(pk=project_id).first() if project_id else projects.first()
-        rock_data = get_rock_dashboard_data(selected) if selected else {}
+        range_days = self.request.GET.get('range')
+        filters = {
+            'date_from': parse_date(self.request.GET.get('date_from', '')),
+            'date_to': parse_date(self.request.GET.get('date_to', '')),
+            'barge_id': self.request.GET.get('barge') or '',
+            'material_type': self.request.GET.get('material_type') or '',
+            'station_range': self.request.GET.get('station_range') or '',
+            'source_quarry': self.request.GET.get('source_quarry') or '',
+            'destination_area': self.request.GET.get('destination_area') or '',
+            'range_days': int(range_days) if range_days in ['7', '14', '30'] else None,
+        }
+        rock_data = get_rock_dashboard_data(selected, filters=filters) if selected else {}
         rock_data.setdefault('chart_data', '{}')
         rock_data.setdefault('barge_totals', [])
-        ctx.update({'projects': projects, 'selected_project': selected, 'data': rock_data})
+        rock_data.setdefault('station_rows', [])
+        ctx.update({
+            'projects': projects,
+            'selected_project': selected,
+            'data': rock_data,
+            'filters': filters,
+            'barges': Barge.objects.filter(is_active=True).order_by('name'),
+            'material_type_choices': RockDailyRecord.ROCK_MATERIAL_CHOICES,
+        })
         return ctx
 
 

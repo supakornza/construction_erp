@@ -3,7 +3,7 @@ from django.forms import inlineformset_factory
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Fieldset
 from .models import (
-    RockDailyRecord, RockBargePlacement,
+    RockDailyRecord, RockBargePlacement, RockDashboardSettings, RockStationProgress,
     SandDailyRecord, SandBargePlacement,
     SandAllocation, RecoveryPlan, RecoveryPlanDailyItem,
     RecoveryActionPlan, RecoveryActionItem,
@@ -17,6 +17,7 @@ class RockDailyRecordForm(forms.ModelForm):
     class Meta:
         model = RockDailyRecord
         fields = ['project', 'record_date', 'day_name',
+                  'material_type', 'source_quarry', 'destination_area',
                   'tct_daily_ton', 'tct_trips', 'tct_trucks',
                   'placed_daily_ton', 'station_of_core',
                   'core_outside_daily', 'core_inside_accum', 'remarks']
@@ -35,6 +36,9 @@ class RockDailyRecordForm(forms.ModelForm):
                 Row(Column('project', css_class='col-md-4'),
                     Column('record_date', css_class='col-md-4'),
                     Column('day_name', css_class='col-md-4')),
+                Row(Column('material_type', css_class='col-md-4'),
+                    Column('source_quarry', css_class='col-md-4'),
+                    Column('destination_area', css_class='col-md-4')),
             ),
             Fieldset('Rock at TCT Port (Weight Bridge)',
                 Row(Column('tct_daily_ton', css_class='col-md-4'),
@@ -58,6 +62,25 @@ RockBargePlacementFormSet = inlineformset_factory(
     fields=['barge', 'quantity_ton', 'trips', 'station', 'remarks'],
     extra=4, can_delete=True,
 )
+
+
+class RockDashboardSettingsForm(forms.ModelForm):
+    class Meta:
+        model = RockDashboardSettings
+        fields = ['project', 'target_quantity_ton', 'daily_target_placement_ton',
+                  'planned_start_date', 'planned_finish_date', 'remarks']
+        widgets = {
+            'planned_start_date': forms.DateInput(attrs={'type': 'date'}),
+            'planned_finish_date': forms.DateInput(attrs={'type': 'date'}),
+            'remarks': forms.Textarea(attrs={'rows': 2}),
+        }
+
+
+class RockStationProgressForm(forms.ModelForm):
+    class Meta:
+        model = RockStationProgress
+        fields = ['project', 'station_range', 'material_type', 'delivered_quantity_ton',
+                  'placed_quantity_ton', 'target_quantity_ton', 'remarks']
 
 
 class SandDailyRecordForm(forms.ModelForm):

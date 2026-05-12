@@ -118,6 +118,7 @@ def _import_rock(project, file_content, duplicate_action):
 
             defaults = dict(
                 day_name=day_name[:10],
+                material_type=RockDailyRecord.MATERIAL_CORE,
                 tct_daily_ton=tct_daily, tct_accum_ton=tct_accum,
                 tct_trips=trips, tct_trucks=trucks,
                 placed_daily_ton=placed_daily, placed_accum_ton=placed_accum,
@@ -144,7 +145,7 @@ def _import_rock(project, file_content, duplicate_action):
                 if qty > 0 and code in barge_map:
                     RockBargePlacement.objects.update_or_create(
                         record=rec, barge=barge_map[code],
-                        defaults={'quantity_ton': qty},
+                        defaults={'quantity_ton': qty, 'trips': None},
                     )
             success += 1
         except Exception as e:

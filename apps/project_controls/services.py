@@ -1,12 +1,31 @@
 import json
+from datetime import date, timedelta
 from decimal import Decimal
-from django.db.models import Sum
+from django.db.models import Max, Sum
 from .models import (
-    RockDailyRecord, SandDailyRecord, SandBargePlacement,
+    RockDailyRecord, RockBargePlacement, RockDashboardSettings, RockStationProgress,
+    SandDailyRecord, SandBargePlacement,
     RecoveryActionItem, RecoveryActionDailyProgress,
     RecoveryPlan,
     RevetmentStation, RevetmentActivity, RevetmentDailyRecord, RevetmentDailyItem,
 )
+
+
+def _fmt_short_date(value):
+    return value.strftime('%d %b') if value else ''
+
+
+def _safe_pct(numerator, denominator):
+    if denominator and denominator > 0:
+        return round(float(numerator) / float(denominator) * 100, 1)
+    return None
+
+
+def _forecast_completion_date(start_date, remaining_qty, average_daily):
+    if not start_date or not remaining_qty or not average_daily or average_daily <= 0:
+        return None
+    days = int((Decimal(str(remaining_qty)) / Decimal(str(average_daily))).to_integral_value(rounding='ROUND_CEILING'))
+    return start_date + timedelta(days=max(days, 0))
 
 
 def recalculate_rock_accumulatives(project):
@@ -79,39 +98,146 @@ def recalculate_action_item_progress(action_item):
         p.save(update_fields=['accumulative_planned', 'accumulative_actual', 'status'])
 
 
-def get_rock_dashboard_data(project):
-    from .models import RockBargePlacement
+def get_rock_dashboard_data(project, filters=None):
+    filters = filters or {}
     records = RockDailyRecord.objects.filter(project=project).order_by('record_date')
+
+    date_from = filters.get('date_from')
+    date_to = filters.get('date_to')
+    if date_from:
+        records = records.filter(record_date__gte=date_from)
+    if date_to:
+        records = records.filter(record_date__lte=date_to)
+
+    range_days = filters.get('range_days')
+    if range_days and not date_from and not date_to:
+        end = records.aggregate(last=Max('record_date'))['last'] or date.today()
+        records = records.filter(record_date__gte=end - timedelta(days=range_days - 1))
+
+    if filters.get('material_type'):
+        records = records.filter(material_type=filters['material_type'])
+    if filters.get('source_quarry'):
+        records = records.filter(source_quarry__icontains=filters['source_quarry'])
+    if filters.get('destination_area'):
+        records = records.filter(destination_area__icontains=filters['destination_area'])
+    if filters.get('station_range'):
+        records = records.filter(station_of_core__icontains=filters['station_range'])
+    if filters.get('barge_id'):
+        records = records.filter(barge_placements__barge_id=filters['barge_id']).distinct()
+
+    settings = RockDashboardSettings.objects.filter(project=project).first()
     if not records.exists():
-        return {}
+        return {
+            'chart_data': '{}',
+            'barge_totals': [],
+            'station_rows': [],
+            'settings': settings,
+            'has_data': False,
+        }
+
     latest = records.last()
     records_list = list(records)
+    total_delivered = latest.tct_accum_ton
+    total_placed = latest.placed_accum_ton
+    available_stock = total_delivered - total_placed
+    production_days = sum(1 for rec in records_list if rec.placed_daily_ton > 0)
+    average_daily_placement = (sum((rec.placed_daily_ton for rec in records_list), Decimal('0')) / production_days) if production_days else None
+    target_qty = settings.target_quantity_ton if settings else None
+    daily_target = settings.daily_target_placement_ton if settings else None
+    remaining_qty = (target_qty - total_placed) if target_qty is not None else None
+    completion_pct = _safe_pct(total_placed, target_qty)
+    stock_pct = _safe_pct(available_stock, total_delivered)
+    forecast_date = _forecast_completion_date(latest.record_date, remaining_qty, average_daily_placement)
+
+    planned_accum = []
+    target_line = []
+    running_plan = Decimal('0')
+    for rec in records_list:
+        if daily_target:
+            running_plan += daily_target
+            planned_accum.append(float(running_plan))
+        else:
+            planned_accum.append(None)
+        target_line.append(float(target_qty) if target_qty is not None else None)
+
     chart_data = json.dumps({
-        'labels': [str(r.record_date) for r in records_list],
+        'labels': [_fmt_short_date(r.record_date) for r in records_list],
+        'full_dates': [str(r.record_date) for r in records_list],
         'daily_delivered': [float(r.tct_daily_ton) for r in records_list],
         'daily_placed': [float(r.placed_daily_ton) for r in records_list],
+        'daily_target': [float(daily_target) if daily_target is not None else None for _ in records_list],
         'accum_delivered': [float(r.tct_accum_ton) for r in records_list],
         'accum_placed': [float(r.placed_accum_ton) for r in records_list],
-        'stock_balance': [float(r.stock_balance) for r in records_list],
-        'core_outside': [float(r.core_outside_daily) for r in records_list],
+        'planned_accum': planned_accum,
+        'target_line': target_line,
+        'variance': [
+            float(r.placed_accum_ton - Decimal(str(planned_accum[idx]))) if planned_accum[idx] is not None else None
+            for idx, r in enumerate(records_list)
+        ],
     })
-    barge_totals = (
-        RockBargePlacement.objects
-        .filter(record__project=project)
-        .values('barge__name')
-        .annotate(total_qty=Sum('quantity_ton'), total_trips=Sum('trips'))
-        .order_by('barge__name')
-    )
+
+    barge_qs = RockBargePlacement.objects.filter(record__project=project)
+    if filters.get('barge_id'):
+        barge_qs = barge_qs.filter(barge_id=filters['barge_id'])
+    if date_from:
+        barge_qs = barge_qs.filter(record__record_date__gte=date_from)
+    if date_to:
+        barge_qs = barge_qs.filter(record__record_date__lte=date_to)
+    barge_rows = []
+    for row in (
+        barge_qs.values('barge__name')
+        .annotate(total_qty=Sum('quantity_ton'), total_trips=Sum('trips'), latest_trip_date=Max('record__record_date'))
+        .order_by('-total_qty', 'barge__name')
+    ):
+        total_trips = row['total_trips']
+        avg_tons = (row['total_qty'] / total_trips) if total_trips else None
+        barge_rows.append({
+            'barge__name': row['barge__name'],
+            'total_qty': row['total_qty'] or Decimal('0'),
+            'total_trips': total_trips,
+            'average_tons_per_trip': avg_tons,
+            'latest_trip_date': row['latest_trip_date'],
+        })
+
+    station_rows = []
+    station_qs = RockStationProgress.objects.filter(project=project)
+    if filters.get('material_type'):
+        station_qs = station_qs.filter(material_type=filters['material_type'])
+    if filters.get('station_range'):
+        station_qs = station_qs.filter(station_range__icontains=filters['station_range'])
+    for station in station_qs:
+        station_rows.append({
+            'station_range': station.station_range,
+            'material_type': station.material_type,
+            'delivered_quantity_ton': station.delivered_quantity_ton,
+            'placed_quantity_ton': station.placed_quantity_ton,
+            'completion_percent': station.completion_percent,
+            'status': station.status,
+        })
+
     return {
-        'total_delivered': float(latest.tct_accum_ton),
-        'total_placed': float(latest.placed_accum_ton),
-        'stock_balance': float(latest.stock_balance),
+        'has_data': True,
+        'settings': settings,
+        'total_delivered': float(total_delivered),
+        'total_placed': float(total_placed),
+        'available_stock_balance': float(available_stock),
+        'stock_balance': float(available_stock),
+        'stock_percent': stock_pct,
+        'placement_completion_percent': completion_pct,
+        'remaining_quantity_to_boq': float(remaining_qty) if remaining_qty is not None else None,
+        'average_daily_placement': float(average_daily_placement) if average_daily_placement is not None else None,
+        'forecast_completion_date': forecast_date,
+        'latest_daily_delivered': float(latest.tct_daily_ton),
+        'latest_daily_placed': float(latest.placed_daily_ton),
         'core_outside_accum': float(latest.core_outside_accum),
         'core_inside_accum': float(latest.core_inside_accum),
         'total_records': records.count(),
+        'record_count': records.count(),
         'latest_date': latest.record_date,
         'chart_data': chart_data,
-        'barge_totals': barge_totals,
+        'barge_totals': barge_rows,
+        'station_rows': station_rows,
+        'material_type_choices': RockDailyRecord.ROCK_MATERIAL_CHOICES,
     }
 
 

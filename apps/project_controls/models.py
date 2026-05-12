@@ -25,9 +25,25 @@ class Barge(models.Model):
 # ── Rock ──────────────────────────────────────────────────────────────────────
 
 class RockDailyRecord(models.Model):
+    MATERIAL_CORE = 'Core Rock'
+    MATERIAL_BEDDING = 'Bedding Rock'
+    MATERIAL_ARMOUR = 'Armour Rock'
+    MATERIAL_TOE = 'Toe Rock'
+    MATERIAL_QUARRY_RUN = 'Quarry Run'
+    ROCK_MATERIAL_CHOICES = [
+        (MATERIAL_CORE, 'Core Rock'),
+        (MATERIAL_BEDDING, 'Bedding Rock'),
+        (MATERIAL_ARMOUR, 'Armour Rock'),
+        (MATERIAL_TOE, 'Toe Rock'),
+        (MATERIAL_QUARRY_RUN, 'Quarry Run'),
+    ]
+
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='rock_daily_records')
     record_date = models.DateField()
     day_name = models.CharField(max_length=10, blank=True)
+    material_type = models.CharField(max_length=30, choices=ROCK_MATERIAL_CHOICES, blank=True)
+    source_quarry = models.CharField(max_length=200, blank=True)
+    destination_area = models.CharField(max_length=200, blank=True)
 
     tct_daily_ton = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     tct_accum_ton = models.DecimalField(max_digits=12, decimal_places=2, default=0)
@@ -61,11 +77,27 @@ class RockDailyRecord(models.Model):
         return self.tct_accum_ton - self.placed_accum_ton
 
 
+class RockDashboardSettings(models.Model):
+    project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name='rock_dashboard_settings')
+    target_quantity_ton = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    daily_target_placement_ton = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    planned_start_date = models.DateField(null=True, blank=True)
+    planned_finish_date = models.DateField(null=True, blank=True)
+    remarks = models.TextField(blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = 'Rock Dashboard Settings'
+
+    def __str__(self):
+        return f'{self.project.contract_no} Rock Dashboard Settings'
+
+
 class RockBargePlacement(models.Model):
     record = models.ForeignKey(RockDailyRecord, on_delete=models.CASCADE, related_name='barge_placements')
     barge = models.ForeignKey(Barge, on_delete=models.PROTECT)
     quantity_ton = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    trips = models.IntegerField(default=0)
+    trips = models.IntegerField(null=True, blank=True)
     station = models.CharField(max_length=300, blank=True)
     remarks = models.CharField(max_length=300, blank=True)
 
@@ -78,6 +110,48 @@ class RockBargePlacement(models.Model):
 
 
 # ── Sand ──────────────────────────────────────────────────────────────────────
+
+class RockStationProgress(models.Model):
+    STATUS_COMPLETED = 'Completed'
+    STATUS_IN_PROGRESS = 'In Progress'
+    STATUS_NOT_STARTED = 'Not Started'
+
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='rock_station_progress')
+    station_range = models.CharField(max_length=100)
+    material_type = models.CharField(
+        max_length=30,
+        choices=RockDailyRecord.ROCK_MATERIAL_CHOICES,
+        default=RockDailyRecord.MATERIAL_CORE,
+    )
+    delivered_quantity_ton = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    placed_quantity_ton = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    target_quantity_ton = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    remarks = models.CharField(max_length=300, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['station_range', 'material_type']
+        unique_together = ('project', 'station_range', 'material_type')
+
+    def __str__(self):
+        return f'{self.project.contract_no} {self.station_range} {self.material_type}'
+
+    @property
+    def completion_percent(self):
+        denominator = self.target_quantity_ton or self.delivered_quantity_ton
+        if denominator and denominator > 0:
+            return round(float(self.placed_quantity_ton) / float(denominator) * 100, 1)
+        return 0
+
+    @property
+    def status(self):
+        pct = self.completion_percent
+        if pct >= 100:
+            return self.STATUS_COMPLETED
+        if pct > 0:
+            return self.STATUS_IN_PROGRESS
+        return self.STATUS_NOT_STARTED
+
 
 class SandDailyRecord(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='sand_daily_records')
