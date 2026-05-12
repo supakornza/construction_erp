@@ -30,7 +30,7 @@ from .forms import (
     RevetmentStationForm, RevetmentActivityForm,
     RevetmentDailyRecordForm, RevetmentDailyItemFormSet,
     RecoveryActionPlanForm, RecoveryActionItemFormSet,
-    RecoveryActionDailyProgressForm, ProjectActionPlanForm, ProjectActionItemFormSet,
+    RecoveryActionDailyProgressForm, ProjectActionPlanForm,
     LogisticsScenarioForm, ImportForm,
 )
 from .services import (
@@ -993,11 +993,13 @@ class ProjectActionPlanListView(LoginRequiredMixin, ListView):
     paginate_by = 30
 
     def get_queryset(self):
-        qs = super().get_queryset().select_related('project', 'created_by').prefetch_related('items')
+        qs = super().get_queryset().select_related('project', 'created_by')
         project_id = self.request.GET.get('project')
         status = self.request.GET.get('status')
         priority = self.request.GET.get('priority')
         category = self.request.GET.get('category')
+        responsible = self.request.GET.get('responsible')
+        meeting_reference = self.request.GET.get('meeting_reference')
         query = self.request.GET.get('q')
         if project_id:
             qs = qs.filter(project_id=project_id)
@@ -1007,13 +1009,17 @@ class ProjectActionPlanListView(LoginRequiredMixin, ListView):
             qs = qs.filter(priority=priority)
         if category:
             qs = qs.filter(category=category)
+        if responsible:
+            qs = qs.filter(responsible_parties__icontains=responsible)
+        if meeting_reference:
+            qs = qs.filter(meeting_reference__icontains=meeting_reference)
         if query:
             qs = qs.filter(
-                Q(title__icontains=query)
-                | Q(description__icontains=query)
-                | Q(owner__icontains=query)
-                | Q(items__action__icontains=query)
-                | Q(items__responsible_party__icontains=query)
+                Q(action_id__icontains=query)
+                | Q(description_th__icontains=query)
+                | Q(responsible_parties__icontains=query)
+                | Q(meeting_reference__icontains=query)
+                | Q(remarks__icontains=query)
             ).distinct()
         return qs
 
@@ -1044,26 +1050,10 @@ class ProjectActionPlanCreateView(LoginRequiredMixin, CreateView):
             initial['project'] = project_id
         return initial
 
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx['item_formset'] = ProjectActionItemFormSet(
-            self.request.POST or None,
-            instance=getattr(self, 'object', None),
-        )
-        return ctx
-
     def form_valid(self, form):
-        ctx = self.get_context_data()
-        item_fs = ctx['item_formset']
-        if item_fs.is_valid():
-            with transaction.atomic():
-                form.instance.created_by = self.request.user
-                self.object = form.save()
-                item_fs.instance = self.object
-                item_fs.save()
-            messages.success(self.request, 'Project Action Plan created.')
-            return redirect(self.get_success_url())
-        return self.render_to_response(self.get_context_data(form=form))
+        form.instance.created_by = self.request.user
+        messages.success(self.request, 'Project action registered.')
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy('project_controls:project_action_plan_detail', kwargs={'pk': self.object.pk})
@@ -1074,36 +1064,15 @@ class ProjectActionPlanDetailView(LoginRequiredMixin, DetailView):
     template_name = 'project_controls/action_plans/detail.html'
     context_object_name = 'plan'
 
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx['items'] = self.object.items.all()
-        return ctx
-
 
 class ProjectActionPlanUpdateView(LoginRequiredMixin, UpdateView):
     model = ProjectActionPlan
     form_class = ProjectActionPlanForm
     template_name = 'project_controls/action_plans/form.html'
 
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx['item_formset'] = ProjectActionItemFormSet(
-            self.request.POST or None,
-            instance=self.object,
-        )
-        return ctx
-
     def form_valid(self, form):
-        ctx = self.get_context_data()
-        item_fs = ctx['item_formset']
-        if item_fs.is_valid():
-            with transaction.atomic():
-                self.object = form.save()
-                item_fs.instance = self.object
-                item_fs.save()
-            messages.success(self.request, 'Project Action Plan updated.')
-            return redirect(self.get_success_url())
-        return self.render_to_response(self.get_context_data(form=form))
+        messages.success(self.request, 'Project action updated.')
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy('project_controls:project_action_plan_detail', kwargs={'pk': self.object.pk})

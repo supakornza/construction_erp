@@ -1,4 +1,5 @@
 import math
+import re
 from decimal import Decimal
 from django.db import models
 from django.core.exceptions import ValidationError
@@ -714,59 +715,75 @@ class RecoveryActionDailyProgress(models.Model):
 
 class ProjectActionPlan(models.Model):
     CATEGORY_CHOICES = [
-        ('Issue', 'Issue'),
-        ('Risk', 'Risk'),
-        ('Decision', 'Decision'),
+        ('Technical', 'Technical'),
+        ('Documentation', 'Documentation'),
+        ('Regulatory', 'Regulatory'),
+        ('Safety', 'Safety'),
+        ('Site Management', 'Site Management'),
+        ('Security', 'Security'),
         ('Coordination', 'Coordination'),
-        ('Change', 'Change'),
+        ('Commercial', 'Commercial'),
         ('Other', 'Other'),
     ]
     PRIORITY_CHOICES = [
-        ('Low', 'Low'),
-        ('Medium', 'Medium'),
         ('High', 'High'),
+        ('Medium', 'Medium'),
+        ('Low', 'Low'),
         ('Critical', 'Critical'),
     ]
     STATUS_OPEN = 'Open'
     STATUS_IN_PROGRESS = 'In Progress'
-    STATUS_WAITING = 'Waiting'
-    STATUS_RESOLVED = 'Resolved'
-    STATUS_CLOSED = 'Closed'
+    STATUS_PENDING = 'Pending'
+    STATUS_FINISH = 'Finish'
     STATUS_CANCELLED = 'Cancelled'
     STATUS_CHOICES = [
         (STATUS_OPEN, 'Open'),
         (STATUS_IN_PROGRESS, 'In Progress'),
-        (STATUS_WAITING, 'Waiting'),
-        (STATUS_RESOLVED, 'Resolved'),
-        (STATUS_CLOSED, 'Closed'),
+        (STATUS_PENDING, 'Pending'),
+        (STATUS_FINISH, 'Finish'),
         (STATUS_CANCELLED, 'Cancelled'),
     ]
-    CLOSED_STATUSES = {STATUS_RESOLVED, STATUS_CLOSED, STATUS_CANCELLED}
+    CLOSED_STATUSES = {STATUS_FINISH, STATUS_CANCELLED}
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_action_plans')
-    title = models.CharField(max_length=300)
-    category = models.CharField(max_length=30, choices=CATEGORY_CHOICES, default='Issue')
+    action_id = models.CharField(max_length=20, blank=True)
+    date_raised = models.DateField(default=timezone.localdate)
+    description_th = models.TextField(blank=True)
+    responsible_parties = models.CharField(max_length=300, blank=True)
+    due_date = models.DateField(null=True, blank=True)
     priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='Medium')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_OPEN)
-    owner = models.CharField(max_length=150, blank=True)
-    due_date = models.DateField(null=True, blank=True)
-    closed_date = models.DateField(null=True, blank=True)
-    description = models.TextField(blank=True)
-    root_cause = models.TextField(blank=True)
-    impact = models.TextField(blank=True)
+    category = models.CharField(max_length=30, choices=CATEGORY_CHOICES, default='Other')
+    meeting_reference = models.CharField(max_length=100, blank=True)
+    remarks = models.TextField(blank=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True,
                                    related_name='project_action_plans_created')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['status', 'due_date', '-created_at']
+        ordering = ['action_id']
+        unique_together = ('project', 'action_id')
         indexes = [
             models.Index(fields=['project', 'status', 'due_date'], name='pm_ap_project_status_idx'),
         ]
 
     def __str__(self):
-        return f"{self.project.contract_no} - {self.title}"
+        return f"{self.action_id} - {self.description_th[:80]}"
+
+    def save(self, *args, **kwargs):
+        if not self.action_id and self.project_id:
+            self.action_id = self.next_action_id(self.project_id)
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def next_action_id(cls, project_id):
+        max_number = 0
+        for action_id in cls.objects.filter(project_id=project_id).values_list('action_id', flat=True):
+            match = re.fullmatch(r'ACT-(\d+)', action_id or '')
+            if match:
+                max_number = max(max_number, int(match.group(1)))
+        return f'ACT-{max_number + 1:03d}'
 
     @property
     def is_overdue(self):
@@ -777,61 +794,8 @@ class ProjectActionPlan(models.Model):
         )
 
     @property
-    def item_count(self):
-        return self.items.count()
-
-    @property
-    def open_item_count(self):
-        return self.items.exclude(status__in=ProjectActionItem.CLOSED_STATUSES).count()
-
-    @property
-    def completion_percent(self):
-        items = list(self.items.all())
-        if not items:
-            return 0
-        done = sum(1 for item in items if item.status in ProjectActionItem.CLOSED_STATUSES)
-        return round(done / len(items) * 100, 1)
-
-
-class ProjectActionItem(models.Model):
-    STATUS_NOT_STARTED = 'Not Started'
-    STATUS_IN_PROGRESS = 'In Progress'
-    STATUS_WAITING = 'Waiting'
-    STATUS_DONE = 'Done'
-    STATUS_CANCELLED = 'Cancelled'
-    STATUS_CHOICES = [
-        (STATUS_NOT_STARTED, 'Not Started'),
-        (STATUS_IN_PROGRESS, 'In Progress'),
-        (STATUS_WAITING, 'Waiting'),
-        (STATUS_DONE, 'Done'),
-        (STATUS_CANCELLED, 'Cancelled'),
-    ]
-    CLOSED_STATUSES = {STATUS_DONE, STATUS_CANCELLED}
-
-    action_plan = models.ForeignKey(ProjectActionPlan, on_delete=models.CASCADE, related_name='items')
-    item_no = models.CharField(max_length=20)
-    action = models.CharField(max_length=500)
-    responsible_party = models.CharField(max_length=150, blank=True)
-    target_date = models.DateField(null=True, blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_NOT_STARTED)
-    remarks = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ['item_no', 'target_date', 'pk']
-        unique_together = ('action_plan', 'item_no')
-
-    def __str__(self):
-        return f"{self.item_no}. {self.action[:80]}"
-
-    @property
-    def is_overdue(self):
-        return bool(
-            self.target_date
-            and self.target_date < timezone.localdate()
-            and self.status not in self.CLOSED_STATUSES
-        )
+    def responsible_party_list(self):
+        return [party.strip() for party in self.responsible_parties.split(',') if party.strip()]
 
 
 class LogisticsScenario(models.Model):

@@ -1,16 +1,17 @@
 {% extends "base.html" %}
-{% block title %}{{ plan.title }} - Construction ERP{% endblock %}
-{% block page_title %}Project Action Plan{% endblock %}
+{% load project_control_tags %}
+{% block title %}{{ plan.action_id }} - Construction ERP{% endblock %}
+{% block page_title %}Project Action{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
   <div>
-    <h4 class="mb-1"><i class="fas fa-clipboard-check me-2 text-primary"></i>{{ plan.title }}</h4>
+    <h4 class="mb-1"><i class="fas fa-clipboard-check me-2 text-primary"></i>{{ plan.action_id }}</h4>
     <div class="text-muted">{{ plan.project.contract_no }} · {{ plan.project.project_name }}</div>
   </div>
   <div class="d-flex gap-2">
     <a href="{% url 'project_controls:project_action_plan_list' %}?project={{ plan.project_id }}" class="btn btn-outline-secondary">
-      <i class="fas fa-list me-1"></i> List
+      <i class="fas fa-list me-1"></i> Register
     </a>
     <a href="{% url 'project_controls:project_action_plan_update' plan.pk %}" class="btn btn-primary">
       <i class="fas fa-edit me-1"></i> Edit
@@ -18,77 +19,25 @@
   </div>
 </div>
 
-<div class="row g-3 mb-4">
-  <div class="col-lg-4">
-    <div class="card h-100">
-      <div class="card-body">
-        <h6 class="text-muted fw-semibold mb-3">Status</h6>
-        <dl class="row mb-0 small">
-          <dt class="col-5">Category</dt><dd class="col-7">{{ plan.category }}</dd>
-          <dt class="col-5">Priority</dt><dd class="col-7">{{ plan.priority }}</dd>
-          <dt class="col-5">Status</dt><dd class="col-7">{{ plan.status }}</dd>
-          <dt class="col-5">Owner</dt><dd class="col-7">{{ plan.owner|default:"-" }}</dd>
-          <dt class="col-5">Due Date</dt><dd class="col-7 {% if plan.is_overdue %}text-danger fw-semibold{% endif %}">{{ plan.due_date|date:"d M Y"|default:"-" }}</dd>
-          <dt class="col-5">Completion</dt><dd class="col-7">{{ plan.completion_percent|floatformat:1 }}%</dd>
-        </dl>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-8">
-    <div class="card h-100">
-      <div class="card-body">
-        <h6 class="text-muted fw-semibold mb-3">Issue / Plan Details</h6>
-        <div class="mb-3">
-          <div class="small text-muted">Description</div>
-          <div>{{ plan.description|linebreaksbr|default:"-" }}</div>
-        </div>
-        <div class="row g-3">
-          <div class="col-md-6">
-            <div class="small text-muted">Root Cause</div>
-            <div>{{ plan.root_cause|linebreaksbr|default:"-" }}</div>
-          </div>
-          <div class="col-md-6">
-            <div class="small text-muted">Impact</div>
-            <div>{{ plan.impact|linebreaksbr|default:"-" }}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="card">
-  <div class="card-header bg-white d-flex justify-content-between align-items-center">
-    <h6 class="mb-0"><i class="fas fa-list-check me-2"></i>Action Items</h6>
-    <span class="badge text-bg-light">{{ plan.open_item_count }} open of {{ plan.item_count }} actions</span>
-  </div>
-  <div class="table-responsive">
-    <table class="table table-hover align-middle mb-0">
-      <thead class="table-light">
-        <tr>
-          <th style="width:90px;">No.</th>
-          <th>Action</th>
-          <th>Responsible</th>
-          <th>Target Date</th>
-          <th>Status</th>
-          <th>Remarks</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in items %}
-        <tr class="{% if item.is_overdue %}table-danger{% endif %}">
-          <td class="fw-semibold">{{ item.item_no }}</td>
-          <td>{{ item.action }}</td>
-          <td>{{ item.responsible_party|default:"-" }}</td>
-          <td class="{% if item.is_overdue %}text-danger fw-semibold{% endif %}">{{ item.target_date|date:"d M Y"|default:"-" }}</td>
-          <td>{{ item.status }}</td>
-          <td>{{ item.remarks|default:"-" }}</td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="6" class="text-center py-4 text-muted">No action items recorded.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="card-body">
+    <dl class="row mb-0">
+      <dt class="col-md-3">Action ID</dt><dd class="col-md-9">{{ plan.action_id }}</dd>
+      <dt class="col-md-3">Date Raised</dt><dd class="col-md-9">{{ plan.date_raised|thai_be_date }}</dd>
+      <dt class="col-md-3">Description (TH)</dt><dd class="col-md-9">{{ plan.description_th|linebreaksbr|default:"-" }}</dd>
+      <dt class="col-md-3">Responsible Party</dt>
+      <dd class="col-md-9">
+        {% for party in plan.responsible_parties|split_parties %}
+        <span class="badge rounded-pill text-bg-primary me-1">{{ party }}</span>
+        {% empty %}-{% endfor %}
+      </dd>
+      <dt class="col-md-3">Due Date</dt><dd class="col-md-9 {% if plan.is_overdue %}text-danger fw-semibold{% endif %}">{{ plan.due_date|thai_be_date }}</dd>
+      <dt class="col-md-3">Priority</dt><dd class="col-md-9">{{ plan.priority }}</dd>
+      <dt class="col-md-3">Status</dt><dd class="col-md-9">{{ plan.status }}</dd>
+      <dt class="col-md-3">Category</dt><dd class="col-md-9">{{ plan.category }}</dd>
+      <dt class="col-md-3">Meeting Reference</dt><dd class="col-md-9">{{ plan.meeting_reference|default:"-" }}</dd>
+      <dt class="col-md-3">Remarks</dt><dd class="col-md-9">{{ plan.remarks|linebreaksbr|default:"-" }}</dd>
+    </dl>
   </div>
 </div>
 {% endblock %}

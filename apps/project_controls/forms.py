@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
+from django.utils import timezone
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Fieldset
 from .models import (
@@ -7,7 +8,7 @@ from .models import (
     SandDailyRecord, SandBargePlacement, SandDashboardSettings, SandAreaProgress,
     SandAllocation, RecoveryPlan, RecoveryPlanDailyItem,
     RecoveryActionPlan, RecoveryActionItem,
-    RecoveryActionDailyProgress, ProjectActionPlan, ProjectActionItem, LogisticsScenario,
+    RecoveryActionDailyProgress, ProjectActionPlan, LogisticsScenario,
     RevetmentStation, RevetmentActivity,
     RevetmentDailyRecord, RevetmentDailyItem,
 )
@@ -173,6 +174,11 @@ class SandAllocationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        if not self.is_bound and not self.instance.pk:
+            self.fields['date_raised'].initial = timezone.localdate()
+        self.fields['description_th'].label = 'Description (TH)'
+        self.fields['responsible_parties'].label = 'Responsible Party'
+        self.fields['meeting_reference'].label = 'Meeting Reference'
         self.helper = FormHelper()
         self.helper.form_tag = False
 
@@ -312,32 +318,25 @@ class ProjectActionPlanForm(forms.ModelForm):
     class Meta:
         model = ProjectActionPlan
         fields = [
-            'project', 'title', 'category', 'priority', 'status', 'owner',
-            'due_date', 'closed_date', 'description', 'root_cause', 'impact',
+            'project', 'action_id', 'date_raised', 'description_th',
+            'responsible_parties', 'due_date', 'priority', 'status',
+            'category', 'meeting_reference', 'remarks',
         ]
         widgets = {
+            'date_raised': forms.DateInput(attrs={'type': 'date'}),
             'due_date': forms.DateInput(attrs={'type': 'date'}),
-            'closed_date': forms.DateInput(attrs={'type': 'date'}),
-            'description': forms.Textarea(attrs={'rows': 3}),
-            'root_cause': forms.Textarea(attrs={'rows': 2}),
-            'impact': forms.Textarea(attrs={'rows': 2}),
+            'description_th': forms.Textarea(attrs={'rows': 3}),
+            'remarks': forms.Textarea(attrs={'rows': 2}),
+        }
+        help_texts = {
+            'action_id': 'Leave blank to auto-generate the next ACT number for this project.',
+            'responsible_parties': 'Separate multiple parties with commas, e.g. PMC, ITD, PMC-TA.',
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
-
-
-ProjectActionItemFormSet = inlineformset_factory(
-    ProjectActionPlan, ProjectActionItem,
-    fields=['item_no', 'action', 'responsible_party', 'target_date', 'status', 'remarks'],
-    extra=3, can_delete=True,
-    widgets={
-        'target_date': forms.DateInput(attrs={'type': 'date'}),
-        'remarks': forms.Textarea(attrs={'rows': 1}),
-    },
-)
 
 
 class LogisticsScenarioForm(forms.ModelForm):
