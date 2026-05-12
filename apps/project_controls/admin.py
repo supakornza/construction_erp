@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Barge, RockDailyRecord, RockBargePlacement, RockDashboardSettings, RockStationProgress,
-    SandDailyRecord, SandBargePlacement, SandAllocation,
+    SandDailyRecord, SandBargePlacement, SandDashboardSettings, SandAreaProgress, SandAllocation,
     RecoveryPlan, RecoveryPlanDailyItem,
     RecoveryActionPlan, RecoveryActionItem, RecoveryActionDailyProgress,
     LogisticsScenario, ImportLog,
@@ -50,6 +50,7 @@ class RockStationProgressAdmin(admin.ModelAdmin):
 class SandBargePlacementInline(admin.TabularInline):
     model = SandBargePlacement
     extra = 1
+    fields = ['barge', 'quantity_ton', 'trips', 'source', 'destination', 'placement_type', 'station', 'status']
 
 
 @admin.register(SandDailyRecord)
@@ -61,6 +62,22 @@ class SandDailyRecordAdmin(admin.ModelAdmin):
     date_hierarchy = 'record_date'
     search_fields = ['project__contract_no', 'sand_source', 'remarks']
     inlines = [SandBargePlacementInline]
+
+
+@admin.register(SandDashboardSettings)
+class SandDashboardSettingsAdmin(admin.ModelAdmin):
+    list_display = ['project', 'target_quantity_ton', 'daily_target_delivery_ton',
+                    'daily_target_placement_ton', 'planned_start_date', 'planned_finish_date', 'updated_at']
+    search_fields = ['project__contract_no', 'project__project_name']
+
+
+@admin.register(SandAreaProgress)
+class SandAreaProgressAdmin(admin.ModelAdmin):
+    list_display = ['project', 'area_zone', 'placement_type', 'planned_quantity_ton',
+                    'delivered_quantity_ton', 'placed_quantity_ton',
+                    'completion_percent', 'status']
+    list_filter = ['project', 'placement_type']
+    search_fields = ['project__contract_no', 'area_zone', 'remarks']
 
 
 @admin.register(SandAllocation)

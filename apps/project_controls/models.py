@@ -68,6 +68,9 @@ class RockDailyRecord(models.Model):
     class Meta:
         unique_together = ('project', 'record_date')
         ordering = ['-record_date']
+        indexes = [
+            models.Index(fields=['project', '-record_date'], name='rock_project_date_idx'),
+        ]
 
     def __str__(self):
         return f"{self.project.contract_no} Rock – {self.record_date}"
@@ -215,6 +218,9 @@ class SandDailyRecord(models.Model):
     class Meta:
         unique_together = ('project', 'record_date')
         ordering = ['-record_date']
+        indexes = [
+            models.Index(fields=['project', '-record_date'], name='sand_project_date_idx'),
+        ]
 
     def __str__(self):
         return f"{self.project.contract_no} Sand – {self.record_date}"
@@ -249,11 +255,30 @@ class SandDailyRecord(models.Model):
 
 
 class SandBargePlacement(models.Model):
+    PLACEMENT_OFFSHORE = 'Offshore'
+    PLACEMENT_ONSHORE = 'Onshore'
+    PLACEMENT_CHOICES = [
+        (PLACEMENT_OFFSHORE, 'Offshore'),
+        (PLACEMENT_ONSHORE, 'Onshore'),
+    ]
+
+    STATUS_RECORDED = 'Recorded'
+    STATUS_MISSING_TRIPS = 'Trip Data Missing'
+    STATUS_CHOICES = [
+        (STATUS_RECORDED, 'Recorded'),
+        (STATUS_MISSING_TRIPS, 'Trip Data Missing'),
+    ]
+
     record = models.ForeignKey(SandDailyRecord, on_delete=models.CASCADE, related_name='barge_placements')
     barge = models.ForeignKey(Barge, on_delete=models.PROTECT)
     quantity_ton = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    trips = models.IntegerField(default=0)
+    trips = models.IntegerField(null=True, blank=True)
     station = models.CharField(max_length=300, blank=True)
+    source = models.CharField(max_length=200, blank=True)
+    destination = models.CharField(max_length=200, blank=True)
+    placement_type = models.CharField(max_length=20, choices=PLACEMENT_CHOICES, default=PLACEMENT_OFFSHORE)
+    material_type = models.CharField(max_length=50, default='Sand', blank=True)
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default=STATUS_RECORDED)
 
     class Meta:
         unique_together = ('record', 'barge')
@@ -264,6 +289,75 @@ class SandBargePlacement(models.Model):
 
 
 # ── Sand Allocation ───────────────────────────────────────────────────────────
+
+class SandDashboardSettings(models.Model):
+    project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name='sand_dashboard_settings')
+    target_quantity_ton = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    daily_target_delivery_ton = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    daily_target_placement_ton = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    planned_start_date = models.DateField(null=True, blank=True)
+    planned_finish_date = models.DateField(null=True, blank=True)
+    remarks = models.TextField(blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = 'Sand Dashboard Settings'
+
+    def __str__(self):
+        return f'{self.project.contract_no} Sand Dashboard Settings'
+
+
+class SandAreaProgress(models.Model):
+    STATUS_COMPLETED = 'Completed'
+    STATUS_IN_PROGRESS = 'In Progress'
+    STATUS_NOT_STARTED = 'Not Started'
+    STATUS_DELAYED = 'Delayed'
+
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='sand_area_progress')
+    area_zone = models.CharField(max_length=120)
+    planned_quantity_ton = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    delivered_quantity_ton = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    placed_quantity_ton = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    planned_placed_to_date_ton = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    placement_type = models.CharField(
+        max_length=20,
+        choices=SandBargePlacement.PLACEMENT_CHOICES,
+        blank=True,
+    )
+    remarks = models.CharField(max_length=300, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['area_zone', 'placement_type']
+        unique_together = ('project', 'area_zone', 'placement_type')
+
+    def __str__(self):
+        return f'{self.project.contract_no} {self.area_zone}'
+
+    @property
+    def remaining_quantity_ton(self):
+        if self.planned_quantity_ton is None:
+            return None
+        remaining = self.planned_quantity_ton - self.placed_quantity_ton
+        return remaining if remaining > 0 else Decimal('0')
+
+    @property
+    def completion_percent(self):
+        if self.planned_quantity_ton and self.planned_quantity_ton > 0:
+            return round(float(self.placed_quantity_ton) / float(self.planned_quantity_ton) * 100, 1)
+        return 0
+
+    @property
+    def status(self):
+        if self.planned_placed_to_date_ton and self.placed_quantity_ton < self.planned_placed_to_date_ton:
+            return self.STATUS_DELAYED
+        pct = self.completion_percent
+        if pct >= 100:
+            return self.STATUS_COMPLETED
+        if pct > 0:
+            return self.STATUS_IN_PROGRESS
+        return self.STATUS_NOT_STARTED
+
 
 class SandAllocation(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='sand_allocations')
@@ -366,6 +460,9 @@ class RevetmentDailyRecord(models.Model):
     class Meta:
         unique_together = ('project', 'record_date')
         ordering = ['-record_date']
+        indexes = [
+            models.Index(fields=['project', '-record_date'], name='revetment_project_date_idx'),
+        ]
 
     def __str__(self):
         return f'{self.project.contract_no} Revetment - {self.record_date}'

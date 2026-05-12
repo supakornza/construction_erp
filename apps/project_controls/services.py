@@ -1,10 +1,10 @@
 import json
 from datetime import date, timedelta
 from decimal import Decimal
-from django.db.models import Max, Sum
+from django.db.models import Count, Max, Q, Sum
 from .models import (
     RockDailyRecord, RockBargePlacement, RockDashboardSettings, RockStationProgress,
-    SandDailyRecord, SandBargePlacement,
+    SandDailyRecord, SandBargePlacement, SandDashboardSettings, SandAreaProgress,
     RecoveryActionItem, RecoveryActionDailyProgress,
     RecoveryPlan,
     RevetmentStation, RevetmentActivity, RevetmentDailyRecord, RevetmentDailyItem,
@@ -136,12 +136,18 @@ def get_rock_dashboard_data(project, filters=None):
         }
 
     latest = records.last()
+    agg = records.aggregate(
+        production_days=Count('pk', filter=Q(placed_daily_ton__gt=0)),
+        sum_placed_daily=Sum('placed_daily_ton'),
+    )
+    production_days = agg['production_days'] or 0
     records_list = list(records)
     total_delivered = latest.tct_accum_ton
     total_placed = latest.placed_accum_ton
     available_stock = total_delivered - total_placed
-    production_days = sum(1 for rec in records_list if rec.placed_daily_ton > 0)
-    average_daily_placement = (sum((rec.placed_daily_ton for rec in records_list), Decimal('0')) / production_days) if production_days else None
+    average_daily_placement = (
+        (agg['sum_placed_daily'] / production_days) if production_days else None
+    )
     target_qty = settings.target_quantity_ton if settings else None
     daily_target = settings.daily_target_placement_ton if settings else None
     remaining_qty = (target_qty - total_placed) if target_qty is not None else None
@@ -231,8 +237,8 @@ def get_rock_dashboard_data(project, filters=None):
         'latest_daily_placed': float(latest.placed_daily_ton),
         'core_outside_accum': float(latest.core_outside_accum),
         'core_inside_accum': float(latest.core_inside_accum),
-        'total_records': records.count(),
-        'record_count': records.count(),
+        'total_records': len(records_list),
+        'record_count': len(records_list),
         'latest_date': latest.record_date,
         'chart_data': chart_data,
         'barge_totals': barge_rows,
@@ -241,62 +247,224 @@ def get_rock_dashboard_data(project, filters=None):
     }
 
 
-def get_sand_dashboard_data(project):
+def get_sand_dashboard_data(project, filters=None):
+    filters = filters or {}
+    settings = SandDashboardSettings.objects.filter(project=project).first()
     records = SandDailyRecord.objects.filter(project=project).order_by('record_date')
+
+    date_from = filters.get('date_from')
+    date_to = filters.get('date_to')
+    if date_from:
+        records = records.filter(record_date__gte=date_from)
+    if date_to:
+        records = records.filter(record_date__lte=date_to)
+
+    range_days = filters.get('range_days')
+    if range_days and not date_from and not date_to:
+        end = records.aggregate(last=Max('record_date'))['last'] or date.today()
+        records = records.filter(record_date__gte=end - timedelta(days=range_days - 1))
+
+    if filters.get('source') == 'chalothon':
+        records = records.filter(chalothon_daily_ton__gt=0)
+    elif filters.get('source') == 'khlong_bang_phai':
+        records = records.filter(khlong_bang_phai_daily_ton__gt=0)
+    if filters.get('destination') == 'tct':
+        records = records.filter(tct_daily_ton__gt=0)
+    elif filters.get('destination') == 'mtp3':
+        records = records.filter(mtp3_daily_ton__gt=0)
+    if filters.get('placement_type') == SandBargePlacement.PLACEMENT_OFFSHORE:
+        records = records.filter(offshore_daily_ton__gt=0)
+    elif filters.get('placement_type') == SandBargePlacement.PLACEMENT_ONSHORE:
+        records = records.filter(onshore_daily_ton__gt=0)
+    if filters.get('barge_id'):
+        records = records.filter(barge_placements__barge_id=filters['barge_id']).distinct()
+    if filters.get('area_zone'):
+        records = records.filter(offshore_station__icontains=filters['area_zone'])
+
     if not records.exists():
-        return {}
+        return {
+            'chart_data': '{}',
+            'barge_totals': [],
+            'source_rows': [],
+            'area_rows': [],
+            'settings': settings,
+            'has_data': False,
+        }
+
     latest = records.last()
-    chart_records = list(records.order_by('record_date'))
-    other_sources = list(
-        records.exclude(sand_source='')
-        .values_list('sand_source', flat=True)
-        .distinct()
-        .order_by('sand_source')
+    agg = records.aggregate(
+        delivery_days=Count('pk', filter=Q(total_daily_ton__gt=0)),
+        placement_days=Count('pk', filter=Q(offshore_daily_ton__gt=0) | Q(onshore_daily_ton__gt=0)),
+        period_delivered=Sum('total_daily_ton'),
+        period_offshore=Sum('offshore_daily_ton'),
+        period_onshore=Sum('onshore_daily_ton'),
     )
-    other_source_label = latest.sand_source_display if len(other_sources) == 1 else 'Other sources'
+    delivery_days = agg['delivery_days'] or 0
+    placement_days = agg['placement_days'] or 0
+    period_delivered = agg['period_delivered'] or Decimal('0')
+    period_placed = (agg['period_offshore'] or Decimal('0')) + (agg['period_onshore'] or Decimal('0'))
+    records_list = list(records)
+    total_delivered = latest.total_accum_ton
+    total_placed = latest.total_placed
+    current_stock_balance = total_delivered - total_placed
+    target_qty = settings.target_quantity_ton if settings else None
+    daily_target_delivery = settings.daily_target_delivery_ton if settings else None
+    daily_target_placement = settings.daily_target_placement_ton if settings else None
+    remaining_qty = (target_qty - total_placed) if target_qty is not None else None
+    if remaining_qty is not None and remaining_qty < 0:
+        remaining_qty = Decimal('0')
+    completion_pct = _safe_pct(total_placed, target_qty)
+    remaining_pct = _safe_pct(remaining_qty, target_qty) if remaining_qty is not None else None
+    stock_pct = _safe_pct(current_stock_balance, total_delivered)
+    average_daily_delivery = (period_delivered / delivery_days) if delivery_days else None
+    average_daily_placement = (period_placed / placement_days) if placement_days else None
+    forecast_date = _forecast_completion_date(latest.record_date, remaining_qty, average_daily_placement)
+
+    planned_delivery = []
+    planned_placement = []
+    target_line = []
+    delivery_plan = placement_plan = Decimal('0')
+    placement_view = filters.get('placement_view') or 'daily'
+    for rec in records_list:
+        if daily_target_delivery:
+            delivery_plan += daily_target_delivery
+            planned_delivery.append(float(delivery_plan))
+        else:
+            planned_delivery.append(None)
+        if daily_target_placement:
+            placement_plan += daily_target_placement
+            planned_placement.append(float(placement_plan))
+        else:
+            planned_placement.append(None)
+        target_line.append(float(target_qty) if target_qty is not None else None)
+
+    accum_placed = [float(rec.total_placed) for rec in records_list]
     chart_data = {
-        'labels': [str(rec.record_date) for rec in chart_records],
-        'tct_daily': [float(rec.tct_daily_ton) for rec in chart_records],
-        'mtp3_daily': [float(rec.mtp3_daily_ton) for rec in chart_records],
-        'chalothon_daily': [float(rec.chalothon_daily_ton) for rec in chart_records],
-        'khlong_bang_phai_daily': [float(rec.khlong_bang_phai_daily_ton) for rec in chart_records],
-        'other_daily': [float(rec.oswald_daily_ton) for rec in chart_records],
-        'tct_accum': [float(rec.tct_accum_ton) for rec in chart_records],
-        'mtp3_accum': [float(rec.mtp3_accum_ton) for rec in chart_records],
-        'chalothon_accum': [float(rec.chalothon_accum_ton) for rec in chart_records],
-        'khlong_bang_phai_accum': [float(rec.khlong_bang_phai_accum_ton) for rec in chart_records],
-        'total_accum': [float(rec.total_accum_ton) for rec in chart_records],
-        'offshore_daily': [float(rec.offshore_daily_ton) for rec in chart_records],
-        'onshore_daily': [float(rec.onshore_daily_ton) for rec in chart_records],
-        'inside_plot_daily': [float(rec.inside_plot_daily) for rec in chart_records],
-        'outside_plot_daily': [float(rec.outside_plot_daily) for rec in chart_records],
+        'labels': [_fmt_short_date(rec.record_date) for rec in records_list],
+        'full_dates': [str(rec.record_date) for rec in records_list],
+        'tct_daily': [float(rec.tct_daily_ton) for rec in records_list],
+        'mtp3_daily': [float(rec.mtp3_daily_ton) for rec in records_list],
+        'daily_target_delivery': [float(daily_target_delivery) if daily_target_delivery is not None else None for _ in records_list],
+        'chalothon_daily': [float(rec.chalothon_daily_ton) for rec in records_list],
+        'khlong_bang_phai_daily': [float(rec.khlong_bang_phai_daily_ton) for rec in records_list],
+        'other_daily': [float(rec.oswald_daily_ton) for rec in records_list],
+        'actual_cumulative_delivery': [float(rec.total_accum_ton) for rec in records_list],
+        'actual_cumulative_placement': accum_placed,
+        'planned_cumulative_delivery': planned_delivery,
+        'planned_cumulative_placement': planned_placement,
+        'target_line': target_line,
+        'variance': [
+            float(Decimal(str(accum_placed[idx])) - Decimal(str(planned_placement[idx]))) if planned_placement[idx] is not None else None
+            for idx in range(len(records_list))
+        ],
+        'offshore_placement': [
+            float(rec.offshore_accum_ton if placement_view == 'cumulative' else rec.offshore_daily_ton)
+            for rec in records_list
+        ],
+        'onshore_placement': [
+            float(rec.onshore_accum_ton if placement_view == 'cumulative' else rec.onshore_daily_ton)
+            for rec in records_list
+        ],
     }
-    barge_totals = (
-        SandBargePlacement.objects
-        .filter(record__project=project)
-        .values('barge__name')
-        .annotate(total_qty=Sum('quantity_ton'), total_trips=Sum('trips'))
-        .order_by('barge__name')
-    )
+
+    source_rows = [
+        {
+            'name': 'Chalothon Sand Pit',
+            'total_qty': latest.chalothon_accum_ton,
+            'percent': _safe_pct(latest.chalothon_accum_ton, latest.total_source_accum_ton),
+            'latest_date': records.filter(chalothon_daily_ton__gt=0).aggregate(last=Max('record_date'))['last'],
+            'status': 'Active' if latest.chalothon_accum_ton > 0 else 'No Delivery',
+        },
+        {
+            'name': 'Khlong Bang Phai (Oswald)',
+            'total_qty': latest.khlong_bang_phai_accum_ton,
+            'percent': _safe_pct(latest.khlong_bang_phai_accum_ton, latest.total_source_accum_ton),
+            'latest_date': records.filter(khlong_bang_phai_daily_ton__gt=0).aggregate(last=Max('record_date'))['last'],
+            'status': 'Active' if latest.khlong_bang_phai_accum_ton > 0 else 'No Delivery',
+        },
+    ]
+    source_rows.sort(key=lambda row: row['total_qty'], reverse=True)
+
+    barge_qs = SandBargePlacement.objects.filter(record__project=project)
+    if date_from:
+        barge_qs = barge_qs.filter(record__record_date__gte=date_from)
+    if date_to:
+        barge_qs = barge_qs.filter(record__record_date__lte=date_to)
+    if filters.get('barge_id'):
+        barge_qs = barge_qs.filter(barge_id=filters['barge_id'])
+    if filters.get('source'):
+        source_name = 'Chalothon Sand Pit' if filters['source'] == 'chalothon' else 'Khlong Bang Phai (Oswald)'
+        barge_qs = barge_qs.filter(source__icontains=source_name)
+    if filters.get('destination'):
+        destination_name = 'TCT Pier' if filters['destination'] == 'tct' else 'Stockpile Sand MTP3'
+        barge_qs = barge_qs.filter(destination__icontains=destination_name)
+    if filters.get('placement_type'):
+        barge_qs = barge_qs.filter(placement_type=filters['placement_type'])
+
+    barge_rows = []
+    for row in (
+        barge_qs.values('barge__name', 'source', 'destination', 'placement_type', 'material_type', 'status')
+        .annotate(total_qty=Sum('quantity_ton'), total_trips=Sum('trips'), latest_trip_date=Max('record__record_date'))
+        .order_by('-total_qty', 'barge__name')
+    ):
+        total_trips = row['total_trips']
+        avg_tons = (row['total_qty'] / total_trips) if total_trips else None
+        barge_rows.append({
+            'barge__name': row['barge__name'],
+            'total_qty': row['total_qty'] or Decimal('0'),
+            'total_trips': total_trips,
+            'average_tons_per_trip': avg_tons,
+            'latest_trip_date': row['latest_trip_date'],
+            'source': row['source'] or 'N/A',
+            'destination': row['destination'] or 'Offshore Placement',
+            'placement_type': row['placement_type'] or 'N/A',
+            'material_type': row['material_type'] or 'Sand',
+            'status': SandBargePlacement.STATUS_MISSING_TRIPS if total_trips is None else row['status'],
+        })
+
+    area_qs = SandAreaProgress.objects.filter(project=project)
+    if filters.get('area_zone'):
+        area_qs = area_qs.filter(area_zone__icontains=filters['area_zone'])
+    if filters.get('placement_type'):
+        area_qs = area_qs.filter(placement_type=filters['placement_type'])
+    area_rows = []
+    for area in area_qs:
+        area_rows.append({
+            'area_zone': area.area_zone,
+            'planned_quantity_ton': area.planned_quantity_ton,
+            'delivered_quantity_ton': area.delivered_quantity_ton,
+            'placed_quantity_ton': area.placed_quantity_ton,
+            'remaining_quantity_ton': area.remaining_quantity_ton,
+            'completion_percent': area.completion_percent,
+            'placement_type': area.placement_type or 'All',
+            'status': area.status,
+        })
+
     return {
+        'has_data': True,
+        'settings': settings,
         'tct_accum': float(latest.tct_accum_ton),
         'mtp3_accum': float(latest.mtp3_accum_ton),
         'chalothon_accum': float(latest.chalothon_accum_ton),
         'khlong_bang_phai_accum': float(latest.khlong_bang_phai_accum_ton),
-        'other_source_label': other_source_label,
-        'other_source_names': ', '.join(other_sources),
+        'other_source_label': 'Khlong Bang Phai (Oswald)',
+        'other_source_names': 'Khlong Bang Phai (Oswald)',
         'other_source_accum': float(latest.oswald_accum_ton),
         'total_source_accum': float(latest.total_source_accum_ton),
         'total_accum': float(latest.total_accum_ton),
         'offshore_accum': float(latest.offshore_accum_ton),
         'onshore_accum': float(latest.onshore_accum_ton),
-        'barge_totals': barge_totals,
+        'barge_totals': barge_rows,
+        'source_rows': source_rows,
+        'area_rows': area_rows,
         'total_tct': float(latest.tct_accum_ton),
         'total_mtp3': float(latest.mtp3_accum_ton),
         'total_chalothon': float(latest.chalothon_accum_ton),
         'total_khlong_bang_phai': float(latest.khlong_bang_phai_accum_ton),
         'total_oswald': float(latest.oswald_accum_ton),
-        'total_delivered': float(latest.total_accum_ton),
+        'total_delivered': float(total_delivered),
+        'total_placed': float(total_placed),
+        'current_stock_balance': float(current_stock_balance),
         'total_offshore': float(latest.offshore_accum_ton),
         'total_onshore': float(latest.onshore_accum_ton),
         'inside_plot': float(latest.inside_plot_accum),
@@ -304,7 +472,18 @@ def get_sand_dashboard_data(project):
         'remaining_tct': float(latest.remaining_tct),
         'remaining_mtp3': float(latest.remaining_mtp3),
         'total_remaining': float(latest.total_remaining),
+        'remaining_quantity': float(remaining_qty) if remaining_qty is not None else None,
+        'remaining_percent': remaining_pct,
+        'completion_percent': completion_pct,
+        'stock_percent': stock_pct,
+        'average_daily_delivery': float(average_daily_delivery) if average_daily_delivery is not None else None,
+        'average_daily_placement': float(average_daily_placement) if average_daily_placement is not None else None,
+        'forecast_completion_date': forecast_date,
+        'latest_daily_delivered': float(latest.total_daily_ton),
+        'latest_daily_placed': float(latest.offshore_daily_ton + latest.onshore_daily_ton),
         'latest_date': latest.record_date,
+        'record_count': len(records_list),
+        'placement_chart_title': 'Cumulative Sand Placement: Offshore vs Onshore' if placement_view == 'cumulative' else 'Daily Sand Placement: Offshore vs Onshore',
         'chart_data': json.dumps(chart_data),
     }
 

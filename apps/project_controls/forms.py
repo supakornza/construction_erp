@@ -4,7 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Fieldset
 from .models import (
     RockDailyRecord, RockBargePlacement, RockDashboardSettings, RockStationProgress,
-    SandDailyRecord, SandBargePlacement,
+    SandDailyRecord, SandBargePlacement, SandDashboardSettings, SandAreaProgress,
     SandAllocation, RecoveryPlan, RecoveryPlanDailyItem,
     RecoveryActionPlan, RecoveryActionItem,
     RecoveryActionDailyProgress, LogisticsScenario,
@@ -135,9 +135,30 @@ class SandDailyRecordForm(forms.ModelForm):
 
 SandBargePlacementFormSet = inlineformset_factory(
     SandDailyRecord, SandBargePlacement,
-    fields=['barge', 'quantity_ton', 'trips', 'station'],
+    fields=['barge', 'quantity_ton', 'trips', 'source', 'destination', 'placement_type', 'station'],
     extra=4, can_delete=True,
 )
+
+
+class SandDashboardSettingsForm(forms.ModelForm):
+    class Meta:
+        model = SandDashboardSettings
+        fields = ['project', 'target_quantity_ton', 'daily_target_delivery_ton',
+                  'daily_target_placement_ton', 'planned_start_date',
+                  'planned_finish_date', 'remarks']
+        widgets = {
+            'planned_start_date': forms.DateInput(attrs={'type': 'date'}),
+            'planned_finish_date': forms.DateInput(attrs={'type': 'date'}),
+            'remarks': forms.Textarea(attrs={'rows': 2}),
+        }
+
+
+class SandAreaProgressForm(forms.ModelForm):
+    class Meta:
+        model = SandAreaProgress
+        fields = ['project', 'area_zone', 'placement_type', 'planned_quantity_ton',
+                  'delivered_quantity_ton', 'placed_quantity_ton',
+                  'planned_placed_to_date_ton', 'remarks']
 
 
 class SandAllocationForm(forms.ModelForm):

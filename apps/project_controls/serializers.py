@@ -37,7 +37,8 @@ class SandBargePlacementSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SandBargePlacement
-        fields = ['id', 'barge', 'barge_name', 'quantity_ton', 'trips', 'station']
+        fields = ['id', 'barge', 'barge_name', 'quantity_ton', 'trips', 'source',
+                  'destination', 'placement_type', 'material_type', 'status', 'station']
 
 
 class SandDailyRecordSerializer(serializers.ModelSerializer):

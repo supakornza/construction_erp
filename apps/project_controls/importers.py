@@ -233,7 +233,14 @@ def _import_sand(project, file_content, duplicate_action):
                 if qty > 0 and code in barge_map:
                     SandBargePlacement.objects.update_or_create(
                         record=rec, barge=barge_map[code],
-                        defaults={'quantity_ton': qty},
+                        defaults={
+                            'quantity_ton': qty,
+                            'trips': None,
+                            'destination': 'Offshore Placement',
+                            'placement_type': SandBargePlacement.PLACEMENT_OFFSHORE,
+                            'material_type': 'Sand',
+                            'status': SandBargePlacement.STATUS_MISSING_TRIPS,
+                        },
                     )
             success += 1
         except Exception as e:

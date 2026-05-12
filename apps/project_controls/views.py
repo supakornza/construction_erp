@@ -355,11 +355,33 @@ class SandDashboardView(LoginRequiredMixin, TemplateView):
         projects = Project.objects.filter(status='Active')
         project_id = self.request.GET.get('project')
         selected = projects.filter(pk=project_id).first() if project_id else projects.first()
-        sand_data = get_sand_dashboard_data(selected) if selected else {}
+        range_days = self.request.GET.get('range_days') or '30'
+        range_days = None if range_days == 'all' else int(range_days or 30)
+        filters = {
+            'date_from': parse_date(self.request.GET.get('date_from') or ''),
+            'date_to': parse_date(self.request.GET.get('date_to') or ''),
+            'range_days': range_days,
+            'source': self.request.GET.get('source') or '',
+            'destination': self.request.GET.get('destination') or '',
+            'barge_id': self.request.GET.get('barge') or '',
+            'placement_type': self.request.GET.get('placement_type') or '',
+            'area_zone': self.request.GET.get('area_zone') or '',
+            'placement_view': self.request.GET.get('placement_view') or 'daily',
+        }
+        sand_data = get_sand_dashboard_data(selected, filters) if selected else {}
         sand_data.setdefault('chart_data', '{}')
         sand_data.setdefault('barge_totals', [])
+        sand_data.setdefault('source_rows', [])
+        sand_data.setdefault('area_rows', [])
         sand_data.setdefault('other_source_label', 'Other sources')
-        ctx.update({'projects': projects, 'selected_project': selected, 'sand_data': sand_data, 'data': sand_data})
+        ctx.update({
+            'projects': projects,
+            'barges': Barge.objects.filter(is_active=True),
+            'selected_project': selected,
+            'sand_data': sand_data,
+            'data': sand_data,
+            'filters': filters,
+        })
         return ctx
 
 
@@ -1084,22 +1106,24 @@ class RockChartDataView(LoginRequiredMixin, View):
         if not project:
             return JsonResponse({'error': 'project required'}, status=400)
         records = RockDailyRecord.objects.filter(project=project).order_by('record_date')
-        labels = [str(r.record_date) for r in records]
-        daily_delivered = [float(r.tct_daily_ton) for r in records]
-        daily_placed = [float(r.placed_daily_ton) for r in records]
-        accum_delivered = [float(r.tct_accum_ton) for r in records]
-        accum_placed = [float(r.placed_accum_ton) for r in records]
-        barge_totals = {}
-        for rec in records:
-            for bp in rec.barge_placements.select_related('barge').all():
-                k = bp.barge.name
-                barge_totals[k] = barge_totals.get(k, 0) + float(bp.quantity_ton)
+        records_list = list(records.values('record_date', 'tct_daily_ton', 'placed_daily_ton',
+                                          'tct_accum_ton', 'placed_accum_ton'))
+        barge_totals = {
+            row['barge__name']: float(row['total'])
+            for row in (
+                RockBargePlacement.objects
+                .filter(record__project=project)
+                .values('barge__name')
+                .annotate(total=Sum('quantity_ton'))
+                .order_by('barge__name')
+            )
+        }
         return JsonResponse({
-            'labels': labels,
-            'daily_delivered': daily_delivered,
-            'daily_placed': daily_placed,
-            'accum_delivered': accum_delivered,
-            'accum_placed': accum_placed,
+            'labels': [str(r['record_date']) for r in records_list],
+            'daily_delivered': [float(r['tct_daily_ton']) for r in records_list],
+            'daily_placed': [float(r['placed_daily_ton']) for r in records_list],
+            'accum_delivered': [float(r['tct_accum_ton']) for r in records_list],
+            'accum_placed': [float(r['placed_accum_ton']) for r in records_list],
             'barge_totals': barge_totals,
         })
 
@@ -1116,9 +1140,13 @@ class SandChartDataView(LoginRequiredMixin, View):
             'labels': labels,
             'tct_daily': [float(r.tct_daily_ton) for r in records],
             'mtp3_daily': [float(r.mtp3_daily_ton) for r in records],
+            'chalothon_daily': [float(r.chalothon_daily_ton) for r in records],
+            'khlong_bang_phai_daily': [float(r.khlong_bang_phai_daily_ton) for r in records],
             'other_daily': [float(r.oswald_daily_ton) for r in records],
             'other_source_labels': [r.sand_source_display for r in records],
             'total_accum': [float(r.total_accum_ton) for r in records],
+            'actual_cumulative_delivery': [float(r.total_accum_ton) for r in records],
+            'actual_cumulative_placement': [float(r.total_placed) for r in records],
             'offshore_daily': [float(r.offshore_daily_ton) for r in records],
             'onshore_daily': [float(r.onshore_daily_ton) for r in records],
             'remaining_tct': [float(r.remaining_tct) for r in records],

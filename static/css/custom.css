@@ -128,7 +128,7 @@ body {
 @media (max-width: 768px) {
     #sidebar { transform: translateX(-100%); }
     #sidebar.show { transform: translateX(0); }
-    #main-content { margin-left: 0; }
+    #main-content { margin-left: 0; overflow-x: hidden; }
 }
 
 /* ── Formset delete button ──────────────────────────────────────────────── */

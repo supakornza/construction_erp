@@ -5,136 +5,174 @@
 
 {% block extra_head %}
 <style>
-  .pc-dashboard { display: grid; gap: 14px; }
-  .pc-titlebar {
+  .sand-board { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .sand-title {
     background: #0f7f9f;
     color: #fff;
-    border-radius: 2px;
-    padding: 14px 18px;
+    padding: 16px 20px;
     text-align: center;
     box-shadow: 0 8px 18px rgba(15, 127, 159, .16);
   }
-  .pc-titlebar h2 { font-size: 2rem; font-weight: 800; letter-spacing: .01em; margin: 0; }
-  .pc-layout { display: grid; grid-template-columns: minmax(0, 1fr) 238px; gap: 14px; align-items: start; }
-  .pc-kpi-grid { display: grid; grid-template-columns: repeat(5, minmax(150px, 1fr)); gap: 10px; }
-  .pc-kpi {
+  .sand-title h2 { font-size: 2rem; font-weight: 900; margin: 0; }
+  .sand-layout { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 14px; align-items: start; min-width: 0; }
+  .sand-kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+  .sand-kpi {
     background: #fff;
-    border-top: 8px solid #2563eb;
-    border-radius: 0 0 12px 12px;
-    box-shadow: 0 3px 9px rgba(15, 23, 42, .18);
+    border-top: 6px solid #2563eb;
+    box-shadow: 0 3px 9px rgba(15, 23, 42, .16);
     min-height: 118px;
-    padding: 16px 12px;
-    text-align: center;
+    padding: 14px 12px;
   }
-  .pc-kpi.green { border-top-color: #059669; }
-  .pc-kpi.orange { border-top-color: #f59e0b; }
-  .pc-kpi.purple { border-top-color: #7c3aed; }
-  .pc-kpi.red { border-top-color: #dc2626; }
-  .pc-kpi .label { color: #111827; font-size: 1rem; font-weight: 800; }
-  .pc-kpi .value { color: #0f1f3d; font-size: 1.75rem; font-weight: 900; margin-top: 12px; }
-  .pc-kpi .sub { color: #64748b; font-size: .78rem; margin-top: 5px; }
-  .pc-panel {
-    background: #fff;
-    border: 1px solid #e8edf4;
-    min-height: 100%;
-    padding: 14px;
-  }
-  .pc-panel h6 { color: #211019; font-size: .9rem; font-weight: 900; margin-bottom: 12px; text-align: center; }
-  .pc-chart { height: 282px; }
-  .pc-wide-chart { height: 292px; }
-  .pc-side-card {
-    background: #fff;
-    border: 1px solid #15a7d1;
-    margin-bottom: 12px;
-    padding: 10px;
-  }
-  .pc-side-title { align-items: center; display: flex; font-size: 1rem; font-weight: 900; justify-content: space-between; margin-bottom: 8px; }
-  .pc-side-actions { display: grid; gap: 6px; }
-  .pc-side-actions .btn { border-radius: 4px; justify-content: flex-start; text-align: left; }
-  .pc-empty {
-    background: #fff;
-    border: 1px dashed #b6c2d2;
-    color: #64748b;
-    padding: 32px;
-    text-align: center;
-  }
-  @media (max-width: 1200px) {
-    .pc-layout { grid-template-columns: 1fr; }
-    .pc-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sand-kpi.green { border-top-color: #059669; }
+  .sand-kpi.orange { border-top-color: #f59e0b; }
+  .sand-kpi.purple { border-top-color: #7c3aed; }
+  .sand-kpi.cyan { border-top-color: #0891b2; }
+  .sand-kpi.warn { border-top-color: #d97706; }
+  .sand-kpi .label { color: #111827; font-size: .86rem; font-weight: 900; min-height: 34px; }
+  .sand-kpi .value { color: #0f1f3d; font-size: 1.55rem; font-weight: 900; margin-top: 8px; }
+  .sand-kpi .sub { color: #64748b; font-size: .76rem; margin-top: 5px; }
+  .sand-panel { background: #fff; border: 1px solid #e8edf4; min-height: 100%; padding: 14px; }
+  .sand-panel h6 { color: #211019; font-size: .9rem; font-weight: 900; margin-bottom: 12px; text-align: center; }
+  .sand-chart { height: 290px; }
+  .sand-wide-chart { height: 305px; }
+  .sand-side-card { background: #fff; border: 1px solid #15a7d1; margin-bottom: 12px; padding: 10px; }
+  .sand-side-title { align-items: center; display: flex; font-weight: 900; justify-content: space-between; margin-bottom: 8px; }
+  .sand-side-actions { display: grid; gap: 6px; }
+  .sand-side-actions .btn { border-radius: 4px; justify-content: flex-start; text-align: left; }
+  .sand-muted { color: #64748b; font-size: .78rem; }
+  .sand-empty { background: #fff; border: 1px dashed #b6c2d2; color: #64748b; padding: 32px; text-align: center; }
+  .source-bar { background: #e5eef8; height: 8px; overflow: hidden; }
+  .source-bar span { background: #0f7f9f; display: block; height: 100%; }
+  @media (max-width: 1280px) {
+    .sand-layout { grid-template-columns: minmax(0, 1fr); }
+    .sand-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 640px) {
-    .pc-titlebar h2 { font-size: 1.35rem; }
-    .pc-kpi-grid { grid-template-columns: 1fr; }
+    .sand-title h2 { font-size: 1.35rem; }
+    .sand-kpis { grid-template-columns: minmax(0, 1fr); }
   }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="pc-dashboard">
-  <div class="pc-titlebar">
+<div class="sand-board">
+  <div class="sand-title">
     <h2>Sand Progress Dashboard</h2>
-    <div class="small mt-1">{{ selected_project.contract_no|default:"No active project" }}{% if selected_project %} · {{ selected_project.project_name }}{% endif %}</div>
+    <div class="small mt-1">{{ selected_project.contract_no|default:"No active project" }}{% if selected_project %} | {{ selected_project.project_name }}{% endif %}</div>
   </div>
 
-  <div class="pc-layout">
-    <main class="pc-dashboard">
-      <section class="pc-kpi-grid">
-        <div class="pc-kpi">
-          <div class="label">TCT Pier Stock</div>
-          <div class="value">{{ data.tct_accum|default:0|floatformat:0|intcomma }}</div>
-          <div class="sub">Accumulated tons</div>
+  <div class="sand-layout">
+    <main class="sand-board">
+      <section class="sand-kpis">
+        <div class="sand-kpi">
+          <div class="label">Total Sand Delivered</div>
+          <div class="value">{{ data.total_delivered|default:0|floatformat:0|intcomma }}</div>
+          <div class="sub">tons to TCT Pier + MTP3</div>
         </div>
-        <div class="pc-kpi green">
-          <div class="label">Stockpile Sand MTP3</div>
-          <div class="value">{{ data.mtp3_accum|default:0|floatformat:0|intcomma }}</div>
-          <div class="sub">Accumulated tons</div>
+        <div class="sand-kpi green">
+          <div class="label">Total Sand Placed</div>
+          <div class="value">{{ data.total_placed|default:0|floatformat:0|intcomma }}</div>
+          <div class="sub">offshore + onshore tons</div>
         </div>
-        <div class="pc-kpi orange">
-          <div class="label">Chalothon Source</div>
-          <div class="value">{{ data.chalothon_accum|default:0|floatformat:0|intcomma }}</div>
-          <div class="sub">Chalothon Sand Pit</div>
+        <div class="sand-kpi cyan">
+          <div class="label">Current Stock Balance</div>
+          <div class="value">{{ data.current_stock_balance|default:0|floatformat:0|intcomma }}</div>
+          <div class="sub">delivered - placed{% if data.stock_percent is not None %} | {{ data.stock_percent }}%{% endif %}</div>
         </div>
-        <div class="pc-kpi purple">
-          <div class="label">Khlong Bang Phai</div>
-          <div class="value">{{ data.khlong_bang_phai_accum|default:0|floatformat:0|intcomma }}</div>
-          <div class="sub">Also known as Oswald</div>
+        <div class="sand-kpi purple">
+          <div class="label">Completion %</div>
+          <div class="value">{% if data.completion_percent is not None %}{{ data.completion_percent }}%{% else %}N/A{% endif %}</div>
+          <div class="sub">requires target quantity</div>
         </div>
-        <div class="pc-kpi red">
-          <div class="label">Remaining</div>
-          <div class="value">{{ data.total_remaining|default:0|floatformat:0|intcomma }}</div>
-          <div class="sub">TCT Pier + MTP3 remaining</div>
+        <div class="sand-kpi warn">
+          <div class="label">Remaining Quantity</div>
+          <div class="value">{% if data.remaining_quantity is not None %}{{ data.remaining_quantity|floatformat:0|intcomma }}{% else %}N/A{% endif %}</div>
+          <div class="sub">{% if data.remaining_percent is not None %}{{ data.remaining_percent }}% remaining{% else %}target not configured{% endif %}</div>
+        </div>
+        <div class="sand-kpi orange">
+          <div class="label">Average Daily Delivery</div>
+          <div class="value">{% if data.average_daily_delivery is not None %}{{ data.average_daily_delivery|floatformat:0|intcomma }}{% else %}N/A{% endif %}</div>
+          <div class="sub">tons per active delivery day</div>
+        </div>
+        <div class="sand-kpi green">
+          <div class="label">Average Daily Placement</div>
+          <div class="value">{% if data.average_daily_placement is not None %}{{ data.average_daily_placement|floatformat:0|intcomma }}{% else %}N/A{% endif %}</div>
+          <div class="sub">tons per active placement day</div>
+        </div>
+        <div class="sand-kpi">
+          <div class="label">Forecast Completion Date</div>
+          <div class="value" style="font-size:1.25rem">{% if data.forecast_completion_date %}{{ data.forecast_completion_date|date:"d M Y" }}{% else %}N/A{% endif %}</div>
+          <div class="sub">based on remaining / avg placement</div>
+        </div>
+        <div class="sand-kpi cyan">
+          <div class="label">Latest Daily Delivered</div>
+          <div class="value">{{ data.latest_daily_delivered|default:0|floatformat:0|intcomma }}</div>
+          <div class="sub">tons on latest record</div>
+        </div>
+        <div class="sand-kpi purple">
+          <div class="label">Latest Daily Placed</div>
+          <div class="value">{{ data.latest_daily_placed|default:0|floatformat:0|intcomma }}</div>
+          <div class="sub">tons on latest record</div>
         </div>
       </section>
 
-      {% if data %}
+      {% if data.has_data %}
       <section class="row g-3">
         <div class="col-xl-5">
-          <div class="pc-panel">
+          <div class="sand-panel">
             <h6>Daily Sand to Stock Destinations</h6>
-            <div class="pc-chart"><canvas id="sandDailyChart"></canvas></div>
+            <div class="sand-chart"><canvas id="sandDailyChart"></canvas></div>
           </div>
         </div>
         <div class="col-xl-3">
-          <div class="pc-panel">
+          <div class="sand-panel">
             <h6>Source Contribution</h6>
-            <div class="pc-chart"><canvas id="sandSourceDonut"></canvas></div>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-0">
+                <thead class="table-light"><tr><th>Source</th><th class="text-end">Tons</th><th class="text-end">%</th></tr></thead>
+                <tbody>
+                  {% for source in data.source_rows %}
+                  <tr>
+                    <td>
+                      <div class="fw-bold">{{ source.name }}</div>
+                      <div class="sand-muted">{{ source.latest_date|date:"d M Y"|default:source.status }}</div>
+                      <div class="source-bar mt-1"><span style="width: {{ source.percent|default:0 }}%"></span></div>
+                    </td>
+                    <td class="text-end fw-bold">{{ source.total_qty|floatformat:0|intcomma }}</td>
+                    <td class="text-end">{% if source.percent is not None %}{{ source.percent }}{% else %}0{% endif %}%</td>
+                  </tr>
+                  {% empty %}
+                  <tr><td colspan="3" class="text-center text-muted py-4">No source data</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
         <div class="col-xl-4">
-          <div class="pc-panel">
+          <div class="sand-panel">
             <h6>Barge Placement Totals</h6>
             <div class="table-responsive">
               <table class="table table-sm align-middle mb-0">
-                <thead class="table-light"><tr><th>Barge</th><th class="text-end">Tons</th><th class="text-end">Trips</th></tr></thead>
+                <thead class="table-light">
+                  <tr>
+                    <th>Barge</th><th class="text-end">Tons</th><th class="text-end">Trips</th><th class="text-end">Avg/trip</th><th>Latest</th>
+                  </tr>
+                </thead>
                 <tbody>
                   {% for b in data.barge_totals %}
                   <tr>
-                    <td>{{ b.barge__name }}</td>
+                    <td>
+                      <div class="fw-bold">{{ b.barge__name }}</div>
+                      <div class="sand-muted">{{ b.source }} -> {{ b.destination }}</div>
+                    </td>
                     <td class="text-end fw-bold">{{ b.total_qty|floatformat:0|intcomma }}</td>
-                    <td class="text-end">{{ b.total_trips }}</td>
+                    <td class="text-end">{% if b.total_trips is not None %}{{ b.total_trips|intcomma }}{% else %}N/A{% endif %}</td>
+                    <td class="text-end">{% if b.average_tons_per_trip is not None %}{{ b.average_tons_per_trip|floatformat:0|intcomma }}{% else %}N/A{% endif %}</td>
+                    <td>{{ b.latest_trip_date|date:"d M" }}<br><span class="sand-muted">{{ b.status }}</span></td>
                   </tr>
                   {% empty %}
-                  <tr><td colspan="3" class="text-center text-muted py-4">No barge data</td></tr>
+                  <tr><td colspan="5" class="text-center text-muted py-4">No barge data</td></tr>
                   {% endfor %}
                 </tbody>
               </table>
@@ -145,51 +183,119 @@
 
       <section class="row g-3">
         <div class="col-xl-4">
-          <div class="pc-panel">
-            <h6>Remaining by Stock Destination</h6>
-            <div class="pc-chart"><canvas id="sandRemainingChart"></canvas></div>
+          <div class="sand-panel">
+            <h6>Remaining Sand Quantity by Destination</h6>
+            <div class="sand-chart"><canvas id="sandRemainingChart"></canvas></div>
           </div>
         </div>
         <div class="col-xl-8">
-          <div class="pc-panel">
-            <h6>Accumulative Stock Destination</h6>
-            <div class="pc-wide-chart"><canvas id="sandAccumChart"></canvas></div>
+          <div class="sand-panel">
+            <h6>Accumulative Delivery and Placement</h6>
+            <div class="sand-wide-chart"><canvas id="sandAccumChart"></canvas></div>
           </div>
         </div>
       </section>
 
       <section class="row g-3">
-        <div class="col-xl-12">
-          <div class="pc-panel">
-            <h6>Offshore vs Onshore Daily Placement</h6>
-            <div class="pc-wide-chart"><canvas id="sandPlacementChart"></canvas></div>
+        <div class="col-xl-7">
+          <div class="sand-panel">
+            <h6>{{ data.placement_chart_title }}</h6>
+            <div class="sand-wide-chart"><canvas id="sandPlacementChart"></canvas></div>
+          </div>
+        </div>
+        <div class="col-xl-5">
+          <div class="sand-panel">
+            <h6>Placement Progress by Area / Zone</h6>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-0">
+                <thead class="table-light">
+                  <tr><th>Area / Zone</th><th class="text-end">Planned</th><th class="text-end">Placed</th><th class="text-end">Remain</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  {% for area in data.area_rows %}
+                  <tr>
+                    <td>
+                      <div class="fw-bold">{{ area.area_zone }}</div>
+                      <div class="sand-muted">{{ area.placement_type }}</div>
+                    </td>
+                    <td class="text-end">{% if area.planned_quantity_ton is not None %}{{ area.planned_quantity_ton|floatformat:0|intcomma }}{% else %}N/A{% endif %}</td>
+                    <td class="text-end fw-bold">{{ area.placed_quantity_ton|floatformat:0|intcomma }}</td>
+                    <td class="text-end">{% if area.remaining_quantity_ton is not None %}{{ area.remaining_quantity_ton|floatformat:0|intcomma }}{% else %}N/A{% endif %}</td>
+                    <td>{{ area.status }}<br><span class="sand-muted">{{ area.completion_percent }}%</span></td>
+                  </tr>
+                  {% empty %}
+                  <tr><td colspan="5" class="text-center text-muted py-4">No area or zone progress configured.</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </section>
       {% else %}
-      <div class="pc-empty">No sand progress data for this project yet.</div>
+      <div class="sand-empty">No sand progress data for this project yet.</div>
       {% endif %}
     </main>
 
     <aside>
-      <form method="get" class="pc-side-card">
-        <div class="pc-side-title">
-          <span>Project</span><i class="fas fa-filter text-muted"></i>
-        </div>
-        <select name="project" class="form-select" onchange="this.form.submit()">
+      <form method="get" class="sand-side-card">
+        <div class="sand-side-title"><span>Filters</span><i class="fas fa-filter text-muted"></i></div>
+        <label class="small fw-bold">Project</label>
+        <select name="project" class="form-select form-select-sm mb-2">
           <option value="">First Active Project</option>
           {% for p in projects %}
           <option value="{{ p.pk }}" {% if selected_project and selected_project.pk == p.pk %}selected{% endif %}>{{ p.contract_no }}</option>
           {% endfor %}
         </select>
+        <label class="small fw-bold">Chart Range</label>
+        <select name="range_days" class="form-select form-select-sm mb-2">
+          <option value="7" {% if filters.range_days == 7 %}selected{% endif %}>Last 7 Days</option>
+          <option value="14" {% if filters.range_days == 14 %}selected{% endif %}>Last 14 Days</option>
+          <option value="30" {% if filters.range_days == 30 %}selected{% endif %}>Last 30 Days</option>
+          <option value="all" {% if filters.range_days is None %}selected{% endif %}>All</option>
+        </select>
+        <label class="small fw-bold">Date Range</label>
+        <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="form-control form-control-sm mb-2">
+        <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control form-control-sm mb-2">
+        <label class="small fw-bold">Source</label>
+        <select name="source" class="form-select form-select-sm mb-2">
+          <option value="">All Sources</option>
+          <option value="chalothon" {% if filters.source == 'chalothon' %}selected{% endif %}>Chalothon Sand Pit</option>
+          <option value="khlong_bang_phai" {% if filters.source == 'khlong_bang_phai' %}selected{% endif %}>Khlong Bang Phai / Oswald</option>
+        </select>
+        <label class="small fw-bold">Destination</label>
+        <select name="destination" class="form-select form-select-sm mb-2">
+          <option value="">All Destinations</option>
+          <option value="tct" {% if filters.destination == 'tct' %}selected{% endif %}>TCT Pier</option>
+          <option value="mtp3" {% if filters.destination == 'mtp3' %}selected{% endif %}>Stockpile Sand MTP3</option>
+        </select>
+        <label class="small fw-bold">Barge</label>
+        <select name="barge" class="form-select form-select-sm mb-2">
+          <option value="">All Barges</option>
+          {% for barge in barges %}
+          <option value="{{ barge.pk }}" {% if filters.barge_id == barge.pk|stringformat:"s" %}selected{% endif %}>{{ barge.name }}</option>
+          {% endfor %}
+        </select>
+        <label class="small fw-bold">Placement Type</label>
+        <select name="placement_type" class="form-select form-select-sm mb-2">
+          <option value="">All</option>
+          <option value="Offshore" {% if filters.placement_type == 'Offshore' %}selected{% endif %}>Offshore</option>
+          <option value="Onshore" {% if filters.placement_type == 'Onshore' %}selected{% endif %}>Onshore</option>
+        </select>
+        <label class="small fw-bold">Area / Zone</label>
+        <input type="text" name="area_zone" value="{{ request.GET.area_zone }}" class="form-control form-control-sm mb-2" placeholder="Station or zone">
+        <label class="small fw-bold">Placement Chart</label>
+        <select name="placement_view" class="form-select form-select-sm mb-3">
+          <option value="daily" {% if filters.placement_view == 'daily' %}selected{% endif %}>Daily</option>
+          <option value="cumulative" {% if filters.placement_view == 'cumulative' %}selected{% endif %}>Cumulative</option>
+        </select>
+        <button type="submit" class="btn btn-info text-white btn-sm w-100">Apply Filters</button>
       </form>
 
-      <div class="pc-side-card">
-        <div class="pc-side-title">
-          <span>Actions</span><i class="fas fa-list-check text-muted"></i>
-        </div>
-        <div class="pc-side-actions">
-          <a href="{% url 'project_controls:sand_list' %}" class="btn btn-info text-white"><i class="fas fa-table me-2"></i>Records</a>
+      <div class="sand-side-card">
+        <div class="sand-side-title"><span>Actions</span><i class="fas fa-list-check text-muted"></i></div>
+        <div class="sand-side-actions">
+          <a href="{% url 'project_controls:sand_list' %}{% if selected_project %}?project={{ selected_project.pk }}{% endif %}" class="btn btn-info text-white"><i class="fas fa-table me-2"></i>Records</a>
           <a href="{% url 'project_controls:sand_create' %}" class="btn btn-info text-white"><i class="fas fa-plus me-2"></i>New Record</a>
           {% if selected_project %}
           <a href="{% url 'project_controls:sand_export_excel' selected_project.pk %}" class="btn btn-info text-white"><i class="fas fa-file-excel me-2"></i>Export Excel</a>
@@ -197,20 +303,16 @@
         </div>
       </div>
 
-      <div class="pc-side-card">
-        <div class="pc-side-title">
-          <span>Remaining</span><i class="fas fa-scale-balanced text-muted"></i>
-        </div>
+      <div class="sand-side-card">
+        <div class="sand-side-title"><span>Destination Balance</span><i class="fas fa-scale-balanced text-muted"></i></div>
         <div class="d-grid gap-2">
           <div class="btn btn-info text-white text-start">TCT Pier: {{ data.remaining_tct|default:0|floatformat:0|intcomma }} T</div>
-          <div class="btn btn-info text-white text-start">Stockpile Sand MTP3: {{ data.remaining_mtp3|default:0|floatformat:0|intcomma }} T</div>
+          <div class="btn btn-info text-white text-start">MTP3: {{ data.remaining_mtp3|default:0|floatformat:0|intcomma }} T</div>
         </div>
       </div>
 
-      <div class="pc-side-card">
-        <div class="pc-side-title">
-          <span>Latest</span><i class="fas fa-calendar-days text-muted"></i>
-        </div>
+      <div class="sand-side-card">
+        <div class="sand-side-title"><span>Latest</span><i class="fas fa-calendar-days text-muted"></i></div>
         <div class="btn btn-info text-white text-start w-100">{{ data.latest_date|date:"M d, Y"|default:"No data" }}</div>
       </div>
     </aside>
@@ -222,10 +324,31 @@
 <script>
 const chartData = {{ data.chart_data|safe }};
 const commonGrid = { color: '#dce3ec' };
+const tonsTick = value => Number(value || 0).toLocaleString();
+const valueLabelPlugin = {
+  id: 'valueLabelPlugin',
+  afterDatasetsDraw(chart) {
+    const { ctx } = chart;
+    ctx.save();
+    ctx.font = '10px sans-serif';
+    ctx.fillStyle = '#334155';
+    chart.data.datasets.forEach((dataset, datasetIndex) => {
+      const meta = chart.getDatasetMeta(datasetIndex);
+      if (meta.type !== 'bar') return;
+      meta.data.forEach((bar, index) => {
+        const value = dataset.data[index];
+        if (!value) return;
+        ctx.textAlign = chart.config.type === 'bar' && chart.options.indexAxis === 'y' ? 'left' : 'center';
+        ctx.fillText(tonsTick(value), bar.x + 4, bar.y - 4);
+      });
+    });
+    ctx.restore();
+  }
+};
 
 function makeChart(id, config) {
   const el = document.getElementById(id);
-  if (el) new Chart(el, config);
+  if (el && window.Chart) new Chart(el, config);
 }
 
 makeChart('sandDailyChart', {
@@ -233,29 +356,33 @@ makeChart('sandDailyChart', {
   data: {
     labels: chartData.labels || [],
     datasets: [
-      { label: 'TCT Pier', data: chartData.tct_daily || [], backgroundColor: '#2563eb', borderRadius: 2 },
-      { label: 'Stockpile Sand MTP3', data: chartData.mtp3_daily || [], backgroundColor: '#059669', borderRadius: 2 }
+      { label: 'TCT Pier', data: chartData.tct_daily || [], backgroundColor: '#2563eb', borderRadius: 2, stack: 'delivery' },
+      { label: 'Stockpile Sand MTP3', data: chartData.mtp3_daily || [], backgroundColor: '#059669', borderRadius: 2, stack: 'delivery' },
+      { label: 'Daily Target Delivery', data: chartData.daily_target_delivery || [], type: 'line', borderColor: '#f59e0b', borderWidth: 2, pointRadius: 0, tension: .25 }
     ]
   },
-  options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, beginAtZero: true, grid: commonGrid } } }
-});
-
-makeChart('sandSourceDonut', {
-  type: 'doughnut',
-  data: {
-    labels: ['Chalothon Sand Pit', 'Khlong Bang Phai (Oswald)'],
-    datasets: [{ data: [{{ data.chalothon_accum|default:0 }}, {{ data.khlong_bang_phai_accum|default:0 }}], backgroundColor: ['#f59e0b', '#7c3aed'], borderWidth: 0 }]
-  },
-  options: { maintainAspectRatio: false, cutout: '58%', plugins: { legend: { position: 'right' } } }
+  options: {
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${tonsTick(ctx.raw)} tons` } } },
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } },
+      y: { stacked: true, beginAtZero: true, grid: commonGrid, title: { display: true, text: 'Quantity (tons)' }, ticks: { callback: tonsTick } }
+    }
+  }
 });
 
 makeChart('sandRemainingChart', {
   type: 'bar',
+  plugins: [valueLabelPlugin],
   data: {
     labels: ['TCT Pier', 'Stockpile Sand MTP3'],
-    datasets: [{ data: [{{ data.remaining_tct|default:0 }}, {{ data.remaining_mtp3|default:0 }}], backgroundColor: ['#f59e0b', '#dc2626'], borderRadius: 3 }]
+    datasets: [{ label: 'Remaining', data: [{{ data.remaining_tct|default:0 }}, {{ data.remaining_mtp3|default:0 }}], backgroundColor: ['#64748b', '#0f7f9f'], borderRadius: 3 }]
   },
-  options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: commonGrid }, x: { grid: { display: false } } } }
+  options: {
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${tonsTick(ctx.raw)} tons` } } },
+    scales: { y: { beginAtZero: true, grid: commonGrid, title: { display: true, text: 'Quantity (tons)' }, ticks: { callback: tonsTick } }, x: { grid: { display: false } } }
+  }
 });
 
 makeChart('sandAccumChart', {
@@ -263,12 +390,18 @@ makeChart('sandAccumChart', {
   data: {
     labels: chartData.labels || [],
     datasets: [
-      { label: 'TCT Pier Accum', data: chartData.tct_accum || [], borderColor: '#2563eb', tension: .3, fill: false },
-      { label: 'Stockpile Sand MTP3 Accum', data: chartData.mtp3_accum || [], borderColor: '#059669', tension: .3, fill: false },
-      { label: 'Total Stock Accum', data: chartData.total_accum || [], borderColor: '#f59e0b', borderWidth: 3, tension: .3, fill: false }
+      { label: 'Actual Cumulative Delivery', data: chartData.actual_cumulative_delivery || [], borderColor: '#2563eb', borderWidth: 2, tension: .25, fill: false },
+      { label: 'Actual Cumulative Placement', data: chartData.actual_cumulative_placement || [], borderColor: '#059669', borderWidth: 2, tension: .25, fill: false },
+      { label: 'Planned Cumulative Delivery', data: chartData.planned_cumulative_delivery || [], borderColor: '#f59e0b', borderDash: [6, 4], pointRadius: 0, tension: .25, fill: false },
+      { label: 'Planned Cumulative Placement', data: chartData.planned_cumulative_placement || [], borderColor: '#7c3aed', borderDash: [6, 4], pointRadius: 0, tension: .25, fill: false },
+      { label: 'BOQ / Target Quantity', data: chartData.target_line || [], borderColor: '#334155', borderDash: [2, 3], pointRadius: 0, fill: false }
     ]
   },
-  options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, grid: commonGrid }, x: { grid: { display: false } } } }
+  options: {
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${tonsTick(ctx.raw)} tons` } } },
+    scales: { y: { beginAtZero: true, grid: commonGrid, title: { display: true, text: 'Cumulative Quantity (tons)' }, ticks: { callback: tonsTick } }, x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } } }
+  }
 });
 
 makeChart('sandPlacementChart', {
@@ -276,11 +409,15 @@ makeChart('sandPlacementChart', {
   data: {
     labels: chartData.labels || [],
     datasets: [
-      { label: 'Offshore', data: chartData.offshore_daily || [], backgroundColor: '#2563eb', borderRadius: 2 },
-      { label: 'Onshore', data: chartData.onshore_daily || [], backgroundColor: '#059669', borderRadius: 2 }
+      { label: 'Offshore', data: chartData.offshore_placement || [], backgroundColor: '#2563eb', borderRadius: 2 },
+      { label: 'Onshore', data: chartData.onshore_placement || [], backgroundColor: '#059669', borderRadius: 2 }
     ]
   },
-  options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, grid: commonGrid }, x: { grid: { display: false } } } }
+  options: {
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${tonsTick(ctx.raw)} tons` } } },
+    scales: { y: { beginAtZero: true, grid: commonGrid, title: { display: true, text: 'Quantity (tons)' }, ticks: { callback: tonsTick } }, x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } } }
+  }
 });
 </script>
 {% endblock %}
