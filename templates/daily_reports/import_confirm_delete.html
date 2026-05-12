@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Delete Import – Construction ERP{% endblock %}
+{% block page_title %}Delete Contractor Import{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-lg-5">
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white fw-semibold">
+            <i class="fas fa-exclamation-triangle me-2"></i>Confirm Delete
+        </div>
+        <div class="card-body">
+            <p class="mb-1">You are about to permanently delete this contractor import:</p>
+            <ul class="mb-3">
+                <li><strong>Project:</strong> {{ ci.project.contract_no }} – {{ ci.project.project_name }}</li>
+                <li><strong>Report Date:</strong> {{ ci.report_date }}</li>
+                <li><strong>Contractor:</strong> {{ ci.contractor_name|default:'-' }}</li>
+                <li><strong>Activities:</strong> {{ ci.activities.count }}</li>
+                <li><strong>Status:</strong> {{ ci.get_status_display }}</li>
+            </ul>
+            <p class="text-danger small mb-3"><i class="fas fa-exclamation-circle me-1"></i>This action cannot be undone. The associated daily report (if any) will not be deleted.</p>
+            <div class="d-flex gap-2">
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-1"></i>Yes, Delete
+                    </button>
+                </form>
+                <a href="{% url 'daily_reports:import_detail' ci.pk %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+{% block title %}Import #{{ ci.pk }} – Construction ERP{% endblock %}
+{% block page_title %}Contractor Import #{{ ci.pk }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
+    <h4 class="mb-0">
+        <i class="fas fa-file-import me-2 text-primary"></i>
+        Contractor Import #{{ ci.pk }}
+        {% if ci.status == 'Pending' %}
+            <span class="badge bg-warning text-dark ms-2 fs-6">Pending</span>
+        {% elif ci.status == 'Imported' %}
+            <span class="badge bg-success ms-2 fs-6">Imported</span>
+        {% else %}
+            <span class="badge bg-danger ms-2 fs-6">{{ ci.status }}</span>
+        {% endif %}
+    </h4>
+    <div class="d-flex gap-2 flex-wrap">
+        {% if ci.status != 'Imported' %}
+        <form method="post" action="{% url 'daily_reports:import_create_report' ci.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-clipboard-check me-1"></i>Create Daily Report
+            </button>
+        </form>
+        {% endif %}
+        {% if ci.daily_report %}
+        <a href="{% url 'daily_reports:detail' ci.daily_report.pk %}" class="btn btn-outline-primary">
+            <i class="fas fa-external-link-alt me-1"></i>View Daily Report
+        </a>
+        {% endif %}
+        {% if ci.status != 'Imported' %}
+        <a href="{% url 'daily_reports:import_delete' ci.pk %}" class="btn btn-outline-danger">
+            <i class="fas fa-trash me-1"></i>Delete
+        </a>
+        {% endif %}
+        <a href="{% url 'daily_reports:import_list' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-list me-1"></i>All Imports
+        </a>
+    </div>
+</div>
+
+{% if ci.daily_report %}
+<div class="alert alert-success d-flex gap-2">
+    <i class="fas fa-check-circle mt-1 flex-shrink-0"></i>
+    <span>This import has been applied to
+        <a href="{% url 'daily_reports:detail' ci.daily_report.pk %}">Daily Report #{{ ci.daily_report.pk }}</a>
+        ({{ ci.report_date }}).
+    </span>
+</div>
+{% endif %}
+
+<!-- Header card -->
+<div class="card mb-3">
+    <div class="card-header fw-semibold"><i class="fas fa-info-circle me-2 text-primary"></i>Report Header</div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-sm-6 col-md-3">
+                <div class="small text-muted">Project</div>
+                <div class="fw-semibold">{{ ci.project.contract_no }}</div>
+                <div class="small text-muted">{{ ci.project.project_name }}</div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="small text-muted">Report Date</div>
+                <div class="fw-semibold">{{ ci.report_date }}</div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="small text-muted">Contractor</div>
+                <div class="fw-semibold">{{ ci.contractor_name|default:'-' }}</div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="small text-muted">Total Manpower</div>
+                <div class="fw-semibold">{{ ci.total_manpower }} persons</div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="small text-muted">Weather (Day / Night)</div>
+                <div class="fw-semibold">
+                    <i class="fas fa-sun text-warning me-1"></i>{{ ci.weather_day }} /
+                    <i class="fas fa-moon text-secondary me-1"></i>{{ ci.weather_night }}
+                    {% if ci.wind_speed %}<span class="text-muted small ms-1">{{ ci.wind_speed }} km/hr</span>{% endif %}
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="small text-muted">Prepared By</div>
+                <div>{{ ci.prepared_by_name|default:'-' }}</div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="small text-muted">Checked By</div>
+                <div>{{ ci.checked_by_name|default:'-' }}</div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="small text-muted">Uploaded By</div>
+                <div class="small">{{ ci.uploaded_by.get_full_name|default:ci.uploaded_by.username|default:'-' }}</div>
+                <div class="small text-muted">{{ ci.uploaded_at|date:"d/m/Y H:i" }}</div>
+            </div>
+            {% if ci.remarks %}
+            <div class="col-12">
+                <div class="small text-muted">Remarks</div>
+                <div class="small">{{ ci.remarks }}</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <!-- Equipment -->
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header fw-semibold small">
+                <i class="fas fa-truck me-2 text-warning"></i>Equipment
+                <span class="badge bg-secondary ms-1">{{ ci.equipment_items.count }}</span>
+            </div>
+            {% if ci.equipment_items.all %}
+            <div class="table-responsive">
+                <table class="table table-sm mb-0 small">
+                    <thead class="table-light"><tr><th>Equipment</th><th>Qty</th><th>Remarks</th></tr></thead>
+                    <tbody>
+                    {% for eq in ci.equipment_items.all %}
+                    <tr>
+                        <td>{{ eq.equipment_name }}</td>
+                        <td class="fw-semibold">{{ eq.quantity }}</td>
+                        <td class="text-muted">{{ eq.remarks|default:'' }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="card-body text-muted small">No equipment data.</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Manpower -->
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header fw-semibold small">
+                <i class="fas fa-users me-2 text-info"></i>Manpower
+                <span class="badge bg-secondary ms-1">{{ ci.manpower_items.count }} roles</span>
+            </div>
+            {% if ci.manpower_items.all %}
+            <div class="table-responsive">
+                <table class="table table-sm mb-0 small">
+                    <thead class="table-light"><tr><th>Role</th><th>Qty</th><th>Company</th></tr></thead>
+                    <tbody>
+                    {% for mp in ci.manpower_items.all %}
+                    <tr>
+                        <td>{{ mp.role }}</td>
+                        <td class="fw-semibold">{{ mp.quantity }}</td>
+                        <td class="text-muted small">{{ mp.company|default:'' }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="card-body text-muted small">No manpower data.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Work Activities -->
+<div class="card mb-3">
+    <div class="card-header fw-semibold small">
+        <i class="fas fa-hard-hat me-2 text-primary"></i>Work Activities
+        <span class="badge bg-secondary ms-1">{{ ci.activities.count }}</span>
+    </div>
+    {% if ci.activities.all %}
+    <div class="table-responsive">
+        <table class="table table-sm mb-0 small">
+            <thead class="table-light">
+                <tr><th>No.</th><th>Description</th><th>Location</th><th>Qty</th><th>Unit</th><th>Problem</th><th>Remarks</th></tr>
+            </thead>
+            <tbody>
+            {% for act in ci.activities.all %}
+            <tr>
+                <td class="text-muted">{{ act.item_no }}</td>
+                <td>{{ act.description }}</td>
+                <td class="text-muted">{{ act.location|default:'' }}</td>
+                <td class="fw-semibold">{{ act.quantity|default:'' }}</td>
+                <td>{{ act.unit|default:'' }}</td>
+                <td class="text-danger small">{{ act.problem|default:'' }}</td>
+                <td class="text-muted">{{ act.remarks|default:'' }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="card-body text-muted small">No work activities.</div>
+    {% endif %}
+</div>
+
+<!-- Lookahead -->
+{% if ci.lookaheads.all %}
+<div class="card mb-3">
+    <div class="card-header fw-semibold small">
+        <i class="fas fa-calendar-alt me-2 text-success"></i>Daily Lookahead
+        <span class="badge bg-secondary ms-1">{{ ci.lookaheads.count }}</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-sm mb-0 small">
+            <thead class="table-light">
+                <tr><th>No.</th><th>Work Activity</th><th>Location</th><th>Qty</th><th>Unit</th><th>Remarks</th></tr>
+            </thead>
+            <tbody>
+            {% for la in ci.lookaheads.all %}
+            <tr>
+                <td class="text-muted">{{ la.item_no }}</td>
+                <td>{{ la.description }}</td>
+                <td class="text-muted">{{ la.location|default:'' }}</td>
+                <td class="fw-semibold">{{ la.quantity|default:'' }}</td>
+                <td>{{ la.unit|default:'' }}</td>
+                <td class="text-muted">{{ la.remarks|default:'' }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<!-- Bottom actions (repeat for convenience) -->
+{% if ci.status != 'Imported' %}
+<div class="d-flex gap-2 mt-2">
+    <form method="post" action="{% url 'daily_reports:import_create_report' ci.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-clipboard-check me-1"></i>Create Daily Report from This Import
+        </button>
+    </form>
+</div>
+{% endif %}
+{% endblock %}

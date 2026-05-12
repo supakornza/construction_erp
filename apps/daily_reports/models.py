@@ -102,3 +102,115 @@ class DailyPhoto(models.Model):
 
     def __str__(self):
         return f"{self.report} – {self.caption[:50]}"
+
+
+# ── Contractor Import ─────────────────────────────────────────────────────────
+
+class ContractorImport(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending Review'),
+        ('Imported', 'Imported to Daily Report'),
+        ('Rejected', 'Rejected'),
+    ]
+    WEATHER_CHOICES = [
+        ('Clear', 'Clear'),
+        ('Cloudy', 'Cloudy'),
+        ('Windy', 'Windy'),
+        ('Raining', 'Raining'),
+        ('High Wave', 'High Wave'),
+        ('Other', 'Other'),
+    ]
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='contractor_imports')
+    report_date = models.DateField()
+    contractor_name = models.CharField(max_length=200)
+    weather_day = models.CharField(max_length=20, choices=WEATHER_CHOICES, default='Clear')
+    weather_night = models.CharField(max_length=20, choices=WEATHER_CHOICES, default='Clear')
+    wind_speed = models.CharField(max_length=50, blank=True)
+    total_manpower = models.PositiveIntegerField(default=0)
+    prepared_by_name = models.CharField(max_length=200, blank=True)
+    checked_by_name = models.CharField(max_length=200, blank=True)
+    remarks = models.TextField(blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    source_file = models.FileField(upload_to='contractor_imports/%Y/%m/', blank=True, null=True)
+    daily_report = models.ForeignKey(
+        DailyReport, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='contractor_imports',
+    )
+    uploaded_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, related_name='contractor_imports',
+    )
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-report_date', '-uploaded_at']
+
+    def __str__(self):
+        return f"{self.contractor_name} – {self.report_date}"
+
+
+class ContractorImportEquipment(models.Model):
+    contractor_import = models.ForeignKey(
+        ContractorImport, on_delete=models.CASCADE, related_name='equipment_items',
+    )
+    equipment_name = models.CharField(max_length=200)
+    quantity = models.PositiveIntegerField(default=1)
+    remarks = models.CharField(max_length=300, blank=True)
+
+    class Meta:
+        ordering = ['equipment_name']
+
+    def __str__(self):
+        return f"{self.equipment_name} × {self.quantity}"
+
+
+class ContractorImportManpower(models.Model):
+    contractor_import = models.ForeignKey(
+        ContractorImport, on_delete=models.CASCADE, related_name='manpower_items',
+    )
+    role = models.CharField(max_length=200)
+    quantity = models.PositiveIntegerField(default=0)
+    company = models.CharField(max_length=200, blank=True)
+    remarks = models.CharField(max_length=300, blank=True)
+
+    class Meta:
+        ordering = ['role']
+
+    def __str__(self):
+        return f"{self.role}: {self.quantity}"
+
+
+class ContractorImportActivity(models.Model):
+    contractor_import = models.ForeignKey(
+        ContractorImport, on_delete=models.CASCADE, related_name='activities',
+    )
+    item_no = models.PositiveSmallIntegerField(default=1)
+    description = models.CharField(max_length=500)
+    location = models.CharField(max_length=200, blank=True)
+    quantity = models.DecimalField(max_digits=14, decimal_places=3, null=True, blank=True)
+    unit = models.CharField(max_length=50, blank=True)
+    problem = models.CharField(max_length=300, blank=True)
+    remarks = models.CharField(max_length=300, blank=True)
+
+    class Meta:
+        ordering = ['item_no']
+
+    def __str__(self):
+        return f"[{self.item_no}] {self.description[:60]}"
+
+
+class ContractorImportLookahead(models.Model):
+    contractor_import = models.ForeignKey(
+        ContractorImport, on_delete=models.CASCADE, related_name='lookaheads',
+    )
+    item_no = models.PositiveSmallIntegerField(default=1)
+    description = models.CharField(max_length=500)
+    location = models.CharField(max_length=200, blank=True)
+    quantity = models.DecimalField(max_digits=14, decimal_places=3, null=True, blank=True)
+    unit = models.CharField(max_length=50, blank=True)
+    remarks = models.CharField(max_length=300, blank=True)
+
+    class Meta:
+        ordering = ['item_no']
+
+    def __str__(self):
+        return f"[{self.item_no}] {self.description[:60]}"

@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% block title %}Preview Import – Construction ERP{% endblock %}
+{% block page_title %}Preview Contractor Import{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center gap-3 mb-4">
+    <h4 class="mb-0"><i class="fas fa-search me-2 text-primary"></i>Preview Import Data</h4>
+</div>
+
+<!-- Step indicator -->
+<div class="d-flex align-items-center mb-4 gap-2 small fw-semibold">
+    <span class="badge bg-success rounded-pill px-3 py-2"><i class="fas fa-check me-1"></i>1 Upload</span>
+    <i class="fas fa-chevron-right text-muted"></i>
+    <span class="badge bg-primary rounded-pill px-3 py-2">2 Preview</span>
+    <i class="fas fa-chevron-right text-muted"></i>
+    <span class="badge bg-light text-muted rounded-pill px-3 py-2 border">3 Confirm</span>
+</div>
+
+<div class="alert alert-warning d-flex gap-2 align-items-start mb-4">
+    <i class="fas fa-exclamation-triangle mt-1 flex-shrink-0"></i>
+    <span>Review the parsed data below carefully. Click <strong>Confirm &amp; Save</strong> to save it to the database, or <strong>Cancel</strong> to upload a different file.</span>
+</div>
+
+<!-- Report header -->
+<div class="card mb-3">
+    <div class="card-header fw-semibold"><i class="fas fa-info-circle me-2 text-primary"></i>Report Header</div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-sm-6 col-md-3">
+                <div class="small text-muted">Project</div>
+                <div class="fw-semibold">{{ data.contract_no }} – {{ data.project_name }}</div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="small text-muted">Report Date</div>
+                <div class="fw-semibold">{{ data.report_date }}</div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="small text-muted">Contractor</div>
+                <div class="fw-semibold">{{ data.contractor_name|default:'-' }}</div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="small text-muted">Total Manpower</div>
+                <div class="fw-semibold">{{ data.total_manpower }} persons</div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="small text-muted">Weather – Day</div>
+                <div class="fw-semibold"><i class="fas fa-sun text-warning me-1"></i>{{ data.weather_day }}</div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="small text-muted">Weather – Night</div>
+                <div class="fw-semibold"><i class="fas fa-moon text-secondary me-1"></i>{{ data.weather_night }}</div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="small text-muted">Wind Speed</div>
+                <div class="fw-semibold">{{ data.wind_speed|default:'-' }}</div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="small text-muted">Prepared By</div>
+                <div class="fw-semibold">{{ data.prepared_by_name|default:'-' }}</div>
+            </div>
+            {% if data.remarks %}
+            <div class="col-12">
+                <div class="small text-muted">Remarks</div>
+                <div>{{ data.remarks }}</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Equipment -->
+{% if data.equipment_items %}
+<div class="card mb-3">
+    <div class="card-header fw-semibold">
+        <i class="fas fa-truck me-2 text-warning"></i>Equipment
+        <span class="badge bg-secondary ms-2">{{ data.equipment_items|length }}</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-sm mb-0">
+            <thead class="table-light"><tr><th>#</th><th>Equipment</th><th>Qty</th><th>Remarks</th></tr></thead>
+            <tbody>
+            {% for eq in data.equipment_items %}
+            <tr>
+                <td class="text-muted small">{{ forloop.counter }}</td>
+                <td>{{ eq.equipment_name }}</td>
+                <td class="fw-semibold">{{ eq.quantity }}</td>
+                <td class="text-muted small">{{ eq.remarks|default:'' }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<!-- Manpower -->
+{% if data.manpower_items %}
+<div class="card mb-3">
+    <div class="card-header fw-semibold">
+        <i class="fas fa-users me-2 text-info"></i>Manpower
+        <span class="badge bg-secondary ms-2">{{ data.manpower_items|length }} roles</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-sm mb-0">
+            <thead class="table-light"><tr><th>#</th><th>Role / Position</th><th>Qty</th><th>Company</th><th>Remarks</th></tr></thead>
+            <tbody>
+            {% for mp in data.manpower_items %}
+            <tr>
+                <td class="text-muted small">{{ forloop.counter }}</td>
+                <td>{{ mp.role }}</td>
+                <td class="fw-semibold">{{ mp.quantity }}</td>
+                <td class="small text-muted">{{ mp.company|default:'' }}</td>
+                <td class="small text-muted">{{ mp.remarks|default:'' }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<!-- Work Activities -->
+<div class="card mb-3">
+    <div class="card-header fw-semibold">
+        <i class="fas fa-hard-hat me-2 text-primary"></i>Work Activities
+        <span class="badge bg-secondary ms-2">{{ data.activities|length }}</span>
+    </div>
+    {% if data.activities %}
+    <div class="table-responsive">
+        <table class="table table-sm mb-0">
+            <thead class="table-light">
+                <tr><th>No.</th><th>Description</th><th>Location</th><th>Qty</th><th>Unit</th><th>Problem</th><th>Remarks</th></tr>
+            </thead>
+            <tbody>
+            {% for act in data.activities %}
+            <tr>
+                <td class="text-muted">{{ act.item_no }}</td>
+                <td>{{ act.description }}</td>
+                <td class="small text-muted">{{ act.location|default:'' }}</td>
+                <td class="fw-semibold">{{ act.quantity|default:'' }}</td>
+                <td class="small">{{ act.unit|default:'' }}</td>
+                <td class="small text-danger">{{ act.problem|default:'' }}</td>
+                <td class="small text-muted">{{ act.remarks|default:'' }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="card-body text-muted small">No work activities found.</div>
+    {% endif %}
+</div>
+
+<!-- Lookahead -->
+{% if data.lookaheads %}
+<div class="card mb-4">
+    <div class="card-header fw-semibold">
+        <i class="fas fa-calendar-alt me-2 text-success"></i>Daily Lookahead (Tomorrow's Plan)
+        <span class="badge bg-secondary ms-2">{{ data.lookaheads|length }}</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-sm mb-0">
+            <thead class="table-light">
+                <tr><th>No.</th><th>Work Activity</th><th>Location</th><th>Qty</th><th>Unit</th><th>Remarks</th></tr>
+            </thead>
+            <tbody>
+            {% for la in data.lookaheads %}
+            <tr>
+                <td class="text-muted">{{ la.item_no }}</td>
+                <td>{{ la.description }}</td>
+                <td class="small text-muted">{{ la.location|default:'' }}</td>
+                <td class="fw-semibold">{{ la.quantity|default:'' }}</td>
+                <td class="small">{{ la.unit|default:'' }}</td>
+                <td class="small text-muted">{{ la.remarks|default:'' }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<!-- Action buttons -->
+<div class="d-flex gap-2 mt-2">
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-check me-1"></i>Confirm &amp; Save Import
+        </button>
+    </form>
+    <a href="{% url 'daily_reports:import_upload' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Back / Upload Different File
+    </a>
+</div>
+{% endblock %}

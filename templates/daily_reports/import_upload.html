@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}Import Contractor Report – Construction ERP{% endblock %}
+{% block page_title %}Import Contractor Daily Report{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-lg-7">
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <h4 class="mb-0"><i class="fas fa-file-import me-2 text-primary"></i>Import Contractor Report</h4>
+</div>
+
+<!-- Step indicator -->
+<div class="d-flex align-items-center mb-4 gap-2 small fw-semibold">
+    <span class="badge bg-primary rounded-pill px-3 py-2">1 Upload</span>
+    <i class="fas fa-chevron-right text-muted"></i>
+    <span class="badge bg-light text-muted rounded-pill px-3 py-2 border">2 Preview</span>
+    <i class="fas fa-chevron-right text-muted"></i>
+    <span class="badge bg-light text-muted rounded-pill px-3 py-2 border">3 Confirm</span>
+</div>
+
+<!-- Template download hint -->
+<div class="alert alert-info d-flex gap-3 align-items-start mb-4">
+    <i class="fas fa-info-circle mt-1 flex-shrink-0"></i>
+    <div>
+        <strong>Use the official Excel template</strong> so the importer can read your data correctly.
+        <a href="{% url 'daily_reports:import_template' %}" class="ms-2">
+            <i class="fas fa-download me-1"></i>Download Template (.xlsx)
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header fw-semibold"><i class="fas fa-upload me-2 text-primary"></i>Upload Excel File</div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" id="upload-form">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="id_project">Project <span class="text-danger">*</span></label>
+                <select name="project" id="id_project" class="form-select" required>
+                    <option value="">— Select Project —</option>
+                    {% for p in projects %}
+                    <option value="{{ p.pk }}">{{ p.contract_no }} – {{ p.project_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-semibold" for="id_import_file">Excel File (.xlsx) <span class="text-danger">*</span></label>
+                <input type="file" name="import_file" id="id_import_file" class="form-control" accept=".xlsx,.xlsm" required>
+                <div class="form-text">
+                    Maximum file size: 10 MB. Only <code>.xlsx</code> or <code>.xlsm</code> files are accepted.
+                </div>
+            </div>
+
+            <!-- Drop zone visual hint -->
+            <div id="drop-zone" class="border border-dashed rounded p-4 text-center text-muted mb-4" style="cursor:pointer; border-color: var(--border-color)!important;">
+                <i class="fas fa-cloud-upload-alt fa-2x mb-2 d-block"></i>
+                <span>Drag &amp; drop your Excel file here, or <strong>click to browse</strong></span>
+                <div id="drop-file-name" class="mt-2 small text-primary fw-semibold d-none"></div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary" id="submit-btn">
+                    <i class="fas fa-arrow-right me-1"></i>Parse &amp; Preview
+                </button>
+                <a href="{% url 'daily_reports:import_list' %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Template sheet structure info -->
+<div class="card mt-4">
+    <div class="card-header fw-semibold small"><i class="fas fa-table me-2 text-muted"></i>Template Sheet Structure</div>
+    <div class="card-body p-0">
+        <table class="table table-sm mb-0 small">
+            <thead class="table-light"><tr><th>Sheet</th><th>Contents</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Report Info</strong></td><td>Date, contractor name, weather, manpower count, prepared/checked by</td></tr>
+                <tr><td><strong>Equipment</strong></td><td>Equipment name, quantity, remarks</td></tr>
+                <tr><td><strong>Manpower</strong></td><td>Role/position, quantity, company, remarks</td></tr>
+                <tr><td><strong>Work Activities</strong></td><td>No., description, location, quantity, unit, problem, remarks</td></tr>
+                <tr><td><strong>Lookahead</strong></td><td>No., planned work activity, location, quantity, unit, remarks</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</div>
+</div>
+
+<script>
+(function () {
+    var fileInput = document.getElementById('id_import_file');
+    var dropZone  = document.getElementById('drop-zone');
+    var fileName  = document.getElementById('drop-file-name');
+
+    function showFile(file) {
+        if (!file) return;
+        fileName.textContent = file.name;
+        fileName.classList.remove('d-none');
+        dropZone.classList.add('border-primary');
+    }
+
+    dropZone.addEventListener('click', function () { fileInput.click(); });
+    fileInput.addEventListener('change', function () { showFile(this.files[0]); });
+
+    dropZone.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dropZone.classList.add('border-primary', 'bg-light');
+    });
+    dropZone.addEventListener('dragleave', function () {
+        dropZone.classList.remove('bg-light');
+    });
+    dropZone.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dropZone.classList.remove('bg-light');
+        var file = e.dataTransfer.files[0];
+        if (file) {
+            var dt = new DataTransfer();
+            dt.items.add(file);
+            fileInput.files = dt.files;
+            showFile(file);
+        }
+    });
+
+    document.getElementById('upload-form').addEventListener('submit', function () {
+        var btn = document.getElementById('submit-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Parsing…';
+    });
+}());
+</script>
+{% endblock %}

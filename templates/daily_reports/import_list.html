@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}Contractor Imports – Construction ERP{% endblock %}
+{% block page_title %}Contractor Daily Report Imports{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h4 class="mb-0"><i class="fas fa-file-import me-2 text-primary"></i>Contractor Imports</h4>
+    <div class="d-flex gap-2">
+        <a href="{% url 'daily_reports:import_template' %}" class="btn btn-sm btn-outline-secondary">
+            <i class="fas fa-download me-1"></i>Download Template
+        </a>
+        <a href="{% url 'daily_reports:import_upload' %}" class="btn btn-primary">
+            <i class="fas fa-upload me-1"></i>Import File
+        </a>
+    </div>
+</div>
+
+<!-- Filter bar -->
+<div class="card mb-3">
+    <div class="card-body py-2">
+        <form method="get" class="d-flex gap-2 flex-wrap align-items-end">
+            <div>
+                <label class="form-label small mb-1">Project</label>
+                <select name="project" class="form-select form-select-sm">
+                    <option value="">All Projects</option>
+                    {% for p in projects %}
+                    <option value="{{ p.pk }}" {% if project_filter == p.pk|stringformat:"s" %}selected{% endif %}>
+                        {{ p.contract_no }} – {{ p.project_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="form-label small mb-1">Status</label>
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">All Status</option>
+                    {% for val, lbl in status_choices %}
+                    <option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ lbl }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-sm btn-outline-secondary">Filter</button>
+            {% if project_filter or status_filter %}
+            <a href="{% url 'daily_reports:import_list' %}" class="btn btn-sm btn-link text-muted">Clear</a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Report Date</th>
+                    <th>Project</th>
+                    <th>Contractor</th>
+                    <th>Manpower</th>
+                    <th>Weather</th>
+                    <th>Status</th>
+                    <th>Uploaded</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for ci in imports %}
+            <tr>
+                <td class="text-muted small">{{ ci.pk }}</td>
+                <td><a href="{% url 'daily_reports:import_detail' ci.pk %}">{{ ci.report_date }}</a></td>
+                <td class="small">{{ ci.project.contract_no }}</td>
+                <td class="small">{{ ci.contractor_name|default:'-' }}</td>
+                <td class="text-center">
+                    {% if ci.total_manpower %}<span class="badge bg-secondary">{{ ci.total_manpower }}</span>{% else %}-{% endif %}
+                </td>
+                <td class="small">
+                    <i class="fas fa-sun text-warning me-1"></i>{{ ci.weather_day }} /
+                    <i class="fas fa-moon text-secondary me-1"></i>{{ ci.weather_night }}
+                </td>
+                <td>
+                    {% if ci.status == 'Pending' %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    {% elif ci.status == 'Imported' %}
+                        <span class="badge bg-success">Imported</span>
+                    {% else %}
+                        <span class="badge bg-danger">{{ ci.status }}</span>
+                    {% endif %}
+                </td>
+                <td class="small text-muted">{{ ci.uploaded_at|date:"d/m/y H:i" }}</td>
+                <td>
+                    <a href="{% url 'daily_reports:import_detail' ci.pk %}" class="btn btn-sm btn-outline-primary" title="View">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                    {% if ci.daily_report %}
+                    <a href="{% url 'daily_reports:detail' ci.daily_report.pk %}" class="btn btn-sm btn-outline-success" title="View Daily Report">
+                        <i class="fas fa-clipboard-check"></i>
+                    </a>
+                    {% endif %}
+                    {% if ci.status != 'Imported' %}
+                    <a href="{% url 'daily_reports:import_delete' ci.pk %}" class="btn btn-sm btn-outline-danger" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="9" class="text-center text-muted py-5">
+                    <i class="fas fa-inbox fa-2x mb-2 d-block text-muted"></i>
+                    No contractor imports yet.
+                    <a href="{% url 'daily_reports:import_upload' %}">Upload the first file</a>.
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
