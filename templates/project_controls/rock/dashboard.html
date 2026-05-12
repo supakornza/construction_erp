@@ -1,130 +1,257 @@
 {% extends "base.html" %}
 {% load humanize %}
-{% block title %}Rock Dashboard - Construction ERP{% endblock %}
-{% block page_title %}Rock Dashboard{% endblock %}
+{% block title %}Rock Progress Dashboard - Construction ERP{% endblock %}
+{% block page_title %}Rock Progress Dashboard{% endblock %}
+
+{% block extra_head %}
+<style>
+  .pc-dashboard { display: grid; gap: 14px; }
+  .pc-titlebar {
+    background: #0f7f9f;
+    color: #fff;
+    border-radius: 2px;
+    padding: 14px 18px;
+    text-align: center;
+    box-shadow: 0 8px 18px rgba(15, 127, 159, .16);
+  }
+  .pc-titlebar h2 { font-size: 2rem; font-weight: 800; letter-spacing: .01em; margin: 0; }
+  .pc-layout { display: grid; grid-template-columns: minmax(0, 1fr) 238px; gap: 14px; align-items: start; }
+  .pc-kpi-grid { display: grid; grid-template-columns: repeat(5, minmax(150px, 1fr)); gap: 10px; }
+  .pc-kpi {
+    background: #fff;
+    border-top: 8px solid #2563eb;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 3px 9px rgba(15, 23, 42, .18);
+    min-height: 118px;
+    padding: 16px 12px;
+    text-align: center;
+  }
+  .pc-kpi.green { border-top-color: #059669; }
+  .pc-kpi.orange { border-top-color: #f59e0b; }
+  .pc-kpi.purple { border-top-color: #7c3aed; }
+  .pc-kpi.red { border-top-color: #dc2626; }
+  .pc-kpi .label { color: #111827; font-size: 1rem; font-weight: 800; }
+  .pc-kpi .value { color: #0f1f3d; font-size: 1.75rem; font-weight: 900; margin-top: 12px; }
+  .pc-kpi .sub { color: #64748b; font-size: .78rem; margin-top: 5px; }
+  .pc-panel {
+    background: #fff;
+    border: 1px solid #e8edf4;
+    min-height: 100%;
+    padding: 14px;
+  }
+  .pc-panel h6 { color: #211019; font-size: .9rem; font-weight: 900; margin-bottom: 12px; text-align: center; }
+  .pc-chart { height: 282px; }
+  .pc-wide-chart { height: 292px; }
+  .pc-side-card {
+    background: #fff;
+    border: 1px solid #15a7d1;
+    margin-bottom: 12px;
+    padding: 10px;
+  }
+  .pc-side-title { align-items: center; display: flex; font-size: 1rem; font-weight: 900; justify-content: space-between; margin-bottom: 8px; }
+  .pc-side-actions { display: grid; gap: 6px; }
+  .pc-side-actions .btn { border-radius: 4px; justify-content: flex-start; text-align: left; }
+  .pc-date-grid { display: grid; gap: 6px; grid-template-columns: 1fr; }
+  .pc-empty {
+    background: #fff;
+    border: 1px dashed #b6c2d2;
+    color: #64748b;
+    padding: 32px;
+    text-align: center;
+  }
+  @media (max-width: 1200px) {
+    .pc-layout { grid-template-columns: 1fr; }
+    .pc-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .pc-titlebar h2 { font-size: 1.35rem; }
+    .pc-kpi-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-  <h5 class="mb-0"><i class="fas fa-mountain me-2 text-secondary"></i>Rock Progress Dashboard</h5>
-  <div class="d-flex gap-2 flex-wrap">
-    <form method="get" class="d-flex gap-2">
-      <select name="project" class="form-select form-select-sm" style="min-width:200px" onchange="this.form.submit()">
-        <option value="">All Projects</option>
-        {% for p in projects %}
-        <option value="{{ p.pk }}" {% if selected_project and selected_project.pk == p.pk %}selected{% endif %}>{{ p.project_name }}</option>
-        {% endfor %}
-      </select>
-    </form>
-    <a href="{% url 'project_controls:rock_list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-list me-1"></i>Records</a>
-    <a href="{% url 'project_controls:rock_create' %}" class="btn btn-sm btn-primary"><i class="fas fa-plus me-1"></i>New Record</a>
-    <a href="{% url 'project_controls:rock_export_excel' selected_project.pk %}" class="btn btn-sm btn-outline-success"><i class="fas fa-file-excel me-1"></i>Export</a>
+<div class="pc-dashboard">
+  <div class="pc-titlebar">
+    <h2>Rock Progress Dashboard</h2>
+    <div class="small mt-1">{{ selected_project.contract_no|default:"No active project" }}{% if selected_project %} · {{ selected_project.project_name }}{% endif %}</div>
   </div>
-</div>
 
-<div class="row g-3 mb-4">
-  <div class="col-md-3">
-    <div class="card border-0 shadow-sm">
-      <div class="card-body text-center">
-        <div class="fs-1 fw-bold text-secondary">{{ data.total_delivered|floatformat:0|intcomma }}</div>
-        <div class="text-muted small">Total Delivered (T)</div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card border-0 shadow-sm">
-      <div class="card-body text-center">
-        <div class="fs-1 fw-bold text-success">{{ data.total_placed|floatformat:0|intcomma }}</div>
-        <div class="text-muted small">Total Placed (T)</div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card border-0 shadow-sm">
-      <div class="card-body text-center">
-        <div class="fs-1 fw-bold {% if data.stock_balance < 0 %}text-danger{% else %}text-warning{% endif %}">
-          {{ data.stock_balance|floatformat:0|intcomma }}
+  <div class="pc-layout">
+    <main class="pc-dashboard">
+      <section class="pc-kpi-grid">
+        <div class="pc-kpi">
+          <div class="label">Total Delivered</div>
+          <div class="value">{{ data.total_delivered|default:0|floatformat:0|intcomma }}</div>
+          <div class="sub">TCT rock delivered (T)</div>
         </div>
-        <div class="text-muted small">Stock Balance (T)</div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card border-0 shadow-sm">
-      <div class="card-body text-center">
-        <div class="fs-1 fw-bold text-info">{{ data.total_records }}</div>
-        <div class="text-muted small">Total Records</div>
-      </div>
-    </div>
-  </div>
-</div>
+        <div class="pc-kpi green">
+          <div class="label">Total Placed</div>
+          <div class="value">{{ data.total_placed|default:0|floatformat:0|intcomma }}</div>
+          <div class="sub">Core placement (T)</div>
+        </div>
+        <div class="pc-kpi orange">
+          <div class="label">Stock Balance</div>
+          <div class="value">{{ data.stock_balance|default:0|floatformat:0|intcomma }}</div>
+          <div class="sub">Delivered - placed</div>
+        </div>
+        <div class="pc-kpi purple">
+          <div class="label">Core Outside</div>
+          <div class="value">{{ data.core_outside_accum|default:0|floatformat:0|intcomma }}</div>
+          <div class="sub">Accumulated outside plot</div>
+        </div>
+        <div class="pc-kpi red">
+          <div class="label">Daily Records</div>
+          <div class="value">{{ data.total_records|default:0 }}</div>
+          <div class="sub">Latest: {{ data.latest_date|date:"d M Y"|default:"-" }}</div>
+        </div>
+      </section>
 
-<div class="row g-3 mb-4">
-  <div class="col-md-8">
-    <div class="card h-100">
-      <div class="card-header fw-semibold"><i class="fas fa-chart-bar me-2"></i>Daily Delivery vs Placement</div>
-      <div class="card-body">
-        <canvas id="rockDailyChart" height="90"></canvas>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <div class="card h-100">
-      <div class="card-header fw-semibold"><i class="fas fa-ship me-2"></i>Barge Placement Totals</div>
-      <div class="card-body p-0">
-        <table class="table table-sm mb-0">
-          <thead class="table-light"><tr><th>Barge</th><th class="text-end">Total (T)</th><th class="text-end">Trips</th></tr></thead>
-          <tbody>
-            {% for b in data.barge_totals %}
-            <tr>
-              <td>{{ b.barge__name }}</td>
-              <td class="text-end fw-bold">{{ b.total_qty|floatformat:2|intcomma }}</td>
-              <td class="text-end">{{ b.total_trips }}</td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="3" class="text-muted text-center py-3">No barge data</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
+      {% if data %}
+      <section class="row g-3">
+        <div class="col-xl-5">
+          <div class="pc-panel">
+            <h6>Daily Delivered vs Placed</h6>
+            <div class="pc-chart"><canvas id="rockDailyChart"></canvas></div>
+          </div>
+        </div>
+        <div class="col-xl-3">
+          <div class="pc-panel">
+            <h6>Placement by Barge</h6>
+            <div class="pc-chart"><canvas id="rockBargeChart"></canvas></div>
+          </div>
+        </div>
+        <div class="col-xl-4">
+          <div class="pc-panel">
+            <h6>Barge Trips & Quantity</h6>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-0">
+                <thead class="table-light"><tr><th>Barge</th><th class="text-end">Tons</th><th class="text-end">Trips</th></tr></thead>
+                <tbody>
+                  {% for b in data.barge_totals %}
+                  <tr>
+                    <td>{{ b.barge__name }}</td>
+                    <td class="text-end fw-bold">{{ b.total_qty|floatformat:0|intcomma }}</td>
+                    <td class="text-end">{{ b.total_trips }}</td>
+                  </tr>
+                  {% empty %}
+                  <tr><td colspan="3" class="text-center text-muted py-4">No barge data</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
 
-<div class="card mb-4">
-  <div class="card-header fw-semibold"><i class="fas fa-chart-line me-2"></i>Accumulative Delivery vs Placement</div>
-  <div class="card-body">
-    <canvas id="rockAccumChart" height="60"></canvas>
+      <section class="row g-3">
+        <div class="col-xl-4">
+          <div class="pc-panel">
+            <h6>Stock Balance Trend</h6>
+            <div class="pc-chart"><canvas id="rockStockChart"></canvas></div>
+          </div>
+        </div>
+        <div class="col-xl-8">
+          <div class="pc-panel">
+            <h6>Accumulative Delivered vs Placed</h6>
+            <div class="pc-wide-chart"><canvas id="rockAccumChart"></canvas></div>
+          </div>
+        </div>
+      </section>
+      {% else %}
+      <div class="pc-empty">No rock progress data for this project yet.</div>
+      {% endif %}
+    </main>
+
+    <aside>
+      <form method="get" class="pc-side-card">
+        <div class="pc-side-title">
+          <span>Project</span><i class="fas fa-filter text-muted"></i>
+        </div>
+        <select name="project" class="form-select" onchange="this.form.submit()">
+          <option value="">First Active Project</option>
+          {% for p in projects %}
+          <option value="{{ p.pk }}" {% if selected_project and selected_project.pk == p.pk %}selected{% endif %}>{{ p.contract_no }}</option>
+          {% endfor %}
+        </select>
+      </form>
+
+      <div class="pc-side-card">
+        <div class="pc-side-title">
+          <span>Actions</span><i class="fas fa-list-check text-muted"></i>
+        </div>
+        <div class="pc-side-actions">
+          <a href="{% url 'project_controls:rock_list' %}" class="btn btn-info text-white"><i class="fas fa-table me-2"></i>Records</a>
+          <a href="{% url 'project_controls:rock_create' %}" class="btn btn-info text-white"><i class="fas fa-plus me-2"></i>New Record</a>
+          {% if selected_project %}
+          <a href="{% url 'project_controls:rock_export_excel' selected_project.pk %}" class="btn btn-info text-white"><i class="fas fa-file-excel me-2"></i>Export Excel</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="pc-side-card">
+        <div class="pc-side-title">
+          <span>Period</span><i class="fas fa-calendar-days text-muted"></i>
+        </div>
+        <div class="pc-date-grid">
+          <div class="btn btn-info text-white text-start">{{ data.latest_date|date:"M d, Y"|default:"No data" }}</div>
+          <div class="small text-muted">Latest approved daily record shown in the charts.</div>
+        </div>
+      </div>
+    </aside>
   </div>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 const chartData = {{ data.chart_data|safe }};
+const bargeLabels = [{% for b in data.barge_totals %}'{{ b.barge__name|escapejs }}'{% if not forloop.last %},{% endif %}{% endfor %}];
+const bargeValues = [{% for b in data.barge_totals %}{{ b.total_qty|default:0 }}{% if not forloop.last %},{% endif %}{% endfor %}];
+const commonGrid = { color: '#dce3ec' };
 
-new Chart(document.getElementById('rockDailyChart'), {
-  type: 'bar',
-  data: {
-    labels: chartData.labels,
-    datasets: [
-      { label: 'Delivered (T)', data: chartData.daily_delivered, backgroundColor: 'rgba(108,117,125,0.7)' },
-      { label: 'Placed (T)', data: chartData.daily_placed, backgroundColor: 'rgba(25,135,84,0.7)' }
-    ]
-  },
-  options: { responsive: true, plugins: { legend: { position: 'top' } } }
-});
+function makeChart(id, config) {
+  const el = document.getElementById(id);
+  if (el) new Chart(el, config);
+}
 
-new Chart(document.getElementById('rockAccumChart'), {
+makeChart('rockDailyChart', {
   type: 'line',
   data: {
-    labels: chartData.labels,
+    labels: chartData.labels || [],
     datasets: [
-      { label: 'Accum Delivered (T)', data: chartData.accum_delivered, borderColor: '#6c757d', backgroundColor: 'rgba(108,117,125,0.1)', fill: true, tension: 0.3 },
-      { label: 'Accum Placed (T)', data: chartData.accum_placed, borderColor: '#198754', backgroundColor: 'rgba(25,135,84,0.1)', fill: true, tension: 0.3 }
+      { label: 'Delivered', data: chartData.daily_delivered || [], borderColor: '#2563eb', backgroundColor: 'rgba(37, 99, 235, .12)', tension: .3, fill: false },
+      { label: 'Placed', data: chartData.daily_placed || [], borderColor: '#dc2626', borderDash: [8, 6], tension: .3, fill: false }
     ]
   },
-  options: { responsive: true, plugins: { legend: { position: 'top' } } }
+  options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, grid: commonGrid }, x: { grid: { display: false } } } }
+});
+
+makeChart('rockBargeChart', {
+  type: 'bar',
+  data: { labels: bargeLabels, datasets: [{ data: bargeValues, backgroundColor: '#2563eb', borderRadius: 2 }] },
+  options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, grid: commonGrid }, y: { grid: { display: false } } } }
+});
+
+makeChart('rockStockChart', {
+  type: 'doughnut',
+  data: {
+    labels: ['Placed', 'Stock'],
+    datasets: [{ data: [{{ data.total_placed|default:0 }}, {{ data.stock_balance|default:0 }}], backgroundColor: ['#059669', '#f59e0b'], borderWidth: 0 }]
+  },
+  options: { maintainAspectRatio: false, cutout: '58%', plugins: { legend: { position: 'right' } } }
+});
+
+makeChart('rockAccumChart', {
+  type: 'bar',
+  data: {
+    labels: chartData.labels || [],
+    datasets: [
+      { label: 'Accum Delivered', data: chartData.accum_delivered || [], backgroundColor: '#f59e0b', borderRadius: 2 },
+      { label: 'Accum Placed', data: chartData.accum_placed || [], backgroundColor: '#059669', borderRadius: 2 }
+    ]
+  },
+  options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, grid: commonGrid }, x: { grid: { display: false } } } }
 });
 </script>
 {% endblock %}

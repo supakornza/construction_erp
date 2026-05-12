@@ -184,6 +184,8 @@ class RockDashboardView(LoginRequiredMixin, TemplateView):
         project_id = self.request.GET.get('project')
         selected = projects.filter(pk=project_id).first() if project_id else projects.first()
         rock_data = get_rock_dashboard_data(selected) if selected else {}
+        rock_data.setdefault('chart_data', '{}')
+        rock_data.setdefault('barge_totals', [])
         ctx.update({'projects': projects, 'selected_project': selected, 'data': rock_data})
         return ctx
 
@@ -336,6 +338,9 @@ class SandDashboardView(LoginRequiredMixin, TemplateView):
         project_id = self.request.GET.get('project')
         selected = projects.filter(pk=project_id).first() if project_id else projects.first()
         sand_data = get_sand_dashboard_data(selected) if selected else {}
+        sand_data.setdefault('chart_data', '{}')
+        sand_data.setdefault('barge_totals', [])
+        sand_data.setdefault('other_source_label', 'Other sources')
         ctx.update({'projects': projects, 'selected_project': selected, 'sand_data': sand_data, 'data': sand_data})
         return ctx
 

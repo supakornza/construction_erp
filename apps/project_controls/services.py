@@ -86,6 +86,8 @@ def get_rock_dashboard_data(project):
         'daily_placed': [float(r.placed_daily_ton) for r in records_list],
         'accum_delivered': [float(r.tct_accum_ton) for r in records_list],
         'accum_placed': [float(r.placed_accum_ton) for r in records_list],
+        'stock_balance': [float(r.stock_balance) for r in records_list],
+        'core_outside': [float(r.core_outside_daily) for r in records_list],
     })
     barge_totals = (
         RockBargePlacement.objects
@@ -128,6 +130,10 @@ def get_sand_dashboard_data(project):
         'tct_accum': [float(rec.tct_accum_ton) for rec in chart_records],
         'mtp3_accum': [float(rec.mtp3_accum_ton) for rec in chart_records],
         'total_accum': [float(rec.total_accum_ton) for rec in chart_records],
+        'offshore_daily': [float(rec.offshore_daily_ton) for rec in chart_records],
+        'onshore_daily': [float(rec.onshore_daily_ton) for rec in chart_records],
+        'inside_plot_daily': [float(rec.inside_plot_daily) for rec in chart_records],
+        'outside_plot_daily': [float(rec.outside_plot_daily) for rec in chart_records],
     }
     barge_totals = (
         SandBargePlacement.objects

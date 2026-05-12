@@ -8,6 +8,14 @@
     <a href="{% url 'dashboard:index' %}" class="nav-link {% if request.resolver_match.namespace == 'dashboard' %}active{% endif %}">
         <i class="fas fa-tachometer-alt"></i> Dashboard
     </a>
+    {% with vn=request.resolver_match.view_name %}
+    <a href="{% url 'project_controls:rock_dashboard' %}" class="nav-link {% if vn == 'project_controls:rock_dashboard' %}active{% endif %}">
+        <i class="fas fa-mountain"></i> Rock Progress
+    </a>
+    <a href="{% url 'project_controls:sand_dashboard' %}" class="nav-link {% if vn == 'project_controls:sand_dashboard' %}active{% endif %}">
+        <i class="fas fa-water"></i> Sand Progress
+    </a>
+    {% endwith %}
 
     <div class="nav-section">Projects</div>
     <a href="{% url 'projects:list' %}" class="nav-link {% if request.resolver_match.namespace == 'projects' %}active{% endif %}">
@@ -42,7 +50,7 @@
 
     <div class="nav-section">Project Controls</div>
     {% with vn=request.resolver_match.view_name %}
-    <a href="{% url 'project_controls:dashboard' %}" class="nav-link {% if vn == 'project_controls:dashboard' or vn|slice:':21' == 'project_controls:rock' or vn|slice:':21' == 'project_controls:sand' %}active{% endif %}">
+    <a href="{% url 'project_controls:dashboard' %}" class="nav-link {% if vn == 'project_controls:dashboard' or vn == 'project_controls:rock_list' or vn == 'project_controls:sand_list' %}active{% endif %}">
         <i class="fas fa-water"></i> Material Control
     </a>
     <a href="{% url 'project_controls:revetment_dashboard' %}" class="nav-link {% if 'project_controls:revetment' in vn %}active{% endif %}">

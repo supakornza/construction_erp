@@ -1,165 +1,287 @@
-﻿{% extends "base.html" %}
-{% block title %}Sand Dashboard โ€“ Construction ERP{% endblock %}
-{% block page_title %}Sand Dashboard{% endblock %}
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}Sand Progress Dashboard - Construction ERP{% endblock %}
+{% block page_title %}Sand Progress Dashboard{% endblock %}
+
+{% block extra_head %}
+<style>
+  .pc-dashboard { display: grid; gap: 14px; }
+  .pc-titlebar {
+    background: #0f7f9f;
+    color: #fff;
+    border-radius: 2px;
+    padding: 14px 18px;
+    text-align: center;
+    box-shadow: 0 8px 18px rgba(15, 127, 159, .16);
+  }
+  .pc-titlebar h2 { font-size: 2rem; font-weight: 800; letter-spacing: .01em; margin: 0; }
+  .pc-layout { display: grid; grid-template-columns: minmax(0, 1fr) 238px; gap: 14px; align-items: start; }
+  .pc-kpi-grid { display: grid; grid-template-columns: repeat(5, minmax(150px, 1fr)); gap: 10px; }
+  .pc-kpi {
+    background: #fff;
+    border-top: 8px solid #2563eb;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 3px 9px rgba(15, 23, 42, .18);
+    min-height: 118px;
+    padding: 16px 12px;
+    text-align: center;
+  }
+  .pc-kpi.green { border-top-color: #059669; }
+  .pc-kpi.orange { border-top-color: #f59e0b; }
+  .pc-kpi.purple { border-top-color: #7c3aed; }
+  .pc-kpi.red { border-top-color: #dc2626; }
+  .pc-kpi .label { color: #111827; font-size: 1rem; font-weight: 800; }
+  .pc-kpi .value { color: #0f1f3d; font-size: 1.75rem; font-weight: 900; margin-top: 12px; }
+  .pc-kpi .sub { color: #64748b; font-size: .78rem; margin-top: 5px; }
+  .pc-panel {
+    background: #fff;
+    border: 1px solid #e8edf4;
+    min-height: 100%;
+    padding: 14px;
+  }
+  .pc-panel h6 { color: #211019; font-size: .9rem; font-weight: 900; margin-bottom: 12px; text-align: center; }
+  .pc-chart { height: 282px; }
+  .pc-wide-chart { height: 292px; }
+  .pc-side-card {
+    background: #fff;
+    border: 1px solid #15a7d1;
+    margin-bottom: 12px;
+    padding: 10px;
+  }
+  .pc-side-title { align-items: center; display: flex; font-size: 1rem; font-weight: 900; justify-content: space-between; margin-bottom: 8px; }
+  .pc-side-actions { display: grid; gap: 6px; }
+  .pc-side-actions .btn { border-radius: 4px; justify-content: flex-start; text-align: left; }
+  .pc-empty {
+    background: #fff;
+    border: 1px dashed #b6c2d2;
+    color: #64748b;
+    padding: 32px;
+    text-align: center;
+  }
+  @media (max-width: 1200px) {
+    .pc-layout { grid-template-columns: 1fr; }
+    .pc-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .pc-titlebar h2 { font-size: 1.35rem; }
+    .pc-kpi-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-  <h5 class="mb-0"><i class="fas fa-water me-2 text-info"></i>Sand Progress Dashboard</h5>
-  <div class="d-flex gap-2 flex-wrap">
-    <form method="get" class="d-flex gap-2">
-      <select name="project" class="form-select form-select-sm" style="min-width:200px" onchange="this.form.submit()">
-        <option value="">All Projects</option>
-        {% for p in projects %}
-        <option value="{{ p.pk }}" {% if selected_project and selected_project.pk == p.pk %}selected{% endif %}>{{ p.project_name }}</option>
-        {% endfor %}
-      </select>
-    </form>
-    <a href="{% url 'project_controls:sand_list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-list me-1"></i>Records</a>
-    <a href="{% url 'project_controls:sand_create' %}" class="btn btn-sm btn-primary"><i class="fas fa-plus me-1"></i>New Record</a>
+<div class="pc-dashboard">
+  <div class="pc-titlebar">
+    <h2>Sand Progress Dashboard</h2>
+    <div class="small mt-1">{{ selected_project.contract_no|default:"No active project" }}{% if selected_project %} · {{ selected_project.project_name }}{% endif %}</div>
   </div>
-</div>
 
-{# KPI Row 1 โ€“ Sources #}
-<div class="row g-3 mb-3">
-  <div class="col-md-3">
-    <div class="card border-info">
-      <div class="card-body text-center">
-        <div class="fs-2 fw-bold text-info">{{ data.tct_accum|floatformat:0|intcomma }}</div>
-        <div class="text-muted small">TCT Total Delivered (T)</div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card border-primary">
-      <div class="card-body text-center">
-        <div class="fs-2 fw-bold text-primary">{{ data.mtp3_accum|floatformat:0|intcomma }}</div>
-        <div class="text-muted small">MTP3 Total Delivered (T)</div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card border-success">
-      <div class="card-body text-center">
-        <div class="fs-2 fw-bold text-success">{{ data.other_source_accum|floatformat:0|intcomma }}</div>
-        <div class="text-muted small">{{ data.other_source_label }} Total (T)</div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card">
-      <div class="card-body text-center">
-        <div class="fs-2 fw-bold">{{ data.total_accum|floatformat:0|intcomma }}</div>
-        <div class="text-muted small">Grand Total Delivered (T)</div>
-      </div>
-    </div>
-  </div>
-</div>
+  <div class="pc-layout">
+    <main class="pc-dashboard">
+      <section class="pc-kpi-grid">
+        <div class="pc-kpi">
+          <div class="label">TCT Delivered</div>
+          <div class="value">{{ data.tct_accum|default:0|floatformat:0|intcomma }}</div>
+          <div class="sub">Accumulated tons</div>
+        </div>
+        <div class="pc-kpi green">
+          <div class="label">MTP3 Delivered</div>
+          <div class="value">{{ data.mtp3_accum|default:0|floatformat:0|intcomma }}</div>
+          <div class="sub">Accumulated tons</div>
+        </div>
+        <div class="pc-kpi orange">
+          <div class="label">{{ data.other_source_label|default:"Other" }}</div>
+          <div class="value">{{ data.other_source_accum|default:0|floatformat:0|intcomma }}</div>
+          <div class="sub">Other source total</div>
+        </div>
+        <div class="pc-kpi purple">
+          <div class="label">Grand Total</div>
+          <div class="value">{{ data.total_accum|default:0|floatformat:0|intcomma }}</div>
+          <div class="sub">All delivered sand</div>
+        </div>
+        <div class="pc-kpi red">
+          <div class="label">Remaining</div>
+          <div class="value">{{ data.total_remaining|default:0|floatformat:0|intcomma }}</div>
+          <div class="sub">TCT + MTP3 remaining</div>
+        </div>
+      </section>
 
-{# KPI Row 2 โ€“ Placement #}
-<div class="row g-3 mb-4">
-  <div class="col-md-3">
-    <div class="card">
-      <div class="card-body text-center">
-        <div class="fs-2 fw-bold text-primary">{{ data.offshore_accum|floatformat:0|intcomma }}</div>
-        <div class="text-muted small">Offshore Placed (T)</div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card">
-      <div class="card-body text-center">
-        <div class="fs-2 fw-bold text-secondary">{{ data.onshore_accum|floatformat:0|intcomma }}</div>
-        <div class="text-muted small">Onshore Placed (T)</div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card border-warning">
-      <div class="card-body text-center">
-        <div class="fs-2 fw-bold text-warning">{{ data.remaining_tct|floatformat:0|intcomma }}</div>
-        <div class="text-muted small">Remaining TCT (T)</div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card border-warning">
-      <div class="card-body text-center">
-        <div class="fs-2 fw-bold text-warning">{{ data.remaining_mtp3|floatformat:0|intcomma }}</div>
-        <div class="text-muted small">Remaining MTP3 (T)</div>
-      </div>
-    </div>
-  </div>
-</div>
+      {% if data %}
+      <section class="row g-3">
+        <div class="col-xl-5">
+          <div class="pc-panel">
+            <h6>Daily Sand by Source</h6>
+            <div class="pc-chart"><canvas id="sandDailyChart"></canvas></div>
+          </div>
+        </div>
+        <div class="col-xl-3">
+          <div class="pc-panel">
+            <h6>Placement Contribution</h6>
+            <div class="pc-chart"><canvas id="sandPlacementDonut"></canvas></div>
+          </div>
+        </div>
+        <div class="col-xl-4">
+          <div class="pc-panel">
+            <h6>Barge Placement Totals</h6>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-0">
+                <thead class="table-light"><tr><th>Barge</th><th class="text-end">Tons</th><th class="text-end">Trips</th></tr></thead>
+                <tbody>
+                  {% for b in data.barge_totals %}
+                  <tr>
+                    <td>{{ b.barge__name }}</td>
+                    <td class="text-end fw-bold">{{ b.total_qty|floatformat:0|intcomma }}</td>
+                    <td class="text-end">{{ b.total_trips }}</td>
+                  </tr>
+                  {% empty %}
+                  <tr><td colspan="3" class="text-center text-muted py-4">No barge data</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
 
-<div class="row g-3 mb-4">
-  <div class="col-md-8">
-    <div class="card h-100">
-      <div class="card-header fw-semibold"><i class="fas fa-chart-bar me-2"></i>Daily Sand by Source (Last 30 Days)</div>
-      <div class="card-body">
-        <canvas id="sandDailyChart" height="90"></canvas>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <div class="card h-100">
-      <div class="card-header fw-semibold"><i class="fas fa-ship me-2"></i>Barge Placement Totals</div>
-      <div class="card-body p-0">
-        <table class="table table-sm mb-0">
-          <thead class="table-light"><tr><th>Barge</th><th class="text-end">Total (T)</th><th class="text-end">Trips</th></tr></thead>
-          <tbody>
-            {% for b in data.barge_totals %}
-            <tr>
-              <td>{{ b.barge__name }}</td>
-              <td class="text-end fw-bold">{{ b.total_qty|floatformat:2|intcomma }}</td>
-              <td class="text-end">{{ b.total_trips }}</td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="3" class="text-muted text-center py-3">No barge data</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
+      <section class="row g-3">
+        <div class="col-xl-4">
+          <div class="pc-panel">
+            <h6>Remaining by Source</h6>
+            <div class="pc-chart"><canvas id="sandRemainingChart"></canvas></div>
+          </div>
+        </div>
+        <div class="col-xl-8">
+          <div class="pc-panel">
+            <h6>Accumulative Sand Delivered</h6>
+            <div class="pc-wide-chart"><canvas id="sandAccumChart"></canvas></div>
+          </div>
+        </div>
+      </section>
 
-<div class="card mb-4">
-  <div class="card-header fw-semibold"><i class="fas fa-chart-line me-2"></i>Accumulative Sand Delivered</div>
-  <div class="card-body">
-    <canvas id="sandAccumChart" height="60"></canvas>
+      <section class="row g-3">
+        <div class="col-xl-12">
+          <div class="pc-panel">
+            <h6>Offshore vs Onshore Daily Placement</h6>
+            <div class="pc-wide-chart"><canvas id="sandPlacementChart"></canvas></div>
+          </div>
+        </div>
+      </section>
+      {% else %}
+      <div class="pc-empty">No sand progress data for this project yet.</div>
+      {% endif %}
+    </main>
+
+    <aside>
+      <form method="get" class="pc-side-card">
+        <div class="pc-side-title">
+          <span>Project</span><i class="fas fa-filter text-muted"></i>
+        </div>
+        <select name="project" class="form-select" onchange="this.form.submit()">
+          <option value="">First Active Project</option>
+          {% for p in projects %}
+          <option value="{{ p.pk }}" {% if selected_project and selected_project.pk == p.pk %}selected{% endif %}>{{ p.contract_no }}</option>
+          {% endfor %}
+        </select>
+      </form>
+
+      <div class="pc-side-card">
+        <div class="pc-side-title">
+          <span>Actions</span><i class="fas fa-list-check text-muted"></i>
+        </div>
+        <div class="pc-side-actions">
+          <a href="{% url 'project_controls:sand_list' %}" class="btn btn-info text-white"><i class="fas fa-table me-2"></i>Records</a>
+          <a href="{% url 'project_controls:sand_create' %}" class="btn btn-info text-white"><i class="fas fa-plus me-2"></i>New Record</a>
+          {% if selected_project %}
+          <a href="{% url 'project_controls:sand_export_excel' selected_project.pk %}" class="btn btn-info text-white"><i class="fas fa-file-excel me-2"></i>Export Excel</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="pc-side-card">
+        <div class="pc-side-title">
+          <span>Remaining</span><i class="fas fa-scale-balanced text-muted"></i>
+        </div>
+        <div class="d-grid gap-2">
+          <div class="btn btn-info text-white text-start">TCT: {{ data.remaining_tct|default:0|floatformat:0|intcomma }} T</div>
+          <div class="btn btn-info text-white text-start">MTP3: {{ data.remaining_mtp3|default:0|floatformat:0|intcomma }} T</div>
+        </div>
+      </div>
+
+      <div class="pc-side-card">
+        <div class="pc-side-title">
+          <span>Latest</span><i class="fas fa-calendar-days text-muted"></i>
+        </div>
+        <div class="btn btn-info text-white text-start w-100">{{ data.latest_date|date:"M d, Y"|default:"No data" }}</div>
+      </div>
+    </aside>
   </div>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 const chartData = {{ data.chart_data|safe }};
+const commonGrid = { color: '#dce3ec' };
 
-new Chart(document.getElementById('sandDailyChart'), {
+function makeChart(id, config) {
+  const el = document.getElementById(id);
+  if (el) new Chart(el, config);
+}
+
+makeChart('sandDailyChart', {
   type: 'bar',
   data: {
-    labels: chartData.labels,
+    labels: chartData.labels || [],
     datasets: [
-      { label: 'TCT', data: chartData.tct_daily, backgroundColor: 'rgba(13,202,240,0.7)' },
-      { label: 'MTP3', data: chartData.mtp3_daily, backgroundColor: 'rgba(13,110,253,0.7)' },
-      { label: '{{ data.other_source_label|escapejs }}', data: chartData.other_daily, backgroundColor: 'rgba(25,135,84,0.7)' }
+      { label: 'TCT', data: chartData.tct_daily || [], backgroundColor: '#2563eb', borderRadius: 2 },
+      { label: 'MTP3', data: chartData.mtp3_daily || [], backgroundColor: '#059669', borderRadius: 2 },
+      { label: '{{ data.other_source_label|escapejs }}', data: chartData.other_daily || [], backgroundColor: '#f59e0b', borderRadius: 2 }
     ]
   },
-  options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { x: { stacked: true }, y: { stacked: true } } }
+  options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, beginAtZero: true, grid: commonGrid } } }
 });
 
-new Chart(document.getElementById('sandAccumChart'), {
+makeChart('sandPlacementDonut', {
+  type: 'doughnut',
+  data: {
+    labels: ['Offshore', 'Onshore'],
+    datasets: [{ data: [{{ data.offshore_accum|default:0 }}, {{ data.onshore_accum|default:0 }}], backgroundColor: ['#2563eb', '#059669'], borderWidth: 0 }]
+  },
+  options: { maintainAspectRatio: false, cutout: '58%', plugins: { legend: { position: 'right' } } }
+});
+
+makeChart('sandRemainingChart', {
+  type: 'bar',
+  data: {
+    labels: ['TCT', 'MTP3'],
+    datasets: [{ data: [{{ data.remaining_tct|default:0 }}, {{ data.remaining_mtp3|default:0 }}], backgroundColor: ['#f59e0b', '#dc2626'], borderRadius: 3 }]
+  },
+  options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: commonGrid }, x: { grid: { display: false } } } }
+});
+
+makeChart('sandAccumChart', {
   type: 'line',
   data: {
-    labels: chartData.labels,
+    labels: chartData.labels || [],
     datasets: [
-      { label: 'TCT Accum', data: chartData.tct_accum, borderColor: '#0dcaf0', tension: 0.3, fill: false },
-      { label: 'MTP3 Accum', data: chartData.mtp3_accum, borderColor: '#0d6efd', tension: 0.3, fill: false },
-      { label: 'Total Accum', data: chartData.total_accum, borderColor: '#212529', tension: 0.3, borderWidth: 2, fill: false }
+      { label: 'TCT Accum', data: chartData.tct_accum || [], borderColor: '#2563eb', tension: .3, fill: false },
+      { label: 'MTP3 Accum', data: chartData.mtp3_accum || [], borderColor: '#059669', tension: .3, fill: false },
+      { label: 'Total Accum', data: chartData.total_accum || [], borderColor: '#f59e0b', borderWidth: 3, tension: .3, fill: false }
     ]
   },
-  options: { responsive: true, plugins: { legend: { position: 'top' } } }
+  options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, grid: commonGrid }, x: { grid: { display: false } } } }
+});
+
+makeChart('sandPlacementChart', {
+  type: 'bar',
+  data: {
+    labels: chartData.labels || [],
+    datasets: [
+      { label: 'Offshore', data: chartData.offshore_daily || [], backgroundColor: '#2563eb', borderRadius: 2 },
+      { label: 'Onshore', data: chartData.onshore_daily || [], backgroundColor: '#059669', borderRadius: 2 }
+    ]
+  },
+  options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, grid: commonGrid }, x: { grid: { display: false } } } }
 });
 </script>
 {% endblock %}
