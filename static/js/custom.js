@@ -69,6 +69,40 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Universal Back button in the top bar.
+    var backButton = document.getElementById('page-back-btn');
+    if (backButton) {
+        backButton.addEventListener('click', function () {
+            var fallbackUrl = backButton.dataset.fallbackUrl || '/';
+            var referrer = document.referrer;
+
+            if (referrer) {
+                try {
+                    var previous = new URL(referrer);
+                    var current = new URL(window.location.href);
+                    if (previous.origin === current.origin && previous.href !== current.href) {
+                        window.location.href = previous.href;
+                        return;
+                    }
+                } catch (e) {
+                    // Fall through to the dashboard fallback when referrer is not parseable.
+                }
+            }
+
+            if (window.history.length > 1) {
+                window.history.back();
+                setTimeout(function () {
+                    if (document.visibilityState !== 'hidden') {
+                        window.location.href = fallbackUrl;
+                    }
+                }, 250);
+                return;
+            }
+
+            window.location.href = fallbackUrl;
+        });
+    }
+
     // Confirm delete dialogs
     document.querySelectorAll('[data-confirm]').forEach(function (el) {
         el.addEventListener('click', function (e) {

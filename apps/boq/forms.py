@@ -7,7 +7,7 @@ from .models import BOQItem, DailyProgressRecord, PaymentClaim
 class BOQItemForm(forms.ModelForm):
     class Meta:
         model = BOQItem
-        fields = ['project', 'item_no', 'description', 'unit', 'contract_quantity', 'unit_rate']
+        fields = ['project', 'item_no', 'description', 'contract_quantity', 'unit', 'unit_rate']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -15,7 +15,7 @@ class BOQItemForm(forms.ModelForm):
         self.helper.layout = Layout(
             Row(Column('project', css_class='col-md-6'), Column('item_no', css_class='col-md-6')),
             'description',
-            Row(Column('unit', css_class='col-md-4'), Column('contract_quantity', css_class='col-md-4'), Column('unit_rate', css_class='col-md-4')),
+            Row(Column('contract_quantity', css_class='col-md-4'), Column('unit', css_class='col-md-4'), Column('unit_rate', css_class='col-md-4')),
             Submit('submit', 'Save BOQ Item', css_class='btn btn-primary'),
         )
 

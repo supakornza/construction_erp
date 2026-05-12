@@ -169,19 +169,19 @@
         <div class="rdb-kpi blue">
           <div class="ki"><i class="fas fa-truck-ramp-box"></i></div>
           <div class="kl">Total Delivered</div>
-          <div class="kv">{{ data.total_delivered|default:0|floatformat:0|intcomma }}</div>
+          <div class="kv">{{ data.total_delivered|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">tons to site</div>
         </div>
         <div class="rdb-kpi green">
           <div class="ki"><i class="fas fa-layer-group"></i></div>
           <div class="kl">Total Placed</div>
-          <div class="kv">{{ data.total_placed|default:0|floatformat:0|intcomma }}</div>
+          <div class="kv">{{ data.total_placed|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">tons placed</div>
         </div>
         <div class="rdb-kpi orange">
           <div class="ki"><i class="fas fa-warehouse"></i></div>
           <div class="kl">Stock Balance</div>
-          <div class="kv">{{ data.available_stock_balance|default:0|floatformat:0|intcomma }}</div>
+          <div class="kv">{{ data.available_stock_balance|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">delivered − placed</div>
         </div>
         <div class="rdb-kpi purple">
@@ -193,13 +193,13 @@
         <div class="rdb-kpi warn">
           <div class="ki"><i class="fas fa-hourglass-half"></i></div>
           <div class="kl">Remaining to BOQ</div>
-          <div class="kv">{% if data.remaining_quantity_to_boq is not None %}{{ data.remaining_quantity_to_boq|floatformat:0|intcomma }}{% else %}N/A{% endif %}</div>
+          <div class="kv">{% if data.remaining_quantity_to_boq is not None %}{{ data.remaining_quantity_to_boq|floatformat:0|intcomma }} tons{% else %}N/A{% endif %}</div>
           <div class="ks">tons remaining</div>
         </div>
         <div class="rdb-kpi teal">
           <div class="ki"><i class="fas fa-gauge-high"></i></div>
           <div class="kl">Avg Daily Placement</div>
-          <div class="kv">{% if data.average_daily_placement is not None %}{{ data.average_daily_placement|floatformat:0|intcomma }}{% else %}N/A{% endif %}</div>
+          <div class="kv">{% if data.average_daily_placement is not None %}{{ data.average_daily_placement|floatformat:0|intcomma }} tons/day{% else %}N/A{% endif %}</div>
           <div class="ks">production days only</div>
         </div>
         <div class="rdb-kpi cyan">
@@ -211,13 +211,13 @@
         <div class="rdb-kpi blue">
           <div class="ki"><i class="fas fa-truck"></i></div>
           <div class="kl">Latest Delivered</div>
-          <div class="kv">{{ data.latest_daily_delivered|default:0|floatformat:0|intcomma }}</div>
+          <div class="kv">{{ data.latest_daily_delivered|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">{{ data.latest_date|date:"d M Y"|default:"No data" }}</div>
         </div>
         <div class="rdb-kpi green">
           <div class="ki"><i class="fas fa-circle-down"></i></div>
           <div class="kl">Latest Placed</div>
-          <div class="kv">{{ data.latest_daily_placed|default:0|floatformat:0|intcomma }}</div>
+          <div class="kv">{{ data.latest_daily_placed|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">{{ data.latest_date|date:"d M Y"|default:"No data" }}</div>
         </div>
       </section>
@@ -291,9 +291,9 @@
                   {% for b in data.barge_totals %}
                   <tr>
                     <td class="fw-bold">{{ b.barge__name }}</td>
-                    <td class="text-end fw-bold" style="color:#2563eb">{{ b.total_qty|floatformat:0|intcomma }}</td>
-                    <td class="text-end">{% if b.total_trips %}{{ b.total_trips }}{% else %}<span class="text-muted">—</span>{% endif %}</td>
-                    <td class="text-end">{% if b.average_tons_per_trip %}{{ b.average_tons_per_trip|floatformat:1|intcomma }}{% else %}<span class="text-muted">—</span>{% endif %}</td>
+                    <td class="text-end fw-bold" style="color:#2563eb">{{ b.total_qty|floatformat:0|intcomma }} tons</td>
+                    <td class="text-end">{% if b.total_trips %}{{ b.total_trips }} trips{% else %}<span class="text-muted">—</span>{% endif %}</td>
+                    <td class="text-end">{% if b.average_tons_per_trip %}{{ b.average_tons_per_trip|floatformat:1|intcomma }} tons/trip{% else %}<span class="text-muted">—</span>{% endif %}</td>
                     <td class="text-end text-muted">{{ b.latest_trip_date|date:"d M Y"|default:"—" }}</td>
                   </tr>
                   {% empty %}
@@ -335,8 +335,8 @@
                 <tr>
                   <td class="fw-bold">{{ row.station_range }}</td>
                   <td><span class="badge bg-light text-dark border" style="font-size:.72rem">{{ row.material_type }}</span></td>
-                  <td class="text-end">{{ row.delivered_quantity_ton|floatformat:0|intcomma }}</td>
-                  <td class="text-end fw-bold">{{ row.placed_quantity_ton|floatformat:0|intcomma }}</td>
+                  <td class="text-end">{{ row.delivered_quantity_ton|floatformat:0|intcomma }} tons</td>
+                  <td class="text-end fw-bold">{{ row.placed_quantity_ton|floatformat:0|intcomma }} tons</td>
                   <td>
                     <div style="font-size:.78rem;font-weight:700;color:#334155;margin-bottom:3px">{{ row.completion_percent|floatformat:1 }}%</div>
                     <div class="minibar"><div class="minibar-fill" style="width:{% if row.completion_percent > 100 %}100{% else %}{{ row.completion_percent|floatformat:0 }}{% endif %}%;background:{% if row.completion_percent >= 100 %}#059669{% elif row.completion_percent >= 50 %}#0891b2{% else %}#f59e0b{% endif %}"></div></div>
@@ -449,8 +449,7 @@
         {% else %}
         <div class="p-3 rounded" style="background:#f0f9fb;border:1px solid #b6dce8;text-align:center">
           <div class="text-muted small">BOQ Target</div>
-          <div class="fw-bold mt-1" style="font-size:1.4rem;color:#0f7f9f">{{ data.settings.target_quantity_ton|floatformat:0|intcomma }}</div>
-          <div class="text-muted small">tons</div>
+          <div class="fw-bold mt-1" style="font-size:1.4rem;color:#0f7f9f">{{ data.settings.target_quantity_ton|floatformat:0|intcomma }} tons</div>
         </div>
         {% endif %}
       </div>

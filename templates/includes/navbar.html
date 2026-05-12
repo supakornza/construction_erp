@@ -2,6 +2,9 @@
     <button class="btn btn-sm btn-outline-secondary d-md-none me-2" id="sidebar-toggler">
         <i class="fas fa-bars"></i>
     </button>
+    <button type="button" class="btn btn-sm btn-outline-secondary me-2 no-print" id="page-back-btn" data-fallback-url="{% url 'dashboard:index' %}" title="Back">
+        <i class="fas fa-arrow-left me-1"></i>Back
+    </button>
     <span class="navbar-brand mb-0 h1 fs-6 text-muted d-none d-md-block">
         {% block page_title %}{% endblock %}
     </span>

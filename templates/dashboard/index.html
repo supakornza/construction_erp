@@ -368,7 +368,7 @@
     <div class="exec-kpi-label">Total Contract Value</div>
     <div class="exec-mini-row">
       <span>Active projects</span>
-      <span>{{ active_projects_count }}</span>
+      <span>{{ active_projects_count }} project{{ active_projects_count|pluralize }}</span>
     </div>
     <div class="exec-mini-row">
       <span>Remaining value</span>
@@ -402,11 +402,11 @@
       <div class="exec-kpi-icon"><i class="fas fa-hard-hat"></i></div>
       <div class="exec-kpi-step">04 Today</div>
     </div>
-    <div class="exec-kpi-value">{{ today_manpower|intcomma }}</div>
+    <div class="exec-kpi-value">{{ today_manpower|intcomma }} people</div>
     <div class="exec-kpi-label">Today's Manpower</div>
     <div class="exec-mini-row">
       <span>Equipment working</span>
-      <span>{{ today_equipment }}</span>
+      <span>{{ today_equipment }} equipment</span>
     </div>
   </div>
 
@@ -415,15 +415,15 @@
       <div class="exec-kpi-icon"><i class="fas fa-bell"></i></div>
       <div class="exec-kpi-step">05 Attention</div>
     </div>
-    <div class="exec-kpi-value">{{ owner_attention_count }}</div>
+    <div class="exec-kpi-value">{{ owner_attention_count }} item{{ owner_attention_count|pluralize }}</div>
     <div class="exec-kpi-label">Items Need Attention</div>
     <div class="exec-mini-row">
       <span>Safety issues</span>
-      <span>{{ open_safety_issues }}</span>
+      <span>{{ open_safety_issues }} issue{{ open_safety_issues|pluralize }}</span>
     </div>
     <div class="exec-mini-row">
       <span>Pending reports</span>
-      <span>{{ pending_reports }}</span>
+      <span>{{ pending_reports }} report{{ pending_reports|pluralize }}</span>
     </div>
     {% if owner_attention_count == 0 %}
     <div class="exec-kpi-status good"><i class="fas fa-check-circle"></i>All Clear</div>
@@ -495,7 +495,7 @@
       <div class="kpi-icon {% if evm.spi >= 1.0 %}c-green{% elif evm.spi >= 0.8 %}c-orange{% else %}c-red{% endif %}">
         <i class="fas fa-tachometer-alt"></i>
       </div>
-      <div class="kpi-value">{{ evm.spi }}</div>
+      <div class="kpi-value">{{ evm.spi }} index</div>
       <div class="kpi-label">SPI</div>
       <div class="kpi-sub">Schedule Performance Index</div>
     </div>
@@ -515,9 +515,9 @@
       <div style="font-size:1.1rem;font-weight:800;line-height:1.2;margin-bottom:.25rem">{{ evm.status }}</div>
       <div class="kpi-label">Schedule Status</div>
       <div class="kpi-sub">
-        {% if evm.status_class == 'on-track' %}<span class="kpi-badge good">SPI ≥ 0.95</span>
-        {% elif evm.status_class == 'warning' %}<span class="kpi-badge warn">SPI 0.80–0.95</span>
-        {% else %}<span class="kpi-badge danger">SPI &lt; 0.80</span>{% endif %}
+        {% if evm.status_class == 'on-track' %}<span class="kpi-badge good">SPI ≥ 0.95 index</span>
+        {% elif evm.status_class == 'warning' %}<span class="kpi-badge warn">SPI 0.80–0.95 index</span>
+        {% else %}<span class="kpi-badge danger">SPI &lt; 0.80 index</span>{% endif %}
       </div>
     </div>
   </div>
@@ -563,7 +563,7 @@
       <div class="kpi-icon {% if cost_kpis.cpi is None %}c-teal{% elif cost_kpis.cpi >= 1.0 %}c-green{% elif cost_kpis.cpi >= 0.9 %}c-orange{% else %}c-red{% endif %}">
         <i class="fas fa-tachometer-alt"></i>
       </div>
-      <div class="kpi-value">{% if cost_kpis.cpi is not None %}{{ cost_kpis.cpi|floatformat:2 }}{% else %}–{% endif %}</div>
+      <div class="kpi-value">{% if cost_kpis.cpi is not None %}{{ cost_kpis.cpi|floatformat:2 }} index{% else %}–{% endif %}</div>
       <div class="kpi-label">CPI</div>
       <div class="kpi-sub">Cost Performance Index</div>
     </div>
@@ -588,9 +588,9 @@
       <div style="font-size:1.1rem;font-weight:800;line-height:1.2;margin-bottom:.25rem">{{ cost_kpis.cost_status }}</div>
       <div class="kpi-label">Cost Status</div>
       <div class="kpi-sub">
-        {% if cost_kpis.cost_status_class == 'good' %}<span class="kpi-badge good">CPI ≥ 1.00</span>
-        {% elif cost_kpis.cost_status_class == 'warning' %}<span class="kpi-badge warn">CPI 0.90–0.99</span>
-        {% elif cost_kpis.cost_status_class == 'critical' %}<span class="kpi-badge danger">CPI &lt; 0.90</span>
+        {% if cost_kpis.cost_status_class == 'good' %}<span class="kpi-badge good">CPI ≥ 1.00 index</span>
+        {% elif cost_kpis.cost_status_class == 'warning' %}<span class="kpi-badge warn">CPI 0.90–0.99 index</span>
+        {% elif cost_kpis.cost_status_class == 'critical' %}<span class="kpi-badge danger">CPI &lt; 0.90 index</span>
         {% else %}<span class="kpi-badge" style="background:rgba(0,180,216,.15);color:#00b4d8">No Cost Data</span>{% endif %}
       </div>
     </div>
@@ -627,10 +627,10 @@
       </div>
       <div class="d-flex justify-content-between align-items-center flex-wrap gap-2" style="border-top:1px solid rgba(255,255,255,.06);padding-top:.7rem">
         <div style="font-size:.72rem;color:#8aa5c0"><i class="fas fa-calendar-check me-1" style="color:#f0a500"></i>{{ row.project.start_date }} → {{ row.project.finish_date }}</div>
-        {% if row.schedule_status == 'on-track' %}<span class="sched-badge sched-on-track"><span class="status-dot dot-green"></span>{{ row.days_remaining }}d left</span>
-        {% elif row.schedule_status == 'warning' %}<span class="sched-badge sched-warning"><span class="status-dot dot-yellow"></span>{{ row.days_remaining }}d left</span>
-        {% elif row.schedule_status == 'critical' %}<span class="sched-badge sched-critical"><span class="status-dot dot-red"></span>{{ row.days_remaining }}d left</span>
-        {% else %}<span class="sched-badge sched-overdue"><span class="status-dot dot-red"></span>{{ row.days_overdue }}d overdue</span>{% endif %}
+        {% if row.schedule_status == 'on-track' %}<span class="sched-badge sched-on-track"><span class="status-dot dot-green"></span>{{ row.days_remaining }} days left</span>
+        {% elif row.schedule_status == 'warning' %}<span class="sched-badge sched-warning"><span class="status-dot dot-yellow"></span>{{ row.days_remaining }} days left</span>
+        {% elif row.schedule_status == 'critical' %}<span class="sched-badge sched-critical"><span class="status-dot dot-red"></span>{{ row.days_remaining }} days left</span>
+        {% else %}<span class="sched-badge sched-overdue"><span class="status-dot dot-red"></span>{{ row.days_overdue }} days overdue</span>{% endif %}
       </div>
     </div>
   </div>
@@ -692,9 +692,9 @@
           <td style="color:#8aa5c0">{{ item.item_no }}</td>
           <td>{{ item.description|truncatechars:55 }}</td>
           <td style="color:#8aa5c0;font-size:.76rem">{{ item.project_name|truncatechars:25 }}</td>
-          <td class="text-end">{{ item.contract_qty|floatformat:1|intcomma }}</td>
-          <td class="text-end" style="color:#00b4d8;font-weight:600">{{ item.completed_qty|floatformat:1|intcomma }}</td>
-          <td class="text-end" style="color:{% if item.remaining_qty == 0 %}#2ecc71{% elif item.percent < 50 %}#e74c3c{% else %}#f39c12{% endif %}">{{ item.remaining_qty|floatformat:1|intcomma }}</td>
+          <td class="text-end">{{ item.contract_qty|floatformat:1|intcomma }} {{ item.unit }}</td>
+          <td class="text-end" style="color:#00b4d8;font-weight:600">{{ item.completed_qty|floatformat:1|intcomma }} {{ item.unit }}</td>
+          <td class="text-end" style="color:{% if item.remaining_qty == 0 %}#2ecc71{% elif item.percent < 50 %}#e74c3c{% else %}#f39c12{% endif %}">{{ item.remaining_qty|floatformat:1|intcomma }} {{ item.unit }}</td>
           <td style="color:#8aa5c0">{{ item.unit }}</td>
           <td>
             <div style="font-size:.75rem;color:#c8d6e5;margin-bottom:2px">{{ item.percent }}%</div>
@@ -749,7 +749,7 @@
       <div class="kpi-value" style="font-size:1rem">–</div>
       {% endif %}
       <div class="kpi-label">Forecast Completion</div>
-      <div class="kpi-sub">{{ forecast.working_days }} working days recorded</div>
+      <div class="kpi-sub">{{ forecast.working_days }} working day{{ forecast.working_days|pluralize }} recorded</div>
     </div>
   </div>
 </div>
@@ -826,20 +826,19 @@
       </div>
       <div class="table-responsive">
         <table class="dark-table">
-          <thead><tr><th>Source</th><th>Material</th><th class="text-end">Qty</th><th>Unit</th></tr></thead>
+          <thead><tr><th>Source</th><th>Material</th><th class="text-end">Qty</th></tr></thead>
           <tbody>
             {% for row in stone_by_source %}
             <tr>
               <td>{{ row.source|default:"Not specified" }}</td>
               <td>{{ row.material__name }}</td>
-              <td class="text-end fw-semibold" style="color:#f0a500">{{ row.total|floatformat:1|intcomma }}</td>
-              <td style="color:#8aa5c0">{{ row.material__unit }}</td>
+              <td class="text-end fw-semibold" style="color:#f0a500">{{ row.total|floatformat:1|intcomma }} {{ row.material__unit }}</td>
             </tr>
             {% empty %}
-            <tr><td colspan="4" class="text-center py-3" style="color:#8aa5c0">No rock delivery data this week</td></tr>
+            <tr><td colspan="3" class="text-center py-3" style="color:#8aa5c0">No rock delivery data this week</td></tr>
             {% endfor %}
           </tbody>
-          {% if stone_by_source %}<tfoot><tr><td colspan="2">Total</td><td class="text-end">{{ stone_total_week|floatformat:1|intcomma }}</td><td>Ton</td></tr></tfoot>{% endif %}
+          {% if stone_by_source %}<tfoot><tr><td colspan="2">Total</td><td class="text-end">{{ stone_total_week|floatformat:1|intcomma }} Ton</td></tr></tfoot>{% endif %}
         </table>
       </div>
     </div>
@@ -852,20 +851,19 @@
       </div>
       <div class="table-responsive">
         <table class="dark-table">
-          <thead><tr><th>Source</th><th>Material</th><th class="text-end">Qty</th><th>Unit</th></tr></thead>
+          <thead><tr><th>Source</th><th>Material</th><th class="text-end">Qty</th></tr></thead>
           <tbody>
             {% for row in sand_by_source %}
             <tr>
               <td>{{ row.source|default:"Not specified" }}</td>
               <td>{{ row.material__name }}</td>
-              <td class="text-end fw-semibold" style="color:#00b4d8">{{ row.total|floatformat:1|intcomma }}</td>
-              <td style="color:#8aa5c0">{{ row.material__unit }}</td>
+              <td class="text-end fw-semibold" style="color:#00b4d8">{{ row.total|floatformat:1|intcomma }} {{ row.material__unit }}</td>
             </tr>
             {% empty %}
-            <tr><td colspan="4" class="text-center py-3" style="color:#8aa5c0">No sand delivery data this week</td></tr>
+            <tr><td colspan="3" class="text-center py-3" style="color:#8aa5c0">No sand delivery data this week</td></tr>
             {% endfor %}
           </tbody>
-          {% if sand_by_source %}<tfoot><tr><td colspan="2">Total</td><td class="text-end">{{ sand_total_week|floatformat:1|intcomma }}</td><td>m³</td></tr></tfoot>{% endif %}
+          {% if sand_by_source %}<tfoot><tr><td colspan="2">Total</td><td class="text-end">{{ sand_total_week|floatformat:1|intcomma }} m&sup3;</td></tr></tfoot>{% endif %}
         </table>
       </div>
     </div>
@@ -881,79 +879,79 @@
     <div class="row g-2">
       <div class="col-6 col-md-3 col-lg">
         <div class="safety-cell {% if safety_metrics.man_hours > 0 %}s-zero{% endif %}">
-          <div class="s-val" style="color:#00b4d8">{{ safety_metrics.man_hours|intcomma }}</div>
+          <div class="s-val" style="color:#00b4d8">{{ safety_metrics.man_hours|intcomma }} hours</div>
           <div class="s-lbl">Man-Hours</div>
         </div>
       </div>
       <div class="col-6 col-md-3 col-lg">
         <div class="safety-cell {% if safety_metrics.lti > 0 %}s-alert{% else %}s-zero{% endif %}">
-          <div class="s-val" style="color:{% if safety_metrics.lti > 0 %}#e74c3c{% else %}#2ecc71{% endif %}">{{ safety_metrics.lti }}</div>
+          <div class="s-val" style="color:{% if safety_metrics.lti > 0 %}#e74c3c{% else %}#2ecc71{% endif %}">{{ safety_metrics.lti }} items</div>
           <div class="s-lbl">LTI</div>
         </div>
       </div>
       <div class="col-6 col-md-3 col-lg">
         <div class="safety-cell {% if safety_metrics.incidents > 0 %}s-warn{% else %}s-zero{% endif %}">
-          <div class="s-val" style="color:{% if safety_metrics.incidents > 0 %}#f39c12{% else %}#2ecc71{% endif %}">{{ safety_metrics.incidents }}</div>
+          <div class="s-val" style="color:{% if safety_metrics.incidents > 0 %}#f39c12{% else %}#2ecc71{% endif %}">{{ safety_metrics.incidents }} incidents</div>
           <div class="s-lbl">Incidents</div>
         </div>
       </div>
       <div class="col-6 col-md-3 col-lg">
         <div class="safety-cell {% if safety_metrics.near_miss > 0 %}s-warn{% else %}s-zero{% endif %}">
-          <div class="s-val" style="color:{% if safety_metrics.near_miss > 0 %}#f39c12{% else %}#2ecc71{% endif %}">{{ safety_metrics.near_miss }}</div>
+          <div class="s-val" style="color:{% if safety_metrics.near_miss > 0 %}#f39c12{% else %}#2ecc71{% endif %}">{{ safety_metrics.near_miss }} items</div>
           <div class="s-lbl">Near Miss</div>
         </div>
       </div>
       <div class="col-6 col-md-3 col-lg">
         <div class="safety-cell {% if safety_metrics.open_issues > 0 %}s-alert{% else %}s-zero{% endif %}">
-          <div class="s-val" style="color:{% if safety_metrics.open_issues > 0 %}#e74c3c{% else %}#2ecc71{% endif %}">{{ safety_metrics.open_issues }}</div>
+          <div class="s-val" style="color:{% if safety_metrics.open_issues > 0 %}#e74c3c{% else %}#2ecc71{% endif %}">{{ safety_metrics.open_issues }} issues</div>
           <div class="s-lbl">Open Issues</div>
         </div>
       </div>
       <div class="col-6 col-md-3 col-lg">
         <div class="safety-cell s-zero">
-          <div class="s-val" style="color:#c8d6e5">{{ quality_metrics.inspection_submitted }}</div>
+          <div class="s-val" style="color:#c8d6e5">{{ quality_metrics.inspection_submitted }} inspections</div>
           <div class="s-lbl">Inspection Submitted</div>
         </div>
       </div>
       <div class="col-6 col-md-3 col-lg">
         <div class="safety-cell s-zero">
-          <div class="s-val" style="color:#2ecc71">{{ quality_metrics.inspection_approved }}</div>
+          <div class="s-val" style="color:#2ecc71">{{ quality_metrics.inspection_approved }} inspections</div>
           <div class="s-lbl">Inspection Approved</div>
         </div>
       </div>
       <div class="col-6 col-md-3 col-lg">
         <div class="safety-cell {% if quality_metrics.inspection_rejected > 0 %}s-alert{% else %}s-zero{% endif %}">
-          <div class="s-val" style="color:{% if quality_metrics.inspection_rejected > 0 %}#e74c3c{% else %}#2ecc71{% endif %}">{{ quality_metrics.inspection_rejected }}</div>
+          <div class="s-val" style="color:{% if quality_metrics.inspection_rejected > 0 %}#e74c3c{% else %}#2ecc71{% endif %}">{{ quality_metrics.inspection_rejected }} inspections</div>
           <div class="s-lbl">Inspection Rejected</div>
         </div>
       </div>
       <div class="col-6 col-md-3 col-lg">
         <div class="safety-cell {% if quality_metrics.pending_inspection > 0 %}s-warn{% else %}s-zero{% endif %}">
-          <div class="s-val" style="color:{% if quality_metrics.pending_inspection > 0 %}#f39c12{% else %}#2ecc71{% endif %}">{{ quality_metrics.pending_inspection }}</div>
+          <div class="s-val" style="color:{% if quality_metrics.pending_inspection > 0 %}#f39c12{% else %}#2ecc71{% endif %}">{{ quality_metrics.pending_inspection }} inspections</div>
           <div class="s-lbl">Pending Inspection</div>
         </div>
       </div>
       <div class="col-6 col-md-3 col-lg">
         <div class="safety-cell {% if quality_metrics.ncr_open > 0 %}s-alert{% else %}s-zero{% endif %}">
-          <div class="s-val" style="color:{% if quality_metrics.ncr_open > 0 %}#e74c3c{% else %}#2ecc71{% endif %}">{{ quality_metrics.ncr_open }}</div>
+          <div class="s-val" style="color:{% if quality_metrics.ncr_open > 0 %}#e74c3c{% else %}#2ecc71{% endif %}">{{ quality_metrics.ncr_open }} NCRs</div>
           <div class="s-lbl">NCR Open</div>
         </div>
       </div>
       <div class="col-6 col-md-3 col-lg">
         <div class="safety-cell s-zero">
-          <div class="s-val" style="color:#2ecc71">{{ quality_metrics.ncr_closed }}</div>
+          <div class="s-val" style="color:#2ecc71">{{ quality_metrics.ncr_closed }} NCRs</div>
           <div class="s-lbl">NCR Closed</div>
         </div>
       </div>
       <div class="col-6 col-md-3 col-lg">
         <div class="safety-cell {% if quality_metrics.punch_list_open > 0 %}s-warn{% else %}s-zero{% endif %}">
-          <div class="s-val" style="color:{% if quality_metrics.punch_list_open > 0 %}#f39c12{% else %}#2ecc71{% endif %}">{{ quality_metrics.punch_list_open }}</div>
+          <div class="s-val" style="color:{% if quality_metrics.punch_list_open > 0 %}#f39c12{% else %}#2ecc71{% endif %}">{{ quality_metrics.punch_list_open }} items</div>
           <div class="s-lbl">Punch List Open</div>
         </div>
       </div>
       <div class="col-6 col-md-3 col-lg">
         <div class="safety-cell s-zero">
-          <div class="s-val" style="color:#2ecc71">{{ quality_metrics.punch_list_closed }}</div>
+          <div class="s-val" style="color:#2ecc71">{{ quality_metrics.punch_list_closed }} items</div>
           <div class="s-lbl">Punch List Closed</div>
         </div>
       </div>
@@ -1117,7 +1115,7 @@
           <div class="fin-row">
             <span class="fin-label">CPI</span>
             <span class="fw-bold" style="color:{% if cost_kpis.cpi is not None and cost_kpis.cpi >= 1.0 %}#2ecc71{% elif cost_kpis.cpi is not None and cost_kpis.cpi >= 0.9 %}#f39c12{% elif cost_kpis.cpi is not None %}#e74c3c{% else %}#8aa5c0{% endif %}">
-              {% if cost_kpis.cpi is not None %}{{ cost_kpis.cpi|floatformat:2 }}{% else %}N/A{% endif %}
+              {% if cost_kpis.cpi is not None %}{{ cost_kpis.cpi|floatformat:2 }} index{% else %}N/A{% endif %}
             </span>
           </div>
           {% if cost_kpis.eac is not None %}

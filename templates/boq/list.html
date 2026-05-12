@@ -21,15 +21,15 @@
 </div></div>
 <div class="card"><div class="table-responsive">
     <table class="table table-hover mb-0">
-        <thead class="table-light"><tr><th>Item No</th><th>Description</th><th>Unit</th><th>Contract Qty</th><th>Cumulative</th><th>% Complete</th><th>Contract Amt</th><th>Earned Value</th><th></th></tr></thead>
+        <thead class="table-light"><tr><th>Item No</th><th>Description</th><th>Contract Qty</th><th>Unit</th><th>Cumulative</th><th>% Complete</th><th>Contract Amt</th><th>Earned Value</th><th></th></tr></thead>
         <tbody>
         {% for item in items %}
         <tr>
             <td>{{ item.item_no }}</td>
             <td>{{ item.description }}</td>
+            <td>{{ item.contract_quantity|floatformat:3|intcomma }} {{ item.unit }}</td>
             <td>{{ item.unit }}</td>
-            <td>{{ item.contract_quantity|floatformat:3|intcomma }}</td>
-            <td>{{ item.cumulative_quantity|floatformat:3|intcomma }}</td>
+            <td>{{ item.cumulative_quantity|floatformat:3|intcomma }} {{ item.unit }}</td>
             <td>
                 <div class="d-flex align-items-center gap-2">
                     <div class="progress flex-fill" style="height:8px;min-width:60px;">
