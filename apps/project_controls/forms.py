@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import inlineformset_factory
+from django.forms import inlineformset_factory, BaseInlineFormSet
 from django.utils import timezone
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Fieldset
@@ -96,7 +96,7 @@ class SandDailyRecordForm(forms.ModelForm):
             'chalothon_daily_ton', 'chalothon_trips', 'chalothon_trucks',
             'khlong_bang_phai_daily_ton', 'khlong_bang_phai_trips', 'khlong_bang_phai_trucks',
             'sand_source', 'oswald_daily_ton', 'oswald_trips', 'oswald_trucks',
-            'offshore_station',
+            'offshore_daily_ton', 'offshore_station',
             'onshore_daily_ton', 'onshore_trips', 'onshore_trucks',
             'inside_plot_daily', 'outside_plot_daily',
             'remaining_tct', 'remaining_mtp3',
@@ -105,6 +105,7 @@ class SandDailyRecordForm(forms.ModelForm):
         widgets = {
             'record_date': forms.DateInput(attrs={'type': 'date'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
+            'offshore_daily_ton': forms.NumberInput(attrs={'readonly': 'readonly', 'style': 'background:#f8f9fa;'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -134,8 +135,30 @@ class SandDailyRecordForm(forms.ModelForm):
         self.helper.form_tag = False
 
 
+class _SandBargePlacementBaseFormSet(BaseInlineFormSet):
+    def add_fields(self, form, index):
+        super().add_fields(form, index)
+        # New extra rows: barge is optional (user may leave rows blank)
+        if index >= self.initial_form_count():
+            form.fields['barge'].required = False
+
+    def save_new_objects(self, commit=True):
+        self.new_objects = []
+        for form in self.extra_forms:
+            if not form.has_changed():
+                continue
+            if self.can_delete and self._should_delete_form(form):
+                continue
+            # Skip extra rows where barge was not selected
+            if not form.cleaned_data.get('barge'):
+                continue
+            self.new_objects.append(self.save_new(form, commit=commit))
+        return self.new_objects
+
+
 SandBargePlacementFormSet = inlineformset_factory(
     SandDailyRecord, SandBargePlacement,
+    formset=_SandBargePlacementBaseFormSet,
     fields=['barge', 'quantity_ton', 'trips', 'source', 'destination', 'placement_type', 'station'],
     extra=4, can_delete=True,
 )

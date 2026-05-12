@@ -275,37 +275,40 @@ class SandCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        if self.request.POST:
-            ctx['barge_formset'] = SandBargePlacementFormSet(self.request.POST)
-        else:
-            ctx['barge_formset'] = SandBargePlacementFormSet()
+        if 'barge_formset' not in ctx:
+            ctx['barge_formset'] = SandBargePlacementFormSet(
+                self.request.POST if self.request.POST else None
+            )
         return ctx
 
     def form_valid(self, form):
-        ctx = self.get_context_data()
-        barge_fs = ctx['barge_formset']
-        if barge_fs.is_valid():
-            with transaction.atomic():
-                form.instance.created_by = self.request.user
-                # Auto-compute total_daily_ton
-                tct = form.cleaned_data.get('tct_daily_ton', Decimal('0')) or Decimal('0')
-                mtp3 = form.cleaned_data.get('mtp3_daily_ton', Decimal('0')) or Decimal('0')
-                form.instance.total_daily_ton = tct + mtp3
-                self.object = form.save()
-                barge_fs.instance = self.object
-                barge_fs.save()
-                offshore_total = sum(
-                    bp.quantity_ton
-                    for bp in self.object.barge_placements.filter(
-                        placement_type=SandBargePlacement.PLACEMENT_OFFSHORE
-                    )
+        # Validate formset before saving anything
+        barge_fs = SandBargePlacementFormSet(self.request.POST)
+        if not barge_fs.is_valid():
+            return self.render_to_response(
+                self.get_context_data(form=form, barge_formset=barge_fs)
+            )
+        with transaction.atomic():
+            form.instance.created_by = self.request.user
+            tct = form.cleaned_data.get('tct_daily_ton', Decimal('0')) or Decimal('0')
+            mtp3 = form.cleaned_data.get('mtp3_daily_ton', Decimal('0')) or Decimal('0')
+            form.instance.total_daily_ton = tct + mtp3
+            self.object = form.save()
+            # Re-bind with saved instance so FK is correctly set on new rows
+            barge_fs2 = SandBargePlacementFormSet(self.request.POST, instance=self.object)
+            barge_fs2.is_valid()
+            barge_fs2.save()
+            offshore_total = sum(
+                bp.quantity_ton
+                for bp in self.object.barge_placements.filter(
+                    placement_type=SandBargePlacement.PLACEMENT_OFFSHORE
                 )
-                self.object.offshore_daily_ton = offshore_total
-                self.object.save(update_fields=['offshore_daily_ton'])
-                recalculate_sand_accumulatives(self.object.project)
-            messages.success(self.request, 'Sand daily record saved.')
-            return redirect(self.get_success_url())
-        return self.render_to_response(self.get_context_data(form=form))
+            )
+            self.object.offshore_daily_ton = offshore_total
+            self.object.save(update_fields=['offshore_daily_ton'])
+            recalculate_sand_accumulatives(self.object.project)
+        messages.success(self.request, 'Sand daily record saved.')
+        return redirect(self.get_success_url())
 
     def get_success_url(self):
         return reverse_lazy('project_controls:sand_detail', kwargs={'pk': self.object.pk})
@@ -324,35 +327,37 @@ class SandUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        if self.request.POST:
-            ctx['barge_formset'] = SandBargePlacementFormSet(self.request.POST, instance=self.object)
-        else:
-            ctx['barge_formset'] = SandBargePlacementFormSet(instance=self.object)
+        if 'barge_formset' not in ctx:
+            ctx['barge_formset'] = SandBargePlacementFormSet(
+                self.request.POST if self.request.POST else None,
+                instance=self.object,
+            )
         return ctx
 
     def form_valid(self, form):
-        ctx = self.get_context_data()
-        barge_fs = ctx['barge_formset']
-        if barge_fs.is_valid():
-            with transaction.atomic():
-                tct = form.cleaned_data.get('tct_daily_ton', Decimal('0')) or Decimal('0')
-                mtp3 = form.cleaned_data.get('mtp3_daily_ton', Decimal('0')) or Decimal('0')
-                form.instance.total_daily_ton = tct + mtp3
-                self.object = form.save()
-                barge_fs.instance = self.object
-                barge_fs.save()
-                offshore_total = sum(
-                    bp.quantity_ton
-                    for bp in self.object.barge_placements.filter(
-                        placement_type=SandBargePlacement.PLACEMENT_OFFSHORE
-                    )
+        barge_fs = SandBargePlacementFormSet(self.request.POST, instance=self.object)
+        if not barge_fs.is_valid():
+            return self.render_to_response(
+                self.get_context_data(form=form, barge_formset=barge_fs)
+            )
+        with transaction.atomic():
+            tct = form.cleaned_data.get('tct_daily_ton', Decimal('0')) or Decimal('0')
+            mtp3 = form.cleaned_data.get('mtp3_daily_ton', Decimal('0')) or Decimal('0')
+            form.instance.total_daily_ton = tct + mtp3
+            self.object = form.save()
+            barge_fs.instance = self.object
+            barge_fs.save()
+            offshore_total = sum(
+                bp.quantity_ton
+                for bp in self.object.barge_placements.filter(
+                    placement_type=SandBargePlacement.PLACEMENT_OFFSHORE
                 )
-                self.object.offshore_daily_ton = offshore_total
-                self.object.save(update_fields=['offshore_daily_ton'])
-                recalculate_sand_accumulatives(self.object.project)
-            messages.success(self.request, 'Sand record updated.')
-            return redirect(self.get_success_url())
-        return self.render_to_response(self.get_context_data(form=form))
+            )
+            self.object.offshore_daily_ton = offshore_total
+            self.object.save(update_fields=['offshore_daily_ton'])
+            recalculate_sand_accumulatives(self.object.project)
+        messages.success(self.request, 'Sand record updated.')
+        return redirect(self.get_success_url())
 
     def get_success_url(self):
         return reverse_lazy('project_controls:sand_detail', kwargs={'pk': self.object.pk})

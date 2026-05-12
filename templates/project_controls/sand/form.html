@@ -47,7 +47,14 @@
       <hr>
       <h6><i class="fas fa-water me-2"></i>Offshore Placement</h6>
       <div class="row g-2">
-        <div class="col-md-4">{{ form.offshore_daily_ton.label_tag }}{{ form.offshore_daily_ton }}</div>
+        <div class="col-md-4">
+          {{ form.offshore_daily_ton.label_tag }}
+          <div class="input-group">
+            {{ form.offshore_daily_ton }}
+            <span class="input-group-text text-muted" style="font-size:.75rem;" title="Auto-calculated from Offshore Barge Placements below"><i class="fas fa-calculator"></i></span>
+          </div>
+          <small class="text-muted">คำนวณอัตโนมัติจาก Offshore Barge Placements</small>
+        </div>
         <div class="col-md-8">{{ form.offshore_station.label_tag }}{{ form.offshore_station }}</div>
       </div>
       <hr>
@@ -122,31 +129,62 @@
 
 {% block extra_scripts %}
 <script>
-document.querySelectorAll('input,select,textarea').forEach(el => {
-  if (!el.classList.contains('form-control') && !el.classList.contains('form-select')) {
-    if (el.tagName === 'SELECT') el.classList.add('form-select','form-select-sm');
-    else if (el.type !== 'checkbox') el.classList.add('form-control','form-control-sm');
-  }
-});
+const BARGE_PREFIX = 'barge_placements';
+
+function applyBootstrapClasses(root) {
+  root.querySelectorAll('input,select,textarea').forEach(el => {
+    if (!el.classList.contains('form-control') && !el.classList.contains('form-select')) {
+      if (el.tagName === 'SELECT') el.classList.add('form-select', 'form-select-sm');
+      else if (el.type !== 'checkbox') el.classList.add('form-control', 'form-control-sm');
+    }
+  });
+}
+applyBootstrapClasses(document);
+
+function bindDeleteButtons(tbody) {
+  tbody.querySelectorAll('.formset-delete-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const row = this.closest('tr');
+      const deleteChk = row.querySelector('input[type="checkbox"][name$="-DELETE"]');
+      if (deleteChk) {
+        deleteChk.checked = true;
+        row.style.opacity = '0.4';
+        row.style.textDecoration = 'line-through';
+      } else {
+        row.remove();
+      }
+    });
+  });
+}
+
+const tbody = document.getElementById('sand-barge-tbody');
+bindDeleteButtons(tbody);
+
 document.getElementById('add-barge-btn')?.addEventListener('click', () => {
-  const tbody = document.getElementById('sand-barge-tbody');
   const rows = tbody.querySelectorAll('tr.formset-row');
-  const prefix = 'sandbargeplacement_set';
-  const total = parseInt(document.getElementById(`id_${prefix}-TOTAL_FORMS`).value);
+  const totalInput = document.getElementById('id_' + BARGE_PREFIX + '-TOTAL_FORMS');
+  if (!totalInput) { console.error('TOTAL_FORMS not found for prefix:', BARGE_PREFIX); return; }
+  const total = parseInt(totalInput.value);
   if (!rows.length) return;
-  const tmpl = rows[rows.length-1].cloneNode(true);
+
+  const tmpl = rows[rows.length - 1].cloneNode(true);
   const old = total - 1;
   tmpl.querySelectorAll('[id],[name]').forEach(el => {
-    if (el.id) el.id = el.id.replace(`-${old}-`, `-${total}-`);
-    if (el.name) el.name = el.name.replace(`-${old}-`, `-${total}-`);
-    if (el.tagName==='INPUT' && el.type!=='checkbox' && el.type!=='hidden') el.value='';
-    if (el.tagName==='SELECT') el.selectedIndex=0;
-    if (el.type==='checkbox') el.checked=false;
+    if (el.id)   el.id   = el.id.replace('-' + old + '-', '-' + total + '-');
+    if (el.name) el.name = el.name.replace('-' + old + '-', '-' + total + '-');
+    if (el.tagName === 'INPUT' && el.type !== 'checkbox' && el.type !== 'hidden') el.value = '';
+    if (el.tagName === 'SELECT') el.selectedIndex = 0;
+    if (el.type === 'checkbox') el.checked = false;
   });
   const idField = tmpl.querySelector('[name$="-id"]');
-  if (idField) idField.value='';
+  if (idField) idField.value = '';
+  tmpl.style.opacity = '';
+  tmpl.style.textDecoration = '';
+
   tbody.appendChild(tmpl);
-  document.getElementById(`id_${prefix}-TOTAL_FORMS`).value = total+1;
+  totalInput.value = total + 1;
+  applyBootstrapClasses(tmpl);
+  bindDeleteButtons(tmpl);
 });
 </script>
 {% endblock %}
