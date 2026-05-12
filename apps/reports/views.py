@@ -1,8 +1,9 @@
 import io
 from datetime import date
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import View
 from apps.daily_reports.models import DailyReport
 from apps.materials.models import MaterialDelivery, Material
@@ -146,6 +147,51 @@ class BOQProgressExcelView(LoginRequiredMixin, View):
         response = HttpResponse(
             buffer.read(),
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+
+
+class PMCDailyReportPDFView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        from apps.reports.pmc_pdf_generator import generate_pmc_pdf
+        from apps.reports.validators import validate_daily_report_export
+        report = get_object_or_404(
+            DailyReport.objects.select_related('project', 'prepared_by', 'checked_by', 'approved_by'),
+            pk=pk,
+        )
+        errors = validate_daily_report_export(report)
+        hard_errors = [e for e in errors if not e.startswith('WARNING:')]
+        if hard_errors:
+            for msg in hard_errors:
+                messages.error(request, msg)
+            return redirect('daily_reports:detail', pk=pk)
+        buf      = generate_pmc_pdf(report)
+        filename = f"{report.project.contract_no}-DR-{report.report_date:%Y%m%d}-Rev0.pdf"
+        response = HttpResponse(buf.getvalue(), content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+
+
+class PMCDailyReportExcelView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        from apps.reports.pmc_excel_generator import generate_pmc_excel
+        from apps.reports.validators import validate_daily_report_export
+        report = get_object_or_404(
+            DailyReport.objects.select_related('project', 'prepared_by', 'checked_by', 'approved_by'),
+            pk=pk,
+        )
+        errors = validate_daily_report_export(report)
+        hard_errors = [e for e in errors if not e.startswith('WARNING:')]
+        if hard_errors:
+            for msg in hard_errors:
+                messages.error(request, msg)
+            return redirect('daily_reports:detail', pk=pk)
+        buf      = generate_pmc_excel(report)
+        filename = f"{report.project.contract_no}-DR-{report.report_date:%Y%m%d}-Rev0.xlsx"
+        response = HttpResponse(
+            buf.read(),
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         )
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response

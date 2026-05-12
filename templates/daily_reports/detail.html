@@ -20,6 +20,19 @@
         <a href="{% url 'daily_reports:update' report.pk %}" class="btn btn-sm btn-warning"><i class="fas fa-edit me-1"></i>Revise</a>
         {% endif %}
         <a href="{% url 'daily_reports:export_pdf' report.pk %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-file-pdf me-1"></i>PDF</a>
+        <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="fas fa-file-export me-1"></i>PMC Export
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="{% url 'reports:pmc_daily_report_pdf' report.pk %}">
+                    <i class="fas fa-file-pdf me-2 text-danger"></i>PMC Report (PDF)
+                </a></li>
+                <li><a class="dropdown-item" href="{% url 'reports:pmc_daily_report_excel' report.pk %}">
+                    <i class="fas fa-file-excel me-2 text-success"></i>PMC Report (Excel)
+                </a></li>
+            </ul>
+        </div>
     </div>
 </div>
 
