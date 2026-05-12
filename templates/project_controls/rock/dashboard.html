@@ -48,6 +48,7 @@
   .rock-side-actions { display: grid; gap: 6px; }
   .rock-side-actions .btn { border-radius: 4px; justify-content: flex-start; text-align: left; }
   .rock-filter-grid { display: grid; gap: 8px; }
+  .rock-filter-label { color: #475569; display: block; font-size: .72rem; font-weight: 700; letter-spacing: .04em; margin-bottom: 3px; text-transform: uppercase; }
   .rock-empty { background: #fff; border: 1px dashed #b6c2d2; color: #64748b; padding: 32px; text-align: center; }
   .rock-warning { background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; border-radius: 6px; padding: 10px 12px; }
   .status-pill { border-radius: 999px; display: inline-flex; font-size: .75rem; font-weight: 800; padding: .18rem .55rem; }
@@ -241,35 +242,62 @@
     <aside>
       <form method="get" class="rock-side-card rock-filter-grid">
         <div class="rock-side-title"><span>Filters</span><i class="fas fa-filter text-muted"></i></div>
-        <select name="project" class="form-select form-select-sm">
-          <option value="">First Active Project</option>
-          {% for p in projects %}
-          <option value="{{ p.pk }}" {% if selected_project and selected_project.pk == p.pk %}selected{% endif %}>{{ p.contract_no }}</option>
-          {% endfor %}
-        </select>
-        <select name="range" class="form-select form-select-sm">
-          <option value="">All Dates</option>
-          <option value="7" {% if request.GET.range == '7' %}selected{% endif %}>Last 7 Days</option>
-          <option value="14" {% if request.GET.range == '14' %}selected{% endif %}>Last 14 Days</option>
-          <option value="30" {% if request.GET.range == '30' %}selected{% endif %}>Last 30 Days</option>
-        </select>
-        <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="form-control form-control-sm" aria-label="Date from">
-        <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control form-control-sm" aria-label="Date to">
-        <select name="barge" class="form-select form-select-sm">
-          <option value="">All Barges</option>
-          {% for barge in barges %}
-          <option value="{{ barge.pk }}" {% if request.GET.barge == barge.pk|stringformat:"s" %}selected{% endif %}>{{ barge.name }}</option>
-          {% endfor %}
-        </select>
-        <select name="material_type" class="form-select form-select-sm">
-          <option value="">All Material Types</option>
-          {% for value, label in material_type_choices %}
-          <option value="{{ value }}" {% if request.GET.material_type == value %}selected{% endif %}>{{ label }}</option>
-          {% endfor %}
-        </select>
-        <input type="text" name="station_range" value="{{ request.GET.station_range }}" class="form-control form-control-sm" placeholder="Station range">
-        <input type="text" name="source_quarry" value="{{ request.GET.source_quarry }}" class="form-control form-control-sm" placeholder="Source / quarry">
-        <input type="text" name="destination_area" value="{{ request.GET.destination_area }}" class="form-control form-control-sm" placeholder="Destination / placement area">
+        <div>
+          <label class="rock-filter-label">Project</label>
+          <select name="project" class="form-select form-select-sm">
+            <option value="">First Active Project</option>
+            {% for p in projects %}
+            <option value="{{ p.pk }}" {% if selected_project and selected_project.pk == p.pk %}selected{% endif %}>{{ p.contract_no }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="rock-filter-label">Date Range</label>
+          <select name="range" class="form-select form-select-sm">
+            <option value="">All Dates</option>
+            <option value="7" {% if request.GET.range == '7' %}selected{% endif %}>Last 7 Days</option>
+            <option value="14" {% if request.GET.range == '14' %}selected{% endif %}>Last 14 Days</option>
+            <option value="30" {% if request.GET.range == '30' %}selected{% endif %}>Last 30 Days</option>
+          </select>
+        </div>
+        <div>
+          <label class="rock-filter-label">From</label>
+          <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="form-control form-control-sm" aria-label="Date from">
+        </div>
+        <div>
+          <label class="rock-filter-label">To</label>
+          <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control form-control-sm" aria-label="Date to">
+        </div>
+        <div>
+          <label class="rock-filter-label">Barge</label>
+          <select name="barge" class="form-select form-select-sm">
+            <option value="">All Barges</option>
+            {% for barge in barges %}
+            <option value="{{ barge.pk }}" {% if request.GET.barge == barge.pk|stringformat:"s" %}selected{% endif %}>{{ barge.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="rock-filter-label">Material Type</label>
+          <select name="material_type" class="form-select form-select-sm">
+            <option value="">All Material Types</option>
+            {% for value, label in material_type_choices %}
+            <option value="{{ value }}" {% if request.GET.material_type == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="rock-filter-label">Station Range</label>
+          <input type="text" name="station_range" value="{{ request.GET.station_range }}" class="form-control form-control-sm" placeholder="e.g. 0+000 - 0+100">
+        </div>
+        <div>
+          <label class="rock-filter-label">Source / Quarry</label>
+          <input type="text" name="source_quarry" value="{{ request.GET.source_quarry }}" class="form-control form-control-sm" placeholder="Source or quarry name">
+        </div>
+        <div>
+          <label class="rock-filter-label">Destination / Area</label>
+          <input type="text" name="destination_area" value="{{ request.GET.destination_area }}" class="form-control form-control-sm" placeholder="Placement area">
+        </div>
         <button class="btn btn-info text-white btn-sm" type="submit"><i class="fas fa-filter me-1"></i>Apply Filters</button>
       </form>
 
