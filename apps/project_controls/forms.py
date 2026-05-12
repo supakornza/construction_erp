@@ -96,7 +96,7 @@ class SandDailyRecordForm(forms.ModelForm):
             'chalothon_daily_ton', 'chalothon_trips', 'chalothon_trucks',
             'khlong_bang_phai_daily_ton', 'khlong_bang_phai_trips', 'khlong_bang_phai_trucks',
             'sand_source', 'oswald_daily_ton', 'oswald_trips', 'oswald_trucks',
-            'offshore_daily_ton', 'offshore_station',
+            'offshore_station',
             'onshore_daily_ton', 'onshore_trips', 'onshore_trucks',
             'inside_plot_daily', 'outside_plot_daily',
             'remaining_tct', 'remaining_mtp3',

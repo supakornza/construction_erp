@@ -182,7 +182,7 @@
           <div class="ki"><i class="fas fa-warehouse"></i></div>
           <div class="kl">Stock Balance</div>
           <div class="kv">{{ data.current_stock_balance|default:0|floatformat:0|intcomma }} tons</div>
-          <div class="ks">delivered − placed{% if data.stock_percent is not None %} · {{ data.stock_percent }}%{% endif %}</div>
+          <div class="ks">TCT Pier + MTP3 stockpile{% if data.stock_percent is not None %} · {{ data.stock_percent }}%{% endif %}</div>
         </div>
         <div class="sdb-kpi purple">
           <div class="ki"><i class="fas fa-chart-pie"></i></div>

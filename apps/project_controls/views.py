@@ -294,8 +294,12 @@ class SandCreateView(LoginRequiredMixin, CreateView):
                 self.object = form.save()
                 barge_fs.instance = self.object
                 barge_fs.save()
-                # Auto-sum offshore from barges
-                offshore_total = sum(bp.quantity_ton for bp in self.object.barge_placements.all())
+                offshore_total = sum(
+                    bp.quantity_ton
+                    for bp in self.object.barge_placements.filter(
+                        placement_type=SandBargePlacement.PLACEMENT_OFFSHORE
+                    )
+                )
                 self.object.offshore_daily_ton = offshore_total
                 self.object.save(update_fields=['offshore_daily_ton'])
                 recalculate_sand_accumulatives(self.object.project)
@@ -337,7 +341,12 @@ class SandUpdateView(LoginRequiredMixin, UpdateView):
                 self.object = form.save()
                 barge_fs.instance = self.object
                 barge_fs.save()
-                offshore_total = sum(bp.quantity_ton for bp in self.object.barge_placements.all())
+                offshore_total = sum(
+                    bp.quantity_ton
+                    for bp in self.object.barge_placements.filter(
+                        placement_type=SandBargePlacement.PLACEMENT_OFFSHORE
+                    )
+                )
                 self.object.offshore_daily_ton = offshore_total
                 self.object.save(update_fields=['offshore_daily_ton'])
                 recalculate_sand_accumulatives(self.object.project)

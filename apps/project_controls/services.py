@@ -306,7 +306,10 @@ def get_sand_dashboard_data(project, filters=None):
     records_list = list(records)
     total_delivered = latest.total_accum_ton
     total_placed = latest.total_placed
-    current_stock_balance = total_delivered - total_placed
+    # Use the stored remaining stock (remaining_tct + remaining_mtp3) entered per record.
+    # Computing total_delivered - total_placed produces negatives when placement is tracked
+    # via a different path than delivery (e.g. direct offshore placement bypasses stockpile).
+    current_stock_balance = latest.total_remaining  # remaining_tct + remaining_mtp3
     target_qty = settings.target_quantity_ton if settings else None
     daily_target_delivery = settings.daily_target_delivery_ton if settings else None
     daily_target_placement = settings.daily_target_placement_ton if settings else None
