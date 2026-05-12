@@ -69,6 +69,49 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Sidebar collapse to icon-only mode (desktop)
+    var collapseBtn = document.getElementById('sidebar-collapse-btn');
+    if (collapseBtn) {
+        var icon = collapseBtn.querySelector('i');
+
+        function sidebarSetCollapsed(collapsed) {
+            document.body.classList.toggle('sidebar-collapsed', collapsed);
+            if (icon) {
+                icon.className = collapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
+            }
+            localStorage.setItem('sidebar-collapsed', collapsed ? '1' : '0');
+            if (collapsed) {
+                _sidebarInitTooltips();
+            } else {
+                _sidebarDestroyTooltips();
+            }
+        }
+
+        // Restore saved state on page load
+        if (localStorage.getItem('sidebar-collapsed') === '1') {
+            sidebarSetCollapsed(true);
+        }
+
+        collapseBtn.addEventListener('click', function () {
+            sidebarSetCollapsed(!document.body.classList.contains('sidebar-collapsed'));
+        });
+    }
+
+    function _sidebarInitTooltips() {
+        document.querySelectorAll('#sidebar [data-bs-toggle="tooltip"]').forEach(function (el) {
+            if (!bootstrap.Tooltip.getInstance(el)) {
+                new bootstrap.Tooltip(el, { trigger: 'hover' });
+            }
+        });
+    }
+
+    function _sidebarDestroyTooltips() {
+        document.querySelectorAll('#sidebar [data-bs-toggle="tooltip"]').forEach(function (el) {
+            var t = bootstrap.Tooltip.getInstance(el);
+            if (t) t.dispose();
+        });
+    }
+
     // Universal Back button in the top bar.
     var backButton = document.getElementById('page-back-btn');
     if (backButton) {
