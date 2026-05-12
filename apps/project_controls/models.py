@@ -712,6 +712,128 @@ class RecoveryActionDailyProgress(models.Model):
 
 # ── Logistics Scenario ────────────────────────────────────────────────────────
 
+class ProjectActionPlan(models.Model):
+    CATEGORY_CHOICES = [
+        ('Issue', 'Issue'),
+        ('Risk', 'Risk'),
+        ('Decision', 'Decision'),
+        ('Coordination', 'Coordination'),
+        ('Change', 'Change'),
+        ('Other', 'Other'),
+    ]
+    PRIORITY_CHOICES = [
+        ('Low', 'Low'),
+        ('Medium', 'Medium'),
+        ('High', 'High'),
+        ('Critical', 'Critical'),
+    ]
+    STATUS_OPEN = 'Open'
+    STATUS_IN_PROGRESS = 'In Progress'
+    STATUS_WAITING = 'Waiting'
+    STATUS_RESOLVED = 'Resolved'
+    STATUS_CLOSED = 'Closed'
+    STATUS_CANCELLED = 'Cancelled'
+    STATUS_CHOICES = [
+        (STATUS_OPEN, 'Open'),
+        (STATUS_IN_PROGRESS, 'In Progress'),
+        (STATUS_WAITING, 'Waiting'),
+        (STATUS_RESOLVED, 'Resolved'),
+        (STATUS_CLOSED, 'Closed'),
+        (STATUS_CANCELLED, 'Cancelled'),
+    ]
+    CLOSED_STATUSES = {STATUS_RESOLVED, STATUS_CLOSED, STATUS_CANCELLED}
+
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_action_plans')
+    title = models.CharField(max_length=300)
+    category = models.CharField(max_length=30, choices=CATEGORY_CHOICES, default='Issue')
+    priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='Medium')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_OPEN)
+    owner = models.CharField(max_length=150, blank=True)
+    due_date = models.DateField(null=True, blank=True)
+    closed_date = models.DateField(null=True, blank=True)
+    description = models.TextField(blank=True)
+    root_cause = models.TextField(blank=True)
+    impact = models.TextField(blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True,
+                                   related_name='project_action_plans_created')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['status', 'due_date', '-created_at']
+        indexes = [
+            models.Index(fields=['project', 'status', 'due_date'], name='pm_ap_project_status_idx'),
+        ]
+
+    def __str__(self):
+        return f"{self.project.contract_no} - {self.title}"
+
+    @property
+    def is_overdue(self):
+        return bool(
+            self.due_date
+            and self.due_date < timezone.localdate()
+            and self.status not in self.CLOSED_STATUSES
+        )
+
+    @property
+    def item_count(self):
+        return self.items.count()
+
+    @property
+    def open_item_count(self):
+        return self.items.exclude(status__in=ProjectActionItem.CLOSED_STATUSES).count()
+
+    @property
+    def completion_percent(self):
+        items = list(self.items.all())
+        if not items:
+            return 0
+        done = sum(1 for item in items if item.status in ProjectActionItem.CLOSED_STATUSES)
+        return round(done / len(items) * 100, 1)
+
+
+class ProjectActionItem(models.Model):
+    STATUS_NOT_STARTED = 'Not Started'
+    STATUS_IN_PROGRESS = 'In Progress'
+    STATUS_WAITING = 'Waiting'
+    STATUS_DONE = 'Done'
+    STATUS_CANCELLED = 'Cancelled'
+    STATUS_CHOICES = [
+        (STATUS_NOT_STARTED, 'Not Started'),
+        (STATUS_IN_PROGRESS, 'In Progress'),
+        (STATUS_WAITING, 'Waiting'),
+        (STATUS_DONE, 'Done'),
+        (STATUS_CANCELLED, 'Cancelled'),
+    ]
+    CLOSED_STATUSES = {STATUS_DONE, STATUS_CANCELLED}
+
+    action_plan = models.ForeignKey(ProjectActionPlan, on_delete=models.CASCADE, related_name='items')
+    item_no = models.CharField(max_length=20)
+    action = models.CharField(max_length=500)
+    responsible_party = models.CharField(max_length=150, blank=True)
+    target_date = models.DateField(null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_NOT_STARTED)
+    remarks = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['item_no', 'target_date', 'pk']
+        unique_together = ('action_plan', 'item_no')
+
+    def __str__(self):
+        return f"{self.item_no}. {self.action[:80]}"
+
+    @property
+    def is_overdue(self):
+        return bool(
+            self.target_date
+            and self.target_date < timezone.localdate()
+            and self.status not in self.CLOSED_STATUSES
+        )
+
+
 class LogisticsScenario(models.Model):
     MATERIAL_CHOICES = [('Sand', 'Sand'), ('Rock', 'Rock')]
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='logistics_scenarios')

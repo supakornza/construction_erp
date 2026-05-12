@@ -69,6 +69,13 @@ urlpatterns = [
     path('recovery/item/<int:item_pk>/progress/new/',
          views.RecoveryActionDailyProgressCreateView.as_view(), name='progress_create'),
 
+    # Project Management Action Plan
+    path('action-plans/', views.ProjectActionPlanListView.as_view(), name='project_action_plan_list'),
+    path('action-plans/new/', views.ProjectActionPlanCreateView.as_view(), name='project_action_plan_create'),
+    path('action-plans/<int:pk>/', views.ProjectActionPlanDetailView.as_view(), name='project_action_plan_detail'),
+    path('action-plans/<int:pk>/edit/', views.ProjectActionPlanUpdateView.as_view(), name='project_action_plan_update'),
+    path('action-plans/<int:pk>/delete/', views.ProjectActionPlanDeleteView.as_view(), name='project_action_plan_delete'),
+
     # Logistics
     path('logistics/', views.LogisticsScenarioListView.as_view(), name='logistics_list'),
     path('logistics/new/', views.LogisticsScenarioCreateView.as_view(), name='logistics_create'),

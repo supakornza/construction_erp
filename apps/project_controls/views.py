@@ -4,7 +4,7 @@ from decimal import Decimal
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.db.models import Sum, Avg
+from django.db.models import Sum, Avg, Q
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -20,6 +20,7 @@ from .models import (
     RevetmentStation, RevetmentActivity, RevetmentDailyRecord,
     RecoveryPlan, RecoveryPlanDailyItem,
     RecoveryActionPlan, RecoveryActionItem, RecoveryActionDailyProgress,
+    ProjectActionPlan,
     LogisticsScenario, ImportLog,
 )
 from .forms import (
@@ -29,7 +30,8 @@ from .forms import (
     RevetmentStationForm, RevetmentActivityForm,
     RevetmentDailyRecordForm, RevetmentDailyItemFormSet,
     RecoveryActionPlanForm, RecoveryActionItemFormSet,
-    RecoveryActionDailyProgressForm, LogisticsScenarioForm, ImportForm,
+    RecoveryActionDailyProgressForm, ProjectActionPlanForm, ProjectActionItemFormSet,
+    LogisticsScenarioForm, ImportForm,
 )
 from .services import (
     recalculate_rock_accumulatives, recalculate_sand_accumulatives,
@@ -983,6 +985,138 @@ class RAPExportPDFView(LoginRequiredMixin, View):
 
 
 # ── Logistics Views ───────────────────────────────────────────────────────────
+
+class ProjectActionPlanListView(LoginRequiredMixin, ListView):
+    model = ProjectActionPlan
+    template_name = 'project_controls/action_plans/list.html'
+    context_object_name = 'plans'
+    paginate_by = 30
+
+    def get_queryset(self):
+        qs = super().get_queryset().select_related('project', 'created_by').prefetch_related('items')
+        project_id = self.request.GET.get('project')
+        status = self.request.GET.get('status')
+        priority = self.request.GET.get('priority')
+        category = self.request.GET.get('category')
+        query = self.request.GET.get('q')
+        if project_id:
+            qs = qs.filter(project_id=project_id)
+        if status:
+            qs = qs.filter(status=status)
+        if priority:
+            qs = qs.filter(priority=priority)
+        if category:
+            qs = qs.filter(category=category)
+        if query:
+            qs = qs.filter(
+                Q(title__icontains=query)
+                | Q(description__icontains=query)
+                | Q(owner__icontains=query)
+                | Q(items__action__icontains=query)
+                | Q(items__responsible_party__icontains=query)
+            ).distinct()
+        return qs
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        filtered = self.get_queryset()
+        ctx.update({
+            'projects': Project.objects.all().order_by('project_name'),
+            'status_choices': ProjectActionPlan.STATUS_CHOICES,
+            'priority_choices': ProjectActionPlan.PRIORITY_CHOICES,
+            'category_choices': ProjectActionPlan.CATEGORY_CHOICES,
+            'open_count': filtered.exclude(status__in=ProjectActionPlan.CLOSED_STATUSES).count(),
+            'closed_count': filtered.filter(status__in=ProjectActionPlan.CLOSED_STATUSES).count(),
+            'overdue_count': sum(1 for plan in filtered if plan.is_overdue),
+        })
+        return ctx
+
+
+class ProjectActionPlanCreateView(LoginRequiredMixin, CreateView):
+    model = ProjectActionPlan
+    form_class = ProjectActionPlanForm
+    template_name = 'project_controls/action_plans/form.html'
+
+    def get_initial(self):
+        initial = super().get_initial()
+        project_id = self.request.GET.get('project')
+        if project_id:
+            initial['project'] = project_id
+        return initial
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['item_formset'] = ProjectActionItemFormSet(
+            self.request.POST or None,
+            instance=getattr(self, 'object', None),
+        )
+        return ctx
+
+    def form_valid(self, form):
+        ctx = self.get_context_data()
+        item_fs = ctx['item_formset']
+        if item_fs.is_valid():
+            with transaction.atomic():
+                form.instance.created_by = self.request.user
+                self.object = form.save()
+                item_fs.instance = self.object
+                item_fs.save()
+            messages.success(self.request, 'Project Action Plan created.')
+            return redirect(self.get_success_url())
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_success_url(self):
+        return reverse_lazy('project_controls:project_action_plan_detail', kwargs={'pk': self.object.pk})
+
+
+class ProjectActionPlanDetailView(LoginRequiredMixin, DetailView):
+    model = ProjectActionPlan
+    template_name = 'project_controls/action_plans/detail.html'
+    context_object_name = 'plan'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['items'] = self.object.items.all()
+        return ctx
+
+
+class ProjectActionPlanUpdateView(LoginRequiredMixin, UpdateView):
+    model = ProjectActionPlan
+    form_class = ProjectActionPlanForm
+    template_name = 'project_controls/action_plans/form.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['item_formset'] = ProjectActionItemFormSet(
+            self.request.POST or None,
+            instance=self.object,
+        )
+        return ctx
+
+    def form_valid(self, form):
+        ctx = self.get_context_data()
+        item_fs = ctx['item_formset']
+        if item_fs.is_valid():
+            with transaction.atomic():
+                self.object = form.save()
+                item_fs.instance = self.object
+                item_fs.save()
+            messages.success(self.request, 'Project Action Plan updated.')
+            return redirect(self.get_success_url())
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_success_url(self):
+        return reverse_lazy('project_controls:project_action_plan_detail', kwargs={'pk': self.object.pk})
+
+
+class ProjectActionPlanDeleteView(AdminRequiredMixin, View):
+    def post(self, request, pk):
+        plan = get_object_or_404(ProjectActionPlan, pk=pk)
+        project_id = plan.project_id
+        plan.delete()
+        messages.success(request, 'Project Action Plan deleted.')
+        return redirect(f"{reverse_lazy('project_controls:project_action_plan_list')}?project={project_id}")
+
 
 class LogisticsScenarioListView(LoginRequiredMixin, ListView):
     model = LogisticsScenario

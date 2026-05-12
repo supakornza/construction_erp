@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}Project Action Plans - Construction ERP{% endblock %}
+{% block page_title %}Project Action Plans{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <div>
+    <h4 class="mb-1"><i class="fas fa-clipboard-check me-2 text-primary"></i>Project Action Plans</h4>
+    <div class="text-muted small">Project management issue, risk, decision, and coordination tracker</div>
+  </div>
+  <a href="{% url 'project_controls:project_action_plan_create' %}{% if request.GET.project %}?project={{ request.GET.project }}{% endif %}" class="btn btn-primary">
+    <i class="fas fa-plus me-1"></i> New Action Plan
+  </a>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-4">
+    <div class="card border-start border-4 border-primary h-100">
+      <div class="card-body py-3">
+        <div class="text-muted small">Open / Active</div>
+        <div class="fs-3 fw-bold">{{ open_count|intcomma }} items</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-start border-4 border-danger h-100">
+      <div class="card-body py-3">
+        <div class="text-muted small">Overdue</div>
+        <div class="fs-3 fw-bold text-danger">{{ overdue_count|intcomma }} items</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-start border-4 border-success h-100">
+      <div class="card-body py-3">
+        <div class="text-muted small">Closed / Resolved</div>
+        <div class="fs-3 fw-bold text-success">{{ closed_count|intcomma }} items</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mb-3">
+  <div class="card-body">
+    <form method="get" class="row g-2 align-items-end">
+      <div class="col-md-3">
+        <label class="form-label small text-muted">Project</label>
+        <select name="project" class="form-select form-select-sm">
+          <option value="">All projects</option>
+          {% for project in projects %}
+          <option value="{{ project.pk }}" {% if request.GET.project == project.pk|stringformat:"s" %}selected{% endif %}>{{ project.project_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label small text-muted">Status</label>
+        <select name="status" class="form-select form-select-sm">
+          <option value="">All</option>
+          {% for value, label in status_choices %}
+          <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label small text-muted">Priority</label>
+        <select name="priority" class="form-select form-select-sm">
+          <option value="">All</option>
+          {% for value, label in priority_choices %}
+          <option value="{{ value }}" {% if request.GET.priority == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label small text-muted">Category</label>
+        <select name="category" class="form-select form-select-sm">
+          <option value="">All</option>
+          {% for value, label in category_choices %}
+          <option value="{{ value }}" {% if request.GET.category == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label small text-muted">Search</label>
+        <input type="search" name="q" value="{{ request.GET.q }}" class="form-control form-control-sm" placeholder="Title, owner, action">
+      </div>
+      <div class="col-md-1 d-grid">
+        <button class="btn btn-sm btn-outline-primary" type="submit"><i class="fas fa-filter"></i></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Project</th>
+          <th>Action Plan</th>
+          <th>Owner</th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th>Due Date</th>
+          <th class="text-end">Progress</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for plan in plans %}
+        <tr class="{% if plan.is_overdue %}table-danger{% endif %}">
+          <td>
+            <div class="fw-semibold">{{ plan.project.contract_no }}</div>
+            <div class="text-muted small">{{ plan.project.project_name|truncatechars:36 }}</div>
+          </td>
+          <td>
+            <a href="{% url 'project_controls:project_action_plan_detail' plan.pk %}" class="fw-semibold text-decoration-none">{{ plan.title }}</a>
+            <div class="text-muted small">{{ plan.category }} · {{ plan.open_item_count }} open of {{ plan.item_count }} actions</div>
+          </td>
+          <td>{{ plan.owner|default:"-" }}</td>
+          <td>
+            <span class="badge {% if plan.priority == 'Critical' %}text-bg-danger{% elif plan.priority == 'High' %}text-bg-warning{% elif plan.priority == 'Medium' %}text-bg-info{% else %}text-bg-secondary{% endif %}">
+              {{ plan.priority }}
+            </span>
+          </td>
+          <td>
+            <span class="badge {% if plan.status == 'Resolved' or plan.status == 'Closed' %}text-bg-success{% elif plan.status == 'Cancelled' %}text-bg-secondary{% elif plan.status == 'Waiting' %}text-bg-warning{% else %}text-bg-primary{% endif %}">
+              {{ plan.status }}
+            </span>
+          </td>
+          <td>
+            {% if plan.due_date %}
+              <span class="{% if plan.is_overdue %}fw-semibold text-danger{% endif %}">{{ plan.due_date|date:"d M Y" }}</span>
+            {% else %}-{% endif %}
+          </td>
+          <td class="text-end">
+            <div class="fw-semibold">{{ plan.completion_percent|floatformat:1 }}%</div>
+            <div class="progress ms-auto" style="height: 5px; width: 90px;">
+              <div class="progress-bar" style="width: {{ plan.completion_percent }}%"></div>
+            </div>
+          </td>
+          <td class="text-end">
+            <a href="{% url 'project_controls:project_action_plan_detail' plan.pk %}" class="btn btn-sm btn-outline-secondary" title="View"><i class="fas fa-eye"></i></a>
+            <a href="{% url 'project_controls:project_action_plan_update' plan.pk %}" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fas fa-edit"></i></a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8" class="text-center py-5 text-muted">No project action plans found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

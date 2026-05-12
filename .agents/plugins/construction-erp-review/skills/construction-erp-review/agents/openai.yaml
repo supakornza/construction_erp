@@ -1,0 +1,4 @@
+interface:
+  display_name: "Construction ERP Review"
+  short_description: "Django review guidance for this Construction ERP project."
+  default_prompt: "Review or modify this Construction ERP Django app using the project-specific dashboard, BOQ, and material control conventions."

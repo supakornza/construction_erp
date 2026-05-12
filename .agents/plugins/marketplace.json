@@ -1,0 +1,20 @@
+{
+  "name": "construction-erp-local",
+  "interface": {
+    "displayName": "Construction ERP Local Plugins"
+  },
+  "plugins": [
+    {
+      "name": "construction-erp-review",
+      "source": {
+        "source": "local",
+        "path": "./plugins/construction-erp-review"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

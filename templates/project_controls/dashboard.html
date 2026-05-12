@@ -1,4 +1,5 @@
 ﻿{% extends "base.html" %}
+{% load humanize %}
 {% block title %}Project Controls Dashboard - Construction ERP{% endblock %}
 {% block page_title %}Project Controls Dashboard{% endblock %}
 
@@ -130,11 +131,22 @@
       <a href="{% url 'project_controls:rap_list' %}?project={{ selected_project.pk }}" class="pc-menu-card">
         <span class="pc-menu-icon bg-danger bg-opacity-10 text-danger"><i class="fas fa-tasks"></i></span>
         <span>
-          <strong>Action Plans</strong>
+          <strong>Recovery Action Plans</strong>
           <span class="d-block text-muted small mt-1">Recovery action tracking and approvals</span>
           <span class="d-inline-flex gap-2 mt-2">
             <span class="badge text-bg-light pc-mini-action">Items</span>
             <span class="badge text-bg-primary pc-mini-action">New plan</span>
+          </span>
+        </span>
+      </a>
+      <a href="{% url 'project_controls:project_action_plan_list' %}?project={{ selected_project.pk }}" class="pc-menu-card">
+        <span class="pc-menu-icon bg-primary bg-opacity-10 text-primary"><i class="fas fa-clipboard-check"></i></span>
+        <span>
+          <strong>Project Action Plans</strong>
+          <span class="d-block text-muted small mt-1">Issue, risk, decision, and coordination tracking</span>
+          <span class="d-inline-flex gap-2 mt-2">
+            <span class="badge text-bg-light pc-mini-action">Issues</span>
+            <span class="badge text-bg-primary pc-mini-action">New action</span>
           </span>
         </span>
       </a>

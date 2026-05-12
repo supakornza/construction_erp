@@ -59,8 +59,11 @@
     <a href="{% url 'project_controls:recovery_plan_list' %}" class="nav-link {% if 'project_controls:recovery_plan' in vn %}active{% endif %}">
         <i class="fas fa-calendar-check"></i> Recovery Plans
     </a>
+    <a href="{% url 'project_controls:project_action_plan_list' %}" class="nav-link {% if 'project_controls:project_action_plan' in vn %}active{% endif %}">
+        <i class="fas fa-clipboard-check"></i> Project Action Plans
+    </a>
     <a href="{% url 'project_controls:rap_list' %}" class="nav-link {% if 'project_controls:rap' in vn or 'project_controls:progress' in vn %}active{% endif %}">
-        <i class="fas fa-tasks"></i> Action Plans
+        <i class="fas fa-tasks"></i> Recovery Action Plans
     </a>
     <a href="{% url 'project_controls:logistics_list' %}" class="nav-link {% if 'project_controls:logistics' in vn %}active{% endif %}">
         <i class="fas fa-truck"></i> Logistics

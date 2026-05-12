@@ -4,6 +4,7 @@ from .models import (
     SandDailyRecord, SandBargePlacement, SandDashboardSettings, SandAreaProgress, SandAllocation,
     RecoveryPlan, RecoveryPlanDailyItem,
     RecoveryActionPlan, RecoveryActionItem, RecoveryActionDailyProgress,
+    ProjectActionPlan, ProjectActionItem,
     LogisticsScenario, ImportLog,
     RevetmentStation, RevetmentActivity,
     RevetmentDailyRecord, RevetmentDailyItem,
@@ -150,6 +151,26 @@ class RecoveryActionItemAdmin(admin.ModelAdmin):
     list_display = ['item_no', 'description', 'total_quantity', 'unit', 'recovery_plan']
     list_filter = ['recovery_plan__project']
     inlines = [RecoveryActionDailyProgressInline]
+
+
+class ProjectActionItemInline(admin.TabularInline):
+    model = ProjectActionItem
+    extra = 1
+
+
+@admin.register(ProjectActionPlan)
+class ProjectActionPlanAdmin(admin.ModelAdmin):
+    list_display = ['title', 'project', 'category', 'priority', 'status', 'owner', 'due_date', 'created_by']
+    list_filter = ['project', 'category', 'priority', 'status']
+    search_fields = ['title', 'owner', 'description', 'project__contract_no', 'project__project_name']
+    inlines = [ProjectActionItemInline]
+
+
+@admin.register(ProjectActionItem)
+class ProjectActionItemAdmin(admin.ModelAdmin):
+    list_display = ['item_no', 'action', 'action_plan', 'responsible_party', 'target_date', 'status']
+    list_filter = ['status', 'action_plan__project']
+    search_fields = ['item_no', 'action', 'responsible_party', 'action_plan__title']
 
 
 @admin.register(LogisticsScenario)

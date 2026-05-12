@@ -1,0 +1,36 @@
+{
+  "name": "construction-erp-review",
+  "version": "0.1.0",
+  "description": "Project-local Codex guidance for reviewing and modifying the Construction ERP Django app.",
+  "author": {
+    "name": "Supakorn"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "django",
+    "construction-erp",
+    "code-review",
+    "dashboard",
+    "boq",
+    "material-control"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Construction ERP Review",
+    "shortDescription": "Django, template, dashboard, BOQ, and material-control conventions for this repo.",
+    "longDescription": "Project-local guidance for safely reviewing and modifying the Construction ERP Django application, including template patterns, dashboard validation, BOQ workflows, and Rock/Sand material-control screens.",
+    "developerName": "Supakorn",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Review"
+    ],
+    "defaultPrompt": [
+      "Review this Construction ERP change for Django, template, dashboard, BOQ, and material-control risks.",
+      "Modify a Construction ERP dashboard while preserving existing template and validation conventions.",
+      "Check Rock/Sand material-control workflow changes for navigation, units, and project-filter behavior."
+    ],
+    "brandColor": "#0F7F9F"
+  }
+}

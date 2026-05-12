@@ -7,7 +7,7 @@ from .models import (
     SandDailyRecord, SandBargePlacement, SandDashboardSettings, SandAreaProgress,
     SandAllocation, RecoveryPlan, RecoveryPlanDailyItem,
     RecoveryActionPlan, RecoveryActionItem,
-    RecoveryActionDailyProgress, LogisticsScenario,
+    RecoveryActionDailyProgress, ProjectActionPlan, ProjectActionItem, LogisticsScenario,
     RevetmentStation, RevetmentActivity,
     RevetmentDailyRecord, RevetmentDailyItem,
 )
@@ -306,6 +306,38 @@ class RecoveryActionDailyProgressForm(forms.ModelForm):
             'progress_date': forms.DateInput(attrs={'type': 'date'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
         }
+
+
+class ProjectActionPlanForm(forms.ModelForm):
+    class Meta:
+        model = ProjectActionPlan
+        fields = [
+            'project', 'title', 'category', 'priority', 'status', 'owner',
+            'due_date', 'closed_date', 'description', 'root_cause', 'impact',
+        ]
+        widgets = {
+            'due_date': forms.DateInput(attrs={'type': 'date'}),
+            'closed_date': forms.DateInput(attrs={'type': 'date'}),
+            'description': forms.Textarea(attrs={'rows': 3}),
+            'root_cause': forms.Textarea(attrs={'rows': 2}),
+            'impact': forms.Textarea(attrs={'rows': 2}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+
+
+ProjectActionItemFormSet = inlineformset_factory(
+    ProjectActionPlan, ProjectActionItem,
+    fields=['item_no', 'action', 'responsible_party', 'target_date', 'status', 'remarks'],
+    extra=3, can_delete=True,
+    widgets={
+        'target_date': forms.DateInput(attrs={'type': 'date'}),
+        'remarks': forms.Textarea(attrs={'rows': 1}),
+    },
+)
 
 
 class LogisticsScenarioForm(forms.ModelForm):
