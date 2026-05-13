@@ -97,6 +97,7 @@
 {% endblock %}
 
 {% block extra_js %}
+{% include "project_controls/includes/day_name_sync.html" %}
 <script>
 function styleRevetmentControls(root) {
   root.querySelectorAll('select, input, textarea').forEach(function(element) {
@@ -114,6 +115,7 @@ function styleRevetmentControls(root) {
 
 document.addEventListener('DOMContentLoaded', function() {
   styleRevetmentControls(document);
+  ProjectControlsDayName.bindById('id_record_date', 'id_day_name');
   document.getElementById('add-item-row')?.addEventListener('click', function() {
     const totalForms = document.getElementById('id_items-TOTAL_FORMS');
     const index = parseInt(totalForms.value, 10);

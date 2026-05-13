@@ -1,0 +1,49 @@
+<script>
+window.ProjectControlsDayName = window.ProjectControlsDayName || (() => {
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  function applySundayStyle(dayInput, dayName) {
+    dayInput.classList.toggle('text-danger', dayName === 'Sun');
+    dayInput.classList.toggle('fw-semibold', dayName === 'Sun');
+  }
+
+  function syncPair(dateInput, dayInput) {
+    if (!dateInput || !dayInput) return;
+    if (!dateInput.value) {
+      dayInput.value = '';
+      applySundayStyle(dayInput, '');
+      return;
+    }
+
+    const [year, month, day] = dateInput.value.split('-').map(Number);
+    const recordDate = new Date(year, month - 1, day);
+    if (Number.isNaN(recordDate.getTime())) return;
+
+    const dayName = dayNames[recordDate.getDay()];
+    dayInput.value = dayName;
+    applySundayStyle(dayInput, dayName);
+  }
+
+  function bindPair(dateInput, dayInput) {
+    if (!dateInput || !dayInput || dateInput.dataset.dayNameBound === 'true') return;
+    dateInput.dataset.dayNameBound = 'true';
+    dateInput.addEventListener('change', () => syncPair(dateInput, dayInput));
+    dateInput.addEventListener('input', () => syncPair(dateInput, dayInput));
+    syncPair(dateInput, dayInput);
+  }
+
+  function bindById(dateId, dayId) {
+    bindPair(document.getElementById(dateId), document.getElementById(dayId));
+  }
+
+  function bindRows(root, rowSelector, dateSuffix, daySuffix) {
+    root.querySelectorAll(rowSelector).forEach(row => {
+      const dateInput = row.querySelector(`[name$="${dateSuffix}"]`);
+      const dayInput = row.querySelector(`[name$="${daySuffix}"]`);
+      bindPair(dateInput, dayInput);
+    });
+  }
+
+  return { bindById, bindRows, syncPair };
+})();
+</script>

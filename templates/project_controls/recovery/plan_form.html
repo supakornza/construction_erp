@@ -72,12 +72,19 @@
 {% endblock %}
 
 {% block extra_scripts %}
+{% include "project_controls/includes/day_name_sync.html" %}
 <script>
 document.querySelectorAll('input,select,textarea').forEach(el => {
   if (!el.classList.contains('form-control') && !el.classList.contains('form-select') && el.type !== 'checkbox') {
     el.classList.add(el.tagName === 'SELECT' ? 'form-select' : 'form-control', el.tagName === 'SELECT' ? 'form-select-sm' : 'form-control-sm');
   }
 });
+
+function bindRecoveryDayNames(root=document) {
+  ProjectControlsDayName.bindRows(root, '#plan-item-tbody tr.formset-row', '-plan_date', '-day_name');
+}
+
+bindRecoveryDayNames();
 
 document.getElementById('add-item-btn')?.addEventListener('click', () => {
   const tbody = document.getElementById('plan-item-tbody');
@@ -91,6 +98,7 @@ document.getElementById('add-item-btn')?.addEventListener('click', () => {
   tmpl.querySelectorAll('[id],[name]').forEach(el => {
     if (el.id) el.id = el.id.replace(`-${old}-`, `-${total}-`);
     if (el.name) el.name = el.name.replace(`-${old}-`, `-${total}-`);
+    delete el.dataset.dayNameBound;
     if (el.tagName === 'INPUT' && el.type !== 'checkbox' && el.type !== 'hidden') el.value = '';
     if (el.tagName === 'SELECT') el.selectedIndex = 0;
     if (el.tagName === 'TEXTAREA') el.value = '';
@@ -101,6 +109,7 @@ document.getElementById('add-item-btn')?.addEventListener('click', () => {
   tmpl.classList.remove('table-danger');
   tbody.appendChild(tmpl);
   totalInput.value = total + 1;
+  bindRecoveryDayNames();
 });
 </script>
 {% endblock %}

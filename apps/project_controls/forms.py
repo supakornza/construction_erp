@@ -24,6 +24,7 @@ class RockDailyRecordForm(forms.ModelForm):
                   'core_outside_daily', 'core_inside_accum', 'remarks']
         widgets = {
             'record_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'day_name': forms.TextInput(attrs={'readonly': 'readonly'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
             'station_of_core': forms.TextInput(),
         }
@@ -101,6 +102,7 @@ class SandDailyRecordForm(forms.ModelForm):
         ]
         widgets = {
             'record_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'day_name': forms.TextInput(attrs={'readonly': 'readonly'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
             'offshore_daily_ton': forms.NumberInput(attrs={'readonly': 'readonly', 'style': 'background:#f8f9fa;'}),
         }
@@ -222,7 +224,8 @@ class RevetmentDailyRecordForm(forms.ModelForm):
         model = RevetmentDailyRecord
         fields = ['project', 'record_date', 'day_name', 'remarks']
         widgets = {
-            'record_date': forms.DateInput(attrs={'type': 'date'}),
+            'record_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'day_name': forms.TextInput(attrs={'readonly': 'readonly'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
         }
 
@@ -302,7 +305,8 @@ RecoveryPlanDailyItemFormSet = inlineformset_factory(
     fields=['plan_date', 'day_name', 'planned_quantity', 'actual_quantity'],
     extra=14, can_delete=True,
     widgets={
-        'plan_date': forms.DateInput(attrs={'type': 'date'}),
+        'plan_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+        'day_name': forms.TextInput(attrs={'readonly': 'readonly'}),
         'planned_quantity': forms.NumberInput(attrs={'step': '0.01', 'min': '0'}),
         'actual_quantity': forms.NumberInput(attrs={'step': '0.01', 'min': '0'}),
     },

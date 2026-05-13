@@ -79,7 +79,10 @@
 {% endblock %}
 
 {% block extra_scripts %}
+{% include "project_controls/includes/day_name_sync.html" %}
 <script>
+ProjectControlsDayName.bindById('id_record_date', 'id_day_name');
+
 document.querySelectorAll('.add-row-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const tbody = document.getElementById('barge-tbody');

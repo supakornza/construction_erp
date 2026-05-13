@@ -128,6 +128,7 @@
 {% endblock %}
 
 {% block extra_scripts %}
+{% include "project_controls/includes/day_name_sync.html" %}
 <script>
 const BARGE_PREFIX = 'barge_placements';
 
@@ -140,6 +141,8 @@ function applyBootstrapClasses(root) {
   });
 }
 applyBootstrapClasses(document);
+
+ProjectControlsDayName.bindById('id_record_date', 'id_day_name');
 
 function bindDeleteButtons(tbody) {
   tbody.querySelectorAll('.formset-delete-btn').forEach(btn => {

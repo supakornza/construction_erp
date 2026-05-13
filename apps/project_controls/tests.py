@@ -5,7 +5,12 @@ from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 
 from apps.projects.models import Project
-from apps.project_controls.forms import SandDailyRecordForm
+from apps.project_controls.forms import (
+    RecoveryPlanDailyItemFormSet,
+    RevetmentDailyRecordForm,
+    RockDailyRecordForm,
+    SandDailyRecordForm,
+)
 from apps.project_controls.models import (
     Barge,
     RockBargePlacement,
@@ -62,6 +67,24 @@ class SandDailyRecordFormTests(TestCase):
 
         self.assertIn('type="date"', str(form['record_date']))
         self.assertIn('value="2026-05-10"', str(form['record_date']))
+        self.assertIn('readonly', str(form['day_name']))
+
+    def test_all_project_control_day_name_fields_are_readonly(self):
+        rock = RockDailyRecord.objects.create(
+            project=self.project,
+            record_date=date(2026, 5, 10),
+            day_name='Sun',
+        )
+        sand = SandDailyRecord.objects.create(
+            project=self.project,
+            record_date=date(2026, 5, 11),
+            day_name='Mon',
+        )
+
+        self.assertIn('readonly', str(RockDailyRecordForm(instance=rock)['day_name']))
+        self.assertIn('readonly', str(SandDailyRecordForm(instance=sand)['day_name']))
+        self.assertIn('readonly', str(RevetmentDailyRecordForm()['day_name']))
+        self.assertIn('readonly', str(RecoveryPlanDailyItemFormSet().empty_form['day_name']))
 
 
 class SandDailyRecordEditTests(TestCase):
@@ -114,7 +137,7 @@ class SandDailyRecordEditTests(TestCase):
             {
                 'project': self.project.pk,
                 'record_date': '2026-05-10',
-                'day_name': 'Sun',
+                'day_name': 'Wrong',
                 'tct_daily_ton': '252.00',
                 'tct_trips': '6',
                 'tct_trucks': '1',
@@ -191,6 +214,7 @@ class SandDailyRecordEditTests(TestCase):
         self.assertRedirects(response, f'/project-controls/sand/{self.record.pk}/')
         self.record.refresh_from_db()
         self.placement_a.refresh_from_db()
+        self.assertEqual(self.record.day_name, 'Sun')
         self.assertEqual(self.placement_a.quantity_ton, Decimal('20.00'))
         self.assertEqual(self.record.offshore_daily_ton, Decimal('1552.20'))
 

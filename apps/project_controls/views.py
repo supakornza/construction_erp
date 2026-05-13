@@ -41,6 +41,32 @@ from .services import (
 )
 
 
+DAY_ABBREVIATIONS = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
+
+
+def english_day_abbreviation(value):
+    return DAY_ABBREVIATIONS[value.weekday()] if value else ''
+
+
+def save_recovery_plan_daily_items(formset):
+    changed_items = formset.save(commit=False)
+    for deleted in formset.deleted_objects:
+        deleted.delete()
+    for item in changed_items:
+        item.day_name = english_day_abbreviation(item.plan_date)
+        item.save()
+    for form in formset.forms:
+        if form in formset.deleted_forms or not form.cleaned_data:
+            continue
+        item = form.instance
+        if item.pk and item.plan_date:
+            expected_day_name = english_day_abbreviation(item.plan_date)
+            if item.day_name != expected_day_name:
+                item.day_name = expected_day_name
+                item.save(update_fields=['day_name'])
+    formset.save_m2m()
+
+
 # ── Project Controls Main Dashboard ──────────────────────────────────────────
 
 class ProjectControlsDashboardView(LoginRequiredMixin, TemplateView):
@@ -121,6 +147,7 @@ class RockCreateView(LoginRequiredMixin, CreateView):
         if barge_fs.is_valid():
             with transaction.atomic():
                 form.instance.created_by = self.request.user
+                form.instance.day_name = english_day_abbreviation(form.cleaned_data.get('record_date'))
                 self.object = form.save()
                 barge_fs.instance = self.object
                 barge_fs.save()
@@ -163,6 +190,7 @@ class RockUpdateView(LoginRequiredMixin, UpdateView):
         barge_fs = ctx['barge_formset']
         if barge_fs.is_valid():
             with transaction.atomic():
+                form.instance.day_name = english_day_abbreviation(form.cleaned_data.get('record_date'))
                 self.object = form.save()
                 barge_fs.instance = self.object
                 barge_fs.save()
@@ -292,6 +320,7 @@ class SandCreateView(LoginRequiredMixin, CreateView):
             form.instance.created_by = self.request.user
             tct = form.cleaned_data.get('tct_daily_ton', Decimal('0')) or Decimal('0')
             mtp3 = form.cleaned_data.get('mtp3_daily_ton', Decimal('0')) or Decimal('0')
+            form.instance.day_name = english_day_abbreviation(form.cleaned_data.get('record_date'))
             form.instance.total_daily_ton = tct + mtp3
             self.object = form.save()
             # Re-bind with saved instance so FK is correctly set on new rows
@@ -343,6 +372,7 @@ class SandUpdateView(LoginRequiredMixin, UpdateView):
         with transaction.atomic():
             tct = form.cleaned_data.get('tct_daily_ton', Decimal('0')) or Decimal('0')
             mtp3 = form.cleaned_data.get('mtp3_daily_ton', Decimal('0')) or Decimal('0')
+            form.instance.day_name = english_day_abbreviation(form.cleaned_data.get('record_date'))
             form.instance.total_daily_ton = tct + mtp3
             self.object = form.save()
             barge_fs.instance = self.object
@@ -510,6 +540,7 @@ class RevetmentRecordCreateView(LoginRequiredMixin, CreateView):
         if item_formset.is_valid():
             with transaction.atomic():
                 form.instance.created_by = self.request.user
+                form.instance.day_name = english_day_abbreviation(form.cleaned_data.get('record_date'))
                 self.object = form.save()
                 item_formset.instance = self.object
                 item_formset.save()
@@ -563,6 +594,7 @@ class RevetmentRecordUpdateView(LoginRequiredMixin, UpdateView):
         )
         if item_formset.is_valid():
             with transaction.atomic():
+                form.instance.day_name = english_day_abbreviation(form.cleaned_data.get('record_date'))
                 self.object = form.save()
                 item_formset.instance = self.object
                 item_formset.save()
@@ -735,7 +767,7 @@ class RecoveryPlanCreateView(LoginRequiredMixin, CreateView):
                 form.instance.prepared_by = self.request.user
                 self.object = form.save()
                 item_fs.instance = self.object
-                item_fs.save()
+                save_recovery_plan_daily_items(item_fs)
                 recalculate_recovery_plan(self.object)
             messages.success(self.request, 'Recovery plan created.')
             return redirect(self.get_success_url())
@@ -770,6 +802,34 @@ class RecoveryPlanUpdateView(LoginRequiredMixin, UpdateView):
     model = RecoveryPlan
     form_class = RecoveryPlanForm
     template_name = 'project_controls/recovery/plan_form.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        if self.request.POST:
+            ctx['item_formset'] = RecoveryPlanDailyItemFormSet(
+                self.request.POST,
+                instance=self.object,
+                prefix='daily_items',
+            )
+        else:
+            ctx['item_formset'] = RecoveryPlanDailyItemFormSet(
+                instance=self.object,
+                prefix='daily_items',
+            )
+        return ctx
+
+    def form_valid(self, form):
+        ctx = self.get_context_data()
+        item_fs = ctx['item_formset']
+        if item_fs.is_valid():
+            with transaction.atomic():
+                self.object = form.save()
+                item_fs.instance = self.object
+                save_recovery_plan_daily_items(item_fs)
+                recalculate_recovery_plan(self.object)
+            messages.success(self.request, 'Recovery plan updated.')
+            return redirect(self.get_success_url())
+        return self.render_to_response(self.get_context_data(form=form))
 
     def get_success_url(self):
         return reverse_lazy('project_controls:recovery_plan_detail', kwargs={'pk': self.object.pk})
