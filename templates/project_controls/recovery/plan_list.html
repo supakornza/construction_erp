@@ -1,10 +1,10 @@
 ﻿{% extends "base.html" %}
-{% block title %}Recovery Plans โ€“ Construction ERP{% endblock %}
+{% block title %}Recovery Plans - Construction ERP{% endblock %}
 {% block page_title %}Recovery Plans{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-  <h5 class="mb-0"><i class="fas fa-calendar-check me-2 text-warning"></i>14-Day Recovery Plans</h5>
+<div class="pc-page-header">
+  <h5 class="pc-page-title"><i class="fas fa-calendar-check me-2 text-warning"></i>14-Day Recovery Plans</h5>
   <div class="d-flex gap-2">
     <a href="{% url 'project_controls:recovery_dashboard' %}" class="btn btn-sm btn-outline-warning">
       <i class="fas fa-chart-bar me-1"></i>Dashboard
@@ -15,6 +15,7 @@
   </div>
 </div>
 
+{% url 'project_controls:recovery_plan_create' as recovery_plan_create_url %}
 <div class="card">
   <div class="table-responsive">
     <table class="table table-sm table-hover mb-0">
@@ -60,7 +61,11 @@
           </td>
         </tr>
         {% empty %}
-        <tr><td colspan="9" class="text-center text-muted py-4">No recovery plans found.</td></tr>
+        <tr>
+          <td colspan="9">
+            {% include "project_controls/includes/empty_state.html" with icon_class="fas fa-calendar-check" title="No recovery plans found" message="Create the first 14-day recovery plan." action_url=recovery_plan_create_url action_label="New Plan" %}
+          </td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>

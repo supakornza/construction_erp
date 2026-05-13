@@ -13,6 +13,10 @@ from apps.project_controls.forms import (
 )
 from apps.project_controls.models import (
     Barge,
+    RecoveryPlan,
+    RevetmentActivity,
+    RevetmentDailyRecord,
+    RevetmentStation,
     RockBargePlacement,
     RockDailyRecord,
     RockDashboardSettings,
@@ -28,6 +32,7 @@ from apps.project_controls.services import (
     recalculate_rock_accumulatives,
     recalculate_sand_accumulatives,
 )
+from apps.project_controls.utils import english_day_abbreviation
 
 
 User = get_user_model()
@@ -49,6 +54,13 @@ def make_project(user):
         status='Active',
         created_by=user,
     )
+
+
+class ProjectControlsUtilsTests(TestCase):
+    def test_english_day_abbreviation(self):
+        self.assertEqual(english_day_abbreviation(date(2026, 5, 10)), 'Sun')
+        self.assertEqual(english_day_abbreviation(date(2026, 5, 11)), 'Mon')
+        self.assertEqual(english_day_abbreviation(None), '')
 
 
 class SandDailyRecordFormTests(TestCase):
@@ -217,6 +229,227 @@ class SandDailyRecordEditTests(TestCase):
         self.assertEqual(self.record.day_name, 'Sun')
         self.assertEqual(self.placement_a.quantity_ton, Decimal('20.00'))
         self.assertEqual(self.record.offshore_daily_ton, Decimal('1552.20'))
+
+
+class ProjectControlsWorkflowTests(TestCase):
+    def setUp(self):
+        self.user = make_user()
+        self.project = make_project(self.user)
+        self.client = Client()
+        self.client.force_login(self.user)
+
+    def test_rock_create_derives_day_name_and_saves_barge_placement(self):
+        barge = Barge.objects.get(name='Bang Sapan 2')
+
+        response = self.client.post('/project-controls/rock/new/', {
+            'project': self.project.pk,
+            'record_date': '2026-05-10',
+            'day_name': 'Wrong',
+            'material_type': '',
+            'source_quarry': '',
+            'destination_area': '',
+            'tct_daily_ton': '100.00',
+            'tct_trips': '1',
+            'tct_trucks': '1',
+            'placed_daily_ton': '0',
+            'station_of_core': '',
+            'core_outside_daily': '0',
+            'core_inside_accum': '0',
+            'remarks': '',
+            'barge_placements-TOTAL_FORMS': '1',
+            'barge_placements-INITIAL_FORMS': '0',
+            'barge_placements-MIN_NUM_FORMS': '0',
+            'barge_placements-MAX_NUM_FORMS': '1000',
+            'barge_placements-0-barge': barge.pk,
+            'barge_placements-0-quantity_ton': '80.00',
+            'barge_placements-0-trips': '',
+            'barge_placements-0-station': '',
+            'barge_placements-0-remarks': '',
+        })
+
+        record = RockDailyRecord.objects.get(project=self.project)
+        self.assertRedirects(response, f'/project-controls/rock/{record.pk}/')
+        self.assertEqual(record.day_name, 'Sun')
+        self.assertEqual(record.placed_daily_ton, Decimal('80.00'))
+        self.assertEqual(record.barge_placements.count(), 1)
+
+    def test_rock_update_derives_day_name_and_updates_barge_placement(self):
+        barge = Barge.objects.get(name='Bang Sapan 2')
+        record = RockDailyRecord.objects.create(
+            project=self.project,
+            record_date=date(2026, 5, 11),
+            day_name='Mon',
+            created_by=self.user,
+        )
+        placement = RockBargePlacement.objects.create(
+            record=record,
+            barge=barge,
+            quantity_ton=Decimal('25.00'),
+        )
+
+        response = self.client.post(f'/project-controls/rock/{record.pk}/edit/', {
+            'project': self.project.pk,
+            'record_date': '2026-05-10',
+            'day_name': 'Wrong',
+            'material_type': '',
+            'source_quarry': '',
+            'destination_area': '',
+            'tct_daily_ton': '100.00',
+            'tct_trips': '1',
+            'tct_trucks': '1',
+            'placed_daily_ton': '0',
+            'station_of_core': '',
+            'core_outside_daily': '0',
+            'core_inside_accum': '0',
+            'remarks': '',
+            'barge_placements-TOTAL_FORMS': '1',
+            'barge_placements-INITIAL_FORMS': '1',
+            'barge_placements-MIN_NUM_FORMS': '0',
+            'barge_placements-MAX_NUM_FORMS': '1000',
+            'barge_placements-0-id': placement.pk,
+            'barge_placements-0-barge': barge.pk,
+            'barge_placements-0-quantity_ton': '90.00',
+            'barge_placements-0-trips': '',
+            'barge_placements-0-station': '',
+            'barge_placements-0-remarks': '',
+        })
+
+        self.assertRedirects(response, f'/project-controls/rock/{record.pk}/')
+        record.refresh_from_db()
+        placement.refresh_from_db()
+        self.assertEqual(record.day_name, 'Sun')
+        self.assertEqual(record.placed_daily_ton, Decimal('90.00'))
+        self.assertEqual(placement.quantity_ton, Decimal('90.00'))
+
+    def test_revetment_create_derives_day_name_and_saves_daily_item(self):
+        station = RevetmentStation.objects.create(project=self.project, station='0+000')
+        activity = RevetmentActivity.objects.create(project=self.project, name='Install geotextile')
+
+        response = self.client.post('/project-controls/revetment/new/', {
+            'project': self.project.pk,
+            'record_date': '2026-05-10',
+            'day_name': 'Wrong',
+            'remarks': '',
+            'items-TOTAL_FORMS': '1',
+            'items-INITIAL_FORMS': '0',
+            'items-MIN_NUM_FORMS': '0',
+            'items-MAX_NUM_FORMS': '1000',
+            'items-0-station': station.pk,
+            'items-0-activity': activity.pk,
+            'items-0-quantity_done': '12.500',
+            'items-0-status': 'Ongoing',
+            'items-0-inspection_date': '',
+            'items-0-remarks': '',
+        })
+
+        record = RevetmentDailyRecord.objects.get(project=self.project)
+        self.assertRedirects(response, f'/project-controls/revetment/{record.pk}/')
+        self.assertEqual(record.day_name, 'Sun')
+        self.assertEqual(record.items.count(), 1)
+
+    def test_revetment_update_derives_day_name_and_updates_daily_item(self):
+        station = RevetmentStation.objects.create(project=self.project, station='0+000')
+        activity = RevetmentActivity.objects.create(project=self.project, name='Install geotextile')
+        record = RevetmentDailyRecord.objects.create(
+            project=self.project,
+            record_date=date(2026, 5, 11),
+            day_name='Mon',
+            created_by=self.user,
+        )
+        item = record.items.create(
+            station=station,
+            activity=activity,
+            quantity_done=Decimal('1.000'),
+        )
+
+        response = self.client.post(f'/project-controls/revetment/{record.pk}/edit/', {
+            'project': self.project.pk,
+            'record_date': '2026-05-10',
+            'day_name': 'Wrong',
+            'remarks': '',
+            'items-TOTAL_FORMS': '1',
+            'items-INITIAL_FORMS': '1',
+            'items-MIN_NUM_FORMS': '0',
+            'items-MAX_NUM_FORMS': '1000',
+            'items-0-id': item.pk,
+            'items-0-station': station.pk,
+            'items-0-activity': activity.pk,
+            'items-0-quantity_done': '15.500',
+            'items-0-status': 'Ongoing',
+            'items-0-inspection_date': '',
+            'items-0-remarks': '',
+        })
+
+        self.assertRedirects(response, f'/project-controls/revetment/{record.pk}/')
+        record.refresh_from_db()
+        item.refresh_from_db()
+        self.assertEqual(record.day_name, 'Sun')
+        self.assertEqual(item.quantity_done, Decimal('15.500'))
+
+    def test_recovery_plan_create_derives_daily_item_day_name(self):
+        response = self.client.post('/project-controls/recovery/plans/new/', {
+            'project': self.project.pk,
+            'plan_name': 'Two week plan',
+            'material_type': 'Sand',
+            'start_date': '2026-05-10',
+            'end_date': '2026-05-23',
+            'description': '',
+            'status': 'Draft',
+            'prepared_by': '',
+            'approved_by': '',
+            'daily_items-TOTAL_FORMS': '1',
+            'daily_items-INITIAL_FORMS': '0',
+            'daily_items-MIN_NUM_FORMS': '0',
+            'daily_items-MAX_NUM_FORMS': '1000',
+            'daily_items-0-plan_date': '2026-05-10',
+            'daily_items-0-day_name': 'Wrong',
+            'daily_items-0-planned_quantity': '100.00',
+            'daily_items-0-actual_quantity': '',
+        })
+
+        plan = RecoveryPlan.objects.get(project=self.project)
+        self.assertRedirects(response, f'/project-controls/recovery/plans/{plan.pk}/')
+        self.assertEqual(plan.daily_items.get().day_name, 'Sun')
+
+    def test_recovery_plan_update_derives_daily_item_day_name(self):
+        plan = RecoveryPlan.objects.create(
+            project=self.project,
+            plan_name='Two week plan',
+            material_type='Sand',
+            start_date=date(2026, 5, 10),
+            end_date=date(2026, 5, 23),
+            prepared_by=self.user,
+        )
+        item = plan.daily_items.create(
+            plan_date=date(2026, 5, 11),
+            day_name='Wrong',
+            planned_quantity=Decimal('50.00'),
+        )
+
+        response = self.client.post(f'/project-controls/recovery/plans/{plan.pk}/edit/', {
+            'project': self.project.pk,
+            'plan_name': 'Updated plan',
+            'material_type': 'Sand',
+            'start_date': '2026-05-10',
+            'end_date': '2026-05-23',
+            'description': '',
+            'status': 'Draft',
+            'prepared_by': self.user.pk,
+            'approved_by': '',
+            'daily_items-TOTAL_FORMS': '1',
+            'daily_items-INITIAL_FORMS': '1',
+            'daily_items-MIN_NUM_FORMS': '0',
+            'daily_items-MAX_NUM_FORMS': '1000',
+            'daily_items-0-id': item.pk,
+            'daily_items-0-plan_date': '2026-05-10',
+            'daily_items-0-day_name': 'Wrong',
+            'daily_items-0-planned_quantity': '100.00',
+            'daily_items-0-actual_quantity': '',
+        })
+
+        self.assertRedirects(response, f'/project-controls/recovery/plans/{plan.pk}/')
+        item.refresh_from_db()
+        self.assertEqual(item.day_name, 'Sun')
 
 
 class ProjectControlsDashboardTests(TestCase):

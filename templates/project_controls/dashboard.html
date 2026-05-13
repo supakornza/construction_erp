@@ -3,67 +3,6 @@
 {% block title %}Project Controls Dashboard - Construction ERP{% endblock %}
 {% block page_title %}Project Controls Dashboard{% endblock %}
 
-{% block extra_head %}
-<style>
-  .pc-menu-grid {
-    display: grid;
-    gap: 0.75rem;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  }
-  .pc-menu-card {
-    background: #fff;
-    border: 1px solid #d9e1ea;
-    border-radius: 8px;
-    color: #1f2d3d;
-    display: flex;
-    gap: 0.75rem;
-    min-height: 88px;
-    padding: 0.9rem;
-    text-decoration: none;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
-  }
-  .pc-menu-card:hover {
-    border-color: #0d6efd;
-    box-shadow: 0 6px 16px rgba(13, 110, 253, 0.12);
-    color: #1f2d3d;
-    transform: translateY(-1px);
-  }
-  .pc-menu-icon {
-    align-items: center;
-    border-radius: 8px;
-    display: inline-flex;
-    flex: 0 0 40px;
-    height: 40px;
-    justify-content: center;
-    width: 40px;
-  }
-  .pc-chart-card,
-  .pc-panel {
-    border: 1px solid #d9e1ea;
-    border-radius: 8px;
-  }
-  .pc-chart-wrap {
-    height: 230px;
-    position: relative;
-  }
-  .pc-section-title {
-    align-items: center;
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-  }
-  .pc-kpi-card {
-    border-radius: 8px;
-    height: 100%;
-    padding: 1rem;
-  }
-  .pc-mini-action {
-    font-size: 0.75rem;
-    line-height: 1;
-  }
-</style>
-{% endblock %}
-
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
   <h4 class="mb-0"><i class="fas fa-chart-bar me-2 text-primary"></i>Project Controls</h4>

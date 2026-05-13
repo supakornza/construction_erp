@@ -129,7 +129,7 @@ class _SandBargePlacementBaseFormSet(BaseInlineFormSet):
     def add_fields(self, form, index):
         super().add_fields(form, index)
         # New extra rows: barge is optional (user may leave rows blank)
-        if index >= self.initial_form_count():
+        if index is not None and index >= self.initial_form_count():
             form.fields['barge'].required = False
 
     def save_new_objects(self, commit=True):

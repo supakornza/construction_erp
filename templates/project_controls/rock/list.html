@@ -1,10 +1,10 @@
 ﻿{% extends "base.html" %}
-{% block title %}Rock Summary โ€“ Construction ERP{% endblock %}
+{% block title %}Rock Summary - Construction ERP{% endblock %}
 {% block page_title %}Rock Summary{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-  <h5 class="mb-0"><i class="fas fa-mountain me-2 text-secondary"></i>Rock Daily Records</h5>
+<div class="pc-page-header">
+  <h5 class="pc-page-title"><i class="fas fa-mountain me-2 text-secondary"></i>Rock Daily Records</h5>
   <div class="d-flex gap-2 flex-wrap">
     <a href="{% url 'project_controls:dashboard' %}{% if request.GET.project %}?project={{ request.GET.project }}{% endif %}" class="btn btn-sm btn-outline-primary">
       <i class="fas fa-arrow-left me-1"></i>Material Control
@@ -23,7 +23,7 @@
   </div>
 </div>
 
-<div class="card mb-3">
+<div class="card mb-3 pc-filter-card">
   <div class="card-body py-2">
     <form method="get" class="row g-2 align-items-end">
       <div class="col-md-4">
@@ -50,10 +50,11 @@
   </div>
 </div>
 
+{% url 'project_controls:rock_create' as rock_create_url %}
 <div class="card">
   <div class="table-responsive">
     <table class="table table-sm table-hover mb-0">
-      <thead class="table-dark">
+      <thead class="table-light">
         <tr>
           <th>Date</th><th>Day</th>
           <th>Material</th>
@@ -66,7 +67,7 @@
           <th class="text-end">Available Stock</th>
           <th>Station</th>
           <th>Remarks</th>
-          <th></th>
+          <th class="text-end">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -86,7 +87,7 @@
           </td>
           <td class="small">{{ rec.station_of_core|truncatechars:30 }}</td>
           <td class="small text-muted">{{ rec.remarks|truncatechars:30 }}</td>
-          <td class="text-nowrap">
+          <td class="pc-table-actions">
             <a href="{% url 'project_controls:rock_update' rec.pk %}" class="btn btn-xs btn-outline-secondary" title="Edit"><i class="fas fa-edit"></i></a>
             {% if request.user.is_superuser or request.user.role == 'admin' %}
             <form method="post" action="{% url 'project_controls:rock_delete' rec.pk %}" class="d-inline" onsubmit="return confirm('Delete rock record for {{ rec.record_date|thai_be_date }}?')">
@@ -97,7 +98,11 @@
           </td>
         </tr>
         {% empty %}
-        <tr><td colspan="13" class="text-center text-muted py-4">No rock records found.</td></tr>
+        <tr>
+          <td colspan="13">
+            {% include "project_controls/includes/empty_state.html" with icon_class="fas fa-mountain" title="No rock records found" message="Create the first rock daily record for this filter." action_url=rock_create_url action_label="New Record" %}
+          </td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>

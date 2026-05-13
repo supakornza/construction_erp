@@ -1,22 +1,15 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
-{% block title %}{% if form.instance.pk %}Edit{% else %}New{% endif %} Rock Record – Construction ERP{% endblock %}
+{% load crispy_forms_tags static %}
+{% block title %}{% if form.instance.pk %}Edit{% else %}New{% endif %} Rock Record - Construction ERP{% endblock %}
 {% block page_title %}{% if form.instance.pk %}Edit Rock Record{% else %}New Rock Daily Record{% endif %}{% endblock %}
 
-{% block extra_head %}
-<style>
-  .formset-row td { vertical-align: middle; padding: 4px; }
-  .formset-row input, .formset-row select { font-size:0.85rem; }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="d-flex align-items-center mb-4">
-  <a href="{% url 'project_controls:rock_list' %}" class="btn btn-sm btn-outline-secondary me-3">
-    <i class="fas fa-arrow-left"></i>
-  </a>
-  <h5 class="mb-0">{% if form.instance.pk %}Edit Rock Record - {{ form.instance.record_date|thai_be_date }}{% else %}New Rock Daily Record{% endif %}</h5>
-</div>
+{% url 'project_controls:rock_list' as rock_list_url %}
+{% if form.instance.pk %}
+  {% include "project_controls/includes/page_header.html" with back_url=rock_list_url icon_class="fas fa-mountain text-secondary" title="Edit Rock Record" subtitle=form.instance.record_date|thai_be_date %}
+{% else %}
+  {% include "project_controls/includes/page_header.html" with back_url=rock_list_url icon_class="fas fa-mountain text-secondary" title="New Rock Daily Record" %}
+{% endif %}
 
 <form method="post">
   {% csrf_token %}
@@ -31,14 +24,14 @@
   <div class="card mb-3">
     <div class="card-header d-flex justify-content-between align-items-center">
       <span><i class="fas fa-ship me-2"></i>Barge Placement</span>
-      <button type="button" class="btn btn-sm btn-outline-success add-row-btn" data-formset="barge">
+      <button type="button" class="btn btn-sm btn-outline-success" id="add-barge-btn">
         <i class="fas fa-plus me-1"></i>Add Barge
       </button>
     </div>
     <div class="card-body p-0">
       {{ barge_formset.management_form }}
       <div class="table-responsive">
-        <table class="table table-sm table-bordered mb-0">
+        <table class="table table-sm table-bordered mb-0 pc-form-table">
           <thead class="table-light">
             <tr>
               <th style="min-width:180px">Barge</th>
@@ -46,7 +39,7 @@
               <th style="width:80px">Trips</th>
               <th style="min-width:200px">Station</th>
               <th style="min-width:160px">Remarks</th>
-              <th style="width:40px">Del</th>
+              <th>Del</th>
             </tr>
           </thead>
           <tbody id="barge-tbody">
@@ -69,44 +62,35 @@
     </div>
   </div>
 
-  <div class="d-flex gap-2 mb-5">
-    <button type="submit" class="btn btn-primary btn-lg px-5">
-      <i class="fas fa-save me-2"></i>Save Record
-    </button>
-    <a href="{% url 'project_controls:rock_list' %}" class="btn btn-outline-secondary btn-lg">Cancel</a>
-  </div>
+  <template id="barge-empty-row">
+    <tr class="formset-row" data-formset="barge">
+      <td>{{ barge_formset.empty_form.barge }}{{ barge_formset.empty_form.id }}</td>
+      <td>{{ barge_formset.empty_form.quantity_ton }}</td>
+      <td>{{ barge_formset.empty_form.trips }}</td>
+      <td>{{ barge_formset.empty_form.station }}</td>
+      <td>{{ barge_formset.empty_form.remarks }}</td>
+      <td class="text-center">
+        <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+        {{ barge_formset.empty_form.DELETE }}
+      </td>
+    </tr>
+  </template>
+
+  {% include "project_controls/includes/form_actions.html" with submit_label="Save Record" cancel_url=rock_list_url %}
 </form>
 {% endblock %}
 
 {% block extra_scripts %}
 {% include "project_controls/includes/day_name_sync.html" %}
+<script src="{% static 'js/project_controls/formsets.js' %}"></script>
 <script>
 ProjectControlsDayName.bindById('id_record_date', 'id_day_name');
-
-document.querySelectorAll('.add-row-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const tbody = document.getElementById('barge-tbody');
-    const rows = tbody.querySelectorAll('tr.formset-row');
-    if (!rows.length) return;
-    const prefix = 'rockbargeplacement_set';
-    const total = parseInt(document.getElementById(`id_${prefix}-TOTAL_FORMS`).value);
-    const tmpl = rows[rows.length-1].cloneNode(true);
-    const old = total - 1;
-    tmpl.querySelectorAll('[id],[name]').forEach(el => {
-      if (el.id) el.id = el.id.replace(`-${old}-`, `-${total}-`);
-      if (el.name) el.name = el.name.replace(`-${old}-`, `-${total}-`);
-      if (el.tagName==='INPUT' && el.type!=='checkbox' && el.type!=='hidden') el.value='';
-      if (el.tagName==='SELECT') el.selectedIndex=0;
-      if (el.type==='checkbox') el.checked=false;
-    });
-    const idField = tmpl.querySelector(`[name$="-id"]`);
-    if (idField) idField.value='';
-    tbody.appendChild(tmpl);
-    document.getElementById(`id_${prefix}-TOTAL_FORMS`).value = total+1;
-  });
-});
-document.querySelectorAll('.formset-row input:not([type=checkbox]), .formset-row select').forEach(el => {
-  el.classList.add('form-control', 'form-control-sm');
+ProjectControlsFormsets.applyBootstrapClasses(document.getElementById('barge-tbody'));
+ProjectControlsFormsets.bindAddButton({
+  buttonId: 'add-barge-btn',
+  tbodyId: 'barge-tbody',
+  templateId: 'barge-empty-row',
+  prefix: 'barge_placements',
 });
 </script>
 {% endblock %}

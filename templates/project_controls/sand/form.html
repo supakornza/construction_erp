@@ -1,13 +1,11 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
+{% load static %}
 {% block title %}{% if form.instance.pk %}Edit{% else %}New{% endif %} Sand Record{% endblock %}
 {% block page_title %}{% if form.instance.pk %}Edit Sand Record{% else %}New Sand Daily Record{% endif %}{% endblock %}
 
 {% block content %}
-<div class="d-flex align-items-center mb-4">
-  <a href="{% url 'project_controls:sand_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
-  <h5 class="mb-0">{% if form.instance.pk %}Edit Sand Record{% else %}New Sand Daily Record{% endif %}</h5>
-</div>
+{% url 'project_controls:sand_list' as sand_list_url %}
+{% include "project_controls/includes/page_header.html" with back_url=sand_list_url icon_class="fas fa-water text-info" title=form.instance.pk|yesno:"Edit Sand Record,New Sand Daily Record" %}
 
 <form method="post">
   {% csrf_token %}
@@ -15,34 +13,35 @@
   <div class="card mb-3">
     <div class="card-header"><i class="fas fa-water me-2"></i>Sand Transport & Placement Details</div>
     <div class="card-body">
+      {{ form.non_field_errors }}
       <div class="row g-3">
-        <div class="col-md-4">{{ form.project.label_tag }}{{ form.project }}</div>
-        <div class="col-md-4">{{ form.record_date.label_tag }}{{ form.record_date }}</div>
-        <div class="col-md-4">{{ form.day_name.label_tag }}{{ form.day_name }}</div>
+        <div class="col-md-4">{{ form.project.label_tag }}{{ form.project }}{{ form.project.errors }}</div>
+        <div class="col-md-4">{{ form.record_date.label_tag }}{{ form.record_date }}{{ form.record_date.errors }}</div>
+        <div class="col-md-4">{{ form.day_name.label_tag }}{{ form.day_name }}{{ form.day_name.errors }}</div>
       </div>
       <hr>
       <h6 class="text-info"><i class="fas fa-anchor me-2"></i>Destination: TCT Pier</h6>
       <div class="row g-2">
-        <div class="col-md-3">{{ form.tct_daily_ton.label_tag }}{{ form.tct_daily_ton }}</div>
-        <div class="col-md-3">{{ form.tct_trips.label_tag }}{{ form.tct_trips }}</div>
-        <div class="col-md-3">{{ form.tct_trucks.label_tag }}{{ form.tct_trucks }}</div>
+        <div class="col-md-3">{{ form.tct_daily_ton.label_tag }}{{ form.tct_daily_ton }}{{ form.tct_daily_ton.errors }}</div>
+        <div class="col-md-3">{{ form.tct_trips.label_tag }}{{ form.tct_trips }}{{ form.tct_trips.errors }}</div>
+        <div class="col-md-3">{{ form.tct_trucks.label_tag }}{{ form.tct_trucks }}{{ form.tct_trucks.errors }}</div>
       </div>
       <hr>
       <h6 class="text-primary"><i class="fas fa-warehouse me-2"></i>Destination: Stockpile Sand MTP3</h6>
       <div class="row g-2">
-        <div class="col-md-3">{{ form.mtp3_daily_ton.label_tag }}{{ form.mtp3_daily_ton }}</div>
-        <div class="col-md-3">{{ form.mtp3_trips.label_tag }}{{ form.mtp3_trips }}</div>
-        <div class="col-md-3">{{ form.mtp3_trucks.label_tag }}{{ form.mtp3_trucks }}</div>
+        <div class="col-md-3">{{ form.mtp3_daily_ton.label_tag }}{{ form.mtp3_daily_ton }}{{ form.mtp3_daily_ton.errors }}</div>
+        <div class="col-md-3">{{ form.mtp3_trips.label_tag }}{{ form.mtp3_trips }}{{ form.mtp3_trips.errors }}</div>
+        <div class="col-md-3">{{ form.mtp3_trucks.label_tag }}{{ form.mtp3_trucks }}{{ form.mtp3_trucks.errors }}</div>
       </div>
       <hr>
       <h6 class="text-success"><i class="fas fa-mound me-2"></i>Sand Sources</h6>
       <div class="row g-2">
-        <div class="col-md-4">{{ form.chalothon_daily_ton.label_tag }}{{ form.chalothon_daily_ton }}</div>
-        <div class="col-md-4">{{ form.chalothon_trips.label_tag }}{{ form.chalothon_trips }}</div>
-        <div class="col-md-4">{{ form.chalothon_trucks.label_tag }}{{ form.chalothon_trucks }}</div>
-        <div class="col-md-4">{{ form.khlong_bang_phai_daily_ton.label_tag }}{{ form.khlong_bang_phai_daily_ton }}</div>
-        <div class="col-md-4">{{ form.khlong_bang_phai_trips.label_tag }}{{ form.khlong_bang_phai_trips }}</div>
-        <div class="col-md-4">{{ form.khlong_bang_phai_trucks.label_tag }}{{ form.khlong_bang_phai_trucks }}</div>
+        <div class="col-md-4">{{ form.chalothon_daily_ton.label_tag }}{{ form.chalothon_daily_ton }}{{ form.chalothon_daily_ton.errors }}</div>
+        <div class="col-md-4">{{ form.chalothon_trips.label_tag }}{{ form.chalothon_trips }}{{ form.chalothon_trips.errors }}</div>
+        <div class="col-md-4">{{ form.chalothon_trucks.label_tag }}{{ form.chalothon_trucks }}{{ form.chalothon_trucks.errors }}</div>
+        <div class="col-md-4">{{ form.khlong_bang_phai_daily_ton.label_tag }}{{ form.khlong_bang_phai_daily_ton }}{{ form.khlong_bang_phai_daily_ton.errors }}</div>
+        <div class="col-md-4">{{ form.khlong_bang_phai_trips.label_tag }}{{ form.khlong_bang_phai_trips }}{{ form.khlong_bang_phai_trips.errors }}</div>
+        <div class="col-md-4">{{ form.khlong_bang_phai_trucks.label_tag }}{{ form.khlong_bang_phai_trucks }}{{ form.khlong_bang_phai_trucks.errors }}</div>
       </div>
       <hr>
       <h6><i class="fas fa-water me-2"></i>Offshore Placement</h6>
@@ -51,34 +50,35 @@
           {{ form.offshore_daily_ton.label_tag }}
           <div class="input-group">
             {{ form.offshore_daily_ton }}
-            <span class="input-group-text text-muted" style="font-size:.75rem;" title="Auto-calculated from Offshore Barge Placements below"><i class="fas fa-calculator"></i></span>
+            <span class="input-group-text text-muted" title="Auto-calculated from Offshore Barge Placements below"><i class="fas fa-calculator"></i></span>
           </div>
-          <small class="text-muted">คำนวณอัตโนมัติจาก Offshore Barge Placements</small>
+          {{ form.offshore_daily_ton.errors }}
+          <small class="text-muted">Auto-calculated from Offshore Barge Placements.</small>
         </div>
-        <div class="col-md-8">{{ form.offshore_station.label_tag }}{{ form.offshore_station }}</div>
+        <div class="col-md-8">{{ form.offshore_station.label_tag }}{{ form.offshore_station }}{{ form.offshore_station.errors }}</div>
       </div>
       <hr>
       <h6><i class="fas fa-road me-2"></i>Onshore Placement</h6>
       <div class="row g-2">
-        <div class="col-md-3">{{ form.onshore_daily_ton.label_tag }}{{ form.onshore_daily_ton }}</div>
-        <div class="col-md-3">{{ form.onshore_trips.label_tag }}{{ form.onshore_trips }}</div>
-        <div class="col-md-3">{{ form.onshore_trucks.label_tag }}{{ form.onshore_trucks }}</div>
+        <div class="col-md-3">{{ form.onshore_daily_ton.label_tag }}{{ form.onshore_daily_ton }}{{ form.onshore_daily_ton.errors }}</div>
+        <div class="col-md-3">{{ form.onshore_trips.label_tag }}{{ form.onshore_trips }}{{ form.onshore_trips.errors }}</div>
+        <div class="col-md-3">{{ form.onshore_trucks.label_tag }}{{ form.onshore_trucks }}{{ form.onshore_trucks.errors }}</div>
       </div>
       <hr>
       <h6><i class="fas fa-border-all me-2"></i>Plot Tank Quantities</h6>
       <div class="row g-2">
-        <div class="col-md-3">{{ form.inside_plot_daily.label_tag }}{{ form.inside_plot_daily }}</div>
-        <div class="col-md-3">{{ form.outside_plot_daily.label_tag }}{{ form.outside_plot_daily }}</div>
+        <div class="col-md-3">{{ form.inside_plot_daily.label_tag }}{{ form.inside_plot_daily }}{{ form.inside_plot_daily.errors }}</div>
+        <div class="col-md-3">{{ form.outside_plot_daily.label_tag }}{{ form.outside_plot_daily }}{{ form.outside_plot_daily.errors }}</div>
       </div>
       <hr>
       <h6 class="text-warning"><i class="fas fa-cubes me-2"></i>Remaining Stock</h6>
       <div class="row g-2">
-        <div class="col-md-3">{{ form.remaining_tct.label_tag }}{{ form.remaining_tct }}</div>
-        <div class="col-md-3">{{ form.remaining_mtp3.label_tag }}{{ form.remaining_mtp3 }}</div>
+        <div class="col-md-3">{{ form.remaining_tct.label_tag }}{{ form.remaining_tct }}{{ form.remaining_tct.errors }}</div>
+        <div class="col-md-3">{{ form.remaining_mtp3.label_tag }}{{ form.remaining_mtp3 }}{{ form.remaining_mtp3.errors }}</div>
       </div>
       <hr>
       <div class="row g-2">
-        <div class="col-12">{{ form.remarks.label_tag }}{{ form.remarks }}</div>
+        <div class="col-12">{{ form.remarks.label_tag }}{{ form.remarks }}{{ form.remarks.errors }}</div>
       </div>
     </div>
   </div>
@@ -90,12 +90,19 @@
     </div>
     <div class="card-body p-0">
       {{ barge_formset.management_form }}
+      {{ barge_formset.non_form_errors }}
       <div class="table-responsive">
-        <table class="table table-sm table-bordered mb-0">
+        <table class="table table-sm table-bordered mb-0 pc-form-table">
           <thead class="table-light">
             <tr>
-              <th>Barge</th><th style="width:120px">Qty (Ton)</th><th style="width:80px">Trips</th>
-              <th>Source</th><th>Destination</th><th style="width:120px">Type</th><th>Station</th><th style="width:40px">Del</th>
+              <th style="min-width:160px">Barge</th>
+              <th style="width:120px">Qty (Ton)</th>
+              <th style="width:80px">Trips</th>
+              <th style="min-width:150px">Source</th>
+              <th style="min-width:150px">Destination</th>
+              <th style="width:120px">Type</th>
+              <th style="min-width:160px">Station</th>
+              <th>Del</th>
             </tr>
           </thead>
           <tbody id="sand-barge-tbody">
@@ -120,74 +127,37 @@
     </div>
   </div>
 
-  <div class="d-flex gap-2 mb-5">
-    <button type="submit" class="btn btn-primary btn-lg px-5"><i class="fas fa-save me-2"></i>Save Record</button>
-    <a href="{% url 'project_controls:sand_list' %}" class="btn btn-outline-secondary btn-lg">Cancel</a>
-  </div>
+  <template id="sand-barge-empty-row">
+    <tr class="formset-row">
+      <td>{{ barge_formset.empty_form.barge }}{{ barge_formset.empty_form.id }}</td>
+      <td>{{ barge_formset.empty_form.quantity_ton }}</td>
+      <td>{{ barge_formset.empty_form.trips }}</td>
+      <td>{{ barge_formset.empty_form.source }}</td>
+      <td>{{ barge_formset.empty_form.destination }}</td>
+      <td>{{ barge_formset.empty_form.placement_type }}</td>
+      <td>{{ barge_formset.empty_form.station }}</td>
+      <td class="text-center">
+        <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+        {{ barge_formset.empty_form.DELETE }}
+      </td>
+    </tr>
+  </template>
+
+  {% include "project_controls/includes/form_actions.html" with submit_label="Save Record" cancel_url=sand_list_url %}
 </form>
 {% endblock %}
 
 {% block extra_scripts %}
 {% include "project_controls/includes/day_name_sync.html" %}
+<script src="{% static 'js/project_controls/formsets.js' %}"></script>
 <script>
-const BARGE_PREFIX = 'barge_placements';
-
-function applyBootstrapClasses(root) {
-  root.querySelectorAll('input,select,textarea').forEach(el => {
-    if (!el.classList.contains('form-control') && !el.classList.contains('form-select')) {
-      if (el.tagName === 'SELECT') el.classList.add('form-select', 'form-select-sm');
-      else if (el.type !== 'checkbox') el.classList.add('form-control', 'form-control-sm');
-    }
-  });
-}
-applyBootstrapClasses(document);
-
 ProjectControlsDayName.bindById('id_record_date', 'id_day_name');
-
-function bindDeleteButtons(tbody) {
-  tbody.querySelectorAll('.formset-delete-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const row = this.closest('tr');
-      const deleteChk = row.querySelector('input[type="checkbox"][name$="-DELETE"]');
-      if (deleteChk) {
-        deleteChk.checked = true;
-        row.style.opacity = '0.4';
-        row.style.textDecoration = 'line-through';
-      } else {
-        row.remove();
-      }
-    });
-  });
-}
-
-const tbody = document.getElementById('sand-barge-tbody');
-bindDeleteButtons(tbody);
-
-document.getElementById('add-barge-btn')?.addEventListener('click', () => {
-  const rows = tbody.querySelectorAll('tr.formset-row');
-  const totalInput = document.getElementById('id_' + BARGE_PREFIX + '-TOTAL_FORMS');
-  if (!totalInput) { console.error('TOTAL_FORMS not found for prefix:', BARGE_PREFIX); return; }
-  const total = parseInt(totalInput.value);
-  if (!rows.length) return;
-
-  const tmpl = rows[rows.length - 1].cloneNode(true);
-  const old = total - 1;
-  tmpl.querySelectorAll('[id],[name]').forEach(el => {
-    if (el.id)   el.id   = el.id.replace('-' + old + '-', '-' + total + '-');
-    if (el.name) el.name = el.name.replace('-' + old + '-', '-' + total + '-');
-    if (el.tagName === 'INPUT' && el.type !== 'checkbox' && el.type !== 'hidden') el.value = '';
-    if (el.tagName === 'SELECT') el.selectedIndex = 0;
-    if (el.type === 'checkbox') el.checked = false;
-  });
-  const idField = tmpl.querySelector('[name$="-id"]');
-  if (idField) idField.value = '';
-  tmpl.style.opacity = '';
-  tmpl.style.textDecoration = '';
-
-  tbody.appendChild(tmpl);
-  totalInput.value = total + 1;
-  applyBootstrapClasses(tmpl);
-  bindDeleteButtons(tmpl);
+ProjectControlsFormsets.applyBootstrapClasses(document);
+ProjectControlsFormsets.bindAddButton({
+  buttonId: 'add-barge-btn',
+  tbodyId: 'sand-barge-tbody',
+  templateId: 'sand-barge-empty-row',
+  prefix: 'barge_placements',
 });
 </script>
 {% endblock %}

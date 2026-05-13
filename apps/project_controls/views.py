@@ -16,7 +16,7 @@ from apps.accounts.mixins import AdminRequiredMixin, ApproverRequiredMixin
 from apps.projects.models import Project
 from .models import (
     Barge, RockDailyRecord, RockBargePlacement,
-    SandDailyRecord, SandBargePlacement, SandAllocation,
+    SandDailyRecord, SandAllocation,
     RevetmentStation, RevetmentActivity, RevetmentDailyRecord,
     RecoveryPlan, RecoveryPlanDailyItem,
     RecoveryActionPlan, RecoveryActionItem, RecoveryActionDailyProgress,
@@ -39,32 +39,12 @@ from .services import (
     get_rock_dashboard_data, get_sand_dashboard_data, get_revetment_dashboard_data,
     get_rap_dashboard_data,
 )
-
-
-DAY_ABBREVIATIONS = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
-
-
-def english_day_abbreviation(value):
-    return DAY_ABBREVIATIONS[value.weekday()] if value else ''
-
-
-def save_recovery_plan_daily_items(formset):
-    changed_items = formset.save(commit=False)
-    for deleted in formset.deleted_objects:
-        deleted.delete()
-    for item in changed_items:
-        item.day_name = english_day_abbreviation(item.plan_date)
-        item.save()
-    for form in formset.forms:
-        if form in formset.deleted_forms or not form.cleaned_data:
-            continue
-        item = form.instance
-        if item.pk and item.plan_date:
-            expected_day_name = english_day_abbreviation(item.plan_date)
-            if item.day_name != expected_day_name:
-                item.day_name = expected_day_name
-                item.save(update_fields=['day_name'])
-    formset.save_m2m()
+from .workflows import (
+    save_recovery_plan,
+    save_revetment_record,
+    save_rock_record,
+    save_sand_record,
+)
 
 
 # ── Project Controls Main Dashboard ──────────────────────────────────────────
@@ -145,19 +125,12 @@ class RockCreateView(LoginRequiredMixin, CreateView):
         ctx = self.get_context_data()
         barge_fs = ctx['barge_formset']
         if barge_fs.is_valid():
-            with transaction.atomic():
-                form.instance.created_by = self.request.user
-                form.instance.day_name = english_day_abbreviation(form.cleaned_data.get('record_date'))
-                self.object = form.save()
-                barge_fs.instance = self.object
-                barge_fs.save()
-                # Auto-sum placed_daily_ton from barges
-                total = sum(
-                    bp.quantity_ton for bp in self.object.barge_placements.all()
-                )
-                self.object.placed_daily_ton = total
-                self.object.save(update_fields=['placed_daily_ton'])
-                recalculate_rock_accumulatives(self.object.project)
+            self.object = save_rock_record(
+                form,
+                barge_fs,
+                user=self.request.user,
+                set_created_by=True,
+            )
             messages.success(self.request, 'Rock daily record saved.')
             return redirect(self.get_success_url())
         return self.render_to_response(self.get_context_data(form=form))
@@ -189,15 +162,7 @@ class RockUpdateView(LoginRequiredMixin, UpdateView):
         ctx = self.get_context_data()
         barge_fs = ctx['barge_formset']
         if barge_fs.is_valid():
-            with transaction.atomic():
-                form.instance.day_name = english_day_abbreviation(form.cleaned_data.get('record_date'))
-                self.object = form.save()
-                barge_fs.instance = self.object
-                barge_fs.save()
-                total = sum(bp.quantity_ton for bp in self.object.barge_placements.all())
-                self.object.placed_daily_ton = total
-                self.object.save(update_fields=['placed_daily_ton'])
-                recalculate_rock_accumulatives(self.object.project)
+            self.object = save_rock_record(form, barge_fs)
             messages.success(self.request, 'Rock record updated.')
             return redirect(self.get_success_url())
         return self.render_to_response(self.get_context_data(form=form))
@@ -316,26 +281,12 @@ class SandCreateView(LoginRequiredMixin, CreateView):
             return self.render_to_response(
                 self.get_context_data(form=form, barge_formset=barge_fs)
             )
-        with transaction.atomic():
-            form.instance.created_by = self.request.user
-            tct = form.cleaned_data.get('tct_daily_ton', Decimal('0')) or Decimal('0')
-            mtp3 = form.cleaned_data.get('mtp3_daily_ton', Decimal('0')) or Decimal('0')
-            form.instance.day_name = english_day_abbreviation(form.cleaned_data.get('record_date'))
-            form.instance.total_daily_ton = tct + mtp3
-            self.object = form.save()
-            # Re-bind with saved instance so FK is correctly set on new rows
-            barge_fs2 = SandBargePlacementFormSet(self.request.POST, instance=self.object)
-            barge_fs2.is_valid()
-            barge_fs2.save()
-            offshore_total = sum(
-                bp.quantity_ton
-                for bp in self.object.barge_placements.filter(
-                    placement_type=SandBargePlacement.PLACEMENT_OFFSHORE
-                )
-            )
-            self.object.offshore_daily_ton = offshore_total
-            self.object.save(update_fields=['offshore_daily_ton'])
-            recalculate_sand_accumulatives(self.object.project)
+        self.object = save_sand_record(
+            form,
+            barge_fs,
+            user=self.request.user,
+            set_created_by=True,
+        )
         messages.success(self.request, 'Sand daily record saved.')
         return redirect(self.get_success_url())
 
@@ -369,23 +320,7 @@ class SandUpdateView(LoginRequiredMixin, UpdateView):
             return self.render_to_response(
                 self.get_context_data(form=form, barge_formset=barge_fs)
             )
-        with transaction.atomic():
-            tct = form.cleaned_data.get('tct_daily_ton', Decimal('0')) or Decimal('0')
-            mtp3 = form.cleaned_data.get('mtp3_daily_ton', Decimal('0')) or Decimal('0')
-            form.instance.day_name = english_day_abbreviation(form.cleaned_data.get('record_date'))
-            form.instance.total_daily_ton = tct + mtp3
-            self.object = form.save()
-            barge_fs.instance = self.object
-            barge_fs.save()
-            offshore_total = sum(
-                bp.quantity_ton
-                for bp in self.object.barge_placements.filter(
-                    placement_type=SandBargePlacement.PLACEMENT_OFFSHORE
-                )
-            )
-            self.object.offshore_daily_ton = offshore_total
-            self.object.save(update_fields=['offshore_daily_ton'])
-            recalculate_sand_accumulatives(self.object.project)
+        self.object = save_sand_record(form, barge_fs)
         messages.success(self.request, 'Sand record updated.')
         return redirect(self.get_success_url())
 
@@ -538,12 +473,12 @@ class RevetmentRecordCreateView(LoginRequiredMixin, CreateView):
             form_kwargs={'project': project},
         )
         if item_formset.is_valid():
-            with transaction.atomic():
-                form.instance.created_by = self.request.user
-                form.instance.day_name = english_day_abbreviation(form.cleaned_data.get('record_date'))
-                self.object = form.save()
-                item_formset.instance = self.object
-                item_formset.save()
+            self.object = save_revetment_record(
+                form,
+                item_formset,
+                user=self.request.user,
+                set_created_by=True,
+            )
             messages.success(self.request, 'Revetment daily record saved.')
             return redirect(self.get_success_url())
         return self.render_to_response(self.get_context_data(form=form, item_formset=item_formset))
@@ -593,11 +528,7 @@ class RevetmentRecordUpdateView(LoginRequiredMixin, UpdateView):
             form_kwargs={'project': project},
         )
         if item_formset.is_valid():
-            with transaction.atomic():
-                form.instance.day_name = english_day_abbreviation(form.cleaned_data.get('record_date'))
-                self.object = form.save()
-                item_formset.instance = self.object
-                item_formset.save()
+            self.object = save_revetment_record(form, item_formset)
             messages.success(self.request, 'Revetment record updated.')
             return redirect(self.get_success_url())
         return self.render_to_response(self.get_context_data(form=form, item_formset=item_formset))
@@ -763,12 +694,12 @@ class RecoveryPlanCreateView(LoginRequiredMixin, CreateView):
         ctx = self.get_context_data()
         item_fs = ctx['item_formset']
         if item_fs.is_valid():
-            with transaction.atomic():
-                form.instance.prepared_by = self.request.user
-                self.object = form.save()
-                item_fs.instance = self.object
-                save_recovery_plan_daily_items(item_fs)
-                recalculate_recovery_plan(self.object)
+            self.object = save_recovery_plan(
+                form,
+                item_fs,
+                user=self.request.user,
+                set_prepared_by=True,
+            )
             messages.success(self.request, 'Recovery plan created.')
             return redirect(self.get_success_url())
         return self.render_to_response(self.get_context_data(form=form))
@@ -822,11 +753,7 @@ class RecoveryPlanUpdateView(LoginRequiredMixin, UpdateView):
         ctx = self.get_context_data()
         item_fs = ctx['item_formset']
         if item_fs.is_valid():
-            with transaction.atomic():
-                self.object = form.save()
-                item_fs.instance = self.object
-                save_recovery_plan_daily_items(item_fs)
-                recalculate_recovery_plan(self.object)
+            self.object = save_recovery_plan(form, item_fs)
             messages.success(self.request, 'Recovery plan updated.')
             return redirect(self.get_success_url())
         return self.render_to_response(self.get_context_data(form=form))

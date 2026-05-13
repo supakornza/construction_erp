@@ -1,10 +1,10 @@
 ﻿{% extends "base.html" %}
-{% block title %}Sand Summary โ€“ Construction ERP{% endblock %}
+{% block title %}Sand Summary - Construction ERP{% endblock %}
 {% block page_title %}Sand Summary{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-  <h5 class="mb-0"><i class="fas fa-water me-2 text-info"></i>Sand Daily Records</h5>
+<div class="pc-page-header">
+  <h5 class="pc-page-title"><i class="fas fa-water me-2 text-info"></i>Sand Daily Records</h5>
   <div class="d-flex gap-2 flex-wrap">
     <a href="{% url 'project_controls:dashboard' %}{% if request.GET.project %}?project={{ request.GET.project }}{% endif %}" class="btn btn-sm btn-outline-primary">
       <i class="fas fa-arrow-left me-1"></i>Material Control
@@ -26,10 +26,11 @@
   </div>
 </div>
 
-<div class="card mb-3">
+<div class="card mb-3 pc-filter-card">
   <div class="card-body py-2">
     <form method="get" class="row g-2 align-items-end">
       <div class="col-md-5">
+        <label class="form-label small">Project</label>
         <select name="project" class="form-select form-select-sm">
           <option value="">All Projects</option>
           {% for p in projects %}
@@ -42,12 +43,14 @@
   </div>
 </div>
 
+{% url 'project_controls:sand_create' as sand_create_url %}
 <div class="card">
   <div class="table-responsive">
     <table class="table table-sm table-hover mb-0">
-      <thead class="table-dark">
+      <thead class="table-light">
         <tr>
           <th>Date</th>
+          <th>Day</th>
           <th class="text-end">TCT Pier Daily (T)</th>
           <th class="text-end">TCT Pier Accum</th>
           <th class="text-end">MTP3 Stock Daily (T)</th>
@@ -60,13 +63,14 @@
           <th class="text-end">Onshore (T)</th>
           <th class="text-end">Rem. TCT</th>
           <th class="text-end">Rem. MTP3</th>
-          <th></th>
+          <th class="text-end">Actions</th>
         </tr>
       </thead>
       <tbody>
         {% for rec in records %}
         <tr>
           <td><a href="{% url 'project_controls:sand_detail' rec.pk %}">{{ rec.record_date|thai_be_date }}</a></td>
+          <td class="{% if rec.day_name == 'Sun' %}text-danger fw-semibold{% else %}text-muted{% endif %} small">{{ rec.day_name }}</td>
           <td class="text-end">{{ rec.tct_daily_ton|floatformat:2|intcomma }}</td>
           <td class="text-end fw-semibold">{{ rec.tct_accum_ton|floatformat:2|intcomma }}</td>
           <td class="text-end">{{ rec.mtp3_daily_ton|floatformat:2|intcomma }}</td>
@@ -79,7 +83,7 @@
           <td class="text-end">{{ rec.onshore_daily_ton|floatformat:2|intcomma }}</td>
           <td class="text-end text-warning">{{ rec.remaining_tct|floatformat:2|intcomma }}</td>
           <td class="text-end text-warning">{{ rec.remaining_mtp3|floatformat:2|intcomma }}</td>
-          <td class="text-nowrap">
+          <td class="pc-table-actions">
             <a href="{% url 'project_controls:sand_update' rec.pk %}" class="btn btn-xs btn-outline-secondary" title="Edit"><i class="fas fa-edit"></i></a>
             {% if request.user.is_superuser or request.user.role == 'admin' %}
             <form method="post" action="{% url 'project_controls:sand_delete' rec.pk %}" class="d-inline" onsubmit="return confirm('Delete sand record for {{ rec.record_date|thai_be_date }}?')">
@@ -90,7 +94,11 @@
           </td>
         </tr>
         {% empty %}
-        <tr><td colspan="14" class="text-center text-muted py-4">No sand records found.</td></tr>
+        <tr>
+          <td colspan="15">
+            {% include "project_controls/includes/empty_state.html" with icon_class="fas fa-water" title="No sand records found" message="Create the first sand daily record for this filter." action_url=sand_create_url action_label="New Record" %}
+          </td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>

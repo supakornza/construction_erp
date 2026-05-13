@@ -3,10 +3,10 @@
 {% block page_title %}Revetment Records{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+<div class="pc-page-header">
   <div class="d-flex align-items-center gap-2">
     <a href="{% url 'project_controls:revetment_dashboard' %}{% if request.GET.project %}?project={{ request.GET.project }}{% endif %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left"></i></a>
-    <h5 class="mb-0"><i class="fas fa-layer-group me-2 text-success"></i>Revetment Daily Records</h5>
+    <h5 class="pc-page-title"><i class="fas fa-layer-group me-2 text-success"></i>Revetment Daily Records</h5>
   </div>
   <div class="d-flex gap-2">
     <a href="{% url 'project_controls:revetment_setup' %}{% if request.GET.project %}?project={{ request.GET.project }}{% endif %}" class="btn btn-sm btn-outline-success"><i class="fas fa-sliders-h me-1"></i>Setup</a>
@@ -14,7 +14,7 @@
   </div>
 </div>
 
-<div class="card mb-3">
+<div class="card mb-3 pc-filter-card">
   <div class="card-body">
     <form method="get" class="row g-2 align-items-end">
       <div class="col-md-4">
@@ -41,12 +41,14 @@
   </div>
 </div>
 
+{% url 'project_controls:revetment_create' as revetment_create_url %}
 <div class="card">
   <div class="table-responsive">
     <table class="table table-hover mb-0 align-middle">
       <thead class="table-light">
         <tr>
           <th>Date</th>
+          <th>Day</th>
           <th>Project</th>
           <th class="text-end">Items</th>
           <th class="text-end">Total Qty</th>
@@ -58,6 +60,7 @@
         {% for record in records %}
         <tr>
           <td><a href="{% url 'project_controls:revetment_detail' record.pk %}">{{ record.record_date|thai_be_date }}</a></td>
+          <td class="{% if record.day_name == 'Sun' %}text-danger fw-semibold{% else %}text-muted{% endif %} small">{{ record.day_name }}</td>
           <td>{{ record.project.project_name }}</td>
           <td class="text-end">{{ record.items.count|intcomma }}</td>
           <td class="text-end fw-semibold">{{ record.total_quantity|floatformat:3|intcomma }}</td>
@@ -67,7 +70,11 @@
           </td>
         </tr>
         {% empty %}
-        <tr><td colspan="6" class="text-center text-muted py-4">No Revetment records found.</td></tr>
+        <tr>
+          <td colspan="7">
+            {% include "project_controls/includes/empty_state.html" with icon_class="fas fa-layer-group" title="No revetment records found" message="Create the first revetment daily entry for this filter." action_url=revetment_create_url action_label="New Entry" %}
+          </td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>
