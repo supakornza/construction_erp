@@ -1,5 +1,5 @@
 ﻿{% extends "base.html" %}
-{% block title %}Recovery Plan โ€“ Construction ERP{% endblock %}
+{% block title %}Recovery Plan - Construction ERP{% endblock %}
 {% block page_title %}Recovery Plan Detail{% endblock %}
 
 {% block content %}
@@ -94,7 +94,7 @@
             <span class="badge {% if item.achievement_percent >= 100 %}bg-success{% elif item.achievement_percent >= 80 %}bg-warning text-dark{% else %}bg-danger{% endif %}">
               {{ item.achievement_percent|floatformat:1|intcomma }}%
             </span>
-            {% else %}โ€“{% endif %}
+            {% else %}-{% endif %}
           </td>
           <td class="text-end text-muted">{{ item.plan_accum|floatformat:2|intcomma }}</td>
           <td class="text-end text-muted">{{ item.actual_accum|floatformat:2|intcomma }}</td>

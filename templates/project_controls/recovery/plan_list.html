@@ -54,7 +54,7 @@
             <span class="badge {% if plan.achievement_pct >= 100 %}bg-success{% elif plan.achievement_pct >= 80 %}bg-warning text-dark{% else %}bg-danger{% endif %}">
               {{ plan.achievement_pct|floatformat:1|intcomma }}%
             </span>
-            {% else %}โ€“{% endif %}
+            {% else %}-{% endif %}
           </td>
           <td>
             <a href="{% url 'project_controls:recovery_plan_detail' plan.pk %}" class="btn btn-xs btn-outline-secondary"><i class="fas fa-eye"></i></a>

@@ -558,6 +558,18 @@ class RecoveryPlan(models.Model):
             return round(float(self.total_actual) / float(self.total_planned) * 100, 1)
         return 0
 
+    @property
+    def total_plan(self):
+        return self.total_planned
+
+    @property
+    def total_deviation(self):
+        return self.total_actual - self.total_planned
+
+    @property
+    def achievement_pct(self):
+        return self.achievement_percent
+
 
 class RecoveryPlanDailyItem(models.Model):
     recovery_plan = models.ForeignKey(RecoveryPlan, on_delete=models.CASCADE, related_name='daily_items')
@@ -575,6 +587,18 @@ class RecoveryPlanDailyItem(models.Model):
 
     def __str__(self):
         return f"{self.recovery_plan.plan_name} – {self.plan_date}"
+
+    @property
+    def plan_quantity(self):
+        return self.planned_quantity
+
+    @property
+    def plan_accum(self):
+        return self.accumulative_planned
+
+    @property
+    def actual_accum(self):
+        return self.accumulative_actual
 
     @property
     def deviation(self):
