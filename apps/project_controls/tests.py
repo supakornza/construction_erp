@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 
 from apps.projects.models import Project
+from apps.project_controls.forms import SandDailyRecordForm
 from apps.project_controls.models import (
     Barge,
     RockBargePlacement,
@@ -43,6 +44,155 @@ def make_project(user):
         status='Active',
         created_by=user,
     )
+
+
+class SandDailyRecordFormTests(TestCase):
+    def setUp(self):
+        self.user = make_user()
+        self.project = make_project(self.user)
+
+    def test_record_date_renders_native_date_value(self):
+        record = SandDailyRecord.objects.create(
+            project=self.project,
+            record_date=date(2026, 5, 10),
+            day_name='Sun',
+        )
+
+        form = SandDailyRecordForm(instance=record)
+
+        self.assertIn('type="date"', str(form['record_date']))
+        self.assertIn('value="2026-05-10"', str(form['record_date']))
+
+
+class SandDailyRecordEditTests(TestCase):
+    def setUp(self):
+        self.user = make_user()
+        self.project = make_project(self.user)
+        self.client = Client()
+        self.client.force_login(self.user)
+        self.record = SandDailyRecord.objects.create(
+            project=self.project,
+            record_date=date(2026, 5, 10),
+            day_name='Sun',
+            tct_daily_ton=Decimal('252.00'),
+            tct_trips=6,
+            tct_trucks=1,
+            mtp3_daily_ton=Decimal('916.20'),
+            mtp3_trips=28,
+            mtp3_trucks=9,
+            khlong_bang_phai_daily_ton=Decimal('364.00'),
+            offshore_daily_ton=Decimal('2982.78'),
+            offshore_station='45145.914',
+            onshore_daily_ton=Decimal('27128.54'),
+            onshore_trucks=500,
+            remaining_tct=Decimal('500.00'),
+            remaining_mtp3=Decimal('5900.00'),
+            created_by=self.user,
+        )
+        self.barge_a = Barge.objects.get(name='Bang Sapan 2')
+        self.barge_b = Barge.objects.get(name='MTP8')
+        self.placement_a = SandBargePlacement.objects.create(
+            record=self.record,
+            barge=self.barge_a,
+            quantity_ton=Decimal('18.00'),
+            trips=None,
+            destination='Offshore Placement',
+            placement_type=SandBargePlacement.PLACEMENT_OFFSHORE,
+        )
+        self.placement_b = SandBargePlacement.objects.create(
+            record=self.record,
+            barge=self.barge_b,
+            quantity_ton=Decimal('1532.20'),
+            trips=None,
+            destination='Offshore Placement',
+            placement_type=SandBargePlacement.PLACEMENT_OFFSHORE,
+        )
+
+    def test_edit_saves_existing_barge_placements(self):
+        response = self.client.post(
+            f'/project-controls/sand/{self.record.pk}/edit/',
+            {
+                'project': self.project.pk,
+                'record_date': '2026-05-10',
+                'day_name': 'Sun',
+                'tct_daily_ton': '252.00',
+                'tct_trips': '6',
+                'tct_trucks': '1',
+                'mtp3_daily_ton': '916.20',
+                'mtp3_trips': '28',
+                'mtp3_trucks': '9',
+                'chalothon_daily_ton': '0',
+                'chalothon_trips': '0',
+                'chalothon_trucks': '0',
+                'khlong_bang_phai_daily_ton': '364.00',
+                'khlong_bang_phai_trips': '0',
+                'khlong_bang_phai_trucks': '0',
+                'offshore_daily_ton': '2982.78',
+                'offshore_station': '45145.914',
+                'onshore_daily_ton': '27128.54',
+                'onshore_trips': '0',
+                'onshore_trucks': '500',
+                'inside_plot_daily': '0',
+                'outside_plot_daily': '0',
+                'remaining_tct': '500.00',
+                'remaining_mtp3': '5900.00',
+                'remarks': '',
+                'barge_placements-TOTAL_FORMS': '6',
+                'barge_placements-INITIAL_FORMS': '2',
+                'barge_placements-MIN_NUM_FORMS': '0',
+                'barge_placements-MAX_NUM_FORMS': '1000',
+                'barge_placements-0-id': self.placement_a.pk,
+                'barge_placements-0-barge': self.barge_a.pk,
+                'barge_placements-0-quantity_ton': '20.00',
+                'barge_placements-0-trips': '',
+                'barge_placements-0-source': '',
+                'barge_placements-0-destination': 'Offshore Placement',
+                'barge_placements-0-placement_type': 'Offshore',
+                'barge_placements-0-station': '',
+                'barge_placements-1-id': self.placement_b.pk,
+                'barge_placements-1-barge': self.barge_b.pk,
+                'barge_placements-1-quantity_ton': '1532.20',
+                'barge_placements-1-trips': '',
+                'barge_placements-1-source': '',
+                'barge_placements-1-destination': 'Offshore Placement',
+                'barge_placements-1-placement_type': 'Offshore',
+                'barge_placements-1-station': '',
+                'barge_placements-2-barge': '',
+                'barge_placements-2-quantity_ton': '0',
+                'barge_placements-2-trips': '',
+                'barge_placements-2-source': '',
+                'barge_placements-2-destination': '',
+                'barge_placements-2-placement_type': 'Offshore',
+                'barge_placements-2-station': '',
+                'barge_placements-3-barge': '',
+                'barge_placements-3-quantity_ton': '0',
+                'barge_placements-3-trips': '',
+                'barge_placements-3-source': '',
+                'barge_placements-3-destination': '',
+                'barge_placements-3-placement_type': 'Offshore',
+                'barge_placements-3-station': '',
+                'barge_placements-4-barge': '',
+                'barge_placements-4-quantity_ton': '0',
+                'barge_placements-4-trips': '',
+                'barge_placements-4-source': '',
+                'barge_placements-4-destination': '',
+                'barge_placements-4-placement_type': 'Offshore',
+                'barge_placements-4-station': '',
+                'barge_placements-5-barge': '',
+                'barge_placements-5-quantity_ton': '0',
+                'barge_placements-5-trips': '',
+                'barge_placements-5-source': '',
+                'barge_placements-5-destination': '',
+                'barge_placements-5-placement_type': 'Offshore',
+                'barge_placements-5-station': '',
+            },
+        )
+
+        self.assertRedirects(response, f'/project-controls/sand/{self.record.pk}/')
+        self.record.refresh_from_db()
+        self.placement_a.refresh_from_db()
+        self.assertEqual(self.placement_a.quantity_ton, Decimal('20.00'))
+        self.assertEqual(self.record.offshore_daily_ton, Decimal('1552.20'))
 
 
 class ProjectControlsDashboardTests(TestCase):

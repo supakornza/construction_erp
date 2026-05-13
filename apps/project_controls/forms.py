@@ -23,7 +23,7 @@ class RockDailyRecordForm(forms.ModelForm):
                   'placed_daily_ton', 'station_of_core',
                   'core_outside_daily', 'core_inside_accum', 'remarks']
         widgets = {
-            'record_date': forms.DateInput(attrs={'type': 'date'}),
+            'record_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
             'station_of_core': forms.TextInput(),
         }
@@ -85,8 +85,6 @@ class RockStationProgressForm(forms.ModelForm):
 
 
 class SandDailyRecordForm(forms.ModelForm):
-    sand_source = forms.ChoiceField(required=False, label='Legacy/other source name')
-
     class Meta:
         model = SandDailyRecord
         fields = [
@@ -95,7 +93,6 @@ class SandDailyRecordForm(forms.ModelForm):
             'mtp3_daily_ton', 'mtp3_trips', 'mtp3_trucks',
             'chalothon_daily_ton', 'chalothon_trips', 'chalothon_trucks',
             'khlong_bang_phai_daily_ton', 'khlong_bang_phai_trips', 'khlong_bang_phai_trucks',
-            'sand_source', 'oswald_daily_ton', 'oswald_trips', 'oswald_trucks',
             'offshore_daily_ton', 'offshore_station',
             'onshore_daily_ton', 'onshore_trips', 'onshore_trucks',
             'inside_plot_daily', 'outside_plot_daily',
@@ -103,19 +100,13 @@ class SandDailyRecordForm(forms.ModelForm):
             'remarks',
         ]
         widgets = {
-            'record_date': forms.DateInput(attrs={'type': 'date'}),
+            'record_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
             'offshore_daily_ton': forms.NumberInput(attrs={'readonly': 'readonly', 'style': 'background:#f8f9fa;'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        source_values = ['Chalothon Sand Pit', 'Khlong Bang Phai (Oswald)']
-        current_source = self.initial.get('sand_source') or getattr(self.instance, 'sand_source', '') or ''
-        for value in ['Oswald', current_source]:
-            if value and value not in source_values:
-                source_values.append(value)
-        self.fields['sand_source'].choices = [('', '---------')] + [(source, source) for source in source_values]
         self.fields['tct_daily_ton'].label = 'TCT Pier daily ton'
         self.fields['tct_trips'].label = 'TCT Pier trips'
         self.fields['tct_trucks'].label = 'TCT Pier trucks'
@@ -128,9 +119,6 @@ class SandDailyRecordForm(forms.ModelForm):
         self.fields['khlong_bang_phai_daily_ton'].label = 'Khlong Bang Phai / Oswald daily ton'
         self.fields['khlong_bang_phai_trips'].label = 'Khlong Bang Phai / Oswald trips'
         self.fields['khlong_bang_phai_trucks'].label = 'Khlong Bang Phai / Oswald trucks'
-        self.fields['oswald_daily_ton'].label = 'Legacy other source daily ton'
-        self.fields['oswald_trips'].label = 'Legacy other source trips'
-        self.fields['oswald_trucks'].label = 'Legacy other source trucks'
         self.helper = FormHelper()
         self.helper.form_tag = False
 
