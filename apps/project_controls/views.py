@@ -13,6 +13,7 @@ from django.views.generic import (
     ListView, CreateView, DetailView, UpdateView, DeleteView, TemplateView, View, FormView
 )
 from apps.accounts.mixins import AdminRequiredMixin, ApproverRequiredMixin
+from apps.equipment.models import Equipment
 from apps.projects.models import Project
 from .models import (
     Barge, RockDailyRecord, RockBargePlacement,
@@ -272,7 +273,7 @@ class RockDashboardView(LoginRequiredMixin, TemplateView):
             'selected_project': selected,
             'data': rock_data,
             'filters': filters,
-            'barges': Barge.objects.filter(is_active=True).order_by('name'),
+            'barges': Equipment.objects.filter(status='Active').order_by('name'),
             'material_type_choices': RockDailyRecord.ROCK_MATERIAL_CHOICES,
         })
         return ctx
@@ -432,7 +433,7 @@ class SandDashboardView(LoginRequiredMixin, TemplateView):
         sand_data.setdefault('other_source_label', 'Other sources')
         ctx.update({
             'projects': projects,
-            'barges': Barge.objects.filter(is_active=True),
+            'barges': Equipment.objects.filter(status='Active').order_by('name'),
             'selected_project': selected,
             'sand_data': sand_data,
             'data': sand_data,

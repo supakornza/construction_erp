@@ -121,7 +121,7 @@ class RockBargePlacement(models.Model):
     ]
 
     record = models.ForeignKey(RockDailyRecord, on_delete=models.CASCADE, related_name='barge_placements')
-    barge = models.ForeignKey(Barge, on_delete=models.PROTECT)
+    barge = models.ForeignKey('equipment.Equipment', on_delete=models.SET_NULL, null=True, blank=True)
     quantity_ton = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     trips = models.IntegerField(null=True, blank=True)
     placement_type = models.CharField(max_length=20, choices=PLACEMENT_CHOICES, default=PLACEMENT_OFFSHORE)
@@ -133,7 +133,8 @@ class RockBargePlacement(models.Model):
         ordering = ['barge__name']
 
     def __str__(self):
-        return f"{self.record} – {self.barge.name}: {self.quantity_ton}T"
+        barge_name = self.barge.name if self.barge_id else '—'
+        return f"{self.record} – {barge_name}: {self.quantity_ton}T"
 
 
 # ── Sand ──────────────────────────────────────────────────────────────────────
@@ -294,7 +295,7 @@ class SandBargePlacement(models.Model):
     ]
 
     record = models.ForeignKey(SandDailyRecord, on_delete=models.CASCADE, related_name='barge_placements')
-    barge = models.ForeignKey(Barge, on_delete=models.PROTECT)
+    barge = models.ForeignKey('equipment.Equipment', on_delete=models.SET_NULL, null=True, blank=True)
     quantity_ton = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     trips = models.IntegerField(null=True, blank=True)
     station = models.CharField(max_length=300, blank=True)
@@ -309,7 +310,8 @@ class SandBargePlacement(models.Model):
         ordering = ['barge__name']
 
     def __str__(self):
-        return f"{self.record} – {self.barge.name}: {self.quantity_ton}T"
+        barge_name = self.barge.name if self.barge_id else '—'
+        return f"{self.record} – {barge_name}: {self.quantity_ton}T"
 
 
 # ── Sand Allocation ───────────────────────────────────────────────────────────

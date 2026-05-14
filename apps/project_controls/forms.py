@@ -2,7 +2,7 @@ from django import forms
 from django.forms import inlineformset_factory, BaseInlineFormSet
 from django.utils import timezone
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Row, Column, Fieldset
+from crispy_forms.layout import Layout, Row, Column, Fieldset, Submit
 from .models import (
     Barge,
     RockDailyRecord, RockBargePlacement, RockDashboardSettings, RockStationProgress,
@@ -95,7 +95,8 @@ class RockTransportPlacementForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['barge'].queryset = self.fields['barge'].queryset.filter(is_active=True)
+        from apps.equipment.models import Equipment
+        self.fields['barge'].queryset = Equipment.objects.filter(status='Active').order_by('name')
 
 
 RockBargePlacementFormSet = inlineformset_factory(
@@ -175,7 +176,8 @@ class SandTransportPlacementForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['barge'].queryset = self.fields['barge'].queryset.filter(is_active=True)
+        from apps.equipment.models import Equipment
+        self.fields['barge'].queryset = Equipment.objects.filter(status='Active').order_by('name')
 
 
 class _SandBargePlacementBaseFormSet(BaseInlineFormSet):
