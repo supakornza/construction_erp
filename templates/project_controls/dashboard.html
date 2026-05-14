@@ -115,146 +115,229 @@
   </div>
 </div>
 
-<div class="row g-3 mb-4">
-  <div class="col-lg-6">
-    <div class="card pc-chart-card h-100">
-      <div class="card-header bg-white fw-semibold d-flex justify-content-between align-items-center">
-        <span><i class="fas fa-chart-pie me-2 text-secondary"></i>Rock Progress</span>
-        <a href="{% url 'project_controls:rock_dashboard' %}?project={{ selected_project.pk }}" class="btn btn-sm btn-outline-secondary">Open Rock</a>
+<div class="pc-ops-grid mb-4">
+  <section class="pc-ops-card pc-ops-rock">
+    <div class="pc-ops-head">
+      <div>
+        <div class="pc-eyebrow"><i class="fas fa-mountain"></i> Rock Progress</div>
+        <h5>Delivery, placement, and stock health</h5>
       </div>
-      <div class="card-body">
-        <div class="row g-3 align-items-center">
-          <div class="col-md-6">
-            <div class="pc-chart-wrap"><canvas id="rockProgressChart"></canvas></div>
+      <a href="{% url 'project_controls:rock_dashboard' %}?project={{ selected_project.pk }}" class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-arrow-up-right-from-square me-1"></i>Open Rock
+      </a>
+    </div>
+    <div class="pc-ops-body">
+      <div class="pc-ops-visual">
+        <div class="pc-chart-wrap pc-chart-wrap-ops">
+          <canvas id="rockProgressChart"></canvas>
+          <div class="pc-chart-center">
+            <span>{% if rock_data.placement_delivery_percent is not None %}{{ rock_data.placement_delivery_percent|floatformat:0 }}%{% else %}0%{% endif %}</span>
+            <small>Placed / delivered</small>
           </div>
-          <div class="col-md-6">
-            <div class="d-flex justify-content-between border-bottom py-2">
-              <span class="text-muted">Delivered</span>
-              <strong>{{ rock_data.total_delivered|default:0|floatformat:0|intcomma }} T</strong>
-            </div>
-            <div class="d-flex justify-content-between border-bottom py-2">
-              <span class="text-muted">Placed</span>
-              <strong class="text-primary">{{ rock_data.total_placed|default:0|floatformat:0|intcomma }} T</strong>
-            </div>
-            <div class="d-flex justify-content-between py-2">
-              <span class="text-muted">Stock balance</span>
-              <strong class="{% if rock_data.stock_balance < 0 %}text-danger{% else %}text-warning{% endif %}">{{ rock_data.stock_balance|default:0|floatformat:0|intcomma }} T</strong>
-            </div>
+        </div>
+        <div class="pc-ops-spark">
+          <span><i class="fas fa-circle text-primary"></i>Placed</span>
+          <span><i class="fas fa-circle text-warning"></i>Stock</span>
+        </div>
+      </div>
+      <div class="pc-ops-side">
+        <div class="pc-health-row">
+          <span class="pc-health-pill {% if rock_data.stock_balance < 0 %}danger{% else %}warning{% endif %}">
+            <i class="fas {% if rock_data.stock_balance < 0 %}fa-triangle-exclamation{% else %}fa-warehouse{% endif %}"></i>
+            {% if rock_data.stock_balance < 0 %}Stock deficit{% else %}Stock available{% endif %}
+          </span>
+          <span class="pc-update-note">{% if rock_data.latest_date %}{{ rock_data.latest_date|thai_be_date }}{% else %}No record{% endif %}</span>
+        </div>
+        <div class="pc-ops-highlight">
+          <div>
+            <span>BOQ completion</span>
+            <strong>{{ rock_data.display_completion_percent|default:0|floatformat:1 }}%</strong>
           </div>
+          <div>
+            <span>Avg placement</span>
+            <strong>{{ rock_data.display_average_daily|default:0|floatformat:0|intcomma }} T/day</strong>
+          </div>
+        </div>
+        <div class="pc-progress-meter">
+          <div class="pc-progress-meta">
+            <span>Placed vs delivered</span>
+            <strong>{% if rock_data.placement_delivery_percent is not None %}{{ rock_data.placement_delivery_percent|floatformat:0 }}%{% else %}0%{% endif %}</strong>
+          </div>
+          <div class="pc-progress-track">
+            <div class="pc-progress-fill success" style="width:{{ rock_data.placement_delivery_percent_capped|default:0 }}%"></div>
+          </div>
+        </div>
+        <div class="pc-ops-facts">
+          <div><span>Delivered</span><strong>{{ rock_data.total_delivered|default:0|floatformat:0|intcomma }} T</strong></div>
+          <div><span>Placed</span><strong>{{ rock_data.total_placed|default:0|floatformat:0|intcomma }} T</strong></div>
+          <div><span>Stock balance</span><strong class="{% if rock_data.stock_balance < 0 %}text-danger{% endif %}">{{ rock_data.stock_balance|default:0|floatformat:0|intcomma }} T</strong></div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="col-lg-6">
-    <div class="card pc-chart-card h-100">
-      <div class="card-header bg-white fw-semibold d-flex justify-content-between align-items-center">
-        <span><i class="fas fa-chart-pie me-2 text-info"></i>Sand Progress</span>
-        <a href="{% url 'project_controls:sand_dashboard' %}?project={{ selected_project.pk }}" class="btn btn-sm btn-outline-info">Open Sand</a>
+  </section>
+
+  <section class="pc-ops-card pc-ops-sand">
+    <div class="pc-ops-head">
+      <div>
+        <div class="pc-eyebrow"><i class="fas fa-water"></i> Sand Progress</div>
+        <h5>Source flow, placement, and remaining stock</h5>
       </div>
-      <div class="card-body">
-        <div class="row g-3 align-items-center">
-          <div class="col-md-6">
-            <div class="pc-chart-wrap"><canvas id="sandProgressChart"></canvas></div>
+      <a href="{% url 'project_controls:sand_dashboard' %}?project={{ selected_project.pk }}" class="btn btn-sm btn-outline-info">
+        <i class="fas fa-arrow-up-right-from-square me-1"></i>Open Sand
+      </a>
+    </div>
+    <div class="pc-ops-body">
+      <div class="pc-ops-visual">
+        <div class="pc-chart-wrap pc-chart-wrap-ops">
+          <canvas id="sandProgressChart"></canvas>
+          <div class="pc-chart-center">
+            <span>{{ sand_data.placement_delivery_percent_capped|default:0|floatformat:0 }}%</span>
+            <small>{% if sand_data.placement_delivery_percent > 100 %}Placement cap{% else %}Placed / delivered{% endif %}</small>
           </div>
-          <div class="col-md-6">
-            <div class="d-flex justify-content-between border-bottom py-2">
-              <span class="text-muted">Delivered</span>
-              <strong>{{ sand_data.total_delivered|default:0|floatformat:0|intcomma }} T</strong>
-            </div>
-            <div class="d-flex justify-content-between border-bottom py-2">
-              <span class="text-muted">Offshore placed</span>
-              <strong class="text-success">{{ sand_data.total_offshore|default:0|floatformat:0|intcomma }} T</strong>
-            </div>
-            <div class="d-flex justify-content-between border-bottom py-2">
-              <span class="text-muted">Onshore placed</span>
-              <strong class="text-warning">{{ sand_data.total_onshore|default:0|floatformat:0|intcomma }} T</strong>
-            </div>
-            <div class="d-flex justify-content-between py-2">
-              <span class="text-muted">Remaining stock</span>
-              <strong class="text-danger">{{ sand_data.total_remaining|default:0|floatformat:0|intcomma }} T</strong>
-            </div>
+        </div>
+        <div class="pc-ops-spark">
+          <span><i class="fas fa-circle text-success"></i>Offshore</span>
+          <span><i class="fas fa-circle text-warning"></i>Onshore</span>
+          <span><i class="fas fa-circle text-danger"></i>Stock</span>
+        </div>
+      </div>
+      <div class="pc-ops-side">
+        <div class="pc-health-row">
+          <span class="pc-health-pill {% if sand_data.placement_delivery_percent > 100 %}danger{% else %}info{% endif %}">
+            <i class="fas {% if sand_data.placement_delivery_percent > 100 %}fa-triangle-exclamation{% else %}fa-scale-balanced{% endif %}"></i>
+            {% if sand_data.placement_delivery_percent > 100 %}Placement exceeds delivery{% else %}Remaining stock{% endif %}
+          </span>
+          <span class="pc-update-note">{% if sand_data.latest_date %}{{ sand_data.latest_date|thai_be_date }}{% else %}No record{% endif %}</span>
+        </div>
+        <div class="pc-ops-highlight">
+          <div>
+            <span>BOQ completion</span>
+            <strong>{{ sand_data.display_completion_percent|default:0|floatformat:1 }}%</strong>
           </div>
+          <div>
+            <span>Avg placement</span>
+            <strong>{{ sand_data.display_average_daily|default:0|floatformat:0|intcomma }} T/day</strong>
+          </div>
+        </div>
+        <div class="pc-progress-meter">
+          <div class="pc-progress-meta">
+            <span>Placed vs delivered</span>
+            <strong>
+              {{ sand_data.placement_delivery_percent_capped|default:0|floatformat:0 }}%
+              {% if sand_data.placement_delivery_percent > 100 %}
+                <small class="text-danger ms-1">Actual {{ sand_data.placement_delivery_percent|floatformat:0 }}%</small>
+              {% endif %}
+            </strong>
+          </div>
+          <div class="pc-progress-track">
+            <div class="pc-progress-fill {% if sand_data.placement_delivery_percent > 100 %}danger{% else %}success{% endif %}" style="width:{{ sand_data.placement_delivery_percent_capped|default:0 }}%"></div>
+          </div>
+        </div>
+        <div class="pc-ops-facts">
+          <div><span>Delivered</span><strong>{{ sand_data.total_delivered|default:0|floatformat:0|intcomma }} T</strong></div>
+          <div><span>Placed</span><strong>{{ sand_data.total_placed|default:0|floatformat:0|intcomma }} T</strong></div>
+          <div><span>Remaining</span><strong>{{ sand_data.total_remaining|default:0|floatformat:0|intcomma }} T</strong></div>
         </div>
       </div>
     </div>
+  </section>
+</div>
+
+<div class="pc-section-title pc-section-title-spaced">
+  <i class="fas fa-gauge-high text-primary"></i>
+  <h6 class="mb-0 fw-semibold">Rock KPIs</h6>
+</div>
+<div class="pc-metric-grid mb-4">
+  <div class="pc-metric-card secondary">
+    <div class="pc-metric-icon"><i class="fas fa-truck-ramp-box"></i></div>
+    <div class="pc-metric-label">Delivered to TCT</div>
+    <div class="pc-metric-value">{{ rock_data.total_delivered|default:0|floatformat:0|intcomma }}</div>
+    <div class="pc-metric-sub">Ton accumulated</div>
+  </div>
+  <div class="pc-metric-card success">
+    <div class="pc-metric-icon"><i class="fas fa-layer-group"></i></div>
+    <div class="pc-metric-label">Rock Placed</div>
+    <div class="pc-metric-value">{{ rock_data.total_placed|default:0|floatformat:0|intcomma }}</div>
+    <div class="pc-metric-sub">Ton accumulated</div>
+  </div>
+  <div class="pc-metric-card {% if rock_data.stock_balance < 0 %}danger{% else %}warning{% endif %}">
+    <div class="pc-metric-icon"><i class="fas fa-warehouse"></i></div>
+    <div class="pc-metric-label">Stock Balance</div>
+    <div class="pc-metric-value">{{ rock_data.stock_balance|default:0|floatformat:0|intcomma }}</div>
+    <div class="pc-metric-sub">{% if rock_data.stock_percent is not None %}{{ rock_data.stock_percent|floatformat:1 }}% of delivered{% else %}Ton{% endif %}</div>
+  </div>
+  <div class="pc-metric-card info">
+    <div class="pc-metric-icon"><i class="fas fa-chart-pie"></i></div>
+    <div class="pc-metric-label">Completion</div>
+    <div class="pc-metric-value">{{ rock_data.display_completion_percent|default:0|floatformat:1 }}%</div>
+    <div class="pc-metric-sub">{{ rock_data.display_target_note|default:"Assumed baseline" }}</div>
+  </div>
+  <div class="pc-metric-card primary">
+    <div class="pc-metric-icon"><i class="fas fa-gauge-high"></i></div>
+    <div class="pc-metric-label">Avg Placement</div>
+    <div class="pc-metric-value">{{ rock_data.display_average_daily|default:0|floatformat:0|intcomma }}</div>
+    <div class="pc-metric-sub">Ton/day</div>
+  </div>
+  <div class="pc-metric-card muted">
+    <div class="pc-metric-icon"><i class="fas fa-calendar-check"></i></div>
+    <div class="pc-metric-label">Forecast Finish</div>
+    <div class="pc-metric-value compact">{% if rock_data.display_forecast_completion_date %}{{ rock_data.display_forecast_completion_date|thai_be_date }}{% else %}-{% endif %}</div>
+    <div class="pc-metric-sub">{{ rock_data.record_count|default:0 }} recorded days</div>
   </div>
 </div>
 
-<h6 class="text-muted fw-semibold mb-2"><i class="fas fa-mountain me-2"></i>Rock KPIs</h6>
-<div class="row g-3 mb-4">
-  <div class="col-6 col-xl-3">
-    <div class="card pc-kpi-card border-start border-4 border-secondary">
-      <div class="text-muted small">Rock Delivered (TCT)</div>
-      <div class="fs-3 fw-bold">{{ rock_data.total_delivered|default:0|floatformat:0|intcomma }}</div>
-      <div class="text-muted small">Ton (Accum.)</div>
-    </div>
-  </div>
-  <div class="col-6 col-xl-3">
-    <div class="card pc-kpi-card border-start border-4 border-primary">
-      <div class="text-muted small">Rock Placed</div>
-      <div class="fs-3 fw-bold">{{ rock_data.total_placed|default:0|floatformat:0|intcomma }}</div>
-      <div class="text-muted small">Ton (Accum.)</div>
-    </div>
-  </div>
-  <div class="col-6 col-xl-3">
-    <div class="card pc-kpi-card border-start border-4 border-warning">
-      <div class="text-muted small">Stock Balance</div>
-      <div class="fs-3 fw-bold {% if rock_data.stock_balance < 0 %}text-danger{% endif %}">{{ rock_data.stock_balance|default:0|floatformat:0|intcomma }}</div>
-      <div class="text-muted small">Ton</div>
-    </div>
-  </div>
-  <div class="col-6 col-xl-3">
-    <div class="card pc-kpi-card border-start border-4 border-info">
-      <div class="text-muted small">Days Recorded</div>
-      <div class="fs-3 fw-bold">{{ rock_data.record_count|default:0 }}</div>
-      <div class="text-muted small">Latest: {% if rock_data.latest_date %}{{ rock_data.latest_date|thai_be_date }}{% else %}-{% endif %}</div>
-    </div>
-  </div>
+<div class="pc-section-title pc-section-title-spaced">
+  <i class="fas fa-water text-info"></i>
+  <h6 class="mb-0 fw-semibold">Sand KPIs</h6>
 </div>
-
-<h6 class="text-muted fw-semibold mb-2"><i class="fas fa-water me-2"></i>Sand KPIs</h6>
-<div class="row g-3 mb-4">
-  <div class="col-6 col-xl-2">
-    <div class="card pc-kpi-card border-start border-4 border-info">
-      <div class="text-muted small">TCT Pier Stock</div>
-      <div class="fs-4 fw-bold">{{ sand_data.total_tct|default:0|floatformat:0|intcomma }}</div>
-      <div class="text-muted small">Ton</div>
-    </div>
+<div class="pc-metric-grid pc-metric-grid-sand mb-4">
+  <div class="pc-metric-card info">
+    <div class="pc-metric-icon"><i class="fas fa-anchor"></i></div>
+    <div class="pc-metric-label">TCT Pier Stock</div>
+    <div class="pc-metric-value">{{ sand_data.total_tct|default:0|floatformat:0|intcomma }}</div>
+    <div class="pc-metric-sub">Ton accumulated</div>
   </div>
-  <div class="col-6 col-xl-2">
-    <div class="card pc-kpi-card border-start border-4 border-primary">
-      <div class="text-muted small">Stockpile Sand MTP3</div>
-      <div class="fs-4 fw-bold">{{ sand_data.total_mtp3|default:0|floatformat:0|intcomma }}</div>
-      <div class="text-muted small">Ton</div>
-    </div>
+  <div class="pc-metric-card primary">
+    <div class="pc-metric-icon"><i class="fas fa-warehouse"></i></div>
+    <div class="pc-metric-label">MTP3 Stockpile</div>
+    <div class="pc-metric-value">{{ sand_data.total_mtp3|default:0|floatformat:0|intcomma }}</div>
+    <div class="pc-metric-sub">Ton accumulated</div>
   </div>
-  <div class="col-6 col-xl-2">
-    <div class="card pc-kpi-card border-start border-4 border-success">
-      <div class="text-muted small">Chalothon Source</div>
-      <div class="fs-4 fw-bold">{{ sand_data.total_chalothon|default:0|floatformat:0|intcomma }}</div>
-      <div class="text-muted small">Ton</div>
-    </div>
+  <div class="pc-metric-card success">
+    <div class="pc-metric-icon"><i class="fas fa-map-location-dot"></i></div>
+    <div class="pc-metric-label">Chalothon Source</div>
+    <div class="pc-metric-value">{{ sand_data.total_chalothon|default:0|floatformat:0|intcomma }}</div>
+    <div class="pc-metric-sub">Ton supplied</div>
   </div>
-  <div class="col-6 col-xl-2">
-    <div class="card pc-kpi-card border-start border-4 border-warning">
-      <div class="text-muted small">Khlong Bang Phai Source</div>
-      <div class="fs-4 fw-bold">{{ sand_data.total_khlong_bang_phai|default:0|floatformat:0|intcomma }}</div>
-      <div class="text-muted small">Ton</div>
-    </div>
+  <div class="pc-metric-card warning">
+    <div class="pc-metric-icon"><i class="fas fa-route"></i></div>
+    <div class="pc-metric-label">Khlong Bang Phai</div>
+    <div class="pc-metric-value">{{ sand_data.total_khlong_bang_phai|default:0|floatformat:0|intcomma }}</div>
+    <div class="pc-metric-sub">Ton supplied</div>
   </div>
-  <div class="col-6 col-xl-2">
-    <div class="card pc-kpi-card border-start border-4 border-danger">
-      <div class="text-muted small">Remaining TCT Pier</div>
-      <div class="fs-4 fw-bold">{{ sand_data.remaining_tct|default:0|floatformat:0|intcomma }}</div>
-      <div class="text-muted small">Ton</div>
-    </div>
+  <div class="pc-metric-card danger">
+    <div class="pc-metric-icon"><i class="fas fa-scale-balanced"></i></div>
+    <div class="pc-metric-label">Remaining TCT</div>
+    <div class="pc-metric-value">{{ sand_data.remaining_tct|default:0|floatformat:0|intcomma }}</div>
+    <div class="pc-metric-sub">Ton remaining</div>
   </div>
-  <div class="col-6 col-xl-2">
-    <div class="card pc-kpi-card border-start border-4 border-secondary">
-      <div class="text-muted small">Remaining MTP3 Stock</div>
-      <div class="fs-4 fw-bold">{{ sand_data.remaining_mtp3|default:0|floatformat:0|intcomma }}</div>
-      <div class="text-muted small">Ton</div>
-    </div>
+  <div class="pc-metric-card secondary">
+    <div class="pc-metric-icon"><i class="fas fa-boxes-stacked"></i></div>
+    <div class="pc-metric-label">Remaining MTP3</div>
+    <div class="pc-metric-value">{{ sand_data.remaining_mtp3|default:0|floatformat:0|intcomma }}</div>
+    <div class="pc-metric-sub">Ton remaining</div>
+  </div>
+  <div class="pc-metric-card success">
+    <div class="pc-metric-icon"><i class="fas fa-gauge-high"></i></div>
+    <div class="pc-metric-label">Avg Placement</div>
+    <div class="pc-metric-value">{{ sand_data.display_average_daily|default:0|floatformat:0|intcomma }}</div>
+    <div class="pc-metric-sub">Ton/day</div>
+  </div>
+  <div class="pc-metric-card muted">
+    <div class="pc-metric-icon"><i class="fas fa-calendar-check"></i></div>
+    <div class="pc-metric-label">Forecast Finish</div>
+    <div class="pc-metric-value compact">{% if sand_data.display_forecast_completion_date %}{{ sand_data.display_forecast_completion_date|thai_be_date }}{% else %}-{% endif %}</div>
+    <div class="pc-metric-sub">{{ sand_data.display_completion_percent|default:0|floatformat:1 }}% complete</div>
   </div>
 </div>
 
@@ -323,20 +406,24 @@ function makeDoughnut(canvasId, labels, values, colors) {
         data,
         backgroundColor: chartColors,
         borderColor: '#fff',
-        borderWidth: 3,
-        hoverOffset: 4
+        borderWidth: 4,
+        hoverOffset: 6
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      cutout: '62%',
+      animation: false,
+      cutout: '68%',
+      devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
       plugins: {
         legend: {
-          position: 'bottom',
-          labels: { boxWidth: 12, usePointStyle: true }
+          display: false
         },
         tooltip: {
+          backgroundColor: '#0f172a',
+          displayColors: true,
+          padding: 10,
           callbacks: {
             label: function(context) {
               if (total === 0) return 'No data';

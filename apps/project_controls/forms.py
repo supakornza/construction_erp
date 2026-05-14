@@ -27,12 +27,14 @@ class RockDailyRecordForm(forms.ModelForm):
             'day_name': forms.TextInput(attrs={'readonly': 'readonly'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
             'station_of_core': forms.TextInput(),
+            'placed_daily_ton': forms.NumberInput(attrs={'readonly': 'readonly', 'style': 'background:#f8f9fa;'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
+        self.fields['placed_daily_ton'].help_text = 'Auto-calculated from Transport Placement quantities below.'
         self.helper.layout = Layout(
             Fieldset('Record Details',
                 Row(Column('project', css_class='col-md-4'),
@@ -59,9 +61,20 @@ class RockDailyRecordForm(forms.ModelForm):
         )
 
 
+class RockTransportPlacementForm(forms.ModelForm):
+    class Meta:
+        model = RockBargePlacement
+        fields = ['barge', 'quantity_ton', 'trips', 'placement_type', 'station', 'remarks']
+        labels = {'barge': 'Transport Unit'}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['barge'].queryset = self.fields['barge'].queryset.filter(is_active=True)
+
+
 RockBargePlacementFormSet = inlineformset_factory(
     RockDailyRecord, RockBargePlacement,
-    fields=['barge', 'quantity_ton', 'trips', 'station', 'remarks'],
+    form=RockTransportPlacementForm,
     extra=4, can_delete=True,
 )
 
@@ -105,6 +118,7 @@ class SandDailyRecordForm(forms.ModelForm):
             'day_name': forms.TextInput(attrs={'readonly': 'readonly'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
             'offshore_daily_ton': forms.NumberInput(attrs={'readonly': 'readonly', 'style': 'background:#f8f9fa;'}),
+            'onshore_daily_ton': forms.NumberInput(attrs={'readonly': 'readonly', 'style': 'background:#f8f9fa;'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -121,8 +135,21 @@ class SandDailyRecordForm(forms.ModelForm):
         self.fields['khlong_bang_phai_daily_ton'].label = 'Khlong Bang Phai / Oswald daily ton'
         self.fields['khlong_bang_phai_trips'].label = 'Khlong Bang Phai / Oswald trips'
         self.fields['khlong_bang_phai_trucks'].label = 'Khlong Bang Phai / Oswald trucks'
+        self.fields['offshore_daily_ton'].label = 'Offshore transport daily ton'
+        self.fields['onshore_daily_ton'].label = 'Onshore transport daily ton'
         self.helper = FormHelper()
         self.helper.form_tag = False
+
+
+class SandTransportPlacementForm(forms.ModelForm):
+    class Meta:
+        model = SandBargePlacement
+        fields = ['barge', 'quantity_ton', 'trips', 'source', 'destination', 'placement_type', 'station']
+        labels = {'barge': 'Transport Unit'}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['barge'].queryset = self.fields['barge'].queryset.filter(is_active=True)
 
 
 class _SandBargePlacementBaseFormSet(BaseInlineFormSet):
@@ -148,8 +175,8 @@ class _SandBargePlacementBaseFormSet(BaseInlineFormSet):
 
 SandBargePlacementFormSet = inlineformset_factory(
     SandDailyRecord, SandBargePlacement,
+    form=SandTransportPlacementForm,
     formset=_SandBargePlacementBaseFormSet,
-    fields=['barge', 'quantity_ton', 'trips', 'source', 'destination', 'placement_type', 'station'],
     extra=4, can_delete=True,
 )
 

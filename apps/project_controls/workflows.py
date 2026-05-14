@@ -1,6 +1,6 @@
 from django.db import transaction
 
-from .models import SandBargePlacement
+from .models import RockBargePlacement, SandBargePlacement
 from .services import (
     recalculate_recovery_plan,
     recalculate_rock_accumulatives,
@@ -18,7 +18,13 @@ def save_rock_record(form, barge_formset, user=None, set_created_by=False):
         barge_formset.instance = record
         barge_formset.save()
         record.placed_daily_ton = sum(bp.quantity_ton for bp in record.barge_placements.all())
-        record.save(update_fields=['placed_daily_ton'])
+        record.core_outside_daily = sum(
+            bp.quantity_ton
+            for bp in record.barge_placements.filter(
+                placement_type=RockBargePlacement.PLACEMENT_ONSHORE
+            )
+        )
+        record.save(update_fields=['placed_daily_ton', 'core_outside_daily'])
         recalculate_rock_accumulatives(record.project)
     return record
 
@@ -40,7 +46,13 @@ def save_sand_record(form, barge_formset, user=None, set_created_by=False):
                 placement_type=SandBargePlacement.PLACEMENT_OFFSHORE
             )
         )
-        record.save(update_fields=['offshore_daily_ton'])
+        record.onshore_daily_ton = sum(
+            bp.quantity_ton
+            for bp in record.barge_placements.filter(
+                placement_type=SandBargePlacement.PLACEMENT_ONSHORE
+            )
+        )
+        record.save(update_fields=['offshore_daily_ton', 'onshore_daily_ton'])
         recalculate_sand_accumulatives(record.project)
     return record
 

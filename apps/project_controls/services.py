@@ -28,6 +28,26 @@ def _forecast_completion_date(start_date, remaining_qty, average_daily):
     return start_date + timedelta(days=max(days, 0))
 
 
+def _display_baseline_metrics(latest_date, completed_qty, delivered_qty, configured_target, average_daily):
+    target_qty = configured_target
+    target_note = 'Configured BOQ target'
+    if target_qty is None or target_qty <= 0:
+        target_qty = max(completed_qty or Decimal('0'), delivered_qty or Decimal('0'), Decimal('1'))
+        target_note = 'Assumed from current production'
+
+    completion_pct = _safe_pct(completed_qty, target_qty) or 0
+    completion_pct = min(max(completion_pct, 0), 100)
+    remaining_qty = max(target_qty - completed_qty, Decimal('0'))
+    forecast_date = _forecast_completion_date(latest_date, remaining_qty, average_daily) or latest_date
+
+    return {
+        'display_completion_percent': completion_pct,
+        'display_forecast_completion_date': forecast_date,
+        'display_target_note': target_note,
+        'display_average_daily': float(average_daily or Decimal('0')),
+    }
+
+
 def recalculate_rock_accumulatives(project):
     records = RockDailyRecord.objects.filter(project=project).order_by('record_date')
     tct_accum = placed_accum = outside_accum = Decimal('0')
@@ -153,7 +173,16 @@ def get_rock_dashboard_data(project, filters=None):
     remaining_qty = (target_qty - total_placed) if target_qty is not None else None
     completion_pct = _safe_pct(total_placed, target_qty)
     stock_pct = _safe_pct(available_stock, total_delivered)
+    placement_delivery_pct = _safe_pct(total_placed, total_delivered)
+    placement_delivery_pct_capped = min(max(placement_delivery_pct or 0, 0), 100)
     forecast_date = _forecast_completion_date(latest.record_date, remaining_qty, average_daily_placement)
+    display_metrics = _display_baseline_metrics(
+        latest.record_date,
+        total_placed,
+        total_delivered,
+        target_qty,
+        average_daily_placement,
+    )
 
     planned_accum = []
     target_line = []
@@ -230,9 +259,12 @@ def get_rock_dashboard_data(project, filters=None):
         'stock_balance': float(available_stock),
         'stock_percent': stock_pct,
         'placement_completion_percent': completion_pct,
+        'placement_delivery_percent': placement_delivery_pct,
+        'placement_delivery_percent_capped': placement_delivery_pct_capped,
         'remaining_quantity_to_boq': float(remaining_qty) if remaining_qty is not None else None,
         'average_daily_placement': float(average_daily_placement) if average_daily_placement is not None else None,
         'forecast_completion_date': forecast_date,
+        **display_metrics,
         'latest_daily_delivered': float(latest.tct_daily_ton),
         'latest_daily_placed': float(latest.placed_daily_ton),
         'core_outside_accum': float(latest.core_outside_accum),
@@ -306,10 +338,11 @@ def get_sand_dashboard_data(project, filters=None):
     records_list = list(records)
     total_delivered = latest.total_accum_ton
     total_placed = latest.total_placed
-    # Use the stored remaining stock (remaining_tct + remaining_mtp3) entered per record.
-    # Computing total_delivered - total_placed produces negatives when placement is tracked
-    # via a different path than delivery (e.g. direct offshore placement bypasses stockpile).
-    current_stock_balance = latest.total_remaining  # remaining_tct + remaining_mtp3
+    # Prefer the recorded stock balance when entered; otherwise derive a safe balance
+    # from delivered minus placed so imported/older rows still produce useful KPIs.
+    recorded_stock_balance = latest.total_remaining  # remaining_tct + remaining_mtp3
+    calculated_stock_balance = total_delivered - total_placed
+    current_stock_balance = recorded_stock_balance if recorded_stock_balance > 0 else max(calculated_stock_balance, Decimal('0'))
     target_qty = settings.target_quantity_ton if settings else None
     daily_target_delivery = settings.daily_target_delivery_ton if settings else None
     daily_target_placement = settings.daily_target_placement_ton if settings else None
@@ -319,9 +352,18 @@ def get_sand_dashboard_data(project, filters=None):
     completion_pct = _safe_pct(total_placed, target_qty)
     remaining_pct = _safe_pct(remaining_qty, target_qty) if remaining_qty is not None else None
     stock_pct = _safe_pct(current_stock_balance, total_delivered)
+    placement_delivery_pct = _safe_pct(total_placed, total_delivered)
+    placement_delivery_pct_capped = min(max(placement_delivery_pct or 0, 0), 100)
     average_daily_delivery = (period_delivered / delivery_days) if delivery_days else None
     average_daily_placement = (period_placed / placement_days) if placement_days else None
     forecast_date = _forecast_completion_date(latest.record_date, remaining_qty, average_daily_placement)
+    display_metrics = _display_baseline_metrics(
+        latest.record_date,
+        total_placed,
+        total_delivered,
+        target_qty,
+        average_daily_placement,
+    )
 
     planned_delivery = []
     planned_placement = []
@@ -418,9 +460,9 @@ def get_sand_dashboard_data(project, filters=None):
             'total_trips': total_trips,
             'average_tons_per_trip': avg_tons,
             'latest_trip_date': row['latest_trip_date'],
-            'source': row['source'] or 'N/A',
+            'source': row['source'] or 'Not specified',
             'destination': row['destination'] or 'Offshore Placement',
-            'placement_type': row['placement_type'] or 'N/A',
+            'placement_type': row['placement_type'] or 'Not specified',
             'material_type': row['material_type'] or 'Sand',
             'status': SandBargePlacement.STATUS_MISSING_TRIPS if total_trips is None else row['status'],
         })
@@ -474,14 +516,17 @@ def get_sand_dashboard_data(project, filters=None):
         'outside_plot': float(latest.outside_plot_accum),
         'remaining_tct': float(latest.remaining_tct),
         'remaining_mtp3': float(latest.remaining_mtp3),
-        'total_remaining': float(latest.total_remaining),
+        'total_remaining': float(current_stock_balance),
         'remaining_quantity': float(remaining_qty) if remaining_qty is not None else None,
         'remaining_percent': remaining_pct,
         'completion_percent': completion_pct,
         'stock_percent': stock_pct,
+        'placement_delivery_percent': placement_delivery_pct,
+        'placement_delivery_percent_capped': placement_delivery_pct_capped,
         'average_daily_delivery': float(average_daily_delivery) if average_daily_delivery is not None else None,
         'average_daily_placement': float(average_daily_placement) if average_daily_placement is not None else None,
         'forecast_completion_date': forecast_date,
+        **display_metrics,
         'latest_daily_delivered': float(latest.total_daily_ton),
         'latest_daily_placed': float(latest.offshore_daily_ton + latest.onshore_daily_ton),
         'latest_date': latest.record_date,

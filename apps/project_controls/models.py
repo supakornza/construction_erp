@@ -11,8 +11,18 @@ from apps.projects.models import Project
 # ── Reference ─────────────────────────────────────────────────────────────────
 
 class Barge(models.Model):
+    TRANSPORT_OFFSHORE = 'Offshore'
+    TRANSPORT_ONSHORE = 'Onshore'
+    TRANSPORT_BOTH = 'Both'
+    TRANSPORT_MODE_CHOICES = [
+        (TRANSPORT_OFFSHORE, 'Offshore'),
+        (TRANSPORT_ONSHORE, 'Onshore'),
+        (TRANSPORT_BOTH, 'Both'),
+    ]
+
     name = models.CharField(max_length=100, unique=True)
     code = models.CharField(max_length=20, unique=True)
+    transport_mode = models.CharField(max_length=20, choices=TRANSPORT_MODE_CHOICES, default=TRANSPORT_OFFSHORE)
     capacity_ton = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
@@ -98,10 +108,18 @@ class RockDashboardSettings(models.Model):
 
 
 class RockBargePlacement(models.Model):
+    PLACEMENT_OFFSHORE = 'Offshore'
+    PLACEMENT_ONSHORE = 'Onshore'
+    PLACEMENT_CHOICES = [
+        (PLACEMENT_OFFSHORE, 'Offshore'),
+        (PLACEMENT_ONSHORE, 'Onshore'),
+    ]
+
     record = models.ForeignKey(RockDailyRecord, on_delete=models.CASCADE, related_name='barge_placements')
     barge = models.ForeignKey(Barge, on_delete=models.PROTECT)
     quantity_ton = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     trips = models.IntegerField(null=True, blank=True)
+    placement_type = models.CharField(max_length=20, choices=PLACEMENT_CHOICES, default=PLACEMENT_OFFSHORE)
     station = models.CharField(max_length=300, blank=True)
     remarks = models.CharField(max_length=300, blank=True)
 

@@ -65,7 +65,7 @@
     <table class="table table-sm mb-0">
       <thead class="table-light"><tr><th>Type</th><th class="text-end">Daily (T)</th><th class="text-end">Accum (T)</th></tr></thead>
       <tbody>
-        <tr><td>Offshore (Barge)</td><td class="text-end">{{ record.offshore_daily_ton|floatformat:2|intcomma }}</td><td class="text-end fw-bold">{{ record.offshore_accum_ton|floatformat:2|intcomma }}</td></tr>
+        <tr><td>Offshore Transport</td><td class="text-end">{{ record.offshore_daily_ton|floatformat:2|intcomma }}</td><td class="text-end fw-bold">{{ record.offshore_accum_ton|floatformat:2|intcomma }}</td></tr>
         <tr><td>Onshore</td><td class="text-end">{{ record.onshore_daily_ton|floatformat:2|intcomma }}</td><td class="text-end fw-bold">{{ record.onshore_accum_ton|floatformat:2|intcomma }}</td></tr>
         <tr><td>Inside Plot Tank</td><td class="text-end">{{ record.inside_plot_daily|floatformat:2|intcomma }}</td><td class="text-end fw-bold">{{ record.inside_plot_accum|floatformat:2|intcomma }}</td></tr>
         <tr><td>Outside Plot Tank</td><td class="text-end">{{ record.outside_plot_daily|floatformat:2|intcomma }}</td><td class="text-end fw-bold">{{ record.outside_plot_accum|floatformat:2|intcomma }}</td></tr>
@@ -74,24 +74,25 @@
   </div>
 </div>
 
-{# Barge Placements #}
+{# Transport Placements #}
 <div class="card mb-3">
-  <div class="card-header fw-semibold"><i class="fas fa-ship me-2"></i>Offshore Barge Placements</div>
+  <div class="card-header fw-semibold"><i class="fas fa-truck-moving me-2"></i>Transport Placements</div>
   <div class="table-responsive">
     <table class="table table-sm mb-0">
       <thead class="table-light">
-        <tr><th>Barge</th><th class="text-end">Qty (Ton)</th><th class="text-end">Trips</th><th>Station</th></tr>
+        <tr><th>Transport Unit</th><th>Type</th><th class="text-end">Qty (Ton)</th><th class="text-end">Trips</th><th>Station</th></tr>
       </thead>
       <tbody>
         {% for bp in record.barge_placements.all %}
         <tr>
           <td><strong>{{ bp.barge.name }}</strong></td>
+          <td>{{ bp.placement_type }}</td>
           <td class="text-end">{{ bp.quantity_ton|floatformat:2|intcomma }}</td>
           <td class="text-end">{{ bp.trips }}</td>
           <td>{{ bp.station|default:'-' }}</td>
         </tr>
         {% empty %}
-        <tr><td colspan="4" class="text-muted text-center">No barge placements</td></tr>
+        <tr><td colspan="5" class="text-muted text-center">No transport placements</td></tr>
         {% endfor %}
       </tbody>
     </table>

@@ -8,7 +8,7 @@
 /* ═══════════════════════════════════════════════════
    EXECUTIVE DASHBOARD  –  Owner Weekly Presentation
    ═══════════════════════════════════════════════════ */
-.page-content { background:#0a1628; padding:0; min-height:calc(100vh - 56px); }
+.page-content { background:#eef3f8; padding:0; min-height:calc(100vh - 56px); }
 
 /* ── Header ─────────────────────────────────────── */
 .exec-header {
@@ -327,10 +327,310 @@
 .qty-bar-fill { height:100%; border-radius:3px; background:linear-gradient(to right,#00b4d8,#0077b6); }
 
 /* ── Print ───────────────────────────────────────── */
+/* Executive cockpit refresh */
+:root {
+  --exec-ink:#0f172a;
+  --exec-muted:#64748b;
+  --exec-line:#d8e2ed;
+  --exec-soft:#f8fafc;
+  --exec-blue:#1565d8;
+  --exec-cyan:#0891b2;
+  --exec-green:#059669;
+  --exec-amber:#d97706;
+  --exec-red:#dc2626;
+}
+.page-content { background:#eef3f8; }
+.exec-header {
+  background:#fff;
+  border-bottom:1px solid #d8e2ed;
+  box-shadow:0 8px 28px rgba(15,23,42,.08);
+}
+.exec-brand-icon {
+  background:linear-gradient(135deg,#1565d8,#00a3c7);
+  box-shadow:0 10px 24px rgba(21,101,216,.22);
+}
+.exec-title { color:#0f172a; letter-spacing:.04em; }
+.exec-subtitle,.exec-date { color:#64748b; }
+.exec-date i[style*="#f0a500"] { color:#1565d8 !important; }
+.btn-exec-print { background:#f8fafc; border-color:#cbd5e1; color:#0f172a; }
+.btn-exec-print:hover { background:#e0f2fe; border-color:#38bdf8; color:#075985; }
+.exec-section { color:#1e293b; letter-spacing:.08em; }
+.exec-section::before { background:#e0f2fe; border-color:#bae6fd; color:#0369a1; }
+.exec-section::after { background:linear-gradient(to right,#cbd5e1,transparent); }
+.exec-kpi-card,.kpi-card,.project-card,.dark-card {
+  background:#fff;
+  border:1px solid #d8e2ed;
+  color:#0f172a;
+  box-shadow:0 10px 28px rgba(15,23,42,.08);
+}
+.exec-kpi-card.primary { background:linear-gradient(145deg,#fff 0%,#f7fbff 58%,#eef7ff 100%); }
+.exec-kpi-card::after { background:rgba(14,165,233,.08); }
+.exec-kpi-step,.exec-kpi-label,.kpi-label,.kpi-sub,.project-card-sub,.donut-sub,.fin-row .fin-label,.dark-card-header h6,.dark-table thead th { color:#64748b; }
+.exec-kpi-value,.exec-kpi-note strong,.exec-mini-row span:last-child,.kpi-value,.project-card-name,.donut-pct,.dark-table,.fin-row,.fin-total { color:#0f172a; }
+.exec-kpi-note,.exec-mini-row { color:#64748b; }
+.exec-kpi-progress,.dark-progress,.qty-bar { background:#e5edf5; }
+.dark-card-header { background:linear-gradient(90deg,#f8fafc,#fff); border-bottom:1px solid #e2e8f0; }
+.dark-table thead th { background:#f8fafc; border-color:#e2e8f0; }
+.dark-table tbody td { border-color:#edf2f7; color:#334155; }
+.dark-table tfoot td { background:#fff7ed; border-color:#fed7aa; color:#9a3412; }
+.dark-table tbody tr:hover td { background:#f8fafc; }
+.chart-filter-bar,.safety-cell {
+  background:#fff;
+  border-color:#d8e2ed;
+  box-shadow:0 8px 24px rgba(15,23,42,.06);
+}
+.chart-filter-bar .form-select,.chart-filter-bar .form-control,#scurve-project {
+  background:#fff !important;
+  border-color:#cbd5e1 !important;
+  color:#0f172a !important;
+}
+.chart-filter-bar label { color:#475569; }
+.chart-filter-bar .btn-check+.btn-outline-primary {
+  border-color:#cbd5e1;
+  color:#334155;
+}
+.chart-filter-bar .btn-check:checked+.btn-outline-primary {
+  background:#1565d8;
+  border-color:#1565d8;
+  color:#fff;
+}
+.dark-progress-bar { max-width:100%; }
+.fin-total { border-top-color:#e2e8f0; }
+.project-card [style*="border-top:1px solid rgba(255,255,255,.06)"] { border-top-color:#e2e8f0 !important; }
+
+.exec-command-grid {
+  display:grid;
+  grid-template-columns:minmax(360px,1.1fr) minmax(360px,1fr);
+  gap:14px;
+  margin-bottom:1.5rem;
+}
+.exec-command-card {
+  background:#fff;
+  border:1px solid var(--exec-line);
+  border-radius:10px;
+  box-shadow:0 10px 28px rgba(15,23,42,.08);
+  overflow:hidden;
+}
+.exec-command-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.8rem;
+  padding:.85rem 1rem;
+  border-bottom:1px solid #e2e8f0;
+  background:linear-gradient(90deg,#fff,#f8fafc);
+}
+.exec-command-head h6 {
+  margin:0;
+  color:#0f172a;
+  font-size:.82rem;
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  gap:.45rem;
+}
+.exec-command-body { padding:.9rem 1rem; }
+.exec-action-list { display:grid; gap:.65rem; }
+.exec-action-item {
+  display:grid;
+  grid-template-columns:88px minmax(0,1fr) 112px;
+  gap:.7rem;
+  align-items:center;
+  padding:.65rem .7rem;
+  border:1px solid #e2e8f0;
+  border-radius:8px;
+  background:#fff;
+}
+.exec-action-title {
+  color:#0f172a;
+  font-size:.8rem;
+  font-weight:800;
+  line-height:1.25;
+  overflow-wrap:anywhere;
+}
+.exec-action-meta {
+  color:#64748b;
+  font-size:.7rem;
+  margin-top:.16rem;
+}
+.exec-action-due {
+  text-align:right;
+  color:#334155;
+  font-size:.74rem;
+  font-weight:700;
+}
+.exec-empty-state {
+  display:flex;
+  align-items:center;
+  gap:.65rem;
+  color:#64748b;
+  background:#f8fafc;
+  border:1px dashed #cbd5e1;
+  border-radius:8px;
+  padding:.9rem 1rem;
+  font-size:.82rem;
+}
+.pc-exec-warning {
+  display:inline-flex;
+  align-items:center;
+  gap:.35rem;
+  border-radius:999px;
+  padding:.18rem .55rem;
+  font-size:.66rem;
+  font-weight:800;
+  background:#fee2e2;
+  color:#b91c1c;
+  margin-top:.55rem;
+}
+
+.pc-exec-grid {
+  display:grid;
+  grid-template-columns:minmax(300px,1.15fr) repeat(4,minmax(170px,1fr));
+  gap:14px;
+  margin-bottom:1.5rem;
+}
+.pc-exec-card {
+  background:#fff;
+  border:1px solid #d8e2ed;
+  border-radius:10px;
+  box-shadow:0 10px 28px rgba(15,23,42,.08);
+  padding:1rem;
+  min-height:152px;
+  position:relative;
+  overflow:hidden;
+}
+.pc-exec-card::before {
+  content:'';
+  position:absolute;
+  inset:0 auto 0 0;
+  width:4px;
+  background:var(--pc-accent,#1565d8);
+}
+.pc-exec-main { background:linear-gradient(145deg,#fff 0%,#f7fbff 55%,#eff8ff 100%); }
+.pc-exec-top { display:flex; justify-content:space-between; gap:.75rem; align-items:flex-start; margin-bottom:.9rem; }
+.pc-exec-eyebrow { color:#64748b; font-size:.68rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.pc-exec-title { color:#0f172a; font-size:1.05rem; font-weight:800; line-height:1.2; }
+.pc-exec-link {
+  display:inline-flex;
+  align-items:center;
+  gap:.35rem;
+  border:1px solid #bae6fd;
+  border-radius:8px;
+  color:#0369a1;
+  background:#e0f2fe;
+  font-size:.75rem;
+  font-weight:800;
+  padding:.38rem .7rem;
+  text-decoration:none;
+  white-space:nowrap;
+}
+.pc-exec-link:hover { background:#bae6fd; color:#075985; }
+.pc-exec-value { color:#0f172a; font-size:1.75rem; font-weight:850; line-height:1.05; }
+.pc-exec-label { color:#64748b; font-size:.72rem; font-weight:700; margin-top:.2rem; }
+.pc-exec-meta { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.55rem; margin-top:1rem; }
+.pc-exec-chip { background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:.55rem .65rem; }
+.pc-exec-chip span { display:block; color:#64748b; font-size:.66rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+.pc-exec-chip strong { color:#0f172a; display:block; margin-top:.15rem; }
+.pc-exec-meter { height:8px; border-radius:999px; background:#e5edf5; overflow:hidden; margin:.8rem 0 .65rem; }
+.pc-exec-meter span { display:block; width:var(--pc-pct,0%); height:100%; border-radius:999px; background:linear-gradient(90deg,var(--pc-accent,#1565d8),#7dd3fc); }
+.pc-exec-rows { display:grid; gap:.42rem; margin-top:.85rem; }
+.pc-exec-row { display:grid; grid-template-columns:minmax(0,1fr) 52px 52px 64px; gap:.55rem; align-items:center; color:#475569; font-size:.76rem; }
+.pc-exec-row strong { color:#0f172a; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pc-exec-row span:not(:first-child) { text-align:right; font-weight:800; }
+
+/* Executive typography scale */
+.exec-title { font-size:1.05rem; line-height:1.15; }
+.exec-subtitle { font-size:.76rem; }
+.exec-date { font-size:.8rem; }
+.exec-section { font-size:.72rem; margin:1rem 0 .75rem; }
+.exec-kpi-step,
+.exec-kpi-label,
+.kpi-label,
+.pc-exec-eyebrow {
+  font-size:.64rem;
+  letter-spacing:.075em;
+}
+.exec-kpi-value {
+  font-size:clamp(1.38rem,1.35vw,1.72rem);
+  line-height:1.12;
+  overflow-wrap:anywhere;
+}
+.exec-kpi-card.primary .exec-kpi-value {
+  font-size:clamp(1.55rem,1.7vw,1.95rem);
+}
+.kpi-value {
+  font-size:clamp(1.28rem,1.2vw,1.55rem);
+  line-height:1.12;
+  overflow-wrap:anywhere;
+}
+.pc-exec-value {
+  font-size:clamp(1.35rem,1.35vw,1.6rem);
+  line-height:1.12;
+  overflow-wrap:anywhere;
+}
+.pc-exec-title {
+  font-size:.96rem;
+  line-height:1.25;
+}
+.pc-exec-label,
+.pc-exec-link,
+.exec-kpi-note,
+.exec-mini-row,
+.kpi-sub,
+.fin-row,
+.dark-table tbody td,
+.dark-table tfoot td {
+  font-size:.75rem;
+}
+.dark-card-header h6,
+.project-card-name {
+  font-size:.82rem;
+}
+.project-card-sub,
+.pc-exec-row,
+.chart-filter-bar label {
+  font-size:.7rem;
+}
+.donut-pct { font-size:1.2rem; }
+.safety-cell .s-val { font-size:1.35rem; }
+@media (max-width:1400px) {
+  .pc-exec-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+  .pc-exec-main { grid-column:span 2; }
+}
+@media (max-width:992px) {
+  .pc-exec-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .pc-exec-main { grid-column:span 2; }
+  .exec-command-grid { grid-template-columns:1fr; }
+}
+@media (max-width:576px) {
+  .exec-body { padding:1rem; }
+  .exec-title { font-size:.95rem; }
+  .exec-subtitle,.exec-date { font-size:.72rem; }
+  .exec-section { font-size:.68rem; letter-spacing:.06em; }
+  .exec-kpi-value,
+  .exec-kpi-card.primary .exec-kpi-value,
+  .kpi-value,
+  .pc-exec-value {
+    font-size:1.28rem;
+  }
+  .exec-kpi-card,
+  .kpi-card,
+  .pc-exec-card {
+    min-height:auto;
+  }
+  .pc-exec-grid { grid-template-columns:1fr; }
+  .pc-exec-main { grid-column:span 1; }
+  .pc-exec-row { grid-template-columns:minmax(0,1fr) 48px 48px; }
+  .pc-exec-row span:last-child { display:none; }
+  .exec-command-head { align-items:flex-start; flex-direction:column; }
+  .exec-action-item { grid-template-columns:1fr; }
+  .exec-action-due { text-align:left; }
+}
+
 @media print {
   #sidebar,#topbar,.no-print { display:none !important; }
   #main-content { margin-left:0 !important; }
-  .page-content { background:#0a1628 !important; padding:0 !important; }
+  .page-content { background:#fff !important; padding:0 !important; }
   * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
   .kpi-card,.dark-card,.project-card { page-break-inside:avoid; }
 }
@@ -345,7 +645,7 @@
     <div class="exec-brand-icon"><i class="fas fa-hard-hat"></i></div>
     <div>
       <div class="exec-title">Executive Dashboard</div>
-      <div class="exec-subtitle">Weekly Owner Presentation · Construction Project Management</div>
+      <div class="exec-subtitle">Executive Cockpit • Construction Project Management</div>
     </div>
   </div>
   <div class="exec-meta">
@@ -433,6 +733,25 @@
     <div class="exec-kpi-status danger"><i class="fas fa-exclamation-triangle"></i>Critical</div>
     {% endif %}
   </div>
+
+  <div class="exec-kpi-card" style="--accent:{% if cost_kpis and cost_kpis.cost_status_class == 'critical' %}#dc2626{% elif cost_kpis and cost_kpis.cost_status_class == 'warning' %}#d97706{% else %}#059669{% endif %}">
+    <div class="exec-kpi-top">
+      <div class="exec-kpi-icon"><i class="fas fa-heartbeat"></i></div>
+      <div class="exec-kpi-step">06 Cost</div>
+    </div>
+    <div class="exec-kpi-value">
+      {% if cost_kpis and cost_kpis.cpi is not None %}{{ cost_kpis.cpi|floatformat:2 }} CPI{% else %}No data{% endif %}
+    </div>
+    <div class="exec-kpi-label">Cost Health</div>
+    <div class="exec-mini-row">
+      <span>Status</span>
+      <span>{% if cost_kpis %}{{ cost_kpis.cost_status }}{% else %}Not available{% endif %}</span>
+    </div>
+    <div class="exec-mini-row">
+      <span>Actual cost</span>
+      <span>{% if cost_kpis %}฿{{ cost_kpis.actual_cost|floatformat:0|intcomma }}{% else %}-{% endif %}</span>
+    </div>
+  </div>
 </div>
 
 {% if pending_reports > 0 or open_safety_issues > 0 %}
@@ -457,6 +776,184 @@
   {% endif %}
 </div>
 {% endif %}
+
+<div class="exec-section"><i class="fas fa-gavel"></i>Executive Action Desk</div>
+<div class="exec-command-grid">
+  <div class="exec-command-card">
+    <div class="exec-command-head">
+      <h6><i class="fas fa-exclamation-circle" style="color:#dc2626"></i>Owner Decisions Required</h6>
+      <a href="/admin/dashboard/ownerdecisionitem/add/" class="pc-exec-link no-print"><i class="fas fa-plus"></i>Add Item</a>
+    </div>
+    <div class="exec-command-body">
+      <div class="exec-action-list">
+        {% for item in owner_decisions|slice:":5" %}
+        <div class="exec-action-item">
+          <span class="priority-{{ item.priority|lower }}">
+            <i class="fas fa-circle me-1" style="font-size:.5rem"></i>{{ item.priority }}
+          </span>
+          <div>
+            <div class="exec-action-title">{{ item.issue }}</div>
+            <div class="exec-action-meta">{{ item.project.contract_no }} • {{ item.decision_required|truncatechars:90 }}</div>
+          </div>
+          <div class="exec-action-due">
+            {% if item.is_overdue %}<i class="fas fa-exclamation-triangle me-1 text-danger"></i>{% endif %}
+            {{ item.due_date|thai_be_date }}
+          </div>
+        </div>
+        {% empty %}
+        <div class="exec-empty-state">
+          <i class="fas fa-check-circle text-success"></i>
+          <span>No pending owner decisions.</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="exec-command-card">
+    <div class="exec-command-head">
+      <h6><i class="fas fa-bolt" style="color:#d97706"></i>Critical Control Pulse</h6>
+      <span class="pc-exec-eyebrow">Immediate visibility</span>
+    </div>
+    <div class="exec-command-body">
+      <div class="pc-exec-meta" style="margin-top:0">
+        <div class="pc-exec-chip">
+          <span>Pending reports</span>
+          <strong>{{ pending_reports|intcomma }}</strong>
+        </div>
+        <div class="pc-exec-chip">
+          <span>Open safety</span>
+          <strong>{{ open_safety_issues|intcomma }}</strong>
+        </div>
+        <div class="pc-exec-chip">
+          <span>Quality pending</span>
+          <strong>{{ quality_metrics.pending_inspection|default:0|intcomma }}</strong>
+        </div>
+        <div class="pc-exec-chip">
+          <span>NCR open</span>
+          <strong>{{ quality_metrics.ncr_open|default:0|intcomma }}</strong>
+        </div>
+      </div>
+      <div class="exec-empty-state mt-3">
+        <i class="fas fa-compass"></i>
+        <span>Use this cockpit to clear decisions first, then drill into Project Controls and cost details.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% with pc=project_controls_summary %}
+<div class="exec-section"><i class="fas fa-sliders-h"></i>Project Controls</div>
+<div class="pc-exec-grid">
+  <div class="pc-exec-card pc-exec-main" style="--pc-accent:#1565d8">
+    <div class="pc-exec-top">
+      <div>
+        <div class="pc-exec-eyebrow">Operational controls</div>
+        <div class="pc-exec-title">Material, revetment, and recovery status</div>
+      </div>
+      <a class="pc-exec-link" href="{% url 'project_controls:dashboard' %}">
+        <i class="fas fa-external-link-alt"></i> Open Controls
+      </a>
+    </div>
+    <div class="pc-exec-meta">
+      <div class="pc-exec-chip">
+        <span>Latest update</span>
+        <strong>{% if pc.latest_date %}{{ pc.latest_date|thai_be_date }}{% else %}No records{% endif %}</strong>
+      </div>
+      <div class="pc-exec-chip">
+        <span>Active projects</span>
+        <strong>{{ pc.project_count|default:0 }} project{{ pc.project_count|default:0|pluralize }}</strong>
+      </div>
+      <div class="pc-exec-chip">
+        <span>Revetment records</span>
+        <strong>{{ pc.revetment_records|default:0|intcomma }}</strong>
+      </div>
+      <div class="pc-exec-chip">
+        <span>Recovery delayed</span>
+        <strong>{{ pc.rap_delayed_items|default:0 }} / {{ pc.rap_total_items|default:0 }}</strong>
+      </div>
+    </div>
+    {% if not pc.available %}
+    <div class="exec-empty-state mt-3">
+      <i class="fas fa-info-circle"></i>
+      <span>Project Controls data is temporarily unavailable.</span>
+    </div>
+    {% elif pc.stock_alerts %}
+    <div class="pc-exec-warning"><i class="fas fa-exclamation-triangle"></i>{{ pc.stock_alerts }} stock alert{{ pc.stock_alerts|pluralize }}</div>
+    {% endif %}
+    {% if pc.rows %}
+    <div class="pc-exec-rows">
+      <div class="pc-exec-row pc-exec-eyebrow">
+        <span>Project</span><span>Rock</span><span>Sand</span><span>RAP</span>
+      </div>
+      {% for row in pc.rows %}
+      <div class="pc-exec-row">
+        <strong>{{ row.project.contract_no|default:row.project.project_name }}</strong>
+        <span>{{ row.rock_pct|floatformat:0 }}%</span>
+        <span>{% if row.sand_pct > 100 %}100%+{% else %}{{ row.sand_pct|floatformat:0 }}%{% endif %}</span>
+        <span>{% if row.stock_alert %}<i class="fas fa-exclamation-triangle text-danger me-1"></i>{% endif %}{{ row.rap_delayed }}/{{ row.rap_total }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% elif pc.available %}
+    <div class="exec-empty-state mt-3">
+      <i class="fas fa-database"></i>
+      <span>No Project Controls records yet.</span>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="pc-exec-card" style="--pc-accent:#1565d8;--pc-pct:{{ pc.rock_pct_capped|default:0 }}%">
+    <div class="pc-exec-eyebrow">Rock progress</div>
+    <div class="pc-exec-value">{{ pc.rock_pct|default:0|floatformat:0 }}%</div>
+    <div class="pc-exec-label">Placed vs delivered</div>
+    <div class="pc-exec-meter"><span></span></div>
+    <div class="fin-row"><span class="fin-label">Delivered</span><span>{{ pc.rock_delivered|default:0|floatformat:0|intcomma }} T</span></div>
+    <div class="fin-row"><span class="fin-label">Placed</span><span>{{ pc.rock_placed|default:0|floatformat:0|intcomma }} T</span></div>
+    <div class="fin-row"><span class="fin-label">Avg daily</span><span>{{ pc.rock_avg_daily|default:0|floatformat:0|intcomma }} T/day</span></div>
+    <div class="fin-row"><span class="fin-label">Forecast</span><span>{% if pc.rock_forecast_date %}{{ pc.rock_forecast_date|thai_be_date }}{% else %}-{% endif %}</span></div>
+    <div class="fin-total"><span>Stock</span><span>{{ pc.rock_stock|default:0|floatformat:0|intcomma }} T</span></div>
+    {% if pc.rock_stock < 0 %}<div class="pc-exec-warning"><i class="fas fa-exclamation-triangle"></i>Negative stock</div>{% endif %}
+  </div>
+
+  <div class="pc-exec-card" style="--pc-accent:#0891b2;--pc-pct:{{ pc.sand_pct_capped|default:0 }}%">
+    <div class="pc-exec-eyebrow">Sand progress</div>
+    <div class="pc-exec-value">{{ pc.sand_pct_capped|default:0|floatformat:0 }}%</div>
+    <div class="pc-exec-label">
+      Placed vs delivered
+      {% if pc.sand_pct > 100 %}<span class="text-danger fw-bold ms-1">Actual {{ pc.sand_pct|floatformat:0 }}%</span>{% endif %}
+    </div>
+    <div class="pc-exec-meter"><span></span></div>
+    <div class="fin-row"><span class="fin-label">Delivered</span><span>{{ pc.sand_delivered|default:0|floatformat:0|intcomma }} T</span></div>
+    <div class="fin-row"><span class="fin-label">Placed</span><span>{{ pc.sand_placed|default:0|floatformat:0|intcomma }} T</span></div>
+    <div class="fin-row"><span class="fin-label">Avg daily</span><span>{{ pc.sand_avg_daily|default:0|floatformat:0|intcomma }} T/day</span></div>
+    <div class="fin-row"><span class="fin-label">Forecast</span><span>{% if pc.sand_forecast_date %}{{ pc.sand_forecast_date|thai_be_date }}{% else %}-{% endif %}</span></div>
+    <div class="fin-total"><span>Remaining</span><span>{{ pc.sand_remaining|default:0|floatformat:0|intcomma }} T</span></div>
+    {% if pc.sand_remaining < 0 %}<div class="pc-exec-warning"><i class="fas fa-exclamation-triangle"></i>Negative stock</div>{% endif %}
+  </div>
+
+  <div class="pc-exec-card" style="--pc-accent:#059669">
+    <div class="pc-exec-eyebrow">Revetment</div>
+    <div class="pc-exec-value">{{ pc.revetment_quantity|default:0|floatformat:0|intcomma }}</div>
+    <div class="pc-exec-label">Total recorded quantity</div>
+    <div class="pc-exec-meta" style="grid-template-columns:1fr">
+      <div class="pc-exec-chip">
+        <span>Records</span>
+        <strong>{{ pc.revetment_records|default:0|intcomma }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="pc-exec-card" style="--pc-accent:{% if pc.rap_delayed_items|default:0 > 0 %}#dc2626{% else %}#059669{% endif %};--pc-pct:{{ pc.rap_pct_capped|default:0 }}%">
+    <div class="pc-exec-eyebrow">Recovery action</div>
+    <div class="pc-exec-value">{{ pc.rap_pct|default:0|floatformat:1 }}%</div>
+    <div class="pc-exec-label">Actual vs planned recovery</div>
+    <div class="pc-exec-meter"><span></span></div>
+    <div class="fin-row"><span class="fin-label">Total items</span><span>{{ pc.rap_total_items|default:0 }}</span></div>
+    <div class="fin-total"><span>Delayed</span><span>{{ pc.rap_delayed_items|default:0 }}</span></div>
+  </div>
+</div>
+{% endwith %}
 
 <div class="exec-section"><i class="fas fa-chart-area"></i>Planned vs Actual Progress (EVM)</div>
 <div class="row g-3 mb-4">
@@ -1133,74 +1630,20 @@
 </div>
 {% endif %}
 
-<div class="exec-section"><i class="fas fa-gavel"></i>Owner Decision Required</div>
-<div class="dark-card mb-4">
-  <div class="dark-card-header">
-    <h6><i class="fas fa-exclamation-circle" style="color:#e74c3c"></i>Pending Owner Actions</h6>
-    <a href="/admin/dashboard/ownerdecisionitem/add/" class="no-print" style="color:#f0a500;font-size:.75rem;font-weight:600;text-decoration:none"><i class="fas fa-plus me-1"></i>Add Item</a>
-  </div>
-  <div class="table-responsive">
-    <table class="dark-table">
-      <thead>
-        <tr>
-          <th>Priority</th>
-          <th>Critical Issue</th>
-          <th>Impact</th>
-          <th>Decision Required</th>
-          <th>Responsible Party</th>
-          <th>Due Date</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in owner_decisions %}
-        <tr>
-          <td>
-            <span class="priority-{{ item.priority|lower }}">
-              <i class="fas fa-circle me-1" style="font-size:.5rem"></i>{{ item.priority }}
-            </span>
-          </td>
-          <td>
-            <div style="font-weight:600;color:#e8f0f8">{{ item.issue }}</div>
-            <div style="font-size:.72rem;color:#8aa5c0">{{ item.project.contract_no }}</div>
-          </td>
-          <td style="font-size:.8rem;max-width:200px">{{ item.impact|truncatechars:80 }}</td>
-          <td style="font-size:.8rem;max-width:200px">{{ item.decision_required|truncatechars:80 }}</td>
-          <td style="color:#8aa5c0;font-size:.8rem">{{ item.responsible_party }}</td>
-          <td>
-            <span style="color:{% if item.is_overdue %}#e74c3c{% else %}#c8d6e5{% endif %};font-size:.8rem">
-              {% if item.is_overdue %}<i class="fas fa-exclamation-triangle me-1 text-danger"></i>{% endif %}
-              {{ item.due_date|thai_be_date }}
-            </span>
-          </td>
-          <td>
-            {% if item.status == 'Pending' %}<span class="rpt-badge" style="background:rgba(243,156,18,.2);color:#f39c12">Pending</span>
-            {% elif item.status == 'Decided' %}<span class="rpt-badge" style="background:rgba(46,204,113,.2);color:#2ecc71">Decided</span>
-            {% else %}<span class="rpt-badge" style="background:rgba(231,76,60,.2);color:#e74c3c">Escalated</span>{% endif %}
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="7" class="text-center py-4" style="color:#8aa5c0">
-            <i class="fas fa-check-circle me-2 text-success"></i>No pending owner decisions.
-            <a href="/admin/dashboard/ownerdecisionitem/add/" class="ms-2 no-print" style="color:#f0a500;font-size:.8rem">Add one via Admin →</a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
-
 </div>{# end exec-body #}
 {% endblock %}
 
 {% block extra_js %}
 <script>
-/* ── Chart.js dark defaults ─── */
-Chart.defaults.color = '#8aa5c0';
-Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+/* Chart.js light dashboard defaults */
+Chart.defaults.color = '#475569';
+Chart.defaults.borderColor = 'rgba(148,163,184,0.24)';
 Chart.defaults.font.family = "'Segoe UI',Tahoma,Geneva,Verdana,sans-serif";
+Chart.defaults.plugins.tooltip.backgroundColor = '#0f172a';
+Chart.defaults.plugins.tooltip.titleColor = '#fff';
+Chart.defaults.plugins.tooltip.bodyColor = '#e2e8f0';
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.tooltip.cornerRadius = 8;
 
 let manpowerChart = null, rockChart = null, sandChart = null, scurveChart = null;
 
@@ -1211,8 +1654,8 @@ document.addEventListener('DOMContentLoaded', function () {
     new Chart(canvas, {
       type: 'doughnut',
       data: { datasets: [{ data: [pct, Math.max(0, 100 - pct)],
-        backgroundColor: ['rgba(0,180,216,0.85)', 'rgba(255,255,255,0.06)'],
-        borderColor: ['rgba(0,180,216,1)', 'rgba(255,255,255,0.04)'],
+        backgroundColor: ['rgba(8,145,178,0.85)', 'rgba(226,232,240,0.9)'],
+        borderColor: ['rgba(8,145,178,1)', 'rgba(203,213,225,0.9)'],
         borderWidth: 2 }] },
       options: { responsive: false, cutout: '72%',
         plugins: { legend: { display: false }, tooltip: { enabled: false } },
@@ -1297,8 +1740,8 @@ function gradV(ctx, top, bot) {
   g.addColorStop(0, top); g.addColorStop(1, bot); return g;
 }
 var SCALE_OPTS = {
-  x: { ticks: { maxTicksLimit: 8, font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
-  y: { beginAtZero: true, ticks: { font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.06)' } }
+  x: { ticks: { maxTicksLimit: 8, color: '#64748b', font: { size: 10 } }, grid: { color: 'rgba(148,163,184,0.16)' } },
+  y: { beginAtZero: true, ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: 'rgba(148,163,184,0.22)' } }
 };
 
 function renderManpower(labels, data) {
@@ -1352,12 +1795,12 @@ function renderSand(labels, data) {
       options: {
         responsive: true,
         plugins: {
-          legend: { labels: { color: '#8aa5c0', font: { size: 11 } } },
+          legend: { labels: { color: '#475569', font: { size: 11 } } },
           tooltip: { callbacks: { label: function(c) { return c.dataset.label + ': ฿' + c.parsed.y.toLocaleString(); } } }
         },
         scales: {
-          x: { ticks: { color: '#8aa5c0', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
-          y: { ticks: { color: '#8aa5c0', font: { size: 10 }, callback: function(v) { return '฿' + (v/1000000).toFixed(1) + 'M'; } }, grid: { color: 'rgba(255,255,255,0.06)' } }
+          x: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: 'rgba(148,163,184,0.16)' } },
+          y: { ticks: { color: '#64748b', font: { size: 10 }, callback: function(v) { return '฿' + (v/1000000).toFixed(1) + 'M'; } }, grid: { color: 'rgba(148,163,184,0.22)' } }
         }
       }
     });
@@ -1409,9 +1852,9 @@ function renderSCurve(data) {
         }
       },
       scales: {
-        x: { ticks: { maxTicksLimit: 12, font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
-        y: { min: 0, max: 100, ticks: { font: { size: 10 }, callback: v => v + '%' },
-          grid: { color: 'rgba(255,255,255,0.06)' } }
+        x: { ticks: { maxTicksLimit: 12, color: '#64748b', font: { size: 10 } }, grid: { color: 'rgba(148,163,184,0.16)' } },
+        y: { min: 0, max: 100, ticks: { color: '#64748b', font: { size: 10 }, callback: v => v + '%' },
+          grid: { color: 'rgba(148,163,184,0.22)' } }
       }
     }
   });

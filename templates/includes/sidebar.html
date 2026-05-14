@@ -82,9 +82,9 @@
 
         <div class="nav-section"><span class="sidebar-label">Project Controls</span></div>
         <a href="{% url 'project_controls:dashboard' %}" class="nav-link {% if vn == 'project_controls:dashboard' or vn == 'project_controls:rock_list' or vn == 'project_controls:sand_list' %}active{% endif %}"
-           data-bs-toggle="tooltip" data-bs-placement="right" title="Material Control">
+           data-bs-toggle="tooltip" data-bs-placement="right" title="Rock &amp; Sand Control">
             <i class="fas fa-water nav-icon"></i>
-            <span class="sidebar-label">Material Control</span>
+            <span class="sidebar-label">Rock &amp; Sand Control</span>
         </a>
         <a href="{% url 'project_controls:revetment_dashboard' %}" class="nav-link {% if 'project_controls:revetment' in vn %}active{% endif %}"
            data-bs-toggle="tooltip" data-bs-placement="right" title="Revetment Progress">

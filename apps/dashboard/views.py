@@ -195,6 +195,122 @@ def _quantity_balance(active_projects):
 #  Main Dashboard View
 # ─────────────────────────────────────────────────────────
 
+def _safe_float(value):
+    try:
+        return float(value or 0)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _percent(numerator, denominator):
+    numerator = _safe_float(numerator)
+    denominator = _safe_float(denominator)
+    return round((numerator / denominator * 100), 1) if denominator else 0.0
+
+
+def _latest_date(*dates):
+    valid_dates = [value for value in dates if value]
+    return max(valid_dates) if valid_dates else None
+
+
+def _project_controls_summary(active_projects):
+    """Aggregate project-control operational data for the executive page."""
+    try:
+        from apps.project_controls.services import (
+            get_rap_dashboard_data,
+            get_revetment_dashboard_data,
+            get_rock_dashboard_data,
+            get_sand_dashboard_data,
+        )
+    except Exception:
+        return {'available': False, 'rows': [], 'latest_date': None}
+
+    summary = {
+        'available': True,
+        'project_count': len(active_projects),
+        'rock_delivered': 0.0,
+        'rock_placed': 0.0,
+        'rock_stock': 0.0,
+        'rock_avg_daily': 0.0,
+        'rock_forecast_date': None,
+        'sand_delivered': 0.0,
+        'sand_placed': 0.0,
+        'sand_remaining': 0.0,
+        'sand_avg_daily': 0.0,
+        'sand_forecast_date': None,
+        'revetment_quantity': 0.0,
+        'revetment_records': 0,
+        'rap_total_items': 0,
+        'rap_delayed_items': 0,
+        'rap_planned': 0.0,
+        'rap_actual': 0.0,
+        'stock_alerts': 0,
+        'latest_date': None,
+        'rows': [],
+    }
+
+    for project in active_projects:
+        rock = get_rock_dashboard_data(project)
+        sand = get_sand_dashboard_data(project)
+        revetment = get_revetment_dashboard_data(project)
+        rap = get_rap_dashboard_data(project)
+
+        rock_delivered = _safe_float(rock.get('total_delivered'))
+        rock_placed = _safe_float(rock.get('total_placed'))
+        sand_delivered = _safe_float(sand.get('total_delivered'))
+        sand_placed = _safe_float(sand.get('total_placed'))
+
+        summary['rock_delivered'] += rock_delivered
+        summary['rock_placed'] += rock_placed
+        summary['rock_stock'] += _safe_float(rock.get('stock_balance'))
+        summary['rock_avg_daily'] += _safe_float(rock.get('average_daily_placement'))
+        summary['sand_delivered'] += sand_delivered
+        summary['sand_placed'] += sand_placed
+        summary['sand_remaining'] += _safe_float(sand.get('total_remaining'))
+        summary['sand_avg_daily'] += _safe_float(sand.get('average_daily_placement'))
+        summary['revetment_quantity'] += _safe_float(revetment.get('total_quantity'))
+        summary['revetment_records'] += int(revetment.get('record_count') or 0)
+        summary['rap_total_items'] += int(rap.get('total_items') or 0)
+        summary['rap_delayed_items'] += int(rap.get('delayed_items') or 0)
+        summary['rap_planned'] += _safe_float(rap.get('total_planned'))
+        summary['rap_actual'] += _safe_float(rap.get('total_actual'))
+        summary['latest_date'] = _latest_date(
+            summary['latest_date'],
+            rock.get('latest_date'),
+            sand.get('latest_date'),
+            revetment.get('latest_date'),
+        )
+        summary['rock_forecast_date'] = _latest_date(
+            summary['rock_forecast_date'],
+            rock.get('forecast_completion_date'),
+        )
+        summary['sand_forecast_date'] = _latest_date(
+            summary['sand_forecast_date'],
+            sand.get('forecast_completion_date'),
+        )
+
+        if _safe_float(rock.get('stock_balance')) < 0 or _safe_float(sand.get('total_remaining')) < 0:
+            summary['stock_alerts'] += 1
+
+        summary['rows'].append({
+            'project': project,
+            'rock_pct': _percent(rock_placed, rock_delivered),
+            'sand_pct': _percent(sand_placed, sand_delivered),
+            'rap_delayed': int(rap.get('delayed_items') or 0),
+            'rap_total': int(rap.get('total_items') or 0),
+            'stock_alert': _safe_float(rock.get('stock_balance')) < 0 or _safe_float(sand.get('total_remaining')) < 0,
+        })
+
+    summary['rock_pct'] = _percent(summary['rock_placed'], summary['rock_delivered'])
+    summary['rock_pct_capped'] = min(summary['rock_pct'], 100)
+    summary['sand_pct'] = _percent(summary['sand_placed'], summary['sand_delivered'])
+    summary['sand_pct_capped'] = min(summary['sand_pct'], 100)
+    summary['rap_pct'] = _percent(summary['rap_actual'], summary['rap_planned'])
+    summary['rap_pct_capped'] = min(summary['rap_pct'], 100)
+    summary['rows'] = summary['rows'][:6]
+    return summary
+
+
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard/index.html'
 
@@ -325,6 +441,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         # ── Quantity balance table ────────────────────────
         ctx['quantity_balance'] = _quantity_balance(ctx['active_projects'])
+        ctx['project_controls_summary'] = _project_controls_summary(ctx['active_projects'])
 
         # ── Owner decisions ───────────────────────────────
         ctx['owner_decisions'] = (OwnerDecisionItem.objects

@@ -11,11 +11,11 @@
 
   /* ── Header ──────────────────────────────────────────────────── */
   .rdb-header {
-    background: linear-gradient(135deg, #0c7a9a 0%, #075e77 55%, #053f52 100%);
-    border-radius: 10px;
+    background: linear-gradient(135deg, #155e75 0%, #0f766e 58%, #334155 100%);
+    border-radius: 8px;
     color: #fff;
     padding: 22px 28px 18px;
-    box-shadow: 0 10px 30px rgba(12,122,154,.30);
+    box-shadow: 0 10px 24px rgba(15,23,42,.18);
     position: relative;
     overflow: hidden;
   }
@@ -40,18 +40,19 @@
   .rdb-kpis { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
   .rdb-kpi {
     background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(15,23,42,.08);
+    border: 1px solid #e8edf4;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(15,23,42,.05);
     padding: 15px 13px 13px;
     position: relative;
     overflow: hidden;
     transition: transform .15s ease, box-shadow .15s ease;
   }
-  .rdb-kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--c, #2563eb); border-radius: 10px 10px 0 0; }
-  .rdb-kpi:hover { box-shadow: 0 8px 22px rgba(15,23,42,.14); transform: translateY(-3px); }
+  .rdb-kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--c, #2563eb); border-radius: 8px 8px 0 0; }
+  .rdb-kpi:hover { box-shadow: 0 8px 18px rgba(15,23,42,.10); transform: translateY(-1px); }
   .rdb-kpi .ki { align-items: center; background: var(--cb, #eff6ff); border-radius: 8px; color: var(--c, #2563eb); display: flex; font-size: .88rem; height: 32px; justify-content: center; margin-bottom: 8px; width: 32px; }
   .rdb-kpi .kl { color: #64748b; font-size: .72rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
-  .rdb-kpi .kv { color: #0f172a; font-size: 1.7rem; font-weight: 900; line-height: 1.1; margin: 4px 0 2px; }
+  .rdb-kpi .kv { color: #0f172a; font-size: 1.7rem; font-weight: 900; line-height: 1.1; margin: 4px 0 2px; overflow-wrap: anywhere; }
   .rdb-kpi .ks { color: #94a3b8; font-size: .71rem; }
   .rdb-kpi.blue   { --c:#2563eb; --cb:#eff6ff; }
   .rdb-kpi.green  { --c:#059669; --cb:#ecfdf5; }
@@ -119,6 +120,10 @@
     .rdb-header-badge    { display: none; }
     .rdb-kpis            { grid-template-columns: repeat(2, minmax(0,1fr)); }
     .rdb-kpi .kv         { font-size: 1.4rem; }
+  }
+  @media (max-width: 520px) {
+    .rdb-header { padding: 18px; }
+    .rdb-kpis  { grid-template-columns: minmax(0,1fr); }
   }
 </style>
 {% endblock %}
@@ -242,13 +247,13 @@
         </div>
         <div class="col-xl-5">
           <div class="rdb-panel">
-            <div class="rdb-pt"><div class="ico"><i class="fas fa-ship"></i></div><h6>Placement by Barge</h6></div>
+            <div class="rdb-pt"><div class="ico"><i class="fas fa-truck-moving"></i></div><h6>Placement by Transport Unit</h6></div>
             <div class="rdb-chart"><canvas id="rockBargeChart"></canvas></div>
           </div>
         </div>
       </section>
 
-      <!-- ─── Stock Balance + Barge Table ──────────────────────── -->
+      <!-- ─── Stock Balance + Transport Table ──────────────────────── -->
       <section class="row g-3">
         <div class="col-xl-4">
           <div class="rdb-panel">
@@ -275,12 +280,12 @@
         </div>
         <div class="col-xl-8">
           <div class="rdb-panel">
-            <div class="rdb-pt"><div class="ico"><i class="fas fa-anchor"></i></div><h6>Barge Trips &amp; Quantity</h6></div>
+            <div class="rdb-pt"><div class="ico"><i class="fas fa-truck-moving"></i></div><h6>Transport Trips &amp; Quantity</h6></div>
             <div class="table-responsive">
               <table class="rdb-tbl">
                 <thead>
                   <tr>
-                    <th>Barge</th>
+                    <th>Transport Unit</th>
                     <th class="text-end">Total (tons)</th>
                     <th class="text-end">Trips</th>
                     <th class="text-end">Avg / Trip</th>
@@ -297,7 +302,7 @@
                     <td class="text-end text-muted">{% if b.latest_trip_date %}{{ b.latest_trip_date|thai_be_date }}{% else %}—{% endif %}</td>
                   </tr>
                   {% empty %}
-                  <tr><td colspan="5" class="text-center text-muted py-4">No barge data for the selected filters.</td></tr>
+                  <tr><td colspan="5" class="text-center text-muted py-4">No transport data for the selected filters.</td></tr>
                   {% endfor %}
                 </tbody>
               </table>
@@ -396,9 +401,9 @@
           <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control form-control-sm">
         </div>
         <div>
-          <label class="rdb-fl">Barge</label>
+          <label class="rdb-fl">Transport Unit</label>
           <select name="barge" class="form-select form-select-sm">
-            <option value="">All Barges</option>
+            <option value="">All Transport Units</option>
             {% for barge in barges %}
             <option value="{{ barge.pk }}" {% if request.GET.barge == barge.pk|stringformat:"s" %}selected{% endif %}>{{ barge.name }}</option>
             {% endfor %}

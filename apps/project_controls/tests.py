@@ -98,6 +98,23 @@ class SandDailyRecordFormTests(TestCase):
         self.assertIn('readonly', str(RevetmentDailyRecordForm()['day_name']))
         self.assertIn('readonly', str(RecoveryPlanDailyItemFormSet().empty_form['day_name']))
 
+    def test_rock_placed_daily_ton_is_readonly_and_calculated_hint(self):
+        form = RockDailyRecordForm()
+
+        self.assertIn('readonly', str(form['placed_daily_ton']))
+        self.assertIn('Auto-calculated from Transport Placement quantities below.', form.fields['placed_daily_ton'].help_text)
+
+    def test_sand_placement_daily_tons_are_readonly(self):
+        form = SandDailyRecordForm()
+
+        self.assertIn('readonly', str(form['offshore_daily_ton']))
+        self.assertIn('readonly', str(form['onshore_daily_ton']))
+
+    def test_onshore_transport_units_are_seeded(self):
+        self.assertTrue(Barge.objects.filter(name='Onshore Truck', transport_mode='Onshore', is_active=True).exists())
+        self.assertTrue(Barge.objects.filter(name='Wheel Loader', transport_mode='Onshore', is_active=True).exists())
+        self.assertTrue(Barge.objects.filter(name='Dump Truck', transport_mode='Onshore', is_active=True).exists())
+
 
 class SandDailyRecordEditTests(TestCase):
     def setUp(self):
@@ -229,6 +246,7 @@ class SandDailyRecordEditTests(TestCase):
         self.assertEqual(self.record.day_name, 'Sun')
         self.assertEqual(self.placement_a.quantity_ton, Decimal('20.00'))
         self.assertEqual(self.record.offshore_daily_ton, Decimal('1552.20'))
+        self.assertEqual(self.record.onshore_daily_ton, Decimal('0'))
 
 
 class ProjectControlsWorkflowTests(TestCase):
@@ -263,6 +281,7 @@ class ProjectControlsWorkflowTests(TestCase):
             'barge_placements-0-barge': barge.pk,
             'barge_placements-0-quantity_ton': '80.00',
             'barge_placements-0-trips': '',
+            'barge_placements-0-placement_type': 'Offshore',
             'barge_placements-0-station': '',
             'barge_placements-0-remarks': '',
         })
@@ -310,6 +329,7 @@ class ProjectControlsWorkflowTests(TestCase):
             'barge_placements-0-barge': barge.pk,
             'barge_placements-0-quantity_ton': '90.00',
             'barge_placements-0-trips': '',
+            'barge_placements-0-placement_type': 'Offshore',
             'barge_placements-0-station': '',
             'barge_placements-0-remarks': '',
         })
@@ -320,6 +340,96 @@ class ProjectControlsWorkflowTests(TestCase):
         self.assertEqual(record.day_name, 'Sun')
         self.assertEqual(record.placed_daily_ton, Decimal('90.00'))
         self.assertEqual(placement.quantity_ton, Decimal('90.00'))
+
+    def test_rock_transport_onshore_updates_outside_daily(self):
+        barge = Barge.objects.get(name='Onshore Truck')
+
+        response = self.client.post('/project-controls/rock/new/', {
+            'project': self.project.pk,
+            'record_date': '2026-05-10',
+            'day_name': 'Wrong',
+            'material_type': '',
+            'source_quarry': '',
+            'destination_area': '',
+            'tct_daily_ton': '120.00',
+            'tct_trips': '1',
+            'tct_trucks': '1',
+            'placed_daily_ton': '0',
+            'station_of_core': '',
+            'core_outside_daily': '0',
+            'core_inside_accum': '0',
+            'remarks': '',
+            'barge_placements-TOTAL_FORMS': '1',
+            'barge_placements-INITIAL_FORMS': '0',
+            'barge_placements-MIN_NUM_FORMS': '0',
+            'barge_placements-MAX_NUM_FORMS': '1000',
+            'barge_placements-0-barge': barge.pk,
+            'barge_placements-0-quantity_ton': '70.00',
+            'barge_placements-0-trips': '',
+            'barge_placements-0-placement_type': 'Onshore',
+            'barge_placements-0-station': 'Outside Plot Tank',
+            'barge_placements-0-remarks': '',
+        })
+
+        record = RockDailyRecord.objects.get(project=self.project, record_date=date(2026, 5, 10))
+        self.assertRedirects(response, f'/project-controls/rock/{record.pk}/')
+        self.assertEqual(record.placed_daily_ton, Decimal('70.00'))
+        self.assertEqual(record.core_outside_daily, Decimal('70.00'))
+
+    def test_sand_transport_types_update_offshore_and_onshore_daily(self):
+        offshore = Barge.objects.get(name='Bang Sapan 2')
+        onshore = Barge.objects.get(name='Onshore Truck')
+
+        response = self.client.post('/project-controls/sand/new/', {
+            'project': self.project.pk,
+            'record_date': '2026-05-10',
+            'day_name': 'Wrong',
+            'tct_daily_ton': '100.00',
+            'tct_trips': '1',
+            'tct_trucks': '1',
+            'mtp3_daily_ton': '50.00',
+            'mtp3_trips': '1',
+            'mtp3_trucks': '1',
+            'chalothon_daily_ton': '0',
+            'chalothon_trips': '0',
+            'chalothon_trucks': '0',
+            'khlong_bang_phai_daily_ton': '0',
+            'khlong_bang_phai_trips': '0',
+            'khlong_bang_phai_trucks': '0',
+            'offshore_daily_ton': '0',
+            'offshore_station': '',
+            'onshore_daily_ton': '0',
+            'onshore_trips': '0',
+            'onshore_trucks': '0',
+            'inside_plot_daily': '0',
+            'outside_plot_daily': '0',
+            'remaining_tct': '100.00',
+            'remaining_mtp3': '50.00',
+            'remarks': '',
+            'barge_placements-TOTAL_FORMS': '2',
+            'barge_placements-INITIAL_FORMS': '0',
+            'barge_placements-MIN_NUM_FORMS': '0',
+            'barge_placements-MAX_NUM_FORMS': '1000',
+            'barge_placements-0-barge': offshore.pk,
+            'barge_placements-0-quantity_ton': '80.00',
+            'barge_placements-0-trips': '',
+            'barge_placements-0-source': '',
+            'barge_placements-0-destination': 'TCT Pier',
+            'barge_placements-0-placement_type': 'Offshore',
+            'barge_placements-0-station': '',
+            'barge_placements-1-barge': onshore.pk,
+            'barge_placements-1-quantity_ton': '30.00',
+            'barge_placements-1-trips': '',
+            'barge_placements-1-source': '',
+            'barge_placements-1-destination': 'Stockpile Sand MTP3',
+            'barge_placements-1-placement_type': 'Onshore',
+            'barge_placements-1-station': 'Inside Plot Tank',
+        })
+
+        record = SandDailyRecord.objects.get(project=self.project, record_date=date(2026, 5, 10))
+        self.assertRedirects(response, f'/project-controls/sand/{record.pk}/')
+        self.assertEqual(record.offshore_daily_ton, Decimal('80.00'))
+        self.assertEqual(record.onshore_daily_ton, Decimal('30.00'))
 
     def test_revetment_create_derives_day_name_and_saves_daily_item(self):
         station = RevetmentStation.objects.create(project=self.project, station='0+000')

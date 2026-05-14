@@ -19,7 +19,7 @@ class RockBargePlacementSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RockBargePlacement
-        fields = ['id', 'barge', 'barge_name', 'quantity_ton', 'trips', 'station', 'remarks']
+        fields = ['id', 'barge', 'barge_name', 'quantity_ton', 'trips', 'placement_type', 'station', 'remarks']
 
 
 class RockDailyRecordSerializer(serializers.ModelSerializer):

@@ -49,6 +49,37 @@ from .workflows import (
 
 # ── Project Controls Main Dashboard ──────────────────────────────────────────
 
+def _rock_form_helper_json(current_record=None):
+    data = {}
+    for project in Project.objects.filter(status='Active'):
+        qs = RockDailyRecord.objects.filter(project=project).order_by('record_date')
+        if current_record and current_record.project_id == project.pk:
+            qs = qs.exclude(pk=current_record.pk).filter(record_date__lt=current_record.record_date)
+        latest = qs.last()
+        data[str(project.pk)] = {
+            'stock': float(latest.stock_balance) if latest else 0,
+            'core_inside_accum': float(latest.core_inside_accum) if latest else 0,
+            'core_outside_accum': float(latest.core_outside_accum) if latest else 0,
+        }
+    return json.dumps(data)
+
+
+def _sand_form_helper_json(current_record=None):
+    data = {}
+    for project in Project.objects.filter(status='Active'):
+        qs = SandDailyRecord.objects.filter(project=project).order_by('record_date')
+        if current_record and current_record.project_id == project.pk:
+            qs = qs.exclude(pk=current_record.pk).filter(record_date__lt=current_record.record_date)
+        latest = qs.last()
+        data[str(project.pk)] = {
+            'remaining_tct': float(latest.remaining_tct) if latest else 0,
+            'remaining_mtp3': float(latest.remaining_mtp3) if latest else 0,
+            'inside_plot_accum': float(latest.inside_plot_accum) if latest else 0,
+            'outside_plot_accum': float(latest.outside_plot_accum) if latest else 0,
+        }
+    return json.dumps(data)
+
+
 class ProjectControlsDashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'project_controls/dashboard.html'
 
@@ -119,6 +150,7 @@ class RockCreateView(LoginRequiredMixin, CreateView):
             ctx['barge_formset'] = RockBargePlacementFormSet(self.request.POST)
         else:
             ctx['barge_formset'] = RockBargePlacementFormSet()
+        ctx['form_helper_json'] = _rock_form_helper_json()
         return ctx
 
     def form_valid(self, form):
@@ -156,6 +188,7 @@ class RockUpdateView(LoginRequiredMixin, UpdateView):
             ctx['barge_formset'] = RockBargePlacementFormSet(self.request.POST, instance=self.object)
         else:
             ctx['barge_formset'] = RockBargePlacementFormSet(instance=self.object)
+        ctx['form_helper_json'] = _rock_form_helper_json(self.object)
         return ctx
 
     def form_valid(self, form):
@@ -272,6 +305,7 @@ class SandCreateView(LoginRequiredMixin, CreateView):
             ctx['barge_formset'] = SandBargePlacementFormSet(
                 self.request.POST if self.request.POST else None
             )
+        ctx['form_helper_json'] = _sand_form_helper_json()
         return ctx
 
     def form_valid(self, form):
@@ -312,6 +346,7 @@ class SandUpdateView(LoginRequiredMixin, UpdateView):
                 self.request.POST if self.request.POST else None,
                 instance=self.object,
             )
+        ctx['form_helper_json'] = _sand_form_helper_json(self.object)
         return ctx
 
     def form_valid(self, form):

@@ -145,7 +145,11 @@ def _import_rock(project, file_content, duplicate_action):
                 if qty > 0 and code in barge_map:
                     RockBargePlacement.objects.update_or_create(
                         record=rec, barge=barge_map[code],
-                        defaults={'quantity_ton': qty, 'trips': None},
+                        defaults={
+                            'quantity_ton': qty,
+                            'trips': None,
+                            'placement_type': RockBargePlacement.PLACEMENT_OFFSHORE,
+                        },
                     )
             success += 1
         except Exception as e:
@@ -190,9 +194,12 @@ def _import_sand(project, file_content, duplicate_action):
             barge4 = _to_decimal(row[15] if len(row) > 15 else None)
             offshore_daily = barge1 + barge2 + barge3 + barge4
             offshore_station = str(row[16] or '') if len(row) > 16 else ''
-            onshore_daily = _to_decimal(row[17] if len(row) > 17 else None)
-            onshore_trips = _to_int(row[18] if len(row) > 18 else None)
-            onshore_trucks = _to_int(row[19] if len(row) > 19 else None)
+            # Legacy summary sheets store a stock/onshore cumulative value in this
+            # area. Onshore placement is now sourced from transport rows, so avoid
+            # importing cumulative stock as a daily placement amount.
+            onshore_daily = Decimal('0')
+            onshore_trips = 0
+            onshore_trucks = 0
             inside_daily = _to_decimal(row[20] if len(row) > 20 else None)
             outside_daily = _to_decimal(row[21] if len(row) > 21 else None)
             remaining_tct = _to_decimal(row[22] if len(row) > 22 else None)

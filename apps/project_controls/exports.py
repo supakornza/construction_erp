@@ -363,8 +363,8 @@ def export_rock_pdf(record):
 
     placements = record.barge_placements.select_related('barge').all()
     if placements:
-        story.append(Paragraph('<b>Barge Placements</b>', styles['Heading3']))
-        bp_data = [['Barge', 'Quantity (Ton)', 'Trips', 'Station']]
+        story.append(Paragraph('<b>Transport Placements</b>', styles['Heading3']))
+        bp_data = [['Transport Unit', 'Quantity (Ton)', 'Trips', 'Station']]
         for bp in placements:
             bp_data.append([bp.barge.name, f'{bp.quantity_ton:,.2f}', str(bp.trips), bp.station or '-'])
         bt = Table(bp_data, colWidths=[5*cm, 4*cm, 3*cm, 8*cm])

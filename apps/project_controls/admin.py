@@ -13,14 +13,15 @@ from .models import (
 
 @admin.register(Barge)
 class BargeAdmin(admin.ModelAdmin):
-    list_display = ['name', 'code', 'capacity_ton', 'is_active']
-    list_filter = ['is_active']
+    list_display = ['name', 'code', 'transport_mode', 'capacity_ton', 'is_active']
+    list_filter = ['transport_mode', 'is_active']
     search_fields = ['name', 'code']
 
 
 class RockBargePlacementInline(admin.TabularInline):
     model = RockBargePlacement
     extra = 1
+    fields = ['barge', 'quantity_ton', 'trips', 'placement_type', 'station', 'remarks']
 
 
 @admin.register(RockDailyRecord)
