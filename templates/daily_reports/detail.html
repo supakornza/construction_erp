@@ -19,12 +19,16 @@
         {% if report.status == 'Rejected' %}
         <a href="{% url 'daily_reports:update' report.pk %}" class="btn btn-sm btn-warning"><i class="fas fa-edit me-1"></i>Revise</a>
         {% endif %}
-        <a href="{% url 'daily_reports:export_pdf' report.pk %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-file-pdf me-1"></i>PDF</a>
         <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
-                <i class="fas fa-file-export me-1"></i>PMC Export
-            </button>
+            <a href="{% url 'daily_reports:export_pdf' report.pk %}" class="btn btn-sm btn-outline-danger">
+                <i class="fas fa-file-pdf me-1"></i>Daily PDF
+            </a>
+            <button type="button" class="btn btn-sm btn-outline-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>
             <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="{% url 'daily_reports:photo_report_pdf' report.pk %}" target="_blank">
+                    <i class="fas fa-images me-2 text-danger"></i>Photo Report (PDF)
+                </a></li>
+                <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="{% url 'reports:pmc_daily_report_pdf' report.pk %}">
                     <i class="fas fa-file-pdf me-2 text-danger"></i>PMC Report (PDF)
                 </a></li>
@@ -164,19 +168,170 @@
     </div>
 </div>
 
-{% if report.photos.all %}
-<div class="card">
-    <div class="card-header"><h6 class="mb-0">Photos</h6></div>
+{# ── Photo Report Section ──────────────────────────────────────── #}
+<div class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h6 class="mb-0"><i class="fas fa-images me-2 text-primary"></i>
+            Photo Report
+            {% if report.photos.count %}<span class="badge bg-primary ms-1">{{ report.photos.count }}</span>{% endif %}
+        </h6>
+        <div class="d-flex gap-2">
+            {% if report.photos.count %}
+            <a href="{% url 'daily_reports:photo_report_pdf' report.pk %}" target="_blank"
+               class="btn btn-sm btn-danger">
+                <i class="fas fa-file-pdf me-1"></i>Export PDF (A4 · 6/หน้า)
+            </a>
+            {% endif %}
+            <button class="btn btn-sm btn-primary" data-bs-toggle="collapse" data-bs-target="#photoUploadPanel">
+                <i class="fas fa-camera-retro me-1"></i>เพิ่มรูปภาพ
+            </button>
+        </div>
+    </div>
+
+    {# ── Upload Panel ──────────────────────────────────────────────── #}
+    <div class="collapse" id="photoUploadPanel">
+        <div class="card-body border-bottom bg-light">
+            <form method="post" action="{% url 'daily_reports:photo_upload' report.pk %}"
+                  enctype="multipart/form-data" id="photoUploadForm">
+                {% csrf_token %}
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold mb-1">รูปภาพ <span class="text-danger">*</span></label>
+                        <input type="file" name="photo" id="photoFileInput" class="form-control form-control-sm"
+                               accept="image/*" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold mb-1">คำอธิบาย (Caption) <span class="text-danger">*</span></label>
+                        <input type="text" name="caption" class="form-control form-control-sm"
+                               placeholder="เช่น งานขุดลอก Zone A, การวางหินใหญ่...">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold mb-1">สถานที่ (Location)</label>
+                        <input type="text" name="location" class="form-control form-control-sm"
+                               placeholder="เช่น Zone B – Quay Wall">
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-success btn-sm w-100">
+                            <i class="fas fa-upload"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="photoPreviewStrip" class="d-flex flex-wrap gap-2 mt-2"></div>
+            </form>
+        </div>
+    </div>
+
+    {# ── Gallery Grid (2 × 3 layout mirrors the PDF) ───────────────── #}
     <div class="card-body">
-        <div class="row g-3">
+        {% if report.photos.all %}
+        <div class="row row-cols-2 row-cols-md-3 g-3" id="photoGallery">
             {% for photo in report.photos.all %}
-            <div class="col-md-3 col-sm-4 col-6">
-                <img src="{{ photo.photo.url }}" class="img-fluid rounded" style="max-height:200px;width:100%;object-fit:cover;">
-                <div class="text-muted small mt-1">{{ photo.caption }}</div>
+            <div class="col" data-photo-id="{{ photo.pk }}">
+                <div class="card h-100 shadow-sm position-relative">
+                    <span class="position-absolute top-0 start-0 badge bg-dark m-1 opacity-75" style="font-size:.7rem;z-index:2;">
+                        {{ forloop.counter }}
+                    </span>
+                    <a href="{{ photo.photo.url }}" data-bs-toggle="modal" data-bs-target="#photoModal"
+                       data-photo-url="{{ photo.photo.url }}"
+                       data-caption="{{ photo.caption }}"
+                       data-location="{{ photo.location }}"
+                       class="d-block overflow-hidden" style="height:180px;">
+                        <img src="{{ photo.photo.url }}"
+                             alt="{{ photo.caption }}"
+                             class="w-100 h-100"
+                             style="object-fit:cover;transition:transform .2s;"
+                             onmouseover="this.style.transform='scale(1.04)'"
+                             onmouseout="this.style.transform='scale(1)'">
+                    </a>
+                    <div class="card-body p-2">
+                        <p class="small fw-semibold mb-0 text-truncate" title="{{ photo.caption }}">{{ photo.caption }}</p>
+                        {% if photo.location %}
+                        <p class="small text-muted mb-0 text-truncate"><i class="fas fa-map-marker-alt me-1"></i>{{ photo.location }}</p>
+                        {% endif %}
+                        {% if photo.taken_at %}
+                        <p class="small text-muted mb-1"><i class="far fa-clock me-1"></i>{{ photo.taken_at|date:"d/m/Y H:i" }}</p>
+                        {% endif %}
+                        <form method="post"
+                              action="{% url 'daily_reports:photo_delete' report.pk photo.pk %}"
+                              onsubmit="return confirm('ลบรูปภาพนี้?')" class="d-grid mt-1">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-danger py-0">
+                                <i class="fas fa-trash-alt me-1"></i>ลบ
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
             {% endfor %}
         </div>
+        {% if report.photos.count > 6 %}
+        <div class="alert alert-info mt-3 small mb-0 py-2">
+            <i class="fas fa-info-circle me-1"></i>
+            รูปภาพทั้งหมด <strong>{{ report.photos.count }}</strong> รูป
+            — PDF จะแบ่ง <strong>{% widthratio report.photos.count 1 1 %}</strong> รูป เป็น {{ report.photos.count|add:5 }} หน้า (6 รูป/หน้า)
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="text-center text-muted py-5">
+            <i class="fas fa-camera fa-3x mb-3 opacity-25 d-block"></i>
+            <p class="mb-1">ยังไม่มีรูปภาพ</p>
+            <p class="small">คลิก <strong>เพิ่มรูปภาพ</strong> เพื่อเริ่มเพิ่มรูปภาพประกอบรายงาน</p>
+        </div>
+        {% endif %}
     </div>
 </div>
-{% endif %}
+
+{# ── Lightbox Modal ──────────────────────────────────────────────── #}
+<div class="modal fade" id="photoModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-0 pb-0">
+                <div>
+                    <h6 class="modal-title text-white mb-0" id="modalCaption"></h6>
+                    <small class="text-secondary" id="modalLocation"></small>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center p-2">
+                <img id="modalImage" src="" alt="" class="img-fluid rounded" style="max-height:80vh;">
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_scripts %}
+{{ block.super }}
+<script>
+document.querySelectorAll('[data-bs-target="#photoModal"]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('modalImage').src = el.getAttribute('data-photo-url');
+        document.getElementById('modalCaption').textContent = el.getAttribute('data-caption');
+        document.getElementById('modalLocation').textContent = el.getAttribute('data-location') || '';
+    });
+});
+
+const fileInput = document.getElementById('photoFileInput');
+const strip = document.getElementById('photoPreviewStrip');
+if (fileInput && strip) {
+    fileInput.addEventListener('change', function() {
+        while (strip.firstChild) { strip.removeChild(strip.firstChild); }
+        if (fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.height = '64px';
+                img.style.width = '64px';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '4px';
+                img.style.border = '2px solid #dee2e6';
+                strip.appendChild(img);
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    });
+}
+</script>
+{% endblock %}
 {% endblock %}

@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
+from django.db.models import Max
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -193,3 +194,44 @@ class ExportPDFView(LoginRequiredMixin, View):
         response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
+
+
+class PhotoReportPDFView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        from apps.reports.pdf_generator import generate_photo_report_pdf
+        report = get_object_or_404(DailyReport, pk=pk)
+        buffer = generate_photo_report_pdf(report)
+        filename = f"PhotoReport_{report.project.contract_no}_{report.report_date}.pdf"
+        response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+        response['Content-Disposition'] = f'inline; filename="{filename}"'
+        return response
+
+
+class PhotoUploadView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        report = get_object_or_404(DailyReport, pk=pk)
+        photo_file = request.FILES.get('photo')
+        caption = request.POST.get('caption', '').strip()
+        location = request.POST.get('location', '').strip()
+        if photo_file and caption:
+            last_order = report.photos.aggregate(m=Max('sort_order'))['m'] or 0
+            DailyPhoto.objects.create(
+                report=report,
+                photo=photo_file,
+                caption=caption,
+                location=location,
+                sort_order=last_order + 1,
+            )
+            messages.success(request, 'Photo added.')
+        else:
+            messages.error(request, 'Photo file and caption are required.')
+        return redirect('daily_reports:detail', pk=pk)
+
+
+class PhotoDeleteView(LoginRequiredMixin, View):
+    def post(self, request, pk, photo_pk):
+        photo = get_object_or_404(DailyPhoto, pk=photo_pk, report_id=pk)
+        photo.photo.delete(save=False)
+        photo.delete()
+        messages.success(request, 'Photo deleted.')
+        return redirect('daily_reports:detail', pk=pk)

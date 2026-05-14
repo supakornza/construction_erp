@@ -95,10 +95,14 @@ class DailyProblemRemark(models.Model):
 
 class DailyPhoto(models.Model):
     report = models.ForeignKey(DailyReport, on_delete=models.CASCADE, related_name='photos')
-    caption = models.CharField(max_length=300)
     photo = models.ImageField(upload_to='daily_reports/%Y/%m/%d/')
+    caption = models.CharField(max_length=300)
     location = models.CharField(max_length=200, blank=True)
     taken_at = models.DateTimeField(null=True, blank=True)
+    sort_order = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ['sort_order', 'id']
 
     def __str__(self):
         return f"{self.report} – {self.caption[:50]}"

@@ -13,6 +13,9 @@ urlpatterns = [
     path('<int:pk>/approve/', views.ApproveReportView.as_view(), name='approve'),
     path('<int:pk>/reject/', views.RejectReportView.as_view(), name='reject'),
     path('<int:pk>/pdf/', views.ExportPDFView.as_view(), name='export_pdf'),
+    path('<int:pk>/photo-report/', views.PhotoReportPDFView.as_view(), name='photo_report_pdf'),
+    path('<int:pk>/photos/upload/', views.PhotoUploadView.as_view(), name='photo_upload'),
+    path('<int:pk>/photos/<int:photo_pk>/delete/', views.PhotoDeleteView.as_view(), name='photo_delete'),
 
     # Contractor import workflow
     path('import/', import_views.ImportListView.as_view(), name='import_list'),

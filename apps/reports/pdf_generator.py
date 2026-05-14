@@ -15,7 +15,7 @@ from reportlab.lib.units import cm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
-    HRFlowable, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle,
+    HRFlowable, Image, PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle,
 )
 
 # ── Font registration ─────────────────────────────────────────────────────────
@@ -329,5 +329,176 @@ def generate_daily_report_pdf(report):
     ]))
     story.append(sig_table)
 
+    doc.build(story)
+    return buffer
+
+
+# ── Photo Report PDF (A4, 6 photos per page, 2 columns × 3 rows) ─────────────
+
+# Layout constants (in points; A4 = 595 × 842 pt)
+_PAGE_W, _PAGE_H = A4
+_MARGIN_L = _MARGIN_R = 1.5 * cm
+_MARGIN_T = 2.0 * cm
+_MARGIN_B = 1.5 * cm
+_CONTENT_W = _PAGE_W - _MARGIN_L - _MARGIN_R   # ≈ 510 pt
+
+# 6 photos per page: 2 columns, 3 rows
+_COLS = 2
+_ROWS = 3
+_PHOTOS_PER_PAGE = _COLS * _ROWS
+
+_COL_GAP = 0.5 * cm
+_ROW_GAP = 0.4 * cm
+
+# Header band per page (project info)
+_HEADER_H = 1.8 * cm
+
+# Photo cell dimensions
+_CELL_W = (_CONTENT_W - (_COLS - 1) * _COL_GAP) / _COLS   # ≈ 247 pt
+_CAPTION_ROWS_H = 1.0 * cm                                   # space for caption + location text
+_CONTENT_PHOTO_H = (_PAGE_H - _MARGIN_T - _MARGIN_B
+                    - _HEADER_H - 0.3 * cm
+                    - (_ROWS - 1) * _ROW_GAP)
+_CELL_H = _CONTENT_PHOTO_H / _ROWS                           # ≈ 222 pt
+_IMG_H  = _CELL_H - _CAPTION_ROWS_H - 0.1 * cm              # ≈ 212 pt
+
+
+def _photo_cell(photo_obj, seq_no, S):
+    """Return a Table (single cell) containing the photo + caption + location."""
+    img_path = photo_obj.photo.path
+
+    try:
+        img = Image(img_path, width=_CELL_W, height=_IMG_H)
+        img.hAlign = 'CENTER'
+    except Exception:
+        img = Paragraph(f"[Image not found: {img_path}]", S['th_sm'])
+
+    lines = []
+    # Number + caption
+    caption_text = f"<b>{seq_no}.</b>  {photo_obj.caption or ''}"
+    safe_caption = caption_text.replace('&', '&amp;').replace('<b>', '<b>').replace('</b>', '</b>')
+    # Escape only the caption part, not the <b> tags already added
+    safe_cap_raw = (photo_obj.caption or '').replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+    lines.append(Paragraph(f"<b>{seq_no}.</b>  {safe_cap_raw}", S['th_sm']))
+
+    if photo_obj.location:
+        safe_loc = photo_obj.location.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+        lines.append(Paragraph(f"<font size='8' color='#607d8b'>📍 {safe_loc}</font>", S['th_sm']))
+
+    cell_content = [img] + lines
+
+    t = Table([[cell_content]], colWidths=[_CELL_W])
+    t.setStyle(TableStyle([
+        ('BOX',        (0, 0), (-1, -1), 0.6, colors.HexColor('#b0bec5')),
+        ('BACKGROUND', (0, 0), (-1, -1), colors.white),
+        ('VALIGN',     (0, 0), (-1, -1), 'TOP'),
+        ('TOPPADDING', (0, 0), (-1, -1), 0),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+        ('LEFTPADDING',  (0, 0), (-1, -1), 0),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+    ]))
+    return t
+
+
+def _page_header_table(report, page_no, total_pages, S):
+    """Thin header band shown at the top of every page."""
+    NAVY = colors.HexColor('#1a3a5c')
+    L = S['label']
+    T = S['th_sm']
+
+    left = Paragraph(
+        f"<b>DAILY PHOTO REPORT</b>  –  {report.project.contract_no}  |  {report.report_date}",
+        ParagraphStyle('hdr_left', parent=L, textColor=NAVY, fontSize=9),
+    )
+    right = Paragraph(
+        f"Page {page_no} / {total_pages}",
+        ParagraphStyle('hdr_right', parent=L, fontSize=9, alignment=TA_RIGHT),
+    )
+    t = Table([[left, right]], colWidths=[_CONTENT_W * 0.75, _CONTENT_W * 0.25])
+    t.setStyle(TableStyle([
+        ('VALIGN',        (0, 0), (-1, -1), 'MIDDLE'),
+        ('LINEBELOW',     (0, 0), (-1, -1), 0.8, NAVY),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+        ('TOPPADDING',    (0, 0), (-1, -1), 2),
+    ]))
+    return t
+
+
+def generate_photo_report_pdf(report):
+    """Generate an A4 photo report with 6 photos per page (2 cols × 3 rows)."""
+    _register_fonts()
+    S, EN_BOLD, EN_NORMAL, TH, TH_BOLD = _styles()
+
+    photos = list(report.photos.order_by('sort_order', 'id'))
+    if not photos:
+        # Return a simple "no photos" PDF
+        buf = io.BytesIO()
+        doc = SimpleDocTemplate(buf, pagesize=A4,
+                                leftMargin=_MARGIN_L, rightMargin=_MARGIN_R,
+                                topMargin=_MARGIN_T, bottomMargin=_MARGIN_B)
+        doc.build([Paragraph("No photos attached to this report.", S['th'])])
+        return buf
+
+    total_pages = (len(photos) + _PHOTOS_PER_PAGE - 1) // _PHOTOS_PER_PAGE
+
+    story = []
+
+    for page_idx in range(total_pages):
+        page_photos = photos[page_idx * _PHOTOS_PER_PAGE:(page_idx + 1) * _PHOTOS_PER_PAGE]
+
+        # Page header
+        story.append(_page_header_table(report, page_idx + 1, total_pages, S))
+        story.append(Spacer(1, 0.3 * cm))
+
+        # Build rows: each row is a list of 2 cell Tables
+        for row_i in range(_ROWS):
+            left_i  = row_i * _COLS
+            right_i = left_i + 1
+            seq_left  = page_idx * _PHOTOS_PER_PAGE + left_i + 1
+            seq_right = seq_left + 1
+
+            left_cell  = (
+                _photo_cell(page_photos[left_i], seq_left, S)
+                if left_i < len(page_photos)
+                else ''
+            )
+            right_cell = (
+                _photo_cell(page_photos[right_i], seq_right, S)
+                if right_i < len(page_photos)
+                else ''
+            )
+
+            row_table = Table(
+                [[left_cell, right_cell]],
+                colWidths=[_CELL_W, _CELL_W],
+                rowHeights=[_CELL_H],
+            )
+            gap = int(_COL_GAP / 2)
+            row_table.setStyle(TableStyle([
+                ('VALIGN',        (0, 0), (-1, -1), 'TOP'),
+                ('LEFTPADDING',   (0, 0), (0, -1), 0),
+                ('RIGHTPADDING',  (0, 0), (0, -1), gap),
+                ('LEFTPADDING',   (1, 0), (1, -1), gap),
+                ('RIGHTPADDING',  (1, 0), (1, -1), 0),
+                ('TOPPADDING',    (0, 0), (-1, -1), 0),
+                ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
+            ]))
+            story.append(row_table)
+
+            if row_i < _ROWS - 1:
+                story.append(Spacer(1, _ROW_GAP))
+
+        if page_idx < total_pages - 1:
+            story.append(PageBreak())
+
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=A4,
+        leftMargin=_MARGIN_L,
+        rightMargin=_MARGIN_R,
+        topMargin=_MARGIN_T,
+        bottomMargin=_MARGIN_B,
+    )
     doc.build(story)
     return buffer
