@@ -27,7 +27,18 @@
                     <td><a href="{% url 'accounts:user_detail' u.pk %}">{{ u.username }}</a></td>
                     <td>{{ u.get_full_name|default:'-' }}</td>
                     <td>{{ u.email|default:'-' }}</td>
-                    <td><span class="badge bg-secondary">{{ u.get_role_display }}</span></td>
+                    <td>
+                        {% if u.role == 'admin' %}<span class="badge bg-danger">{{ u.get_role_display }}</span>
+                        {% elif u.role == 'project_manager' %}<span class="badge bg-primary">{{ u.get_role_display }}</span>
+                        {% elif u.role == 'engineer' %}<span class="badge bg-info text-dark">{{ u.get_role_display }}</span>
+                        {% elif u.role == 'inspector' %}<span class="badge bg-warning text-dark">{{ u.get_role_display }}</span>
+                        {% elif u.role == 'contractor' %}<span class="badge bg-orange text-white" style="background:#fd7e14">{{ u.get_role_display }}</span>
+                        {% elif u.role == 'owner' %}<span class="badge bg-success">{{ u.get_role_display }}</span>
+                        {% elif u.role == 'quantity_surveyor' %}<span class="badge bg-purple text-white" style="background:#6f42c1">{{ u.get_role_display }}</span>
+                        {% elif u.role == 'safety_officer' %}<span class="badge bg-danger bg-opacity-75">{{ u.get_role_display }}</span>
+                        {% else %}<span class="badge bg-secondary">{{ u.get_role_display }}</span>
+                        {% endif %}
+                    </td>
                     <td>
                         {% if u.is_active %}<span class="text-success"><i class="fas fa-check-circle"></i></span>
                         {% else %}<span class="text-danger"><i class="fas fa-times-circle"></i></span>{% endif %}
@@ -53,6 +64,53 @@
             </ul>
         </nav>
         {% endif %}
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header"><i class="fas fa-shield-alt me-2"></i>Role Permissions Reference</div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered mb-0 text-center small">
+                <thead class="table-light">
+                    <tr>
+                        <th class="text-start">Module</th>
+                        <th><span class="badge bg-danger">Admin</span></th>
+                        <th><span class="badge bg-primary">PM</span></th>
+                        <th><span class="badge bg-info text-dark">Engineer</span></th>
+                        <th><span class="badge bg-warning text-dark">Inspector</span></th>
+                        <th><span class="badge" style="background:#fd7e14">Contractor</span></th>
+                        <th><span class="badge bg-success">Owner</span></th>
+                        <th><span class="badge" style="background:#6f42c1">QS</span></th>
+                        <th><span class="badge bg-danger bg-opacity-75">Safety</span></th>
+                        <th><span class="badge bg-secondary">Viewer</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="text-start fw-semibold">User Management</td><td><span class="badge bg-success">Full</span></td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+                    <tr><td class="text-start fw-semibold">Projects</td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-primary">CRU</span></td><td><span class="badge bg-secondary">View</span></td><td><span class="badge bg-secondary">View</span></td><td>–</td><td><span class="badge bg-secondary">View</span></td><td><span class="badge bg-secondary">View</span></td><td><span class="badge bg-secondary">View</span></td><td><span class="badge bg-secondary">View</span></td></tr>
+                    <tr><td class="text-start fw-semibold">Daily Reports</td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-primary">CRU</span></td><td><span class="badge bg-primary">CRU</span></td><td><span class="badge bg-info text-dark">Create</span></td><td><span class="badge bg-secondary">View</span></td><td>–</td><td><span class="badge bg-secondary">View</span></td><td>–</td></tr>
+                    <tr><td class="text-start fw-semibold">Approve Reports</td><td><span class="badge bg-warning text-dark">Approve</span></td><td><span class="badge bg-warning text-dark">Approve</span></td><td><span class="badge bg-warning text-dark">Approve</span></td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+                    <tr><td class="text-start fw-semibold">Manpower</td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-primary">CRU</span></td><td><span class="badge bg-primary">CRU</span></td><td><span class="badge bg-info text-dark">Create</span></td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+                    <tr><td class="text-start fw-semibold">Equipment</td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-primary">CRU</span></td><td><span class="badge bg-primary">CRU</span></td><td><span class="badge bg-info text-dark">Create</span></td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+                    <tr><td class="text-start fw-semibold">Materials</td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-secondary">View</span></td><td>–</td><td><span class="badge bg-primary">CRU</span></td><td>–</td><td><span class="badge bg-success">Full</span></td><td>–</td><td>–</td></tr>
+                    <tr><td class="text-start fw-semibold">Safety</td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-primary">CRU</span></td><td><span class="badge bg-primary">CRU</span></td><td>–</td><td><span class="badge bg-secondary">View</span></td><td>–</td><td><span class="badge bg-success">Full</span></td><td>–</td></tr>
+                    <tr><td class="text-start fw-semibold">Quality</td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-primary">CRU</span></td><td>–</td><td><span class="badge bg-secondary">View</span></td><td>–</td><td>–</td><td>–</td></tr>
+                    <tr><td class="text-start fw-semibold">Cost Control</td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-secondary">View</span></td><td>–</td><td>–</td><td><span class="badge bg-secondary">View</span></td><td><span class="badge bg-success">Full</span></td><td>–</td><td>–</td></tr>
+                    <tr><td class="text-start fw-semibold">BOQ &amp; Progress</td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-secondary">View</span></td><td><span class="badge bg-secondary">View</span></td><td>–</td><td><span class="badge bg-secondary">View</span></td><td><span class="badge bg-success">Full</span></td><td>–</td><td><span class="badge bg-secondary">View</span></td></tr>
+                    <tr><td class="text-start fw-semibold">Documents</td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-primary">CRU</span></td><td>–</td><td>–</td><td>–</td><td><span class="badge bg-primary">CRU</span></td><td>–</td><td>–</td></tr>
+                    <tr><td class="text-start fw-semibold">Procurement</td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-success">Full</span></td><td>–</td><td>–</td><td>–</td><td>–</td><td><span class="badge bg-success">Full</span></td><td>–</td><td>–</td></tr>
+                    <tr><td class="text-start fw-semibold">Project Controls</td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-success">Full</span></td><td><span class="badge bg-primary">CRU</span></td><td><span class="badge bg-secondary">View</span></td><td>–</td><td><span class="badge bg-secondary">View</span></td><td><span class="badge bg-secondary">View</span></td><td>–</td><td>–</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="p-2 text-muted small">
+            <strong>Full</strong> = Create, Edit, Delete &nbsp;|&nbsp;
+            <strong>CRU</strong> = Create, Read, Update (no Delete) &nbsp;|&nbsp;
+            <strong>Create</strong> = Submit new records only &nbsp;|&nbsp;
+            <strong>View</strong> = Read-only &nbsp;|&nbsp;
+            <strong>–</strong> = No access
+        </div>
     </div>
 </div>
 {% endblock %}

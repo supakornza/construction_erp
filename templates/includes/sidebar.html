@@ -112,12 +112,14 @@
             <span class="sidebar-label">Logistics</span>
         </a>
 
+        {% if user.can_access_financial %}
         <div class="nav-section"><span class="sidebar-label">Cost Control</span></div>
         <a href="{% url 'cost_control:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'cost_control' %}active{% endif %}"
            data-bs-toggle="tooltip" data-bs-placement="right" title="Cost Control">
             <i class="fas fa-coins nav-icon"></i>
             <span class="sidebar-label">Cost Control</span>
         </a>
+        {% endif %}
 
         <div class="nav-section"><span class="sidebar-label">Safety</span></div>
         <a href="{% url 'safety:toolbox_list' %}" class="nav-link {% if request.resolver_match.namespace == 'safety' %}active{% endif %}"
