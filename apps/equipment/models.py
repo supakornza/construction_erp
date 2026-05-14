@@ -36,6 +36,19 @@ class Equipment(models.Model):
         return f"{self.name} ({self.registration_no})" if self.registration_no else self.name
 
 
+class EquipmentPhoto(models.Model):
+    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE, related_name='photos')
+    image = models.ImageField(upload_to='equipment/photos/')
+    caption = models.CharField(max_length=200, blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['uploaded_at']
+
+    def __str__(self):
+        return f"Photo of {self.equipment} – {self.uploaded_at.date()}"
+
+
 class DailyEquipmentRecord(models.Model):
     STATUS_CHOICES = [
         ('Working', 'Working'),

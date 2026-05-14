@@ -13,9 +13,10 @@ from .models import (
 
 @admin.register(Barge)
 class BargeAdmin(admin.ModelAdmin):
-    list_display = ['name', 'code', 'transport_mode', 'capacity_ton', 'is_active']
+    list_display = ['name', 'code', 'transport_mode', 'capacity_ton', 'equipment', 'is_active']
     list_filter = ['transport_mode', 'is_active']
     search_fields = ['name', 'code']
+    autocomplete_fields = ['equipment']
 
 
 class RockBargePlacementInline(admin.TabularInline):

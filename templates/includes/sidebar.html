@@ -111,6 +111,11 @@
             <i class="fas fa-truck nav-icon"></i>
             <span class="sidebar-label">Logistics</span>
         </a>
+        <a href="{% url 'project_controls:barge_list' %}" class="nav-link {% if 'project_controls:barge' in vn %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="Transport Units">
+            <i class="fas fa-ship nav-icon"></i>
+            <span class="sidebar-label">Transport Units</span>
+        </a>
 
         {% if user.can_access_financial %}
         <div class="nav-section"><span class="sidebar-label">Cost Control</span></div>

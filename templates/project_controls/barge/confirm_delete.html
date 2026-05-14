@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Delete Transport Unit{% endblock %}
+{% block page_title %}Delete Transport Unit{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header text-danger fw-semibold"><i class="fas fa-exclamation-triangle me-2"></i>Confirm Delete</div>
+            <div class="card-body">
+                <p>Are you sure you want to delete transport unit <strong>{{ object.name }}</strong> ({{ object.code }})?</p>
+                <p class="text-danger small">This action cannot be undone. Any existing Rock/Sand records linked to this unit will be affected.</p>
+                <div class="d-flex gap-2">
+                    <form method="post">{% csrf_token %}<button type="submit" class="btn btn-danger">Delete</button></form>
+                    <a href="{% url 'project_controls:barge_list' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -24,6 +24,7 @@ from .models import (
     LogisticsScenario, ImportLog,
 )
 from .forms import (
+    BargeForm,
     RockDailyRecordForm, RockBargePlacementFormSet,
     SandDailyRecordForm, SandBargePlacementFormSet,
     SandAllocationForm, RecoveryPlanForm, RecoveryPlanDailyItemFormSet,
@@ -45,6 +46,45 @@ from .workflows import (
     save_rock_record,
     save_sand_record,
 )
+
+
+# ── Transport Unit (Barge) Management ────────────────────────────────────────
+
+class BargeListView(LoginRequiredMixin, ListView):
+    model = Barge
+    template_name = 'project_controls/barge/list.html'
+    context_object_name = 'barges'
+
+    def get_queryset(self):
+        return Barge.objects.select_related('equipment', 'equipment__category').order_by('name')
+
+
+class BargeCreateView(LoginRequiredMixin, CreateView):
+    model = Barge
+    form_class = BargeForm
+    template_name = 'project_controls/barge/form.html'
+    success_url = reverse_lazy('project_controls:barge_list')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Transport Unit created.')
+        return super().form_valid(form)
+
+
+class BargeUpdateView(LoginRequiredMixin, UpdateView):
+    model = Barge
+    form_class = BargeForm
+    template_name = 'project_controls/barge/form.html'
+    success_url = reverse_lazy('project_controls:barge_list')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Transport Unit updated.')
+        return super().form_valid(form)
+
+
+class BargeDeleteView(AdminRequiredMixin, DeleteView):
+    model = Barge
+    template_name = 'project_controls/barge/confirm_delete.html'
+    success_url = reverse_lazy('project_controls:barge_list')
 
 
 # ── Project Controls Main Dashboard ──────────────────────────────────────────

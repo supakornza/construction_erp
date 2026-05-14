@@ -15,13 +15,14 @@
         <tbody>
         {% for e in equipment_list %}
         <tr>
-            <td>{{ e.name }}</td>
+            <td><a href="{% url 'equipment:detail' e.pk %}">{{ e.name }}</a></td>
             <td>{{ e.category }}</td>
             <td>{{ e.registration_no|default:'-' }}</td>
             <td>{{ e.project.contract_no|default:'-' }}</td>
             <td><span class="badge bg-{% if e.status == 'Active' %}success{% elif e.status == 'Inactive' %}secondary{% else %}warning{% endif %}">{{ e.status }}</span></td>
             <td>
-                <a href="{% url 'equipment:update' e.pk %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a>
+                <a href="{% url 'equipment:detail' e.pk %}" class="btn btn-sm btn-outline-secondary" title="Detail"><i class="fas fa-eye"></i></a>
+                <a href="{% url 'equipment:update' e.pk %}" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fas fa-edit"></i></a>
                 {% if request.user.is_superuser or request.user.role == 'admin' %}
                 <form method="post" action="{% url 'equipment:delete' e.pk %}" class="d-inline" onsubmit="return confirm('Delete equipment {{ e.name }}?')">
                   {% csrf_token %}

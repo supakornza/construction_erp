@@ -25,6 +25,11 @@ class Barge(models.Model):
     transport_mode = models.CharField(max_length=20, choices=TRANSPORT_MODE_CHOICES, default=TRANSPORT_OFFSHORE)
     capacity_ton = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     is_active = models.BooleanField(default=True)
+    equipment = models.ForeignKey(
+        'equipment.Equipment', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='transport_units',
+        help_text='Link to Equipment record (optional)',
+    )
 
     class Meta:
         ordering = ['name']

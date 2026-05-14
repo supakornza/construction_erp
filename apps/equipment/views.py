@@ -1,10 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy, reverse
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, View
 from apps.accounts.mixins import AdminRequiredMixin
-from .models import Equipment, DailyEquipmentRecord
-from .forms import EquipmentForm, DailyEquipmentRecordForm
+from .models import Equipment, DailyEquipmentRecord, EquipmentPhoto
+from .forms import EquipmentForm, DailyEquipmentRecordForm, EquipmentPhotoForm
 
 
 class EquipmentListView(LoginRequiredMixin, ListView):
@@ -21,11 +22,30 @@ class EquipmentListView(LoginRequiredMixin, ListView):
         return qs
 
 
+class EquipmentDetailView(LoginRequiredMixin, DetailView):
+    model = Equipment
+    template_name = 'equipment/detail.html'
+    context_object_name = 'equipment'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['photos'] = self.object.photos.all()
+        ctx['photo_form'] = EquipmentPhotoForm()
+        ctx['recent_records'] = (
+            self.object.dailyequipmentrecord_set
+            .select_related('project')
+            .order_by('-report_date')[:10]
+        )
+        return ctx
+
+
 class EquipmentCreateView(LoginRequiredMixin, CreateView):
     model = Equipment
     form_class = EquipmentForm
     template_name = 'equipment/form.html'
-    success_url = reverse_lazy('equipment:list')
+
+    def get_success_url(self):
+        return reverse('equipment:detail', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
         messages.success(self.request, 'Equipment added.')
@@ -36,13 +56,42 @@ class EquipmentUpdateView(LoginRequiredMixin, UpdateView):
     model = Equipment
     form_class = EquipmentForm
     template_name = 'equipment/form.html'
-    success_url = reverse_lazy('equipment:list')
+
+    def get_success_url(self):
+        return reverse('equipment:detail', kwargs={'pk': self.object.pk})
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Equipment updated.')
+        return super().form_valid(form)
 
 
 class EquipmentDeleteView(AdminRequiredMixin, DeleteView):
     model = Equipment
     template_name = 'equipment/confirm_delete.html'
     success_url = reverse_lazy('equipment:list')
+
+
+class EquipmentPhotoUploadView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        equipment = get_object_or_404(Equipment, pk=pk)
+        form = EquipmentPhotoForm(request.POST, request.FILES)
+        if form.is_valid():
+            photo = form.save(commit=False)
+            photo.equipment = equipment
+            photo.save()
+            messages.success(request, 'Photo uploaded.')
+        else:
+            messages.error(request, 'Invalid file. Please upload a valid image.')
+        return redirect('equipment:detail', pk=pk)
+
+
+class EquipmentPhotoDeleteView(LoginRequiredMixin, View):
+    def post(self, request, pk, photo_pk):
+        photo = get_object_or_404(EquipmentPhoto, pk=photo_pk, equipment_id=pk)
+        photo.image.delete(save=False)
+        photo.delete()
+        messages.success(request, 'Photo deleted.')
+        return redirect('equipment:detail', pk=pk)
 
 
 class DailyEquipmentRecordListView(LoginRequiredMixin, ListView):

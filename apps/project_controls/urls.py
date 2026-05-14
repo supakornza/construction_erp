@@ -4,6 +4,12 @@ from . import views
 app_name = 'project_controls'
 
 urlpatterns = [
+    # Transport Units (Barge)
+    path('transport-units/', views.BargeListView.as_view(), name='barge_list'),
+    path('transport-units/new/', views.BargeCreateView.as_view(), name='barge_create'),
+    path('transport-units/<int:pk>/edit/', views.BargeUpdateView.as_view(), name='barge_update'),
+    path('transport-units/<int:pk>/delete/', views.BargeDeleteView.as_view(), name='barge_delete'),
+
     # Main dashboard
     path('', views.ProjectControlsDashboardView.as_view(), name='dashboard'),
 

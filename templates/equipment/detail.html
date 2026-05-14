@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}{{ equipment.name }} – Equipment{% endblock %}
+{% block page_title %}Equipment Detail{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center gap-2 mb-4">
+    <a href="{% url 'equipment:list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="mb-0 me-auto"><i class="fas fa-truck-monster me-2 text-primary"></i>{{ equipment.name }}</h4>
+    <a href="{% url 'equipment:update' equipment.pk %}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit me-1"></i>Edit</a>
+</div>
+
+<div class="row g-4">
+
+    {# ── Info Card ────────────────────────────────────────────────────── #}
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header fw-semibold"><i class="fas fa-info-circle me-2"></i>Equipment Info</div>
+            <div class="card-body">
+                <table class="table table-sm table-borderless mb-0">
+                    <tr><th class="text-muted w-40">Name</th><td>{{ equipment.name }}</td></tr>
+                    <tr><th class="text-muted">Category</th><td>{{ equipment.category }}</td></tr>
+                    <tr><th class="text-muted">Reg. No.</th><td>{{ equipment.registration_no|default:'–' }}</td></tr>
+                    <tr><th class="text-muted">Capacity</th><td>{{ equipment.capacity|default:'–' }} {{ equipment.unit }}</td></tr>
+                    <tr><th class="text-muted">Project</th><td>{{ equipment.project.contract_no|default:'–' }}</td></tr>
+                    <tr>
+                        <th class="text-muted">Status</th>
+                        <td>
+                            <span class="badge bg-{% if equipment.status == 'Active' %}success{% elif equipment.status == 'Inactive' %}secondary{% else %}warning{% endif %}">
+                                {{ equipment.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% if equipment.transport_units.exists %}
+                    <tr>
+                        <th class="text-muted">Transport Units</th>
+                        <td>
+                            {% for tu in equipment.transport_units.all %}
+                            <span class="badge bg-info text-dark">{{ tu.name }}</span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {# ── Photo Gallery ─────────────────────────────────────────────────── #}
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span class="fw-semibold"><i class="fas fa-images me-2"></i>Photos ({{ photos.count }})</span>
+                <button class="btn btn-sm btn-primary" data-bs-toggle="collapse" data-bs-target="#uploadPanel">
+                    <i class="fas fa-upload me-1"></i>Upload Photo
+                </button>
+            </div>
+
+            {# Upload form (collapsible) #}
+            <div class="collapse" id="uploadPanel">
+                <div class="card-body border-bottom bg-light">
+                    <form method="post" action="{% url 'equipment:photo_upload' equipment.pk %}" enctype="multipart/form-data" class="d-flex gap-3 align-items-end flex-wrap">
+                        {% csrf_token %}
+                        <div class="flex-grow-1">
+                            <label class="form-label small mb-1">Image file</label>
+                            <input type="file" name="image" class="form-control form-control-sm" accept="image/*" required>
+                        </div>
+                        <div class="flex-grow-1">
+                            <label class="form-label small mb-1">Caption (optional)</label>
+                            <input type="text" name="caption" class="form-control form-control-sm" placeholder="e.g. Front view, Serial plate...">
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-cloud-upload-alt me-1"></i>Upload</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card-body">
+                {% if photos %}
+                <div class="row g-3">
+                    {% for photo in photos %}
+                    <div class="col-sm-6 col-md-4">
+                        <div class="card h-100 shadow-sm equipment-photo-card">
+                            <a href="{{ photo.image.url }}" target="_blank" class="d-block overflow-hidden" style="height:160px;">
+                                <img src="{{ photo.image.url }}"
+                                     alt="{{ photo.caption|default:equipment.name }}"
+                                     class="card-img-top h-100 w-100"
+                                     style="object-fit:cover; transition:transform .2s;"
+                                     onmouseover="this.style.transform='scale(1.05)'"
+                                     onmouseout="this.style.transform='scale(1)'">
+                            </a>
+                            <div class="card-body p-2">
+                                <p class="small text-muted mb-1">{{ photo.caption|default:'No caption' }}</p>
+                                <p class="small text-muted mb-2">{{ photo.uploaded_at|date:"d M Y" }}</p>
+                                <form method="post" action="{% url 'equipment:photo_delete' equipment.pk photo.pk %}"
+                                      onsubmit="return confirm('Delete this photo?')" class="d-grid">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash me-1"></i>Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center text-muted py-5">
+                    <i class="fas fa-camera fa-3x mb-3 opacity-25"></i>
+                    <p class="mb-0">No photos yet. Click <strong>Upload Photo</strong> to add the first one.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {# ── Recent Daily Records ──────────────────────────────────────────── #}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header fw-semibold"><i class="fas fa-calendar-alt me-2"></i>Recent Daily Records (last 10)</div>
+            <div class="table-responsive">
+                <table class="table table-hover table-sm mb-0">
+                    <thead class="table-light">
+                        <tr><th>Date</th><th>Project</th><th>Status</th><th>Working Hours</th><th>Remarks</th></tr>
+                    </thead>
+                    <tbody>
+                    {% for rec in recent_records %}
+                    <tr>
+                        <td>{{ rec.report_date }}</td>
+                        <td>{{ rec.project.contract_no }}</td>
+                        <td>
+                            <span class="badge bg-{% if rec.status == 'Working' %}success{% elif rec.status == 'Standby' %}warning text-dark{% elif rec.status == 'Breakdown' %}danger{% else %}secondary{% endif %}">
+                                {{ rec.status }}
+                            </span>
+                        </td>
+                        <td>{{ rec.working_hours }} hrs</td>
+                        <td class="text-muted small">{{ rec.remarks|default:'–' }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-center text-muted py-3">No records yet.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

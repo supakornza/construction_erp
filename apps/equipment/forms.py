@@ -1,7 +1,7 @@
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
-from .models import Equipment, DailyEquipmentRecord
+from .models import Equipment, DailyEquipmentRecord, EquipmentPhoto
 
 
 class EquipmentForm(forms.ModelForm):
@@ -36,3 +36,13 @@ class DailyEquipmentRecordForm(forms.ModelForm):
             'report', 'remarks',
             Submit('submit', 'Save Record', css_class='btn btn-primary'),
         )
+
+
+class EquipmentPhotoForm(forms.ModelForm):
+    class Meta:
+        model = EquipmentPhoto
+        fields = ['image', 'caption']
+        widgets = {
+            'image': forms.FileInput(attrs={'accept': 'image/*'}),
+            'caption': forms.TextInput(attrs={'placeholder': 'Caption (optional)'}),
+        }
