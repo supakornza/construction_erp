@@ -13,7 +13,7 @@ from apps.materials.models import MaterialDelivery
 from apps.safety.models import SafetyInspection, IncidentReport, ToolboxMeeting
 from apps.boq.models import BOQItem, DailyProgressRecord
 from apps.quality.services import get_quality_dashboard_tables, get_quality_metrics
-from .models import OwnerDecisionItem
+from apps.project_controls.models import ProjectActionPlan
 
 
 # ─────────────────────────────────────────────────────────
@@ -450,11 +450,18 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         ctx['quantity_balance'] = _quantity_balance(ctx['active_projects'])
         ctx['project_controls_summary'] = _project_controls_summary(ctx['active_projects'])
 
-        # ── Owner decisions ───────────────────────────────
-        ctx['owner_decisions'] = (OwnerDecisionItem.objects
+        # ── Owner decisions (from Project Action Plans) ───
+        ctx['owner_decisions'] = (ProjectActionPlan.objects
                                   .select_related('project')
-                                  .filter(project__in=ctx['active_projects'])
-                                  .order_by('status', 'due_date'))
+                                  .filter(
+                                      project__in=ctx['active_projects'],
+                                      status__in=[
+                                          ProjectActionPlan.STATUS_OPEN,
+                                          ProjectActionPlan.STATUS_IN_PROGRESS,
+                                          ProjectActionPlan.STATUS_PENDING,
+                                      ],
+                                  )
+                                  .order_by('due_date'))
 
         # ── Cost Control KPIs ─────────────────────────────
         try:

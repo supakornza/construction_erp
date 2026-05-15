@@ -782,7 +782,10 @@
   <div class="exec-command-card">
     <div class="exec-command-head">
       <h6><i class="fas fa-exclamation-circle" style="color:#dc2626"></i>Owner Decisions Required</h6>
-      <a href="/admin/dashboard/ownerdecisionitem/add/" class="pc-exec-link no-print"><i class="fas fa-plus"></i>Add Item</a>
+      <div class="d-flex gap-2 align-items-center no-print">
+        <a href="{% url 'project_controls:project_action_plan_list' %}" class="pc-exec-link"><i class="fas fa-list"></i>View All</a>
+        <a href="{% url 'project_controls:project_action_plan_create' %}" class="pc-exec-link"><i class="fas fa-plus"></i>Add Item</a>
+      </div>
     </div>
     <div class="exec-command-body">
       <div class="exec-action-list">
@@ -792,18 +795,20 @@
             <i class="fas fa-circle me-1" style="font-size:.5rem"></i>{{ item.priority }}
           </span>
           <div>
-            <div class="exec-action-title">{{ item.issue }}</div>
-            <div class="exec-action-meta">{{ item.project.contract_no }} • {{ item.decision_required|truncatechars:90 }}</div>
+            <div class="exec-action-title">
+              <a href="{% url 'project_controls:project_action_plan_detail' item.pk %}" style="color:inherit;text-decoration:none">{{ item.description_th|truncatechars:80 }}</a>
+            </div>
+            <div class="exec-action-meta">{{ item.project.contract_no }} • {{ item.action_id }}{% if item.responsible_parties %} • {{ item.responsible_parties|truncatechars:60 }}{% endif %}</div>
           </div>
           <div class="exec-action-due">
             {% if item.is_overdue %}<i class="fas fa-exclamation-triangle me-1 text-danger"></i>{% endif %}
-            {{ item.due_date|thai_be_date }}
+            {% if item.due_date %}{{ item.due_date|thai_be_date }}{% else %}<span style="opacity:.5">–</span>{% endif %}
           </div>
         </div>
         {% empty %}
         <div class="exec-empty-state">
           <i class="fas fa-check-circle text-success"></i>
-          <span>No pending owner decisions.</span>
+          <span>No pending action items. <a href="{% url 'project_controls:project_action_plan_create' %}" style="color:#f0a500">Add one →</a></span>
         </div>
         {% endfor %}
       </div>
@@ -1553,9 +1558,9 @@
           <tbody>
             {% for r in latest_reports %}
             <tr>
-              <td><a href="{% url 'daily_reports:detail' r.pk %}" style="color:#c8d6e5;text-decoration:none">{{ r.report_date|thai_be_date }}</a></td>
-              <td style="color:#8aa5c0;font-size:.76rem">{{ r.project.contract_no }}</td>
-              <td style="color:#8aa5c0;font-size:.76rem">{{ r.prepared_by.get_full_name|default:r.prepared_by.username }}</td>
+              <td><a href="{% url 'daily_reports:detail' r.pk %}" style="color:#0f172a;text-decoration:none;font-weight:600">{{ r.report_date|thai_be_date }}</a></td>
+              <td style="color:#334155;font-size:.76rem">{{ r.project.contract_no }}</td>
+              <td style="color:#334155;font-size:.76rem">{{ r.prepared_by.get_full_name|default:r.prepared_by.username }}</td>
               <td><span class="rpt-badge rpt-{{ r.status|lower }}">{{ r.status }}</span></td>
             </tr>
             {% empty %}
