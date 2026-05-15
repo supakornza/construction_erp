@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'apps.project_controls',
     'apps.cost_control',
     'apps.tide_monitor',
+    'apps.turbidity_monitor',
 ]
 
 MIDDLEWARE = [

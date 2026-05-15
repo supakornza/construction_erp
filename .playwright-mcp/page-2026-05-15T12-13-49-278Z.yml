@@ -1,0 +1,10 @@
+- generic [ref=e2]:
+  - generic [ref=e3]: Member login form
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - textbox "User ID" [ref=e7]
+      - textbox "Password" [ref=e9]
+      - generic [ref=e10]:
+        - checkbox [ref=e11]
+        - text: Remember me
+    - button "Login" [ref=e13] [cursor=pointer]

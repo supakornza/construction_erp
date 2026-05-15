@@ -1,0 +1,125 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - link "Logo" [ref=e3] [cursor=pointer]:
+      - /url: index.php
+      - img "Logo" [ref=e4]
+    - navigation [ref=e5]:
+      - button "Toggle navigation" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]: Toggle navigation
+      - generic [ref=e11]:
+        - generic [ref=e12]: Emission Quality Monitoring System
+        - list [ref=e14]:
+          - listitem [ref=e15]:
+            - link " ttteia" [ref=e16] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e17]: 
+              - generic [ref=e18]: ttteia
+  - generic [ref=e20]:
+    - complementary [ref=e21]:
+      - list [ref=e23]:
+        - listitem [ref=e24]:
+          - link " Site Location" [ref=e25] [cursor=pointer]:
+            - /url: index.php
+            - generic [ref=e26]: 
+            - text: Site Location
+        - listitem [ref=e27]:
+          - link " Multi Site Report" [ref=e28] [cursor=pointer]:
+            - /url: "?names=tables&files=compare"
+            - generic [ref=e29]: 
+            - text: Multi Site Report
+        - listitem [ref=e30]:
+          - link " Last Update Table " [ref=e31] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=e32]: 
+            - text: Last Update Table
+            - generic [ref=e33]: 
+          - list [ref=e34]:
+            - listitem [ref=e35]:
+              - link " ราย 1 นาที " [ref=e36] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=e37]: 
+                - text: ราย 1 นาที
+                - generic [ref=e38]: 
+              - text: 
+            - listitem [ref=e39]:
+              - link " ราย 10 นาที " [ref=e40] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=e41]: 
+                - text: ราย 10 นาที
+                - generic [ref=e42]: 
+              - text: 
+            - listitem [ref=e43]:
+              - link " ราย 30 นาที " [ref=e44] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=e45]: 
+                - text: ราย 30 นาที
+                - generic [ref=e46]: 
+              - text: 
+            - listitem [ref=e47]:
+              - link " ราย 1 ชั่วโมง " [ref=e48] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=e49]: 
+                - text: ราย 1 ชั่วโมง
+                - generic [ref=e50]: 
+              - text: 
+            - listitem [ref=e51]:
+              - link " ราย 24 ชั่วโมง " [ref=e52] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=e53]: 
+                - text: ราย 24 ชั่วโมง
+                - generic [ref=e54]: 
+              - text: 
+    - complementary [ref=e55]:
+      - generic [ref=e58]:
+        - generic [ref=e59]:
+          - generic [ref=e60]:
+            - button "" [ref=e61] [cursor=pointer]:
+              - generic [ref=e62]: 
+            - button "" [ref=e63] [cursor=pointer]:
+              - generic [ref=e64]: 
+          - generic [ref=e65]: 
+          - heading "Station Location ." [level=3] [ref=e66]
+        - generic [ref=e69]:
+          - generic:
+            - button "แป้นพิมพ์ลัด"
+          - region "แผนที่" [ref=e70]
+          - generic [ref=e71]:
+            - generic [ref=e154]:
+              - generic:
+                - button "สถานี TTT_Turbitdity โครงการ N/A" [ref=e156] [cursor=pointer]
+                - dialog [ref=e197]:
+                  - button "ปิด" [ref=e200] [cursor=pointer]
+                  - generic [ref=e202]:
+                    - text: "Station : TTT_Turbitdity โครงการ N/A"
+                    - text: "Last date: 2026-05-15 19:00:00"
+                    - text: "Data: [Turbidity: 1.8 NTU]"
+                    - link "เข้าดูข้อมูลย้อนหลังทั้งหมดได้ที่นี่" [active] [ref=e203] [cursor=pointer]:
+                      - /url: "?names=viewdata&files=index&type=T60&table=95"
+            - iframe [ref=e157]:
+              
+            - menubar [ref=e158] [cursor=pointer]:
+              - menuitemradio "แสดงแผนที่ถนน" [checked] [ref=e160]: แผนที่
+              - menuitemradio "แสดงภาพจากดาวเทียม" [ref=e162]: ดาวเทียม
+            - button "สลับเป็นมุมมองแบบเต็มหน้าจอ" [ref=e163] [cursor=pointer]
+            - generic:
+              - generic:
+                - button "ควบคุมกล้องของแผนที่" [ref=e165] [cursor=pointer]
+                - button "ลากเพ็กแมนไปบนแผนที่เพื่อดู Street View" [ref=e166] [cursor=pointer]:
+                  - generic:
+                    - img "การควบคุมเพ็กแมนสำหรับ Street View"
+            - link "เปิดพื้นที่นี้ใน Google Maps (เปิดในหน้าต่างใหม่)" [ref=e168] [cursor=pointer]:
+              - /url: https://maps.google.com/maps?ll=13.827696,100.559763&z=7&t=m&hl=th&gl=US&mapclient=apiv3
+              - img "Google" [ref=e170]
+            - generic [ref=e171]:
+              - button "แป้นพิมพ์ลัด" [ref=e177] [cursor=pointer]
+              - generic [ref=e182]: ข้อมูลแผนที่ ©2026 Google
+              - link "ข้อกำหนด (เปิดในแท็บใหม่)" [ref=e187] [cursor=pointer]:
+                - /url: https://www.google.com/intl/th_US/help/terms_maps.html
+                - text: ข้อกำหนด
+        - generic [ref=e188]: ขอขอบคุณ Google Map ที่ให้ความอนุเคราะห์แผนที่ออนไลน์
+  - generic [ref=e190] [cursor=pointer]: 
+  - generic [ref=e191]:
+    - heading "Layout Options" [level=4] [ref=e192]
+    - generic [ref=e195]:
+      - checkbox "Fixed layout" [ref=e196]
+      - text: Fixed layout

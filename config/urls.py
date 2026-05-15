@@ -22,6 +22,7 @@ urlpatterns = [
     path('project-controls/', include('apps.project_controls.urls', namespace='project_controls')),
     path('cost-control/', include('apps.cost_control.urls', namespace='cost_control')),
     path('tide-monitor/', include('apps.tide_monitor.urls', namespace='tide_monitor')),
+    path('turbidity-monitor/', include('apps.turbidity_monitor.urls', namespace='turbidity_monitor')),
 ]
 
 if settings.DEBUG:
