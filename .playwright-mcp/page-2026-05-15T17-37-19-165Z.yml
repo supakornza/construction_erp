@@ -1,0 +1,229 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link " Construction ERP" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: 
+        - generic [ref=e6]: Construction ERP
+      - button "" [ref=e7] [cursor=pointer]:
+        - generic [ref=e8]: 
+    - generic [ref=e9]:
+      - generic [ref=e10]: Dashboard
+      - link " Dashboard" [ref=e11] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e12]: 
+        - generic [ref=e13]: Dashboard
+      - link " Tide Monitor" [ref=e14] [cursor=pointer]:
+        - /url: /tide-monitor/
+        - generic [ref=e15]: 
+        - generic [ref=e16]: Tide Monitor
+      - link " Turbidity Monitor" [ref=e17] [cursor=pointer]:
+        - /url: /turbidity-monitor/
+        - generic [ref=e18]: 
+        - generic [ref=e19]: Turbidity Monitor
+      - link " Rock Progress" [ref=e20] [cursor=pointer]:
+        - /url: /project-controls/rock/dashboard/
+        - generic [ref=e21]: 
+        - generic [ref=e22]: Rock Progress
+      - link " Sand Progress" [ref=e23] [cursor=pointer]:
+        - /url: /project-controls/sand/dashboard/
+        - generic [ref=e24]: 
+        - generic [ref=e25]: Sand Progress
+      - generic [ref=e26]: Projects
+      - link " Projects" [ref=e27] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e28]: 
+        - generic [ref=e29]: Projects
+      - generic [ref=e30]: Daily Reports
+      - link " Daily Reports" [ref=e31] [cursor=pointer]:
+        - /url: /daily-reports/
+        - generic [ref=e32]: 
+        - generic [ref=e33]: Daily Reports
+      - link " Contractor Imports" [ref=e34] [cursor=pointer]:
+        - /url: /daily-reports/import/
+        - generic [ref=e35]: 
+        - generic [ref=e36]: Contractor Imports
+      - generic [ref=e37]: Resources
+      - link " Manpower" [ref=e38] [cursor=pointer]:
+        - /url: /manpower/dashboard/
+        - generic [ref=e39]: 
+        - generic [ref=e40]: Manpower
+      - link " Equipment" [ref=e41] [cursor=pointer]:
+        - /url: /equipment/
+        - generic [ref=e42]: 
+        - generic [ref=e43]: Equipment
+      - link " Materials" [ref=e44] [cursor=pointer]:
+        - /url: /materials/dashboard/
+        - generic [ref=e45]: 
+        - generic [ref=e46]: Materials
+      - generic [ref=e47]: Procurement
+      - link " Procurement" [ref=e48] [cursor=pointer]:
+        - /url: /procurement/pr/
+        - generic [ref=e49]: 
+        - generic [ref=e50]: Procurement
+      - generic [ref=e51]: BOQ & Progress
+      - link " BOQ & Progress" [ref=e52] [cursor=pointer]:
+        - /url: /boq/
+        - generic [ref=e53]: 
+        - generic [ref=e54]: BOQ & Progress
+      - generic [ref=e55]: Project Controls
+      - link " Rock & Sand Control" [ref=e56] [cursor=pointer]:
+        - /url: /project-controls/
+        - generic [ref=e57]: 
+        - generic [ref=e58]: Rock & Sand Control
+      - link " Revetment Progress" [ref=e59] [cursor=pointer]:
+        - /url: /project-controls/revetment/dashboard/
+        - generic [ref=e60]: 
+        - generic [ref=e61]: Revetment Progress
+      - link " Recovery Plans" [ref=e62] [cursor=pointer]:
+        - /url: /project-controls/recovery/plans/
+        - generic [ref=e63]: 
+        - generic [ref=e64]: Recovery Plans
+      - link " Project Action Plans" [ref=e65] [cursor=pointer]:
+        - /url: /project-controls/action-plans/
+        - generic [ref=e66]: 
+        - generic [ref=e67]: Project Action Plans
+      - link " Recovery Action Plans" [ref=e68] [cursor=pointer]:
+        - /url: /project-controls/recovery/rap/
+        - generic [ref=e69]: 
+        - generic [ref=e70]: Recovery Action Plans
+      - link " Logistics" [ref=e71] [cursor=pointer]:
+        - /url: /project-controls/logistics/
+        - generic [ref=e72]: 
+        - generic [ref=e73]: Logistics
+      - link " Transport Units" [ref=e74] [cursor=pointer]:
+        - /url: /project-controls/transport-units/
+        - generic [ref=e75]: 
+        - generic [ref=e76]: Transport Units
+      - generic [ref=e77]: Cost Control
+      - link " Cost Control" [ref=e78] [cursor=pointer]:
+        - /url: /cost-control/
+        - generic [ref=e79]: 
+        - generic [ref=e80]: Cost Control
+      - generic [ref=e81]: Safety
+      - link " Safety" [ref=e82] [cursor=pointer]:
+        - /url: /safety/toolbox/
+        - generic [ref=e83]: 
+        - generic [ref=e84]: Safety
+      - generic [ref=e85]: Quality
+      - link " Quality Control" [ref=e86] [cursor=pointer]:
+        - /url: /quality/
+        - generic [ref=e87]: 
+        - generic [ref=e88]: Quality Control
+      - generic [ref=e89]: Documents
+      - link " Documents" [ref=e90] [cursor=pointer]:
+        - /url: /documents/
+        - generic [ref=e91]: 
+        - generic [ref=e92]: Documents
+      - generic [ref=e93]: Admin
+      - link " Users" [ref=e94] [cursor=pointer]:
+        - /url: /accounts/users/
+        - generic [ref=e95]: 
+        - generic [ref=e96]: Users
+      - link " Django Admin" [ref=e97] [cursor=pointer]:
+        - /url: /admin/
+        - generic [ref=e98]: 
+        - generic [ref=e99]: Django Admin
+  - generic [ref=e100]:
+    - navigation [ref=e101]:
+      - text: 
+      - button "Go back" [ref=e102] [cursor=pointer]:
+        - generic [ref=e103]: 
+        - text: Back
+      - generic [ref=e105]:
+        - button "A Admin User Admin" [ref=e106] [cursor=pointer]:
+          - generic [ref=e107]: A
+          - generic [ref=e108]: Admin User
+          - generic [ref=e109]: Admin
+        - text:  
+    - generic [ref=e110]:
+      - generic [ref=e111]:
+        - link "" [ref=e112] [cursor=pointer]:
+          - /url: /project-controls/rock/
+          - generic [ref=e113]: 
+        - heading "Rock Record - 12/05/2569 ()" [level=5] [ref=e114]
+        - generic [ref=e115]:
+          - link " Edit" [ref=e116] [cursor=pointer]:
+            - /url: /project-controls/rock/3/edit/
+            - generic [ref=e117]: 
+            - text: Edit
+          - link " PDF" [ref=e118] [cursor=pointer]:
+            - /url: /project-controls/rock/3/pdf/
+            - generic [ref=e119]: 
+            - text: PDF
+      - generic [ref=e120]:
+        - generic [ref=e122]:
+          - generic [ref=e123]:
+            - generic [ref=e124]: 
+            - text: Rock at TCT Port
+          - generic [ref=e126]:
+            - term [ref=e127]: Project
+            - definition [ref=e128]: Land Recliamation Chang Project
+            - term [ref=e129]: Date
+            - definition [ref=e130]: 12/05/2569
+            - term [ref=e131]: Material Type
+            - definition [ref=e132]: N/A
+            - term [ref=e133]: Source / Quarry
+            - definition [ref=e134]: N/A
+            - term [ref=e135]: Destination / Area
+            - definition [ref=e136]: N/A
+            - term [ref=e137]: Daily Delivery (Ton)
+            - definition [ref=e138]: 3,000.00
+            - term [ref=e139]: Accumulative (Ton)
+            - definition [ref=e140]: 62,776.74
+            - term [ref=e141]: Trips
+            - definition [ref=e142]: "20"
+            - term [ref=e143]: Trucks
+            - definition [ref=e144]: "10"
+        - generic [ref=e146]:
+          - generic [ref=e147]:
+            - generic [ref=e148]: 
+            - text: Rock Placed in Revetment
+          - generic [ref=e150]:
+            - term [ref=e151]: Placed Daily (Ton)
+            - definition [ref=e152]: 1,250.00
+            - term [ref=e153]: Placed Accum (Ton)
+            - definition [ref=e154]: 56,562.00
+            - term [ref=e155]: Available Stock Balance
+            - definition [ref=e156]: 6,214.74
+            - term [ref=e157]: Station of Core
+            - definition [ref=e158]: 0+299
+            - term [ref=e159]: Core Rock Placed Outside Plot
+            - definition [ref=e160]: 4,200.00
+            - term [ref=e161]: Core Inside (Accum)
+            - definition [ref=e162]: 1,000.00
+      - generic [ref=e163]:
+        - generic [ref=e164]:
+          - generic [ref=e165]: 
+          - text: Transport Placements
+        - table [ref=e167]:
+          - rowgroup [ref=e168]:
+            - row "Transport Unit Type Qty (Ton) Trips Station Remarks" [ref=e169]:
+              - columnheader "Transport Unit" [ref=e170]
+              - columnheader "Type" [ref=e171]
+              - columnheader "Qty (Ton)" [ref=e172]
+              - columnheader "Trips" [ref=e173]
+              - columnheader "Station" [ref=e174]
+              - columnheader "Remarks" [ref=e175]
+          - rowgroup [ref=e176]:
+            - row "J.Yuttachai 1 Offshore 650.00 1 0+299 -" [ref=e177]:
+              - cell "J.Yuttachai 1" [ref=e178]:
+                - strong [ref=e179]: J.Yuttachai 1
+              - cell "Offshore" [ref=e180]
+              - cell "650.00" [ref=e181]
+              - cell "1" [ref=e182]
+              - cell "0+299" [ref=e183]
+              - cell "-" [ref=e184]
+            - row "MTP 8 Offshore 600.00 1 0+299 -" [ref=e185]:
+              - cell "MTP 8" [ref=e186]:
+                - strong [ref=e187]: MTP 8
+              - cell "Offshore" [ref=e188]
+              - cell "600.00" [ref=e189]
+              - cell "1" [ref=e190]
+              - cell "0+299" [ref=e191]
+              - cell "-" [ref=e192]
+          - rowgroup [ref=e193]:
+            - row "Total 1,250.00" [ref=e194]:
+              - cell "Total" [ref=e195]
+              - cell "1,250.00" [ref=e196]
+              - cell [ref=e197]

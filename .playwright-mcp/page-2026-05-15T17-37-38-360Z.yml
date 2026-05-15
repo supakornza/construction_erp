@@ -1,0 +1,351 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link " Construction ERP" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: 
+        - generic [ref=e6]: Construction ERP
+      - button "" [ref=e7] [cursor=pointer]:
+        - generic [ref=e8]: 
+    - generic [ref=e9]:
+      - generic [ref=e10]: Dashboard
+      - link " Dashboard" [ref=e11] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e12]: 
+        - generic [ref=e13]: Dashboard
+      - link " Tide Monitor" [ref=e14] [cursor=pointer]:
+        - /url: /tide-monitor/
+        - generic [ref=e15]: 
+        - generic [ref=e16]: Tide Monitor
+      - link " Turbidity Monitor" [ref=e17] [cursor=pointer]:
+        - /url: /turbidity-monitor/
+        - generic [ref=e18]: 
+        - generic [ref=e19]: Turbidity Monitor
+      - link " Rock Progress" [ref=e20] [cursor=pointer]:
+        - /url: /project-controls/rock/dashboard/
+        - generic [ref=e21]: 
+        - generic [ref=e22]: Rock Progress
+      - link " Sand Progress" [ref=e23] [cursor=pointer]:
+        - /url: /project-controls/sand/dashboard/
+        - generic [ref=e24]: 
+        - generic [ref=e25]: Sand Progress
+      - generic [ref=e26]: Projects
+      - link " Projects" [ref=e27] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e28]: 
+        - generic [ref=e29]: Projects
+      - generic [ref=e30]: Daily Reports
+      - link " Daily Reports" [ref=e31] [cursor=pointer]:
+        - /url: /daily-reports/
+        - generic [ref=e32]: 
+        - generic [ref=e33]: Daily Reports
+      - link " Contractor Imports" [ref=e34] [cursor=pointer]:
+        - /url: /daily-reports/import/
+        - generic [ref=e35]: 
+        - generic [ref=e36]: Contractor Imports
+      - generic [ref=e37]: Resources
+      - link " Manpower" [ref=e38] [cursor=pointer]:
+        - /url: /manpower/dashboard/
+        - generic [ref=e39]: 
+        - generic [ref=e40]: Manpower
+      - link " Equipment" [ref=e41] [cursor=pointer]:
+        - /url: /equipment/
+        - generic [ref=e42]: 
+        - generic [ref=e43]: Equipment
+      - link " Materials" [ref=e44] [cursor=pointer]:
+        - /url: /materials/dashboard/
+        - generic [ref=e45]: 
+        - generic [ref=e46]: Materials
+      - generic [ref=e47]: Procurement
+      - link " Procurement" [ref=e48] [cursor=pointer]:
+        - /url: /procurement/pr/
+        - generic [ref=e49]: 
+        - generic [ref=e50]: Procurement
+      - generic [ref=e51]: BOQ & Progress
+      - link " BOQ & Progress" [ref=e52] [cursor=pointer]:
+        - /url: /boq/
+        - generic [ref=e53]: 
+        - generic [ref=e54]: BOQ & Progress
+      - generic [ref=e55]: Project Controls
+      - link " Rock & Sand Control" [ref=e56] [cursor=pointer]:
+        - /url: /project-controls/
+        - generic [ref=e57]: 
+        - generic [ref=e58]: Rock & Sand Control
+      - link " Revetment Progress" [ref=e59] [cursor=pointer]:
+        - /url: /project-controls/revetment/dashboard/
+        - generic [ref=e60]: 
+        - generic [ref=e61]: Revetment Progress
+      - link " Recovery Plans" [ref=e62] [cursor=pointer]:
+        - /url: /project-controls/recovery/plans/
+        - generic [ref=e63]: 
+        - generic [ref=e64]: Recovery Plans
+      - link " Project Action Plans" [ref=e65] [cursor=pointer]:
+        - /url: /project-controls/action-plans/
+        - generic [ref=e66]: 
+        - generic [ref=e67]: Project Action Plans
+      - link " Recovery Action Plans" [ref=e68] [cursor=pointer]:
+        - /url: /project-controls/recovery/rap/
+        - generic [ref=e69]: 
+        - generic [ref=e70]: Recovery Action Plans
+      - link " Logistics" [ref=e71] [cursor=pointer]:
+        - /url: /project-controls/logistics/
+        - generic [ref=e72]: 
+        - generic [ref=e73]: Logistics
+      - link " Transport Units" [ref=e74] [cursor=pointer]:
+        - /url: /project-controls/transport-units/
+        - generic [ref=e75]: 
+        - generic [ref=e76]: Transport Units
+      - generic [ref=e77]: Cost Control
+      - link " Cost Control" [ref=e78] [cursor=pointer]:
+        - /url: /cost-control/
+        - generic [ref=e79]: 
+        - generic [ref=e80]: Cost Control
+      - generic [ref=e81]: Safety
+      - link " Safety" [ref=e82] [cursor=pointer]:
+        - /url: /safety/toolbox/
+        - generic [ref=e83]: 
+        - generic [ref=e84]: Safety
+      - generic [ref=e85]: Quality
+      - link " Quality Control" [ref=e86] [cursor=pointer]:
+        - /url: /quality/
+        - generic [ref=e87]: 
+        - generic [ref=e88]: Quality Control
+      - generic [ref=e89]: Documents
+      - link " Documents" [ref=e90] [cursor=pointer]:
+        - /url: /documents/
+        - generic [ref=e91]: 
+        - generic [ref=e92]: Documents
+      - generic [ref=e93]: Admin
+      - link " Users" [ref=e94] [cursor=pointer]:
+        - /url: /accounts/users/
+        - generic [ref=e95]: 
+        - generic [ref=e96]: Users
+      - link " Django Admin" [ref=e97] [cursor=pointer]:
+        - /url: /admin/
+        - generic [ref=e98]: 
+        - generic [ref=e99]: Django Admin
+  - generic [ref=e100]:
+    - navigation [ref=e101]:
+      - text: 
+      - button "Go back" [ref=e102] [cursor=pointer]:
+        - generic [ref=e103]: 
+        - text: Back
+      - generic [ref=e105]:
+        - button "A Admin User Admin" [ref=e106] [cursor=pointer]:
+          - generic [ref=e107]: A
+          - generic [ref=e108]: Admin User
+          - generic [ref=e109]: Admin
+        - text:  
+    - generic [ref=e111]:
+      - generic [ref=e112]:
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - heading " Rock Progress Dashboard" [level=2] [ref=e115]:
+              - generic [ref=e116]: 
+              - text: Rock Progress Dashboard
+            - generic [ref=e117]: CON-2025-002 · Sattahip Port Breakwater Phase 2 · As of 16 พ.ค. 2026
+          - generic [ref=e118]:
+            - generic [ref=e119]: Completion
+            - generic [ref=e120]: 94.7%
+        - generic [ref=e124]:
+          - generic [ref=e125]: 0%
+          - generic [ref=e126]: 56,832 of 61,109 tons placed
+          - generic [ref=e127]: 100%
+      - generic [ref=e128]:
+        - main [ref=e129]:
+          - generic [ref=e130]:
+            - generic [ref=e131]:
+              - generic [ref=e133]: 
+              - generic [ref=e134]: Total Delivered
+              - generic [ref=e135]: 61,109 tons
+              - generic [ref=e136]: tons to site
+            - generic [ref=e137]:
+              - generic [ref=e139]: 
+              - generic [ref=e140]: Total Placed
+              - generic [ref=e141]: 56,832 tons
+              - generic [ref=e142]: tons placed
+            - generic [ref=e143]:
+              - generic [ref=e145]: 
+              - generic [ref=e146]: Stock Balance
+              - generic [ref=e147]: 4,278 tons
+              - generic [ref=e148]: delivered − placed
+            - generic [ref=e149]:
+              - generic [ref=e151]: 
+              - generic [ref=e152]: Placement Completion
+              - generic [ref=e153]: 94.7%
+              - generic [ref=e154]: vs BOQ target
+            - generic [ref=e155]:
+              - generic [ref=e157]: 
+              - generic [ref=e158]: Remaining to BOQ
+              - generic [ref=e159]: 3,168 tons
+              - generic [ref=e160]: tons remaining
+            - generic [ref=e161]:
+              - generic [ref=e163]: 
+              - generic [ref=e164]: Avg Daily Placement
+              - generic [ref=e165]: 426 tons/day
+              - generic [ref=e166]: production days only
+            - generic [ref=e167]:
+              - generic [ref=e169]: 
+              - generic [ref=e170]: Forecast Completion
+              - generic [ref=e171]: 24/05/2569
+              - generic [ref=e172]: based on avg placement
+            - generic [ref=e173]:
+              - generic [ref=e175]: 
+              - generic [ref=e176]: Latest Delivered
+              - generic [ref=e177]: 569 tons
+              - generic [ref=e178]: 16/05/2569
+            - generic [ref=e179]:
+              - generic [ref=e181]: 
+              - generic [ref=e182]: Latest Placed
+              - generic [ref=e183]: 558 tons
+              - generic [ref=e184]: 16/05/2569
+          - generic [ref=e185]:
+            - generic [ref=e188]:
+              - generic [ref=e190]: 
+              - heading "Daily Delivered vs Placed" [level=6] [ref=e191]
+            - generic [ref=e196]:
+              - generic [ref=e198]: 
+              - heading "Placement by Transport Unit" [level=6] [ref=e199]
+          - generic [ref=e202]:
+            - generic [ref=e204]:
+              - generic [ref=e205]:
+                - generic [ref=e207]: 
+                - heading "Stock Balance Summary" [level=6] [ref=e208]
+              - generic [ref=e210]:
+                - generic [ref=e211]: Total Delivered
+                - generic [ref=e212]: 61,109 t
+              - generic [ref=e216]:
+                - generic [ref=e217]: Total Placed
+                - generic [ref=e218]: 56,832 t
+              - generic [ref=e222]:
+                - generic [ref=e223]: Stock Balance
+                - generic [ref=e224]: 4,278 t
+              - generic [ref=e227]:
+                - generic [ref=e228]: Stock % of Delivered
+                - generic [ref=e229]: 7.0%
+            - generic [ref=e231]:
+              - generic [ref=e232]:
+                - generic [ref=e234]: 
+                - heading "Transport Trips & Quantity" [level=6] [ref=e235]
+              - table [ref=e237]:
+                - rowgroup [ref=e238]:
+                  - row "Transport Unit Total (tons) Trips Avg / Trip Latest Date" [ref=e239]:
+                    - columnheader "Transport Unit" [ref=e240]
+                    - columnheader "Total (tons)" [ref=e241]
+                    - columnheader "Trips" [ref=e242]
+                    - columnheader "Avg / Trip" [ref=e243]
+                    - columnheader "Latest Date" [ref=e244]
+                - rowgroup [ref=e245]:
+                  - row "Bang Sapan 2 61,109 tons 1824 trips 33.5 tons/trip 16/05/2569" [ref=e246]:
+                    - cell "Bang Sapan 2" [ref=e247]
+                    - cell "61,109 tons" [ref=e248]
+                    - cell "1824 trips" [ref=e249]
+                    - cell "33.5 tons/trip" [ref=e250]
+                    - cell "16/05/2569" [ref=e251]
+          - generic [ref=e254]:
+            - generic [ref=e256]: 
+            - heading "Accumulative Delivered vs Placed" [level=6] [ref=e257]
+          - generic [ref=e261]:
+            - generic [ref=e262]:
+              - generic [ref=e264]: 
+              - heading "Placement Progress by Station" [level=6] [ref=e265]
+            - table [ref=e267]:
+              - rowgroup [ref=e268]:
+                - row "Station Range Material Delivered (t) Placed (t) Completion Status" [ref=e269]:
+                  - columnheader "Station Range" [ref=e270]
+                  - columnheader "Material" [ref=e271]
+                  - columnheader "Delivered (t)" [ref=e272]
+                  - columnheader "Placed (t)" [ref=e273]
+                  - columnheader "Completion" [ref=e274]
+                  - columnheader "Status" [ref=e275]
+              - rowgroup [ref=e276]:
+                - row "No station progress records yet. Add station ranges in admin when ready." [ref=e277]:
+                  - cell "No station progress records yet. Add station ranges in admin when ready." [ref=e278]
+        - complementary [ref=e279]:
+          - generic [ref=e280]:
+            - generic [ref=e282]:
+              - generic [ref=e283]: 
+              - text: Filters
+            - generic [ref=e284]:
+              - generic [ref=e285]: Project
+              - combobox [ref=e286]:
+                - option "First Active Project"
+                - option "CON-2025-002" [selected]
+                - option "P06643"
+                - option "CON-2024-001"
+            - generic [ref=e287]:
+              - generic [ref=e288]: Date Range
+              - combobox [ref=e289]:
+                - option "All Dates" [selected]
+                - option "Last 7 Days"
+                - option "Last 14 Days"
+                - option "Last 30 Days"
+            - generic [ref=e290]:
+              - generic [ref=e291]: From
+              - textbox [ref=e292]
+            - generic [ref=e293]:
+              - generic [ref=e294]: To
+              - textbox [ref=e295]
+            - generic [ref=e296]:
+              - generic [ref=e297]: Transport Unit
+              - combobox [ref=e298]:
+                - option "All Transport Units" [selected]
+                - option "Bang Sapan 2"
+                - option "Crane (50T)"
+                - option "Dump Truck (10-wheel)"
+                - option "Excavator (CAT 320)"
+                - option "Generator (200kVA)"
+                - option "J.Yuttachai 1"
+                - option "MTP 10"
+                - option "MTP 14"
+                - option "MTP 8"
+                - option "MTP 9"
+                - option "Onshore Truck"
+                - option "Split Barge (500T)"
+                - option "Wheel Loader"
+                - option "cat 320"
+            - generic [ref=e299]:
+              - generic [ref=e300]: Material Type
+              - combobox [ref=e301]:
+                - option "All Material Types" [selected]
+                - option "Core Rock"
+                - option "Bedding Rock"
+                - option "Armour Rock"
+                - option "Toe Rock"
+                - option "Quarry Run"
+            - generic [ref=e302]:
+              - generic [ref=e303]: Station Range
+              - textbox "e.g. 0+000 – 0+100" [ref=e304]
+            - generic [ref=e305]:
+              - generic [ref=e306]: Source / Quarry
+              - textbox "Quarry name" [ref=e307]
+            - generic [ref=e308]:
+              - generic [ref=e309]: Destination / Area
+              - textbox "Placement area" [ref=e310]
+            - button " Apply Filters" [ref=e311] [cursor=pointer]:
+              - generic [ref=e312]: 
+              - text: Apply Filters
+          - generic [ref=e313]:
+            - generic [ref=e315]:
+              - generic [ref=e316]: 
+              - text: Quick Actions
+            - generic [ref=e317]:
+              - link " Records" [ref=e318] [cursor=pointer]:
+                - /url: /project-controls/rock/
+                - generic [ref=e319]: 
+                - text: Records
+              - link "+ New Record" [ref=e320] [cursor=pointer]:
+                - /url: /project-controls/rock/new/
+                - generic [ref=e321]: +
+                - text: New Record
+              - link " Export Excel" [ref=e322] [cursor=pointer]:
+                - /url: /project-controls/rock/export/3/
+                - generic [ref=e323]: 
+                - text: Export Excel
+          - generic [ref=e324]:
+            - generic [ref=e326]:
+              - generic [ref=e327]: 
+              - text: Target Setup
+            - generic [ref=e328]:
+              - generic [ref=e329]: BOQ Target
+              - generic [ref=e330]: 60,000 tons
