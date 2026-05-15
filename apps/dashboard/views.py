@@ -131,9 +131,10 @@ def _production_forecast(today, boq_progress, active_projects):
     # Latest finish date across active projects
     finish_dates = [p.finish_date for p in active_projects]
     latest_finish = max(finish_dates) if finish_dates else today
-    days_remaining = max((latest_finish - today).days, 1)
+    days_remaining = (latest_finish - today).days
     remaining_pct = (total_remaining / total_contract * 100) if total_contract else 0
-    required_daily_pct = remaining_pct / days_remaining
+    # If already overdue, required rate is undefined — use 0 to avoid division by ≤0
+    required_daily_pct = remaining_pct / days_remaining if days_remaining > 0 else 0
 
     gap = required_daily_pct - avg_daily_pct
 
@@ -143,13 +144,17 @@ def _production_forecast(today, boq_progress, active_projects):
     else:
         forecast_date = None
 
+    is_overdue = days_remaining <= 0
+
     return dict(
         avg_daily_pct=round(avg_daily_pct, 3),
         required_daily_pct=round(required_daily_pct, 3),
         gap=round(gap, 3),
         forecast_date=forecast_date,
         working_days=working_days,
-        is_on_track=gap <= 0,
+        is_on_track=gap <= 0 and not is_overdue,
+        is_overdue=is_overdue,
+        days_overdue=abs(days_remaining) if is_overdue else 0,
         days_remaining=days_remaining,
         latest_finish=latest_finish,
     )
@@ -412,6 +417,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         ctx['boq_progress'] = boq_progress
         ctx['project_overview'] = project_overview
         ctx['donut_data_json'] = json.dumps(donut_data)
+        ctx['boq_projects'] = [r['project'] for r in boq_progress]
+        ctx['default_scurve_project_id'] = boq_progress[0]['project'].pk if boq_progress else ''
 
         # ── Executive summary totals ──────────────────────
         total_contract_value = float(

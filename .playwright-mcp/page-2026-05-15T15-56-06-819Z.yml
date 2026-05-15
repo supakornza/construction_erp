@@ -1,0 +1,19 @@
+- generic [ref=e6]:
+  - generic [ref=e7]:
+    - generic [ref=e9]: 
+    - heading "Construction ERP" [level=4] [ref=e10]
+    - paragraph [ref=e11]: Sign in to your account
+  - generic [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]: Username
+      - generic [ref=e15]:
+        - generic [ref=e17]: 
+        - textbox "Enter username" [active] [ref=e18]
+    - generic [ref=e19]:
+      - generic [ref=e20]: Password
+      - generic [ref=e21]:
+        - generic [ref=e23]: 
+        - textbox "Enter password" [ref=e24]
+    - button " Sign In" [ref=e25] [cursor=pointer]:
+      - generic [ref=e26]: 
+      - text: Sign In

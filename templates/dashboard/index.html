@@ -734,7 +734,7 @@
     {% endif %}
   </div>
 
-  <div class="exec-kpi-card" style="--accent:{% if cost_kpis and cost_kpis.cost_status_class == 'critical' %}#dc2626{% elif cost_kpis and cost_kpis.cost_status_class == 'warning' %}#d97706{% else %}#059669{% endif %}">
+  <div class="exec-kpi-card" style="--accent:{% if cost_kpis and cost_kpis.cost_status_class == 'critical' %}#dc2626{% elif cost_kpis and cost_kpis.cost_status_class == 'warning' %}#d97706{% elif cost_kpis and cost_kpis.cost_status_class == 'good' %}#059669{% else %}#64748b{% endif %}">
     <div class="exec-kpi-top">
       <div class="exec-kpi-icon"><i class="fas fa-heartbeat"></i></div>
       <div class="exec-kpi-step">06 Cost</div>
@@ -1114,9 +1114,14 @@
           <div class="donut-center"><div class="donut-pct">{{ row.percent|floatformat:0 }}%</div><div class="donut-sub">BOQ</div></div>
         </div>
         <div style="flex:1;min-width:0">
+          {% if row.contract_amount %}
           <div class="fin-row"><span class="fin-label">Contract</span><span>฿{{ row.contract_amount|floatformat:0|intcomma }}</span></div>
           <div class="fin-row"><span class="fin-label">Earned</span><span style="color:#00b4d8">฿{{ row.earned_value|floatformat:0|intcomma }}</span></div>
           <div class="fin-total"><span>Progress</span><span>{{ row.percent|floatformat:1 }}%</span></div>
+          {% else %}
+          <div class="fin-row" style="color:#64748b;font-style:italic"><span colspan="2"><i class="fas fa-info-circle me-1"></i>No BOQ items entered yet</span></div>
+          <div class="fin-row"><span class="fin-label">Contract value</span><span>฿{{ row.project.contract_value|floatformat:0|intcomma }}</span></div>
+          {% endif %}
           <div class="dark-progress mt-1">
             <div class="dark-progress-bar" style="width:{{ row.percent }}%;background:linear-gradient(to right,#00b4d8,#0077b6)"></div>
           </div>
@@ -1142,9 +1147,9 @@
       <div class="dark-card-header">
         <h6><i class="fas fa-chart-area" style="color:#9b59b6"></i>Cumulative Progress (%)</h6>
         <div class="d-flex align-items-center gap-2 no-print">
-          {% if projects %}
+          {% if boq_projects %}
           <select id="scurve-project" class="form-select form-select-sm" style="background:#0d1f35;border:1px solid rgba(255,255,255,.12);color:#c8d6e5;font-size:.78rem;width:auto">
-            {% for p in projects %}<option value="{{ p.pk }}">{{ p.project_name }}</option>{% endfor %}
+            {% for p in boq_projects %}<option value="{{ p.pk }}"{% if p.pk == default_scurve_project_id %} selected{% endif %}>{{ p.project_name }}</option>{% endfor %}
           </select>
           {% endif %}
           <span id="scurve-project-label" style="color:#8aa5c0;font-size:.75rem"></span>
@@ -1217,24 +1222,36 @@
     </div>
   </div>
   <div class="col-6 col-md-3">
-    <div class="kpi-card c-violet">
-      <div class="kpi-icon c-violet"><i class="fas fa-flag-checkered"></i></div>
+    <div class="kpi-card {% if forecast.is_overdue %}c-red{% else %}c-violet{% endif %}">
+      <div class="kpi-icon {% if forecast.is_overdue %}c-red{% else %}c-violet{% endif %}"><i class="fas fa-flag-checkered"></i></div>
+      {% if forecast.is_overdue %}
+      <div class="kpi-value" style="font-size:1.3rem">Overdue</div>
+      <div class="kpi-label">Required Daily Rate</div>
+      <div class="kpi-sub">{{ forecast.days_overdue }} days past deadline</div>
+      {% else %}
       <div class="kpi-value">{{ forecast.required_daily_pct }}%</div>
       <div class="kpi-label">Required Daily Rate</div>
       <div class="kpi-sub">{{ forecast.days_remaining }} days remaining</div>
+      {% endif %}
     </div>
   </div>
   <div class="col-6 col-md-3">
-    <div class="kpi-card {% if forecast.is_on_track %}c-green{% else %}c-red{% endif %}">
-      <div class="kpi-icon {% if forecast.is_on_track %}c-green{% else %}c-red{% endif %}">
+    <div class="kpi-card {% if forecast.is_overdue %}c-red{% elif forecast.is_on_track %}c-green{% else %}c-red{% endif %}">
+      <div class="kpi-icon {% if forecast.is_overdue %}c-red{% elif forecast.is_on_track %}c-green{% else %}c-red{% endif %}">
         <i class="fas fa-{% if forecast.is_on_track %}thumbs-up{% else %}exclamation-triangle{% endif %}"></i>
       </div>
+      {% if forecast.is_overdue %}
+      <div class="kpi-value" style="font-size:1.1rem">Past Deadline</div>
+      <div class="kpi-label">Productivity Gap</div>
+      <div class="kpi-sub"><span class="kpi-badge danger">Recovery needed</span></div>
+      {% else %}
       <div class="kpi-value">{% if forecast.gap > 0 %}+{% endif %}{{ forecast.gap }}%</div>
       <div class="kpi-label">Productivity Gap</div>
       <div class="kpi-sub">
         {% if forecast.is_on_track %}<span class="kpi-badge good">Sufficient</span>
         {% else %}<span class="kpi-badge danger">Acceleration needed</span>{% endif %}
       </div>
+      {% endif %}
     </div>
   </div>
   <div class="col-6 col-md-3">
@@ -1589,6 +1606,11 @@
       </div>
       <div class="dark-card-body" style="padding:.8rem 1rem">
         <canvas id="costBudgetChart" height="120"></canvas>
+        <div id="costBudgetNoData" style="display:none;text-align:center;padding:2rem;color:#64748b;font-size:.82rem">
+          <i class="fas fa-chart-bar fa-2x mb-2 d-block" style="opacity:.3"></i>
+          No budget or actual cost records entered yet.<br>
+          <a href="{% url 'cost_control:dashboard' %}" style="color:#f0a500;font-size:.78rem">Set up cost control →</a>
+        </div>
       </div>
     </div>
   </div>
@@ -1680,14 +1702,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  /* S-Curve – load first project by default */
+  /* S-Curve – load pre-selected project (first project with BOQ data) */
   var scSel = document.getElementById('scurve-project');
-  if (scSel) {
-    fetchSCurve(scSel.value);
-    scSel.addEventListener('change', function () { fetchSCurve(this.value); });
-  } else {
-    fetchSCurve('');
-  }
+  fetchSCurve(scSel ? scSel.value : '');
+  scSel?.addEventListener('change', function () { fetchSCurve(this.value); });
 });
 
 /* ── Date helpers ──────────────────────────────── */
@@ -1780,8 +1798,14 @@ function renderSand(labels, data) {
   var raw = '{{ cost_chart_json|escapejs }}';
   try {
     var d = JSON.parse(raw);
-    if (!d.labels || !d.labels.length) return;
-    var ctx = document.getElementById('costBudgetChart');
+    var noDataEl = document.getElementById('costBudgetNoData');
+    var canvasEl = document.getElementById('costBudgetChart');
+    if (!d.labels || !d.labels.length) {
+      if (canvasEl) canvasEl.style.display = 'none';
+      if (noDataEl) noDataEl.style.display = 'block';
+      return;
+    }
+    var ctx = canvasEl;
     if (!ctx) return;
     new Chart(ctx.getContext('2d'), {
       type: 'bar',

@@ -1,0 +1,77 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - heading "Page not found (404)" [level=1] [ref=e3]
+    - table [ref=e4]:
+      - rowgroup [ref=e5]:
+        - 'row "Request Method: GET" [ref=e6]':
+          - rowheader "Request Method:" [ref=e7]
+          - cell "GET" [ref=e8]
+        - 'row "Request URL: http://127.0.0.1:8000/dashboard/" [ref=e9]':
+          - rowheader "Request URL:" [ref=e10]
+          - cell "http://127.0.0.1:8000/dashboard/" [ref=e11]
+  - main [ref=e12]:
+    - paragraph [ref=e13]:
+      - text: Using the URLconf defined in
+      - code [ref=e14]: config.urls
+      - text: ", Django tried these URL patterns, in this order:"
+    - list [ref=e15]:
+      - listitem [ref=e16]:
+        - code [ref=e17]: admin/
+      - listitem [ref=e18]:
+        - code
+        - code [ref=e19]: "[name='index']"
+      - listitem [ref=e20]:
+        - code
+        - code [ref=e21]: chart-data/ [name='chart_data']
+      - listitem [ref=e22]:
+        - code
+        - code [ref=e23]: scurve/ [name='scurve_data']
+      - listitem [ref=e24]:
+        - code [ref=e25]: accounts/
+      - listitem [ref=e26]:
+        - code [ref=e27]: projects/
+      - listitem [ref=e28]:
+        - code [ref=e29]: daily-reports/
+      - listitem [ref=e30]:
+        - code [ref=e31]: manpower/
+      - listitem [ref=e32]:
+        - code [ref=e33]: equipment/
+      - listitem [ref=e34]:
+        - code [ref=e35]: materials/
+      - listitem [ref=e36]:
+        - code [ref=e37]: procurement/
+      - listitem [ref=e38]:
+        - code [ref=e39]: boq/
+      - listitem [ref=e40]:
+        - code [ref=e41]: safety/
+      - listitem [ref=e42]:
+        - code [ref=e43]: quality/
+      - listitem [ref=e44]:
+        - code [ref=e45]: documents/
+      - listitem [ref=e46]:
+        - code [ref=e47]: reports/
+      - listitem [ref=e48]:
+        - code [ref=e49]: api/v1/
+      - listitem [ref=e50]:
+        - code [ref=e51]: project-controls/
+      - listitem [ref=e52]:
+        - code [ref=e53]: cost-control/
+      - listitem [ref=e54]:
+        - code [ref=e55]: tide-monitor/
+      - listitem [ref=e56]:
+        - code [ref=e57]: turbidity-monitor/
+      - listitem [ref=e58]:
+        - code [ref=e59]: ^media/(?P<path>.*)$
+      - listitem [ref=e60]:
+        - code [ref=e61]: ^static/(?P<path>.*)$
+    - paragraph [ref=e62]:
+      - text: The current path,
+      - code [ref=e63]: dashboard/
+      - text: ", didn’t match any of these."
+  - contentinfo [ref=e64]:
+    - paragraph [ref=e65]:
+      - text: You’re seeing this error because you have
+      - code [ref=e66]: DEBUG = True
+      - text: in your Django settings file. Change that to
+      - code [ref=e67]: "False"
+      - text: ", and Django will display a standard 404 page."

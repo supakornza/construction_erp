@@ -1,0 +1,1012 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link " Construction ERP" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: 
+        - generic [ref=e6]: Construction ERP
+      - button "" [ref=e7] [cursor=pointer]:
+        - generic [ref=e8]: 
+    - generic [ref=e9]:
+      - generic [ref=e10]: Dashboard
+      - link " Dashboard" [ref=e11] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e12]: 
+        - generic [ref=e13]: Dashboard
+      - link " Tide Monitor" [ref=e14] [cursor=pointer]:
+        - /url: /tide-monitor/
+        - generic [ref=e15]: 
+        - generic [ref=e16]: Tide Monitor
+      - link " Turbidity Monitor" [ref=e17] [cursor=pointer]:
+        - /url: /turbidity-monitor/
+        - generic [ref=e18]: 
+        - generic [ref=e19]: Turbidity Monitor
+      - link " Rock Progress" [ref=e20] [cursor=pointer]:
+        - /url: /project-controls/rock/dashboard/
+        - generic [ref=e21]: 
+        - generic [ref=e22]: Rock Progress
+      - link " Sand Progress" [ref=e23] [cursor=pointer]:
+        - /url: /project-controls/sand/dashboard/
+        - generic [ref=e24]: 
+        - generic [ref=e25]: Sand Progress
+      - generic [ref=e26]: Projects
+      - link " Projects" [ref=e27] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e28]: 
+        - generic [ref=e29]: Projects
+      - generic [ref=e30]: Daily Reports
+      - link " Daily Reports" [ref=e31] [cursor=pointer]:
+        - /url: /daily-reports/
+        - generic [ref=e32]: 
+        - generic [ref=e33]: Daily Reports
+      - link " Contractor Imports" [ref=e34] [cursor=pointer]:
+        - /url: /daily-reports/import/
+        - generic [ref=e35]: 
+        - generic [ref=e36]: Contractor Imports
+      - generic [ref=e37]: Resources
+      - link " Manpower" [ref=e38] [cursor=pointer]:
+        - /url: /manpower/dashboard/
+        - generic [ref=e39]: 
+        - generic [ref=e40]: Manpower
+      - link " Equipment" [ref=e41] [cursor=pointer]:
+        - /url: /equipment/
+        - generic [ref=e42]: 
+        - generic [ref=e43]: Equipment
+      - link " Materials" [ref=e44] [cursor=pointer]:
+        - /url: /materials/dashboard/
+        - generic [ref=e45]: 
+        - generic [ref=e46]: Materials
+      - generic [ref=e47]: Procurement
+      - link " Procurement" [ref=e48] [cursor=pointer]:
+        - /url: /procurement/pr/
+        - generic [ref=e49]: 
+        - generic [ref=e50]: Procurement
+      - generic [ref=e51]: BOQ & Progress
+      - link " BOQ & Progress" [ref=e52] [cursor=pointer]:
+        - /url: /boq/
+        - generic [ref=e53]: 
+        - generic [ref=e54]: BOQ & Progress
+      - generic [ref=e55]: Project Controls
+      - link " Rock & Sand Control" [ref=e56] [cursor=pointer]:
+        - /url: /project-controls/
+        - generic [ref=e57]: 
+        - generic [ref=e58]: Rock & Sand Control
+      - link " Revetment Progress" [ref=e59] [cursor=pointer]:
+        - /url: /project-controls/revetment/dashboard/
+        - generic [ref=e60]: 
+        - generic [ref=e61]: Revetment Progress
+      - link " Recovery Plans" [ref=e62] [cursor=pointer]:
+        - /url: /project-controls/recovery/plans/
+        - generic [ref=e63]: 
+        - generic [ref=e64]: Recovery Plans
+      - link " Project Action Plans" [ref=e65] [cursor=pointer]:
+        - /url: /project-controls/action-plans/
+        - generic [ref=e66]: 
+        - generic [ref=e67]: Project Action Plans
+      - link " Recovery Action Plans" [ref=e68] [cursor=pointer]:
+        - /url: /project-controls/recovery/rap/
+        - generic [ref=e69]: 
+        - generic [ref=e70]: Recovery Action Plans
+      - link " Logistics" [ref=e71] [cursor=pointer]:
+        - /url: /project-controls/logistics/
+        - generic [ref=e72]: 
+        - generic [ref=e73]: Logistics
+      - link " Transport Units" [ref=e74] [cursor=pointer]:
+        - /url: /project-controls/transport-units/
+        - generic [ref=e75]: 
+        - generic [ref=e76]: Transport Units
+      - generic [ref=e77]: Cost Control
+      - link " Cost Control" [ref=e78] [cursor=pointer]:
+        - /url: /cost-control/
+        - generic [ref=e79]: 
+        - generic [ref=e80]: Cost Control
+      - generic [ref=e81]: Safety
+      - link " Safety" [ref=e82] [cursor=pointer]:
+        - /url: /safety/toolbox/
+        - generic [ref=e83]: 
+        - generic [ref=e84]: Safety
+      - generic [ref=e85]: Quality
+      - link " Quality Control" [ref=e86] [cursor=pointer]:
+        - /url: /quality/
+        - generic [ref=e87]: 
+        - generic [ref=e88]: Quality Control
+      - generic [ref=e89]: Documents
+      - link " Documents" [ref=e90] [cursor=pointer]:
+        - /url: /documents/
+        - generic [ref=e91]: 
+        - generic [ref=e92]: Documents
+      - generic [ref=e93]: Admin
+      - link " Users" [ref=e94] [cursor=pointer]:
+        - /url: /accounts/users/
+        - generic [ref=e95]: 
+        - generic [ref=e96]: Users
+      - link " Django Admin" [ref=e97] [cursor=pointer]:
+        - /url: /admin/
+        - generic [ref=e98]: 
+        - generic [ref=e99]: Django Admin
+  - generic [ref=e100]:
+    - navigation [ref=e101]:
+      - text: 
+      - button "Go back" [ref=e102] [cursor=pointer]:
+        - generic [ref=e103]: 
+        - text: Back
+      - generic [ref=e105]:
+        - button "A Admin User Admin" [ref=e106] [cursor=pointer]:
+          - generic [ref=e107]: A
+          - generic [ref=e108]: Admin User
+          - generic [ref=e109]: Admin
+        - text:  
+    - generic [ref=e110]:
+      - generic [ref=e111]:
+        - generic [ref=e112]:
+          - generic [ref=e114]: 
+          - generic [ref=e115]:
+            - generic [ref=e116]: Executive Dashboard
+            - generic [ref=e117]: Executive Cockpit • Construction Project Management
+        - generic [ref=e118]:
+          - generic [ref=e119]:
+            - generic [ref=e120]: 
+            - text: 15/05/2569
+          - generic [ref=e121]:
+            - generic [ref=e122]: 
+            - text: 2 Active Projects
+          - button " Print" [ref=e123] [cursor=pointer]:
+            - generic [ref=e124]: 
+            - text: Print
+      - generic [ref=e125]:
+        - generic [ref=e126]:
+          - generic [ref=e127]: 
+          - text: Contract & Progress KPIs
+        - generic [ref=e128]:
+          - generic [ref=e129]:
+            - generic [ref=e130]:
+              - generic [ref=e132]: 
+              - generic [ref=e133]: 01 Contract
+            - generic [ref=e134]: ฿157,410,500
+            - generic [ref=e135]: Total Contract Value
+            - generic [ref=e136]:
+              - generic [ref=e137]: Active projects
+              - generic [ref=e138]: 2 projects
+            - generic [ref=e139]:
+              - generic [ref=e140]: Remaining value
+              - generic [ref=e141]: ฿152,303,389
+          - generic [ref=e142]:
+            - generic [ref=e143]:
+              - generic [ref=e145]: 
+              - generic [ref=e146]: 02 Earned
+            - generic [ref=e147]: ฿5,107,111
+            - generic [ref=e148]: Earned Value
+            - generic [ref=e149]: Work certified against BOQ progress
+          - generic [ref=e150]:
+            - generic [ref=e151]:
+              - generic [ref=e153]: 
+              - generic [ref=e154]: 03 Progress
+            - generic [ref=e155]: 3.2%
+            - generic [ref=e156]: Overall BOQ Progress
+            - generic [ref=e159]: Actual progress across active projects
+          - generic [ref=e160]:
+            - generic [ref=e161]:
+              - generic [ref=e163]: 
+              - generic [ref=e164]: 04 Today
+            - generic [ref=e165]: 69 people
+            - generic [ref=e166]: Today's Manpower
+            - generic [ref=e167]:
+              - generic [ref=e168]: Equipment working
+              - generic [ref=e169]: 4 equipment
+          - generic [ref=e170]:
+            - generic [ref=e171]:
+              - generic [ref=e173]: 
+              - generic [ref=e174]: 05 Attention
+            - generic [ref=e175]: 8 items
+            - generic [ref=e176]: Items Need Attention
+            - generic [ref=e177]:
+              - generic [ref=e178]: Safety issues
+              - generic [ref=e179]: 8 issues
+            - generic [ref=e180]:
+              - generic [ref=e181]: Pending reports
+              - generic [ref=e182]: 0 reports
+            - generic [ref=e183]:
+              - generic [ref=e184]: 
+              - text: Critical
+          - generic [ref=e185]:
+            - generic [ref=e186]:
+              - generic [ref=e188]: 
+              - generic [ref=e189]: 06 Cost
+            - generic [ref=e190]: No data
+            - generic [ref=e191]: Cost Health
+            - generic [ref=e192]:
+              - generic [ref=e193]: Status
+              - generic [ref=e194]: N/A
+            - generic [ref=e195]:
+              - generic [ref=e196]: Actual cost
+              - generic [ref=e197]: ฿0
+        - generic [ref=e200]:
+          - generic [ref=e201]: 
+          - generic [ref=e202]:
+            - strong [ref=e203]: 8 open safety issues
+            - text: require action
+          - link "View →" [ref=e204] [cursor=pointer]:
+            - /url: /safety/inspections/
+        - generic [ref=e205]:
+          - generic [ref=e206]: 
+          - text: Executive Action Desk
+        - generic [ref=e207]:
+          - generic [ref=e208]:
+            - generic [ref=e209]:
+              - heading " Owner Decisions Required" [level=6] [ref=e210]:
+                - generic [ref=e211]: 
+                - text: Owner Decisions Required
+              - link "+ Add Item" [ref=e212] [cursor=pointer]:
+                - /url: /admin/dashboard/ownerdecisionitem/add/
+                - generic [ref=e213]: +
+                - text: Add Item
+            - generic [ref=e216]:
+              - generic [ref=e217]: 
+              - generic [ref=e218]: No pending owner decisions.
+          - generic [ref=e219]:
+            - generic [ref=e220]:
+              - heading " Critical Control Pulse" [level=6] [ref=e221]:
+                - generic [ref=e222]: 
+                - text: Critical Control Pulse
+              - generic [ref=e223]: Immediate visibility
+            - generic [ref=e224]:
+              - generic [ref=e225]:
+                - generic [ref=e226]:
+                  - generic [ref=e227]: Pending reports
+                  - strong [ref=e228]: "0"
+                - generic [ref=e229]:
+                  - generic [ref=e230]: Open safety
+                  - strong [ref=e231]: "8"
+                - generic [ref=e232]:
+                  - generic [ref=e233]: Quality pending
+                  - strong [ref=e234]: "0"
+                - generic [ref=e235]:
+                  - generic [ref=e236]: NCR open
+                  - strong [ref=e237]: "0"
+              - generic [ref=e238]:
+                - generic [ref=e239]: 
+                - generic [ref=e240]: Use this cockpit to clear decisions first, then drill into Project Controls and cost details.
+        - generic [ref=e241]:
+          - generic [ref=e242]: 
+          - text: Project Controls
+        - generic [ref=e243]:
+          - generic [ref=e244]:
+            - generic [ref=e245]:
+              - generic [ref=e246]:
+                - generic [ref=e247]: Operational controls
+                - generic [ref=e248]: Material, revetment, and recovery status
+              - link " Open Controls" [ref=e249] [cursor=pointer]:
+                - /url: /project-controls/
+                - generic [ref=e250]: 
+                - text: Open Controls
+            - generic [ref=e251]:
+              - generic [ref=e252]:
+                - generic [ref=e253]: Latest update
+                - strong [ref=e254]: 14/05/2569
+              - generic [ref=e255]:
+                - generic [ref=e256]: Active projects
+                - strong [ref=e257]: 2 projects
+              - generic [ref=e258]:
+                - generic [ref=e259]: Revetment records
+                - strong [ref=e260]: "3"
+              - generic [ref=e261]:
+                - generic [ref=e262]: Recovery delayed
+                - strong [ref=e263]: 0 / 24
+            - generic [ref=e264]:
+              - generic [ref=e265]:
+                - generic [ref=e266]: Project
+                - generic [ref=e267]: Rock
+                - generic [ref=e268]: Sand
+                - generic [ref=e269]: RAP
+              - generic [ref=e270]:
+                - strong [ref=e271]: P06643
+                - generic [ref=e272]: 72%
+                - generic [ref=e273]: 100%
+                - generic [ref=e274]: 0/24
+              - generic [ref=e275]:
+                - strong [ref=e276]: CON-2024-001
+                - generic [ref=e277]: 10%
+                - generic [ref=e278]: 100%
+                - generic [ref=e279]: 0/0
+          - generic [ref=e280]:
+            - generic [ref=e281]: Rock progress
+            - generic [ref=e282]: 66%
+            - generic [ref=e283]: Placed vs delivered
+            - generic [ref=e286]:
+              - generic [ref=e287]: Delivered
+              - generic [ref=e288]: 91,676 T
+            - generic [ref=e289]:
+              - generic [ref=e290]: Placed
+              - generic [ref=e291]: 60,467 T
+            - generic [ref=e292]:
+              - generic [ref=e293]: Avg daily
+              - generic [ref=e294]: 1,620 T/day
+            - generic [ref=e295]:
+              - generic [ref=e296]: Forecast
+              - generic [ref=e297]: "-"
+            - generic [ref=e298]:
+              - generic [ref=e299]: Stock
+              - generic [ref=e300]: 31,209 T
+          - generic [ref=e301]:
+            - generic [ref=e302]: Sand progress
+            - generic [ref=e303]: 100%
+            - generic [ref=e304]: Placed vs delivered
+            - generic [ref=e307]:
+              - generic [ref=e308]: Delivered
+              - generic [ref=e309]: 87,466 T
+            - generic [ref=e310]:
+              - generic [ref=e311]: Placed
+              - generic [ref=e312]: 87,466 T
+            - generic [ref=e313]:
+              - generic [ref=e314]: Avg daily
+              - generic [ref=e315]: 3,431 T/day
+            - generic [ref=e316]:
+              - generic [ref=e317]: Forecast
+              - generic [ref=e318]: "-"
+            - generic [ref=e319]:
+              - generic [ref=e320]: Remaining
+              - generic [ref=e321]: 6,400 T
+          - generic [ref=e322]:
+            - generic [ref=e323]: Revetment
+            - generic [ref=e324]: 1,000
+            - generic [ref=e325]: Total recorded quantity
+            - generic [ref=e327]:
+              - generic [ref=e328]: Records
+              - strong [ref=e329]: "3"
+          - generic [ref=e330]:
+            - generic [ref=e331]: Recovery action
+            - generic [ref=e332]: 0.0%
+            - generic [ref=e333]: Actual vs planned recovery
+            - generic [ref=e335]:
+              - generic [ref=e336]: Total items
+              - generic [ref=e337]: "24"
+            - generic [ref=e338]:
+              - generic [ref=e339]: Delayed
+              - generic [ref=e340]: "0"
+        - generic [ref=e341]:
+          - generic [ref=e342]: 
+          - text: Planned vs Actual Progress (EVM)
+        - generic [ref=e343]:
+          - generic [ref=e345]:
+            - generic [ref=e346]: 
+            - generic [ref=e348]: 
+            - generic [ref=e349]: 100.0%
+            - generic [ref=e350]: Planned Progress
+            - generic [ref=e351]: Linear time-weighted
+          - generic [ref=e353]:
+            - generic [ref=e354]: 
+            - generic [ref=e356]: 
+            - generic [ref=e357]: 2.8%
+            - generic [ref=e358]: Actual Progress
+            - generic [ref=e359]: BOQ earned value
+          - generic [ref=e361]:
+            - generic [ref=e362]: 
+            - generic [ref=e364]: 
+            - generic [ref=e365]: "-97.2%"
+            - generic [ref=e366]: Variance
+            - generic [ref=e367]: Actual − Planned
+          - generic [ref=e369]:
+            - generic [ref=e370]: 
+            - generic [ref=e372]: 
+            - generic [ref=e373]: 0.03 index
+            - generic [ref=e374]: SPI
+            - generic [ref=e375]: Schedule Performance Index
+          - generic [ref=e377]:
+            - generic [ref=e378]: 
+            - generic [ref=e380]: 
+            - generic [ref=e381]: Critical Delay
+            - generic [ref=e382]: Schedule Status
+            - generic [ref=e384]: SPI < 0.80 index
+        - generic [ref=e385]:
+          - generic [ref=e386]: 
+          - text: Cost Performance (CPI / Budget / EAC)
+        - generic [ref=e387]:
+          - generic [ref=e389]:
+            - generic [ref=e390]: 
+            - generic [ref=e392]: 
+            - generic [ref=e393]: ฿0
+            - generic [ref=e394]: Total Budget
+            - generic [ref=e395]: "Committed: ฿0"
+          - generic [ref=e397]:
+            - generic [ref=e398]: 
+            - generic [ref=e400]: 
+            - generic [ref=e401]: ฿0
+            - generic [ref=e402]: Actual Cost
+            - generic [ref=e403]: "EV: ฿0"
+          - generic [ref=e405]:
+            - generic [ref=e406]: 
+            - generic [ref=e408]: 
+            - generic [ref=e409]: +฿0
+            - generic [ref=e410]: Cost Variance (CV)
+            - generic [ref=e411]: EV − Actual Cost
+          - generic [ref=e413]:
+            - generic [ref=e414]: 
+            - generic [ref=e416]: 
+            - generic [ref=e417]: –
+            - generic [ref=e418]: CPI
+            - generic [ref=e419]: Cost Performance Index
+          - generic [ref=e421]:
+            - generic [ref=e422]: 
+            - generic [ref=e424]: 
+            - generic [ref=e425]: –
+            - generic [ref=e426]: EAC
+            - generic [ref=e427]: Estimate at Completion
+          - generic [ref=e429]:
+            - generic [ref=e430]: 
+            - generic [ref=e432]: 
+            - generic [ref=e433]: N/A
+            - generic [ref=e434]: Cost Status
+            - generic [ref=e436]: No Cost Data
+        - generic [ref=e437]:
+          - generic [ref=e438]: 
+          - text: Project Status Overview
+        - generic [ref=e439]:
+          - generic [ref=e441]:
+            - generic [ref=e442]:
+              - generic [ref=e443]:
+                - generic [ref=e444]: Land Recliamation Chang Project
+                - generic [ref=e445]: P06643 · Rayong Thailand
+              - generic [ref=e446]: Active
+            - generic [ref=e447]:
+              - generic [ref=e448]:
+                - generic:
+                  - generic: 0%
+                  - generic: BOQ
+              - generic [ref=e450]:
+                - generic [ref=e452]:
+                  - generic [ref=e453]: 
+                  - text: No BOQ items entered yet
+                - generic [ref=e454]:
+                  - generic [ref=e455]: Contract value
+                  - generic [ref=e456]: ฿7,410,500
+            - generic [ref=e458]:
+              - generic [ref=e459]:
+                - generic [ref=e460]: 
+                - text: 01/08/2568 → 30/04/2569
+              - generic [ref=e461]: 15 days overdue
+          - generic [ref=e464]:
+            - generic [ref=e465]:
+              - generic [ref=e466]:
+                - generic [ref=e467]: Port Expansion Project Phase 1
+                - generic [ref=e468]: CON-2024-001 · Laem Chabang, Chonburi, Thailand
+              - generic [ref=e469]: Active
+            - generic [ref=e470]:
+              - generic [ref=e471]:
+                - generic:
+                  - generic: 3%
+                  - generic: BOQ
+              - generic [ref=e473]:
+                - generic [ref=e474]:
+                  - generic [ref=e475]: Contract
+                  - generic [ref=e476]: ฿182,450,000
+                - generic [ref=e477]:
+                  - generic [ref=e478]: Earned
+                  - generic [ref=e479]: ฿5,107,111
+                - generic [ref=e480]:
+                  - generic [ref=e481]: Progress
+                  - generic [ref=e482]: 2.8%
+            - generic [ref=e485]:
+              - generic [ref=e486]:
+                - generic [ref=e487]: 
+                - text: 01/01/2567 → 30/06/2568
+              - generic [ref=e488]: 319 days overdue
+        - generic [ref=e490]:
+          - generic [ref=e491]: 
+          - text: EVM S-Curve – Planned vs Actual vs Forecast
+        - generic [ref=e494]:
+          - generic [ref=e495]:
+            - heading " Cumulative Progress (%)" [level=6] [ref=e496]:
+              - generic [ref=e497]: 
+              - text: Cumulative Progress (%)
+            - generic [ref=e498]:
+              - combobox [ref=e499]:
+                - option "Port Expansion Project Phase 1" [selected]
+              - generic [ref=e500]: Port Expansion Project Phase 1 · SPI 0.03 · Planned 100% · Actual 2.8%
+          - generic [ref=e503]:
+            - generic [ref=e504]: Planned
+            - generic [ref=e506]: Actual
+            - generic [ref=e508]: Forecast
+        - generic [ref=e510]:
+          - generic [ref=e511]: 
+          - text: BOQ Quantity Balance
+        - generic [ref=e512]:
+          - generic [ref=e513]:
+            - heading " Work Package Progress" [level=6] [ref=e514]:
+              - generic [ref=e515]: 
+              - text: Work Package Progress
+            - generic [ref=e516]: 10 items
+          - table [ref=e518]:
+            - rowgroup [ref=e519]:
+              - row "# Work Package Project BOQ Qty Completed Remaining Unit Progress" [ref=e520]:
+                - columnheader "#" [ref=e521]
+                - columnheader "Work Package" [ref=e522]
+                - columnheader "Project" [ref=e523]
+                - columnheader "BOQ Qty" [ref=e524]
+                - columnheader "Completed" [ref=e525]
+                - columnheader "Remaining" [ref=e526]
+                - columnheader "Unit" [ref=e527]
+                - columnheader "Progress" [ref=e528]
+            - rowgroup [ref=e529]:
+              - row "1.1 Mobilization & Demobilization Port Expansion Project P… 1.0 LS 0.0 LS 1.0 LS LS 0.0%" [ref=e530]:
+                - cell "1.1" [ref=e531]
+                - cell "Mobilization & Demobilization" [ref=e532]
+                - cell "Port Expansion Project P…" [ref=e533]
+                - cell "1.0 LS" [ref=e534]
+                - cell "0.0 LS" [ref=e535]
+                - cell "1.0 LS" [ref=e536]
+                - cell "LS" [ref=e537]
+                - cell "0.0%" [ref=e538]:
+                  - generic [ref=e539]: 0.0%
+              - row "2.1 Temporary Works & Cofferdams Port Expansion Project P… 2,000.0 m² 0.0 m² 2,000.0 m² m² 0.0%" [ref=e541]:
+                - cell "2.1" [ref=e542]
+                - cell "Temporary Works & Cofferdams" [ref=e543]
+                - cell "Port Expansion Project P…" [ref=e544]
+                - cell "2,000.0 m²" [ref=e545]
+                - cell "0.0 m²" [ref=e546]
+                - cell "2,000.0 m²" [ref=e547]
+                - cell "m²" [ref=e548]
+                - cell "0.0%" [ref=e549]:
+                  - generic [ref=e550]: 0.0%
+              - row "3.1 Dredging & Excavation Port Expansion Project P… 50,000.0 m³ 6,329.3 m³ 43,670.7 m³ m³ 12.7%" [ref=e552]:
+                - cell "3.1" [ref=e553]
+                - cell "Dredging & Excavation" [ref=e554]
+                - cell "Port Expansion Project P…" [ref=e555]
+                - cell "50,000.0 m³" [ref=e556]
+                - cell "6,329.3 m³" [ref=e557]
+                - cell "43,670.7 m³" [ref=e558]
+                - cell "m³" [ref=e559]
+                - cell "12.7%" [ref=e560]:
+                  - generic [ref=e561]: 12.7%
+              - row "3.2 Disposal of Dredged Material Port Expansion Project P… 50,000.0 m³ 5,619.7 m³ 44,380.3 m³ m³ 11.2%" [ref=e564]:
+                - cell "3.2" [ref=e565]
+                - cell "Disposal of Dredged Material" [ref=e566]
+                - cell "Port Expansion Project P…" [ref=e567]
+                - cell "50,000.0 m³" [ref=e568]
+                - cell "5,619.7 m³" [ref=e569]
+                - cell "44,380.3 m³" [ref=e570]
+                - cell "m³" [ref=e571]
+                - cell "11.2%" [ref=e572]:
+                  - generic [ref=e573]: 11.2%
+              - row "4.1 Core Rock Supply & Placement Port Expansion Project P… 120,000.0 Ton 6,833.8 Ton 113,166.2 Ton Ton 5.7%" [ref=e576]:
+                - cell "4.1" [ref=e577]
+                - cell "Core Rock Supply & Placement" [ref=e578]
+                - cell "Port Expansion Project P…" [ref=e579]
+                - cell "120,000.0 Ton" [ref=e580]
+                - cell "6,833.8 Ton" [ref=e581]
+                - cell "113,166.2 Ton" [ref=e582]
+                - cell "Ton" [ref=e583]
+                - cell "5.7%" [ref=e584]:
+                  - generic [ref=e585]: 5.7%
+              - row "4.2 Armour Rock Supply & Placement Port Expansion Project P… 45,000.0 Ton 0.0 Ton 45,000.0 Ton Ton 0.0%" [ref=e588]:
+                - cell "4.2" [ref=e589]
+                - cell "Armour Rock Supply & Placement" [ref=e590]
+                - cell "Port Expansion Project P…" [ref=e591]
+                - cell "45,000.0 Ton" [ref=e592]
+                - cell "0.0 Ton" [ref=e593]
+                - cell "45,000.0 Ton" [ref=e594]
+                - cell "Ton" [ref=e595]
+                - cell "0.0%" [ref=e596]:
+                  - generic [ref=e597]: 0.0%
+              - row "4.3 Geotextile Filter Layer Port Expansion Project P… 85,000.0 m² 0.0 m² 85,000.0 m² m² 0.0%" [ref=e599]:
+                - cell "4.3" [ref=e600]
+                - cell "Geotextile Filter Layer" [ref=e601]
+                - cell "Port Expansion Project P…" [ref=e602]
+                - cell "85,000.0 m²" [ref=e603]
+                - cell "0.0 m²" [ref=e604]
+                - cell "85,000.0 m²" [ref=e605]
+                - cell "m²" [ref=e606]
+                - cell "0.0%" [ref=e607]:
+                  - generic [ref=e608]: 0.0%
+              - row "5.1 Concrete Quay Wall (Precast) Port Expansion Project P… 600.0 m 0.0 m 600.0 m m 0.0%" [ref=e610]:
+                - cell "5.1" [ref=e611]
+                - cell "Concrete Quay Wall (Precast)" [ref=e612]
+                - cell "Port Expansion Project P…" [ref=e613]
+                - cell "600.0 m" [ref=e614]
+                - cell "0.0 m" [ref=e615]
+                - cell "600.0 m" [ref=e616]
+                - cell "m" [ref=e617]
+                - cell "0.0%" [ref=e618]:
+                  - generic [ref=e619]: 0.0%
+              - row "5.2 Steel Pipe Pile Driving Port Expansion Project P… 8,000.0 m 0.0 m 8,000.0 m m 0.0%" [ref=e621]:
+                - cell "5.2" [ref=e622]
+                - cell "Steel Pipe Pile Driving" [ref=e623]
+                - cell "Port Expansion Project P…" [ref=e624]
+                - cell "8,000.0 m" [ref=e625]
+                - cell "0.0 m" [ref=e626]
+                - cell "8,000.0 m" [ref=e627]
+                - cell "m" [ref=e628]
+                - cell "0.0%" [ref=e629]:
+                  - generic [ref=e630]: 0.0%
+              - row "6.1 Yard Pavement & Drainage Port Expansion Project P… 25,000.0 m² 0.0 m² 25,000.0 m² m² 0.0%" [ref=e632]:
+                - cell "6.1" [ref=e633]
+                - cell "Yard Pavement & Drainage" [ref=e634]
+                - cell "Port Expansion Project P…" [ref=e635]
+                - cell "25,000.0 m²" [ref=e636]
+                - cell "0.0 m²" [ref=e637]
+                - cell "25,000.0 m²" [ref=e638]
+                - cell "m²" [ref=e639]
+                - cell "0.0%" [ref=e640]:
+                  - generic [ref=e641]: 0.0%
+        - generic [ref=e643]:
+          - generic [ref=e644]: 
+          - text: Production Forecast
+        - generic [ref=e645]:
+          - generic [ref=e647]:
+            - generic [ref=e649]: 
+            - generic [ref=e650]: 0.082%
+            - generic [ref=e651]: Avg Daily Production
+            - generic [ref=e652]: "% per working day"
+          - generic [ref=e654]:
+            - generic [ref=e656]: 
+            - generic [ref=e657]: Overdue
+            - generic [ref=e658]: Required Daily Rate
+            - generic [ref=e659]: 15 days past deadline
+          - generic [ref=e661]:
+            - generic [ref=e663]: 
+            - generic [ref=e664]: Past Deadline
+            - generic [ref=e665]: Productivity Gap
+            - generic [ref=e667]: Recovery needed
+          - generic [ref=e669]:
+            - generic [ref=e671]: 
+            - generic [ref=e672]: 07/08/2572
+            - generic [ref=e673]: Forecast Completion
+            - generic [ref=e674]: 34 working days recorded
+        - generic [ref=e675]:
+          - generic [ref=e676]: 
+          - text: Trend Analysis
+        - generic [ref=e678]:
+          - generic [ref=e679]:
+            - generic [ref=e680]: Project Filter
+            - combobox [ref=e681]:
+              - option "All Projects" [selected]
+              - option "Land Recliamation Chang Project"
+              - option "Port Expansion Project Phase 1"
+          - generic [ref=e682]:
+            - generic [ref=e683]: Time Range
+            - group [ref=e684]:
+              - radio "7 Days"
+              - generic [ref=e685] [cursor=pointer]: 7 Days
+              - radio "30 Days" [checked]
+              - generic [ref=e686] [cursor=pointer]: 30 Days
+              - radio "Custom"
+              - generic [ref=e687] [cursor=pointer]: Custom
+          - generic [ref=e688]:
+            - generic [ref=e689]: From
+            - textbox [disabled] [ref=e690]: 2026-04-16
+          - generic [ref=e691]:
+            - generic [ref=e692]: To
+            - textbox [disabled] [ref=e693]: 2026-05-15
+          - button " Apply" [ref=e695] [cursor=pointer]:
+            - generic [ref=e696]: 
+            - text: Apply
+        - generic [ref=e697]:
+          - heading " Manpower (Last 30 Days)" [level=6] [ref=e701]:
+            - generic [ref=e702]: 
+            - text: Manpower
+            - generic [ref=e703]: (Last 30 Days)
+          - heading " Rock Delivery (Ton) (Last 30 Days)" [level=6] [ref=e709]:
+            - generic [ref=e710]: 
+            - text: Rock Delivery (Ton)
+            - generic [ref=e711]: (Last 30 Days)
+          - heading " Sand Delivery (m³) (Last 30 Days)" [level=6] [ref=e717]:
+            - generic [ref=e718]: 
+            - text: Sand Delivery (m³)
+            - generic [ref=e719]: (Last 30 Days)
+        - generic [ref=e722]:
+          - generic [ref=e723]: 
+          - text: Material Source Summary — Last 7 Days
+        - generic [ref=e724]:
+          - generic [ref=e726]:
+            - generic [ref=e727]:
+              - heading " Rock Sources" [level=6] [ref=e728]:
+                - generic [ref=e729]: 
+                - text: Rock Sources
+              - generic [ref=e730]: 3,222.4 Ton
+            - table [ref=e732]:
+              - rowgroup [ref=e733]:
+                - row "Source Material Qty" [ref=e734]:
+                  - columnheader "Source" [ref=e735]
+                  - columnheader "Material" [ref=e736]
+                  - columnheader "Qty" [ref=e737]
+              - rowgroup [ref=e738]:
+                - row "Demo Quarry Co., Ltd. Armour Rock (1-3T) 746.5 Ton" [ref=e739]:
+                  - cell "Demo Quarry Co., Ltd." [ref=e740]
+                  - cell "Armour Rock (1-3T)" [ref=e741]
+                  - cell "746.5 Ton" [ref=e742]
+                - row "Demo Quarry Co., Ltd. Core Rock (300-500kg) 2,475.9 Ton" [ref=e743]:
+                  - cell "Demo Quarry Co., Ltd." [ref=e744]
+                  - cell "Core Rock (300-500kg)" [ref=e745]
+                  - cell "2,475.9 Ton" [ref=e746]
+              - rowgroup [ref=e747]:
+                - row "Total 3,222.4 Ton" [ref=e748]:
+                  - cell "Total" [ref=e749]
+                  - cell "3,222.4 Ton" [ref=e750]
+          - generic [ref=e752]:
+            - generic [ref=e753]:
+              - heading " Sand / Aggregate Sources" [level=6] [ref=e754]:
+                - generic [ref=e755]: 
+                - text: Sand / Aggregate Sources
+              - generic [ref=e756]: 1,268.5 m³
+            - table [ref=e758]:
+              - rowgroup [ref=e759]:
+                - row "Source Material Qty" [ref=e760]:
+                  - columnheader "Source" [ref=e761]
+                  - columnheader "Material" [ref=e762]
+                  - columnheader "Qty" [ref=e763]
+              - rowgroup [ref=e764]:
+                - row "Demo Quarry Co., Ltd. Sand 1,268.5 m³" [ref=e765]:
+                  - cell "Demo Quarry Co., Ltd." [ref=e766]
+                  - cell "Sand" [ref=e767]
+                  - cell "1,268.5 m³" [ref=e768]
+              - rowgroup [ref=e769]:
+                - row "Total 1,268.5 m³" [ref=e770]:
+                  - cell "Total" [ref=e771]
+                  - cell "1,268.5 m³" [ref=e772]
+        - generic [ref=e773]:
+          - generic [ref=e774]: 
+          - text: Safety & Quality Scorecard
+        - generic [ref=e775]:
+          - heading " HSE & Quality Performance (All Active Projects, Cumulative)" [level=6] [ref=e777]:
+            - generic [ref=e778]: 
+            - text: HSE & Quality Performance (All Active Projects, Cumulative)
+          - generic [ref=e780]:
+            - generic [ref=e782]:
+              - generic [ref=e783]: 24,780 hours
+              - generic [ref=e784]: Man-Hours
+            - generic [ref=e786]:
+              - generic [ref=e787]: 0 items
+              - generic [ref=e788]: LTI
+            - generic [ref=e790]:
+              - generic [ref=e791]: 0 incidents
+              - generic [ref=e792]: Incidents
+            - generic [ref=e794]:
+              - generic [ref=e795]: 5 items
+              - generic [ref=e796]: Near Miss
+            - generic [ref=e798]:
+              - generic [ref=e799]: 8 issues
+              - generic [ref=e800]: Open Issues
+            - generic [ref=e802]:
+              - generic [ref=e803]: 0 inspections
+              - generic [ref=e804]: Inspection Submitted
+            - generic [ref=e806]:
+              - generic [ref=e807]: 0 inspections
+              - generic [ref=e808]: Inspection Approved
+            - generic [ref=e810]:
+              - generic [ref=e811]: 0 inspections
+              - generic [ref=e812]: Inspection Rejected
+            - generic [ref=e814]:
+              - generic [ref=e815]: 0 inspections
+              - generic [ref=e816]: Pending Inspection
+            - generic [ref=e818]:
+              - generic [ref=e819]: 0 NCRs
+              - generic [ref=e820]: NCR Open
+            - generic [ref=e822]:
+              - generic [ref=e823]: 0 NCRs
+              - generic [ref=e824]: NCR Closed
+            - generic [ref=e826]:
+              - generic [ref=e827]: 0 items
+              - generic [ref=e828]: Punch List Open
+            - generic [ref=e830]:
+              - generic [ref=e831]: 0 items
+              - generic [ref=e832]: Punch List Closed
+            - generic [ref=e834]:
+              - generic [ref=e835]: 0.0%
+              - generic [ref=e836]: Quality Approval Rate
+        - generic [ref=e837]:
+          - heading " Quality Watchlist" [level=6] [ref=e839]:
+            - generic [ref=e840]: 
+            - text: Quality Watchlist
+          - table [ref=e842]:
+            - rowgroup [ref=e843]:
+              - row "Category Reference Project Owner / Date Status" [ref=e844]:
+                - columnheader "Category" [ref=e845]
+                - columnheader "Reference" [ref=e846]
+                - columnheader "Project" [ref=e847]
+                - columnheader "Owner / Date" [ref=e848]
+                - columnheader "Status" [ref=e849]
+            - rowgroup [ref=e850]:
+              - row "Latest NCR No NCR records" [ref=e851]:
+                - cell "Latest NCR" [ref=e852]
+                - cell "No NCR records" [ref=e853]
+              - row "Overdue NCR No overdue NCR" [ref=e854]:
+                - cell "Overdue NCR" [ref=e855]
+                - cell "No overdue NCR" [ref=e856]
+              - row "Pending Inspection No pending inspections" [ref=e857]:
+                - cell "Pending Inspection" [ref=e858]
+                - cell "No pending inspections" [ref=e859]
+              - row "Critical Punch List No critical punch list items" [ref=e860]:
+                - cell "Critical Punch List" [ref=e861]
+                - cell "No critical punch list items" [ref=e862]
+        - generic [ref=e863]:
+          - generic [ref=e864]: 
+          - text: Latest Activity
+        - generic [ref=e865]:
+          - generic [ref=e867]:
+            - generic [ref=e868]:
+              - heading " Latest Daily Reports" [level=6] [ref=e869]:
+                - generic [ref=e870]: 
+                - text: Latest Daily Reports
+              - link "View All →" [ref=e871] [cursor=pointer]:
+                - /url: /daily-reports/
+            - table [ref=e873]:
+              - rowgroup [ref=e874]:
+                - row "Date Project Prepared By Status" [ref=e875]:
+                  - columnheader "Date" [ref=e876]
+                  - columnheader "Project" [ref=e877]
+                  - columnheader "Prepared By" [ref=e878]
+                  - columnheader "Status" [ref=e879]
+              - rowgroup [ref=e880]:
+                - row "15/05/2569 CON-2024-001 Sara Lee Draft" [ref=e881]:
+                  - cell "15/05/2569" [ref=e882]:
+                    - link "15/05/2569" [ref=e883] [cursor=pointer]:
+                      - /url: /daily-reports/36/
+                  - cell "CON-2024-001" [ref=e884]
+                  - cell "Sara Lee" [ref=e885]
+                  - cell "Draft" [ref=e886]:
+                    - generic [ref=e887]: Draft
+                - row "14/05/2569 CON-2024-001 Sara Lee Draft" [ref=e888]:
+                  - cell "14/05/2569" [ref=e889]:
+                    - link "14/05/2569" [ref=e890] [cursor=pointer]:
+                      - /url: /daily-reports/35/
+                  - cell "CON-2024-001" [ref=e891]
+                  - cell "Sara Lee" [ref=e892]
+                  - cell "Draft" [ref=e893]:
+                    - generic [ref=e894]: Draft
+                - row "13/05/2569 CON-2024-001 Sara Lee Draft" [ref=e895]:
+                  - cell "13/05/2569" [ref=e896]:
+                    - link "13/05/2569" [ref=e897] [cursor=pointer]:
+                      - /url: /daily-reports/34/
+                  - cell "CON-2024-001" [ref=e898]
+                  - cell "Sara Lee" [ref=e899]
+                  - cell "Draft" [ref=e900]:
+                    - generic [ref=e901]: Draft
+                - row "12/05/2569 CON-2024-001 Sara Lee Approved" [ref=e902]:
+                  - cell "12/05/2569" [ref=e903]:
+                    - link "12/05/2569" [ref=e904] [cursor=pointer]:
+                      - /url: /daily-reports/31/
+                  - cell "CON-2024-001" [ref=e905]
+                  - cell "Sara Lee" [ref=e906]
+                  - cell "Approved" [ref=e907]:
+                    - generic [ref=e908]: Approved
+                - row "11/05/2569 CON-2024-001 Sara Lee Draft" [ref=e909]:
+                  - cell "11/05/2569" [ref=e910]:
+                    - link "11/05/2569" [ref=e911] [cursor=pointer]:
+                      - /url: /daily-reports/33/
+                  - cell "CON-2024-001" [ref=e912]
+                  - cell "Sara Lee" [ref=e913]
+                  - cell "Draft" [ref=e914]:
+                    - generic [ref=e915]: Draft
+                - row "10/05/2569 CON-2024-001 Sara Lee Draft" [ref=e916]:
+                  - cell "10/05/2569" [ref=e917]:
+                    - link "10/05/2569" [ref=e918] [cursor=pointer]:
+                      - /url: /daily-reports/29/
+                  - cell "CON-2024-001" [ref=e919]
+                  - cell "Sara Lee" [ref=e920]
+                  - cell "Draft" [ref=e921]:
+                    - generic [ref=e922]: Draft
+                - row "09/05/2569 CON-2024-001 Sara Lee Draft" [ref=e923]:
+                  - cell "09/05/2569" [ref=e924]:
+                    - link "09/05/2569" [ref=e925] [cursor=pointer]:
+                      - /url: /daily-reports/28/
+                  - cell "CON-2024-001" [ref=e926]
+                  - cell "Sara Lee" [ref=e927]
+                  - cell "Draft" [ref=e928]:
+                    - generic [ref=e929]: Draft
+                - row "08/05/2569 CON-2024-001 Sara Lee Approved" [ref=e930]:
+                  - cell "08/05/2569" [ref=e931]:
+                    - link "08/05/2569" [ref=e932] [cursor=pointer]:
+                      - /url: /daily-reports/27/
+                  - cell "CON-2024-001" [ref=e933]
+                  - cell "Sara Lee" [ref=e934]
+                  - cell "Approved" [ref=e935]:
+                    - generic [ref=e936]: Approved
+          - generic [ref=e938]:
+            - generic [ref=e939]:
+              - heading " Recent Material Deliveries (7 days)" [level=6] [ref=e940]:
+                - generic [ref=e941]: 
+                - text: Recent Material Deliveries (7 days)
+              - link "View All →" [ref=e942] [cursor=pointer]:
+                - /url: /materials/deliveries/
+            - table [ref=e944]:
+              - rowgroup [ref=e945]:
+                - row "Date Material Source Qty" [ref=e946]:
+                  - columnheader "Date" [ref=e947]
+                  - columnheader "Material" [ref=e948]
+                  - columnheader "Source" [ref=e949]
+                  - columnheader "Qty" [ref=e950]
+              - rowgroup [ref=e951]:
+                - row "13/05/2569 Core Rock (300-500kg) Demo Quarry Co., Ltd. 118.6 Ton" [ref=e952]:
+                  - cell "13/05/2569" [ref=e953]
+                  - cell "Core Rock (300-500kg)" [ref=e954]
+                  - cell "Demo Quarry Co., Ltd." [ref=e955]
+                  - cell "118.6 Ton" [ref=e956]
+                - row "13/05/2569 Core Rock (300-500kg) Demo Quarry Co., Ltd. 96.8 Ton" [ref=e957]:
+                  - cell "13/05/2569" [ref=e958]
+                  - cell "Core Rock (300-500kg)" [ref=e959]
+                  - cell "Demo Quarry Co., Ltd." [ref=e960]
+                  - cell "96.8 Ton" [ref=e961]
+                - row "12/05/2569 Sand Demo Quarry Co., Ltd. 357.7 m³" [ref=e962]:
+                  - cell "12/05/2569" [ref=e963]
+                  - cell "Sand" [ref=e964]
+                  - cell "Demo Quarry Co., Ltd." [ref=e965]
+                  - cell "357.7 m³" [ref=e966]
+                - row "12/05/2569 Sand Demo Quarry Co., Ltd. 295.5 m³" [ref=e967]:
+                  - cell "12/05/2569" [ref=e968]
+                  - cell "Sand" [ref=e969]
+                  - cell "Demo Quarry Co., Ltd." [ref=e970]
+                  - cell "295.5 m³" [ref=e971]
+                - row "11/05/2569 Core Rock (300-500kg) Demo Quarry Co., Ltd. 339.2 Ton" [ref=e972]:
+                  - cell "11/05/2569" [ref=e973]
+                  - cell "Core Rock (300-500kg)" [ref=e974]
+                  - cell "Demo Quarry Co., Ltd." [ref=e975]
+                  - cell "339.2 Ton" [ref=e976]
+                - row "11/05/2569 Core Rock (300-500kg) Demo Quarry Co., Ltd. 286.4 Ton" [ref=e977]:
+                  - cell "11/05/2569" [ref=e978]
+                  - cell "Core Rock (300-500kg)" [ref=e979]
+                  - cell "Demo Quarry Co., Ltd." [ref=e980]
+                  - cell "286.4 Ton" [ref=e981]
+                - row "10/05/2569 Core Rock (300-500kg) Demo Quarry Co., Ltd. 264.8 Ton" [ref=e982]:
+                  - cell "10/05/2569" [ref=e983]
+                  - cell "Core Rock (300-500kg)" [ref=e984]
+                  - cell "Demo Quarry Co., Ltd." [ref=e985]
+                  - cell "264.8 Ton" [ref=e986]
+                - row "10/05/2569 Core Rock (300-500kg) Demo Quarry Co., Ltd. 96.8 Ton" [ref=e987]:
+                  - cell "10/05/2569" [ref=e988]
+                  - cell "Core Rock (300-500kg)" [ref=e989]
+                  - cell "Demo Quarry Co., Ltd." [ref=e990]
+                  - cell "96.8 Ton" [ref=e991]
+                - row "10/05/2569 Armour Rock (1-3T) Demo Quarry Co., Ltd. 60.9 Ton" [ref=e992]:
+                  - cell "10/05/2569" [ref=e993]
+                  - cell "Armour Rock (1-3T)" [ref=e994]
+                  - cell "Demo Quarry Co., Ltd." [ref=e995]
+                  - cell "60.9 Ton" [ref=e996]
+                - row "10/05/2569 Sand Demo Quarry Co., Ltd. 394.3 m³" [ref=e997]:
+                  - cell "10/05/2569" [ref=e998]
+                  - cell "Sand" [ref=e999]
+                  - cell "Demo Quarry Co., Ltd." [ref=e1000]
+                  - cell "394.3 m³" [ref=e1001]
+        - generic [ref=e1002]:
+          - generic [ref=e1003]: 
+          - text: Cost Health
+        - generic [ref=e1004]:
+          - generic [ref=e1006]:
+            - generic [ref=e1007]:
+              - heading " Budget vs Actual Cost by Project" [level=6] [ref=e1008]:
+                - generic [ref=e1009]: 
+                - text: Budget vs Actual Cost by Project
+              - link " Cost Detail" [ref=e1010] [cursor=pointer]:
+                - /url: /cost-control/
+                - generic [ref=e1011]: 
+                - text: Cost Detail
+            - generic [ref=e1013]:
+              - generic [ref=e1014]: 
+              - text: No budget or actual cost records entered yet.
+              - link "Set up cost control →" [ref=e1015] [cursor=pointer]:
+                - /url: /cost-control/
+          - generic [ref=e1017]:
+            - heading " Cost Summary" [level=6] [ref=e1019]:
+              - generic [ref=e1020]: 
+              - text: Cost Summary
+            - generic [ref=e1021]:
+              - generic [ref=e1022]:
+                - generic [ref=e1023]: Total Budget
+                - generic [ref=e1024]: ฿0
+              - generic [ref=e1025]:
+                - generic [ref=e1026]: Committed
+                - generic [ref=e1027]: ฿0
+              - generic [ref=e1028]:
+                - generic [ref=e1029]: Actual Cost
+                - generic [ref=e1030]: ฿0
+              - generic [ref=e1031]:
+                - generic [ref=e1032]: Earned Value
+                - generic [ref=e1033]: ฿0
+              - generic [ref=e1034]:
+                - generic [ref=e1035]: Cost Variance
+                - generic [ref=e1036]: +฿0
+              - generic [ref=e1038]:
+                - generic [ref=e1039]: CPI
+                - generic [ref=e1040]: N/A
+              - link "+ Record Cost" [ref=e1042] [cursor=pointer]:
+                - /url: /cost-control/actuals/new/
+                - generic [ref=e1043]: +
+                - text: Record Cost
