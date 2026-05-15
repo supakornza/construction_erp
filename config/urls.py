@@ -21,6 +21,7 @@ urlpatterns = [
     path('api/v1/', include('apps.api.urls')),
     path('project-controls/', include('apps.project_controls.urls', namespace='project_controls')),
     path('cost-control/', include('apps.cost_control.urls', namespace='cost_control')),
+    path('tide-monitor/', include('apps.tide_monitor.urls', namespace='tide_monitor')),
 ]
 
 if settings.DEBUG:
