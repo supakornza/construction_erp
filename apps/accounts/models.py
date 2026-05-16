@@ -6,23 +6,34 @@ class User(AbstractUser):
     ROLE_CHOICES = [
         ('admin', 'Admin'),
         ('project_manager', 'Project Manager'),
+        ('construction_manager', 'Construction Manager'),
+        ('office_engineer', 'Office Engineer'),
         ('engineer', 'Engineer'),
-        ('inspector', 'Inspector'),
-        ('contractor', 'Contractor'),
-        ('owner', 'Owner'),
         ('site_engineer', 'Site Engineer'),
+        ('inspector', 'Inspector'),
         ('quantity_surveyor', 'Quantity Surveyor'),
         ('safety_officer', 'Safety Officer'),
+        ('document_controller', 'Document Controller'),
+        ('project_coordinator', 'Project Coordinator'),
+        ('legal_officer', 'Legal Officer'),
+        ('environmental_specialist', 'Environmental Specialist'),
+        ('senior_advisor', 'Senior Advisor'),
+        ('contractor', 'Contractor'),
+        ('owner', 'Owner'),
         ('storekeeper', 'Storekeeper'),
         ('viewer', 'Viewer'),
     ]
 
     # Roles that can create/edit operational records
-    OPERATIONAL_ROLES = {'admin', 'project_manager', 'engineer', 'site_engineer',
-                         'inspector', 'contractor', 'quantity_surveyor', 'safety_officer', 'storekeeper'}
+    OPERATIONAL_ROLES = {
+        'admin', 'project_manager', 'construction_manager', 'office_engineer',
+        'engineer', 'site_engineer', 'inspector', 'quantity_surveyor',
+        'safety_officer', 'storekeeper', 'environmental_specialist',
+        'project_coordinator', 'document_controller', 'contractor',
+    }
 
     # Roles that can access financial/cost data
-    FINANCIAL_ROLES = {'admin', 'project_manager', 'engineer', 'quantity_surveyor', 'owner'}
+    FINANCIAL_ROLES = {'admin', 'project_manager', 'construction_manager', 'quantity_surveyor', 'office_engineer'}
 
     role = models.CharField(max_length=30, choices=ROLE_CHOICES, default='viewer')
     phone = models.CharField(max_length=20, blank=True)
@@ -38,7 +49,7 @@ class User(AbstractUser):
         return self.role == 'admin' or self.is_superuser
 
     def is_approver(self):
-        return self.role in ('admin', 'project_manager', 'engineer') or self.is_superuser
+        return self.role in ('admin', 'project_manager', 'construction_manager', 'engineer') or self.is_superuser
 
     def can_access_financial(self):
         return self.is_superuser or self.role in self.FINANCIAL_ROLES
@@ -48,33 +59,40 @@ class User(AbstractUser):
 
     def can_view_boq(self):
         return self.is_superuser or self.role in {
-            'admin', 'project_manager', 'engineer', 'inspector',
-            'owner', 'quantity_surveyor', 'viewer'}
+            'admin', 'project_manager', 'construction_manager', 'office_engineer',
+            'engineer', 'inspector', 'owner', 'quantity_surveyor',
+            'project_coordinator', 'senior_advisor', 'legal_officer', 'viewer'}
 
     def can_view_safety(self):
         return self.is_superuser or self.role in {
-            'admin', 'project_manager', 'engineer', 'inspector',
-            'owner', 'safety_officer', 'site_engineer'}
+            'admin', 'project_manager', 'construction_manager', 'office_engineer',
+            'engineer', 'inspector', 'owner', 'safety_officer', 'site_engineer',
+            'environmental_specialist', 'project_coordinator'}
 
     def can_view_quality(self):
         return self.is_superuser or self.role in {
-            'admin', 'project_manager', 'engineer', 'inspector', 'owner'}
+            'admin', 'project_manager', 'construction_manager', 'office_engineer',
+            'engineer', 'inspector', 'owner'}
 
     def can_view_documents(self):
         return self.is_superuser or self.role in {
-            'admin', 'project_manager', 'engineer', 'quantity_surveyor'}
+            'admin', 'project_manager', 'construction_manager', 'office_engineer',
+            'engineer', 'quantity_surveyor', 'document_controller',
+            'legal_officer', 'project_coordinator'}
 
     def can_view_project_controls(self):
         return self.is_superuser or self.role in {
-            'admin', 'project_manager', 'engineer', 'inspector',
-            'owner', 'quantity_surveyor', 'site_engineer'}
+            'admin', 'project_manager', 'construction_manager', 'office_engineer',
+            'engineer', 'inspector', 'owner', 'quantity_surveyor',
+            'site_engineer', 'project_coordinator', 'senior_advisor'}
 
     def can_view_procurement(self):
         return self.is_superuser or self.role in {
-            'admin', 'project_manager', 'quantity_surveyor'}
+            'admin', 'project_manager', 'construction_manager', 'quantity_surveyor', 'office_engineer'}
 
     def can_view_executive_desk(self):
-        return self.is_superuser or self.role in {'admin', 'project_manager', 'owner'}
+        return self.is_superuser or self.role in {
+            'admin', 'project_manager', 'construction_manager', 'owner', 'senior_advisor'}
 
     def is_contractor(self):
         return self.role == 'contractor'

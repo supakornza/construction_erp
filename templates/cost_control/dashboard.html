@@ -26,6 +26,42 @@
   </form>
 </div></div>
 
+{# ── Contract Value Overview ── #}
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card text-center h-100 border-warning border-2">
+      <div class="card-body py-3">
+        <div class="text-warning mb-1"><i class="fas fa-file-contract fa-lg"></i></div>
+        <div class="fs-4 fw-bold text-warning">฿{{ total_contract_value|floatformat:0|intcomma }}</div>
+        <div class="small text-uppercase fw-semibold text-muted mt-1">Total Contract Value</div>
+        <div class="small text-muted mt-1">
+          {% if selected_project %}{{ selected_project.project_name }}{% else %}All Active Projects{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center h-100 border-info border-2">
+      <div class="card-body py-3">
+        <div class="text-info mb-1"><i class="fas fa-coins fa-lg"></i></div>
+        <div class="fs-4 fw-bold text-info">฿{{ total_earned_value|floatformat:0|intcomma }}</div>
+        <div class="small text-uppercase fw-semibold text-muted mt-1">Total Earned Value</div>
+        <div class="small text-muted mt-1">Certified by BOQ progress</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center h-100 border-secondary border-2">
+      <div class="card-body py-3">
+        <div class="text-secondary mb-1"><i class="fas fa-hourglass-half fa-lg"></i></div>
+        <div class="fs-4 fw-bold text-secondary">฿{{ total_remaining_value|floatformat:0|intcomma }}</div>
+        <div class="small text-uppercase fw-semibold text-muted mt-1">Remaining Value</div>
+        <div class="small text-muted mt-1">Contract − Earned</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {# KPI Cards #}
 {% if cost_summary %}
 <div class="row g-3 mb-4">
@@ -147,6 +183,94 @@
         </tr>
         {% endfor %}
       </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{# ── Project Financial Overview table ── #}
+{% if project_financial_overview %}
+<div class="card mb-4">
+  <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+    <span><i class="fas fa-table me-2 text-warning"></i>Project Financial Overview</span>
+    <span class="text-muted small">Contract Value vs Cost Performance</span>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover table-sm mb-0 align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Project</th>
+          <th class="text-end">Contract (฿)</th>
+          <th class="text-end">Budget (฿)</th>
+          <th class="text-end">Actual Cost (฿)</th>
+          <th class="text-end">Earned Value (฿)</th>
+          <th class="text-end">Cost Variance (฿)</th>
+          <th class="text-center">CPI</th>
+          <th class="text-center">EAC (฿)</th>
+          <th class="text-center">BOQ&nbsp;%</th>
+          <th class="text-center">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in project_financial_overview %}
+        <tr>
+          <td>
+            <div class="fw-semibold">{{ row.project.project_name }}</div>
+            <div class="small text-muted">{{ row.project.contract_no }}</div>
+          </td>
+          <td class="text-end fw-semibold">{{ row.contract_value|floatformat:0|intcomma }}</td>
+          <td class="text-end">{{ row.budget|floatformat:0|intcomma }}</td>
+          <td class="text-end text-danger">{{ row.actual_cost|floatformat:0|intcomma }}</td>
+          <td class="text-end text-info">{{ row.earned_value|floatformat:0|intcomma }}</td>
+          <td class="text-end fw-semibold {% if row.cost_variance >= 0 %}text-success{% else %}text-danger{% endif %}">
+            {% if row.cost_variance >= 0 %}+{% endif %}{{ row.cost_variance|floatformat:0|intcomma }}
+          </td>
+          <td class="text-center fw-bold {% if row.cpi is None %}text-muted{% elif row.cpi >= 1.0 %}text-success{% elif row.cpi >= 0.9 %}text-warning{% else %}text-danger{% endif %}">
+            {% if row.cpi is not None %}{{ row.cpi|floatformat:2 }}{% else %}N/A{% endif %}
+          </td>
+          <td class="text-center small">
+            {% if row.eac is not None %}฿{{ row.eac|floatformat:0|intcomma }}{% else %}–{% endif %}
+          </td>
+          <td class="text-center">
+            <div class="progress mb-1" style="height:6px;min-width:60px">
+              <div class="progress-bar bg-info" style="width:{{ row.boq_pct|floatformat:0 }}%"></div>
+            </div>
+            <div class="small">{{ row.boq_pct|floatformat:1 }}%</div>
+          </td>
+          <td class="text-center">
+            <span class="badge {% if row.cost_status_class == 'good' %}bg-success{% elif row.cost_status_class == 'warning' %}bg-warning text-dark{% elif row.cost_status_class == 'critical' %}bg-danger{% else %}bg-secondary{% endif %}">
+              {{ row.cost_status }}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      {% if project_financial_overview|length > 1 %}
+      <tfoot class="table-light fw-bold">
+        <tr>
+          <td>Total</td>
+          <td class="text-end">{{ total_contract_value|floatformat:0|intcomma }}</td>
+          <td class="text-end">{{ cost_summary.total_budget|floatformat:0|intcomma }}</td>
+          <td class="text-end text-danger">{{ cost_summary.actual_cost|floatformat:0|intcomma }}</td>
+          <td class="text-end text-info">{{ cost_summary.earned_value|floatformat:0|intcomma }}</td>
+          <td class="text-end {% if cost_summary.cost_variance >= 0 %}text-success{% else %}text-danger{% endif %}">
+            {% if cost_summary.cost_variance >= 0 %}+{% endif %}{{ cost_summary.cost_variance|floatformat:0|intcomma }}
+          </td>
+          <td class="text-center fw-bold {% if cost_summary.cpi is None %}text-muted{% elif cost_summary.cpi >= 1.0 %}text-success{% elif cost_summary.cpi >= 0.9 %}text-warning{% else %}text-danger{% endif %}">
+            {% if cost_summary.cpi is not None %}{{ cost_summary.cpi|floatformat:2 }}{% else %}N/A{% endif %}
+          </td>
+          <td class="text-center small">
+            {% if cost_summary.eac is not None %}฿{{ cost_summary.eac|floatformat:0|intcomma }}{% else %}–{% endif %}
+          </td>
+          <td></td>
+          <td class="text-center">
+            <span class="badge {% if cost_summary.cost_status_class == 'good' %}bg-success{% elif cost_summary.cost_status_class == 'warning' %}bg-warning text-dark{% elif cost_summary.cost_status_class == 'critical' %}bg-danger{% else %}bg-secondary{% endif %}">
+              {{ cost_summary.cost_status }}
+            </span>
+          </td>
+        </tr>
+      </tfoot>
+      {% endif %}
     </table>
   </div>
 </div>

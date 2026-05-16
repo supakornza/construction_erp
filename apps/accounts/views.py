@@ -112,3 +112,41 @@ class UserDetailView(AdminRequiredMixin, DetailView):
     model = User
     template_name = 'accounts/user_detail.html'
     context_object_name = 'viewed_user'
+
+
+class RoleListView(AdminRequiredMixin, ListView):
+    model = User
+    template_name = 'accounts/role_list.html'
+    context_object_name = 'users'
+
+    def get_queryset(self):
+        return User.objects.all().order_by('role', 'username')
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        users_by_role = {}
+        for role_value, role_label in User.ROLE_CHOICES:
+            users_by_role[role_value] = {
+                'label': role_label,
+                'users': [],
+            }
+        for u in ctx['users']:
+            if u.role in users_by_role:
+                users_by_role[u.role]['users'].append(u)
+        ctx['users_by_role'] = users_by_role
+        ctx['role_choices'] = User.ROLE_CHOICES
+        return ctx
+
+
+class UserRoleUpdateView(AdminRequiredMixin, View):
+    def post(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        new_role = request.POST.get('role')
+        valid_roles = {r[0] for r in User.ROLE_CHOICES}
+        if new_role in valid_roles:
+            user.role = new_role
+            user.save(update_fields=['role'])
+            messages.success(request, f'{user.username} role updated to {user.get_role_display()}.')
+        else:
+            messages.error(request, 'Invalid role.')
+        return redirect(request.POST.get('next', 'accounts:role_list'))

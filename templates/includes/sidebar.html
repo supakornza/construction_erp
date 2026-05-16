@@ -171,10 +171,15 @@
 
         {% if user.role == 'admin' or user.is_superuser %}
         <div class="nav-section"><span class="sidebar-label">Admin</span></div>
-        <a href="{% url 'accounts:user_list' %}" class="nav-link {% if request.resolver_match.namespace == 'accounts' %}active{% endif %}"
+        <a href="{% url 'accounts:user_list' %}" class="nav-link {% if request.resolver_match.namespace == 'accounts' and request.resolver_match.url_name != 'role_list' %}active{% endif %}"
            data-bs-toggle="tooltip" data-bs-placement="right" title="Users">
             <i class="fas fa-user-cog nav-icon"></i>
             <span class="sidebar-label">Users</span>
+        </a>
+        <a href="{% url 'accounts:role_list' %}" class="nav-link {% if request.resolver_match.url_name == 'role_list' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="Roles">
+            <i class="fas fa-user-shield nav-icon"></i>
+            <span class="sidebar-label">Roles</span>
         </a>
         <a href="{% url 'admin:index' %}" class="nav-link"
            data-bs-toggle="tooltip" data-bs-placement="right" title="Django Admin">

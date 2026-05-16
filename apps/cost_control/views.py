@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
@@ -9,8 +10,9 @@ from apps.projects.models import Project
 from .forms import ActualCostForm, BudgetItemForm, CostCodeForm
 from .models import ActualCost, BudgetItem, CostCode
 from .services import (
-    get_all_projects_cost_summary, get_budget_vs_actual_chart_data,
-    get_cost_by_code, get_cost_by_source, get_cost_summary,
+    get_all_projects_cost_summaries, get_all_projects_cost_summary,
+    get_budget_vs_actual_chart_data, get_cost_by_code, get_cost_by_source,
+    get_cost_summary,
 )
 
 
@@ -29,12 +31,45 @@ class CostDashboardView(FinancialViewMixin, TemplateView):
             ctx['cost_summary'] = get_cost_summary(project)
             ctx['cost_by_code'] = get_cost_by_code(project)
             ctx['cost_by_source'] = get_cost_by_source(project)
+            display_projects = [project]
         else:
             ctx['cost_summary'] = get_all_projects_cost_summary(active_projects)
             ctx['cost_by_code'] = []
             ctx['cost_by_source'] = []
+            display_projects = active_projects
 
         ctx['budget_vs_actual_json'] = get_budget_vs_actual_chart_data(active_projects)
+
+        total_contract = float(
+            Project.objects.filter(pk__in=[p.pk for p in display_projects])
+            .aggregate(t=Sum('contract_value'))['t'] or 0
+        )
+        earned = ctx['cost_summary']['earned_value']
+        ctx['total_contract_value'] = total_contract
+        ctx['total_earned_value'] = earned
+        ctx['total_remaining_value'] = max(total_contract - earned, 0)
+
+        per_project = (
+            [ctx['cost_summary']] if project_id
+            else get_all_projects_cost_summaries(display_projects)
+        )
+        ctx['project_financial_overview'] = [
+            {
+                'project': p,
+                'contract_value': float(p.contract_value or 0),
+                'budget': s['total_budget'],
+                'committed': s['committed'],
+                'actual_cost': s['actual_cost'],
+                'earned_value': s['earned_value'],
+                'cost_variance': s['cost_variance'],
+                'cpi': s['cpi'],
+                'eac': s['eac'],
+                'cost_status': s['cost_status'],
+                'cost_status_class': s['cost_status_class'],
+                'boq_pct': s['boq_pct'],
+            }
+            for p, s in zip(display_projects, per_project)
+        ]
         return ctx
 
 

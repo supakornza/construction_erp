@@ -463,17 +463,6 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                                   )
                                   .order_by('due_date'))
 
-        # ── Cost Control KPIs ─────────────────────────────
-        try:
-            from apps.cost_control.services import (
-                get_all_projects_cost_summary, get_budget_vs_actual_chart_data,
-            )
-            ctx['cost_kpis'] = get_all_projects_cost_summary(ctx['active_projects'])
-            ctx['cost_chart_json'] = get_budget_vs_actual_chart_data(ctx['active_projects'])
-        except Exception:
-            ctx['cost_kpis'] = None
-            ctx['cost_chart_json'] = '{}'
-
         return ctx
 
 

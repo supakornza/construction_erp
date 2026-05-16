@@ -1,11 +1,17 @@
+import os
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.files.base import ContentFile
 from django.db import transaction
 from django.db.models import Max
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, FormView, View
+
+from apps.utils import image_to_jpeg_bytes
+
 from apps.accounts.mixins import (ApproverRequiredMixin, ManagerRequiredMixin,
                                    DailyReportViewMixin, DailyReportCreateMixin, DailyReportUpdateMixin)
 from .models import DailyReport, DailyWorkActivity, DailyLookahead, DailyProblemRemark, DailyPhoto
@@ -215,6 +221,13 @@ class PhotoUploadView(DailyReportCreateMixin, View):
         caption = request.POST.get('caption', '').strip()
         location = request.POST.get('location', '').strip()
         if photo_file and caption:
+            try:
+                jpeg_buf = image_to_jpeg_bytes(photo_file)
+                base_name = os.path.splitext(photo_file.name)[0]
+                photo_file = ContentFile(jpeg_buf.read(), name=f"{base_name}.jpg")
+            except Exception:
+                messages.error(request, 'ไม่สามารถอ่านไฟล์รูปได้ กรุณาใช้ไฟล์ JPG หรือ PNG')
+                return redirect('daily_reports:detail', pk=pk)
             last_order = report.photos.aggregate(m=Max('sort_order'))['m'] or 0
             DailyPhoto.objects.create(
                 report=report,

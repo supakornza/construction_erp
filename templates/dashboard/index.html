@@ -659,34 +659,6 @@
 
 <div class="exec-section"><i class="fas fa-chart-pie"></i>Contract &amp; Progress KPIs</div>
 <div class="exec-kpi-grid">
-  {% if user.can_access_financial %}
-  <div class="exec-kpi-card primary" style="--accent:#f0a500">
-    <div class="exec-kpi-top">
-      <div class="exec-kpi-icon"><i class="fas fa-file-contract"></i></div>
-      <div class="exec-kpi-step">01 Contract</div>
-    </div>
-    <div class="exec-kpi-value">฿{{ total_contract_value|floatformat:0|intcomma }}</div>
-    <div class="exec-kpi-label">Total Contract Value</div>
-    <div class="exec-mini-row">
-      <span>Active projects</span>
-      <span>{{ active_projects_count }} project{{ active_projects_count|pluralize }}</span>
-    </div>
-    <div class="exec-mini-row">
-      <span>Remaining value</span>
-      <span>฿{{ total_remaining_value|floatformat:0|intcomma }}</span>
-    </div>
-  </div>
-
-  <div class="exec-kpi-card" style="--accent:#00b4d8">
-    <div class="exec-kpi-top">
-      <div class="exec-kpi-icon"><i class="fas fa-coins"></i></div>
-      <div class="exec-kpi-step">02 Earned</div>
-    </div>
-    <div class="exec-kpi-value">฿{{ total_earned_value|floatformat:0|intcomma }}</div>
-    <div class="exec-kpi-label">Earned Value</div>
-    <div class="exec-kpi-note">Work certified against BOQ progress</div>
-  </div>
-  {% endif %}
 
   <div class="exec-kpi-card" style="--accent:#2ecc71">
     <div class="exec-kpi-top">
@@ -736,26 +708,6 @@
     {% endif %}
   </div>
 
-  {% if user.can_access_financial %}
-  <div class="exec-kpi-card" style="--accent:{% if cost_kpis and cost_kpis.cost_status_class == 'critical' %}#dc2626{% elif cost_kpis and cost_kpis.cost_status_class == 'warning' %}#d97706{% elif cost_kpis and cost_kpis.cost_status_class == 'good' %}#059669{% else %}#64748b{% endif %}">
-    <div class="exec-kpi-top">
-      <div class="exec-kpi-icon"><i class="fas fa-heartbeat"></i></div>
-      <div class="exec-kpi-step">06 Cost</div>
-    </div>
-    <div class="exec-kpi-value">
-      {% if cost_kpis and cost_kpis.cpi is not None %}{{ cost_kpis.cpi|floatformat:2 }} CPI{% else %}No data{% endif %}
-    </div>
-    <div class="exec-kpi-label">Cost Health</div>
-    <div class="exec-mini-row">
-      <span>Status</span>
-      <span>{% if cost_kpis %}{{ cost_kpis.cost_status }}{% else %}Not available{% endif %}</span>
-    </div>
-    <div class="exec-mini-row">
-      <span>Actual cost</span>
-      <span>{% if cost_kpis %}฿{{ cost_kpis.actual_cost|floatformat:0|intcomma }}{% else %}-{% endif %}</span>
-    </div>
-  </div>
-  {% endif %}
 </div>
 
 {% if pending_reports > 0 or open_safety_issues > 0 %}
@@ -1031,80 +983,6 @@
   </div>
 </div>
 
-{% if cost_kpis and user.can_access_financial %}
-<div class="exec-section"><i class="fas fa-coins"></i>Cost Performance (CPI / Budget / EAC)</div>
-<div class="row g-3 mb-4">
-  <div class="col-6 col-xl-2">
-    <div class="kpi-card c-gold">
-      <i class="fas fa-wallet kpi-bg-icon"></i>
-      <div class="kpi-icon c-gold"><i class="fas fa-wallet"></i></div>
-      <div class="kpi-value" style="font-size:1.25rem">฿{{ cost_kpis.total_budget|floatformat:0|intcomma }}</div>
-      <div class="kpi-label">Total Budget</div>
-      <div class="kpi-sub">Committed: ฿{{ cost_kpis.committed|floatformat:0|intcomma }}</div>
-    </div>
-  </div>
-  <div class="col-6 col-xl-2">
-    <div class="kpi-card c-orange">
-      <i class="fas fa-receipt kpi-bg-icon"></i>
-      <div class="kpi-icon c-orange"><i class="fas fa-receipt"></i></div>
-      <div class="kpi-value" style="font-size:1.25rem">฿{{ cost_kpis.actual_cost|floatformat:0|intcomma }}</div>
-      <div class="kpi-label">Actual Cost</div>
-      <div class="kpi-sub">EV: ฿{{ cost_kpis.earned_value|floatformat:0|intcomma }}</div>
-    </div>
-  </div>
-  <div class="col-6 col-xl-2">
-    <div class="kpi-card {% if cost_kpis.cost_variance >= 0 %}c-green{% else %}c-red{% endif %}">
-      <i class="fas fa-balance-scale kpi-bg-icon"></i>
-      <div class="kpi-icon {% if cost_kpis.cost_variance >= 0 %}c-green{% else %}c-red{% endif %}">
-        <i class="fas fa-{% if cost_kpis.cost_variance >= 0 %}arrow-up{% else %}arrow-down{% endif %}"></i>
-      </div>
-      <div class="kpi-value" style="font-size:1.25rem">
-        {% if cost_kpis.cost_variance >= 0 %}+{% endif %}฿{{ cost_kpis.cost_variance|floatformat:0|intcomma }}
-      </div>
-      <div class="kpi-label">Cost Variance (CV)</div>
-      <div class="kpi-sub">EV − Actual Cost</div>
-    </div>
-  </div>
-  <div class="col-6 col-xl-2">
-    <div class="kpi-card {% if cost_kpis.cpi is None %}c-teal{% elif cost_kpis.cpi >= 1.0 %}c-green{% elif cost_kpis.cpi >= 0.9 %}c-orange{% else %}c-red{% endif %}">
-      <i class="fas fa-tachometer-alt kpi-bg-icon"></i>
-      <div class="kpi-icon {% if cost_kpis.cpi is None %}c-teal{% elif cost_kpis.cpi >= 1.0 %}c-green{% elif cost_kpis.cpi >= 0.9 %}c-orange{% else %}c-red{% endif %}">
-        <i class="fas fa-tachometer-alt"></i>
-      </div>
-      <div class="kpi-value">{% if cost_kpis.cpi is not None %}{{ cost_kpis.cpi|floatformat:2 }} index{% else %}–{% endif %}</div>
-      <div class="kpi-label">CPI</div>
-      <div class="kpi-sub">Cost Performance Index</div>
-    </div>
-  </div>
-  <div class="col-6 col-xl-2">
-    <div class="kpi-card c-violet">
-      <i class="fas fa-calculator kpi-bg-icon"></i>
-      <div class="kpi-icon c-violet"><i class="fas fa-calculator"></i></div>
-      <div class="kpi-value" style="font-size:1.25rem">
-        {% if cost_kpis.eac is not None %}฿{{ cost_kpis.eac|floatformat:0|intcomma }}{% else %}–{% endif %}
-      </div>
-      <div class="kpi-label">EAC</div>
-      <div class="kpi-sub">Estimate at Completion</div>
-    </div>
-  </div>
-  <div class="col-6 col-xl-2">
-    <div class="kpi-card {% if cost_kpis.cost_status_class == 'good' %}c-green{% elif cost_kpis.cost_status_class == 'warning' %}c-orange{% elif cost_kpis.cost_status_class == 'critical' %}c-red{% else %}c-teal{% endif %}">
-      <i class="fas fa-heartbeat kpi-bg-icon"></i>
-      <div class="kpi-icon {% if cost_kpis.cost_status_class == 'good' %}c-green{% elif cost_kpis.cost_status_class == 'warning' %}c-orange{% elif cost_kpis.cost_status_class == 'critical' %}c-red{% else %}c-teal{% endif %}">
-        <i class="fas fa-heartbeat"></i>
-      </div>
-      <div style="font-size:1.1rem;font-weight:800;line-height:1.2;margin-bottom:.25rem">{{ cost_kpis.cost_status }}</div>
-      <div class="kpi-label">Cost Status</div>
-      <div class="kpi-sub">
-        {% if cost_kpis.cost_status_class == 'good' %}<span class="kpi-badge good">CPI ≥ 1.00 index</span>
-        {% elif cost_kpis.cost_status_class == 'warning' %}<span class="kpi-badge warn">CPI 0.90–0.99 index</span>
-        {% elif cost_kpis.cost_status_class == 'critical' %}<span class="kpi-badge danger">CPI &lt; 0.90 index</span>
-        {% else %}<span class="kpi-badge" style="background:rgba(0,180,216,.15);color:#00b4d8">No Cost Data</span>{% endif %}
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
 
 {% if project_overview %}
 <div class="exec-section"><i class="fas fa-building"></i>Project Status Overview</div>
@@ -1125,18 +1003,7 @@
           <div class="donut-center"><div class="donut-pct">{{ row.percent|floatformat:0 }}%</div><div class="donut-sub">BOQ</div></div>
         </div>
         <div style="flex:1;min-width:0">
-          {% if user.can_access_financial %}
-            {% if row.contract_amount %}
-            <div class="fin-row"><span class="fin-label">Contract</span><span>฿{{ row.contract_amount|floatformat:0|intcomma }}</span></div>
-            <div class="fin-row"><span class="fin-label">Earned</span><span style="color:#00b4d8">฿{{ row.earned_value|floatformat:0|intcomma }}</span></div>
-            <div class="fin-total"><span>Progress</span><span>{{ row.percent|floatformat:1 }}%</span></div>
-            {% else %}
-            <div class="fin-row" style="color:#64748b;font-style:italic"><span colspan="2"><i class="fas fa-info-circle me-1"></i>No BOQ items entered yet</span></div>
-            <div class="fin-row"><span class="fin-label">Contract value</span><span>฿{{ row.project.contract_value|floatformat:0|intcomma }}</span></div>
-            {% endif %}
-          {% else %}
           <div class="fin-total"><span>Progress</span><span>{{ row.percent|floatformat:1 }}%</span></div>
-          {% endif %}
           <div class="dark-progress mt-1">
             <div class="dark-progress-bar" style="width:{{ row.percent }}%;background:linear-gradient(to right,#00b4d8,#0077b6)"></div>
           </div>
@@ -1608,64 +1475,6 @@
   </div>
 </div>
 
-{% if cost_kpis and cost_chart_json != '{}' %}
-<div class="exec-section"><i class="fas fa-heartbeat"></i>Cost Health</div>
-<div class="row g-3 mb-4">
-  <div class="col-lg-8">
-    <div class="dark-card">
-      <div class="dark-card-header">
-        <h6><i class="fas fa-chart-bar" style="color:#f0a500"></i>Budget vs Actual Cost by Project</h6>
-        <a href="{% url 'cost_control:dashboard' %}" class="btn btn-xs btn-outline-secondary no-print" style="font-size:.72rem;padding:.2rem .6rem">
-          <i class="fas fa-external-link-alt me-1"></i>Cost Detail
-        </a>
-      </div>
-      <div class="dark-card-body" style="padding:.8rem 1rem">
-        <canvas id="costBudgetChart" height="120"></canvas>
-        <div id="costBudgetNoData" style="display:none;text-align:center;padding:2rem;color:#64748b;font-size:.82rem">
-          <i class="fas fa-chart-bar fa-2x mb-2 d-block" style="opacity:.3"></i>
-          No budget or actual cost records entered yet.<br>
-          <a href="{% url 'cost_control:dashboard' %}" style="color:#f0a500;font-size:.78rem">Set up cost control →</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-4">
-    <div class="dark-card" style="height:100%">
-      <div class="dark-card-header">
-        <h6><i class="fas fa-coins" style="color:#f0a500"></i>Cost Summary</h6>
-      </div>
-      <div class="dark-card-body">
-        <div class="fin-row"><span class="fin-label">Total Budget</span><span>฿{{ cost_kpis.total_budget|floatformat:0|intcomma }}</span></div>
-        <div class="fin-row"><span class="fin-label">Committed</span><span>฿{{ cost_kpis.committed|floatformat:0|intcomma }}</span></div>
-        <div class="fin-row"><span class="fin-label">Actual Cost</span><span style="color:#f39c12">฿{{ cost_kpis.actual_cost|floatformat:0|intcomma }}</span></div>
-        <div class="fin-row"><span class="fin-label">Earned Value</span><span style="color:#00b4d8">฿{{ cost_kpis.earned_value|floatformat:0|intcomma }}</span></div>
-        <div class="fin-total">
-          <span>Cost Variance</span>
-          <span style="color:{% if cost_kpis.cost_variance >= 0 %}#2ecc71{% else %}#e74c3c{% endif %}">
-            {% if cost_kpis.cost_variance >= 0 %}+{% endif %}฿{{ cost_kpis.cost_variance|floatformat:0|intcomma }}
-          </span>
-        </div>
-        <div style="margin-top:.75rem;padding-top:.6rem;border-top:1px solid rgba(255,255,255,.06)">
-          <div class="fin-row">
-            <span class="fin-label">CPI</span>
-            <span class="fw-bold" style="color:{% if cost_kpis.cpi is not None and cost_kpis.cpi >= 1.0 %}#2ecc71{% elif cost_kpis.cpi is not None and cost_kpis.cpi >= 0.9 %}#f39c12{% elif cost_kpis.cpi is not None %}#e74c3c{% else %}#8aa5c0{% endif %}">
-              {% if cost_kpis.cpi is not None %}{{ cost_kpis.cpi|floatformat:2 }} index{% else %}N/A{% endif %}
-            </span>
-          </div>
-          {% if cost_kpis.eac is not None %}
-          <div class="fin-row"><span class="fin-label">EAC</span><span>฿{{ cost_kpis.eac|floatformat:0|intcomma }}</span></div>
-          {% endif %}
-        </div>
-        <div class="mt-3 text-center">
-          <a href="{% url 'cost_control:actual_cost_create' %}" class="btn btn-sm btn-outline-warning no-print" style="font-size:.75rem">
-            <i class="fas fa-plus me-1"></i>Record Cost
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
 
 </div>{# end exec-body #}
 {% endblock %}

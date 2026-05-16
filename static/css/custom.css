@@ -485,6 +485,17 @@ textarea.form-control { min-height: 90px; resize: vertical; }
 .badge-inprogress   { background: rgba(245,158,11,.1);  color: #d97706; }
 .badge-closed-safety { background: rgba(16,185,129,.1); color: #059669; }
 
+/* Role management table */
+.role-col-action  { min-width: 210px; }
+.role-select      { max-width: 190px; }
+
+/* Role badges */
+.role-qs         { background: #6f42c1; color: #fff; }
+.role-contractor { background: #fd7e14; color: #fff; }
+.role-legal      { background: #495057; color: #fff; }
+.role-advisor    { background: #20c997; color: #fff; }
+.bg-teal         { background: #0d9488 !important; color: #fff; }
+
 /* ── 12. Progress bars ─────────────────────────────────────── */
 .progress {
   height: 6px;

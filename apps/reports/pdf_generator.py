@@ -363,15 +363,19 @@ _CELL_H = _CONTENT_PHOTO_H / _ROWS                           # ≈ 222 pt
 _IMG_H  = _CELL_H - _CAPTION_ROWS_H - 0.1 * cm              # ≈ 212 pt
 
 
+from apps.utils import image_to_jpeg_bytes as _load_image_as_jpeg_bytes
+
+
 def _photo_cell(photo_obj, seq_no, S):
     """Return a Table (single cell) containing the photo + caption + location."""
     img_path = photo_obj.photo.path
 
     try:
-        img = Image(img_path, width=_CELL_W, height=_IMG_H)
+        jpeg_buf = _load_image_as_jpeg_bytes(img_path)
+        img = Image(jpeg_buf, width=_CELL_W, height=_IMG_H)
         img.hAlign = 'CENTER'
     except Exception:
-        img = Paragraph(f"[Image not found: {img_path}]", S['th_sm'])
+        img = Paragraph('[Image unavailable]', S['th_sm'])
 
     lines = []
     # Number + caption

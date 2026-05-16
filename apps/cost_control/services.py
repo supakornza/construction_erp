@@ -157,6 +157,56 @@ def get_all_projects_cost_summary(projects):
     )
 
 
+def get_all_projects_cost_summaries(projects):
+    """Return per-project cost summary dicts using bulk queries (avoids N+1 on BudgetItem/ActualCost)."""
+    from .models import BudgetItem, ActualCost
+
+    projects = list(projects)
+    pks = [p.pk for p in projects]
+
+    budget_by_project = {
+        row['project_id']: row
+        for row in BudgetItem.objects.filter(project_id__in=pks)
+            .values('project_id')
+            .annotate(total=Sum('budget_amount'), committed=Sum('committed_amount'))
+    }
+    actual_by_project = {
+        row['project_id']: row['total']
+        for row in ActualCost.objects.filter(project_id__in=pks)
+            .values('project_id')
+            .annotate(total=Sum('amount'))
+    }
+
+    result = []
+    for p in projects:
+        b = budget_by_project.get(p.pk, {})
+        total_budget = Decimal(str(b.get('total') or 0))
+        committed = Decimal(str(b.get('committed') or 0))
+        actual_cost = Decimal(str(actual_by_project.get(p.pk) or 0))
+
+        boq_pct = _boq_percent(p)
+        earned_value = (total_budget * boq_pct / Decimal('100')).quantize(Decimal('0.01'))
+
+        cpi = calculate_cpi(earned_value, actual_cost)
+        cost_variance = calculate_cost_variance(earned_value, actual_cost)
+        eac = calculate_eac(total_budget, cpi)
+        status, status_class = _cost_status(cpi)
+
+        result.append(dict(
+            total_budget=float(total_budget),
+            committed=float(committed),
+            actual_cost=float(actual_cost),
+            earned_value=float(earned_value),
+            boq_pct=float(boq_pct),
+            cost_variance=float(cost_variance),
+            cpi=float(cpi) if cpi is not None else None,
+            eac=float(eac) if eac is not None else None,
+            cost_status=status,
+            cost_status_class=status_class,
+        ))
+    return result
+
+
 def get_cost_by_code(project):
     """Cost breakdown by cost code for one project. Returns list of dicts."""
     from .models import BudgetItem, ActualCost
