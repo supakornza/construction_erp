@@ -830,6 +830,14 @@ tr.formset-row-deleted td {
 .pc-chart-wrap {
   height: 230px;
   position: relative;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+.pc-chart-wrap > canvas {
+  max-width: 100% !important;
+  max-height: 100% !important;
 }
 .pc-section-title {
   align-items: center;
@@ -925,6 +933,7 @@ tr.formset-row-deleted td {
   display: grid;
   gap: .3rem;
   min-width: 0;
+  overflow: hidden;
   padding: .65rem .65rem .5rem;
 }
 .pc-chart-wrap-ops {
