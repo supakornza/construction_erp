@@ -3,12 +3,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, View
-from apps.accounts.mixins import AdminRequiredMixin
+from apps.accounts.mixins import ManagerRequiredMixin, OperationalViewMixin, OperationalUpdateMixin
 from .models import Equipment, DailyEquipmentRecord, EquipmentPhoto
 from .forms import EquipmentForm, DailyEquipmentRecordForm, EquipmentPhotoForm
 
 
-class EquipmentListView(LoginRequiredMixin, ListView):
+class EquipmentListView(OperationalViewMixin, ListView):
     model = Equipment
     template_name = 'equipment/list.html'
     context_object_name = 'equipment_list'
@@ -22,7 +22,7 @@ class EquipmentListView(LoginRequiredMixin, ListView):
         return qs
 
 
-class EquipmentDetailView(LoginRequiredMixin, DetailView):
+class EquipmentDetailView(OperationalViewMixin, DetailView):
     model = Equipment
     template_name = 'equipment/detail.html'
     context_object_name = 'equipment'
@@ -39,7 +39,7 @@ class EquipmentDetailView(LoginRequiredMixin, DetailView):
         return ctx
 
 
-class EquipmentCreateView(LoginRequiredMixin, CreateView):
+class EquipmentCreateView(OperationalViewMixin, CreateView):
     model = Equipment
     form_class = EquipmentForm
     template_name = 'equipment/form.html'
@@ -52,7 +52,7 @@ class EquipmentCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class EquipmentUpdateView(LoginRequiredMixin, UpdateView):
+class EquipmentUpdateView(OperationalUpdateMixin, UpdateView):
     model = Equipment
     form_class = EquipmentForm
     template_name = 'equipment/form.html'
@@ -65,13 +65,13 @@ class EquipmentUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class EquipmentDeleteView(AdminRequiredMixin, DeleteView):
+class EquipmentDeleteView(ManagerRequiredMixin, DeleteView):
     model = Equipment
     template_name = 'equipment/confirm_delete.html'
     success_url = reverse_lazy('equipment:list')
 
 
-class EquipmentPhotoUploadView(LoginRequiredMixin, View):
+class EquipmentPhotoUploadView(OperationalViewMixin, View):
     def post(self, request, pk):
         equipment = get_object_or_404(Equipment, pk=pk)
         form = EquipmentPhotoForm(request.POST, request.FILES)
@@ -85,7 +85,7 @@ class EquipmentPhotoUploadView(LoginRequiredMixin, View):
         return redirect('equipment:detail', pk=pk)
 
 
-class EquipmentPhotoDeleteView(LoginRequiredMixin, View):
+class EquipmentPhotoDeleteView(OperationalUpdateMixin, View):
     def post(self, request, pk, photo_pk):
         photo = get_object_or_404(EquipmentPhoto, pk=photo_pk, equipment_id=pk)
         photo.image.delete(save=False)
@@ -94,7 +94,7 @@ class EquipmentPhotoDeleteView(LoginRequiredMixin, View):
         return redirect('equipment:detail', pk=pk)
 
 
-class DailyEquipmentRecordListView(LoginRequiredMixin, ListView):
+class DailyEquipmentRecordListView(OperationalViewMixin, ListView):
     model = DailyEquipmentRecord
     template_name = 'equipment/record_list.html'
     context_object_name = 'records'
@@ -117,7 +117,7 @@ class DailyEquipmentRecordListView(LoginRequiredMixin, ListView):
         return ctx
 
 
-class DailyEquipmentRecordCreateView(LoginRequiredMixin, CreateView):
+class DailyEquipmentRecordCreateView(OperationalViewMixin, CreateView):
     model = DailyEquipmentRecord
     form_class = DailyEquipmentRecordForm
     template_name = 'equipment/record_form.html'
@@ -128,14 +128,14 @@ class DailyEquipmentRecordCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class DailyEquipmentRecordUpdateView(LoginRequiredMixin, UpdateView):
+class DailyEquipmentRecordUpdateView(OperationalUpdateMixin, UpdateView):
     model = DailyEquipmentRecord
     form_class = DailyEquipmentRecordForm
     template_name = 'equipment/record_form.html'
     success_url = reverse_lazy('equipment:record_list')
 
 
-class DailyEquipmentRecordDeleteView(AdminRequiredMixin, DeleteView):
+class DailyEquipmentRecordDeleteView(ManagerRequiredMixin, DeleteView):
     model = DailyEquipmentRecord
     template_name = 'equipment/confirm_delete.html'
     success_url = reverse_lazy('equipment:record_list')

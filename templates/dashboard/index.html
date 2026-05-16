@@ -659,6 +659,7 @@
 
 <div class="exec-section"><i class="fas fa-chart-pie"></i>Contract &amp; Progress KPIs</div>
 <div class="exec-kpi-grid">
+  {% if user.can_access_financial %}
   <div class="exec-kpi-card primary" style="--accent:#f0a500">
     <div class="exec-kpi-top">
       <div class="exec-kpi-icon"><i class="fas fa-file-contract"></i></div>
@@ -685,6 +686,7 @@
     <div class="exec-kpi-label">Earned Value</div>
     <div class="exec-kpi-note">Work certified against BOQ progress</div>
   </div>
+  {% endif %}
 
   <div class="exec-kpi-card" style="--accent:#2ecc71">
     <div class="exec-kpi-top">
@@ -734,6 +736,7 @@
     {% endif %}
   </div>
 
+  {% if user.can_access_financial %}
   <div class="exec-kpi-card" style="--accent:{% if cost_kpis and cost_kpis.cost_status_class == 'critical' %}#dc2626{% elif cost_kpis and cost_kpis.cost_status_class == 'warning' %}#d97706{% elif cost_kpis and cost_kpis.cost_status_class == 'good' %}#059669{% else %}#64748b{% endif %}">
     <div class="exec-kpi-top">
       <div class="exec-kpi-icon"><i class="fas fa-heartbeat"></i></div>
@@ -752,6 +755,7 @@
       <span>{% if cost_kpis %}฿{{ cost_kpis.actual_cost|floatformat:0|intcomma }}{% else %}-{% endif %}</span>
     </div>
   </div>
+  {% endif %}
 </div>
 
 {% if pending_reports > 0 or open_safety_issues > 0 %}
@@ -777,6 +781,7 @@
 </div>
 {% endif %}
 
+{% if user.can_view_executive_desk %}
 <div class="exec-section"><i class="fas fa-gavel"></i>Executive Action Desk</div>
 <div class="exec-command-grid">
   <div class="exec-command-card">
@@ -846,6 +851,7 @@
     </div>
   </div>
 </div>
+{% endif %}
 
 {% with pc=project_controls_summary %}
 <div class="exec-section"><i class="fas fa-sliders-h"></i>Project Controls</div>
@@ -1025,7 +1031,7 @@
   </div>
 </div>
 
-{% if cost_kpis %}
+{% if cost_kpis and user.can_access_financial %}
 <div class="exec-section"><i class="fas fa-coins"></i>Cost Performance (CPI / Budget / EAC)</div>
 <div class="row g-3 mb-4">
   <div class="col-6 col-xl-2">
@@ -1119,13 +1125,17 @@
           <div class="donut-center"><div class="donut-pct">{{ row.percent|floatformat:0 }}%</div><div class="donut-sub">BOQ</div></div>
         </div>
         <div style="flex:1;min-width:0">
-          {% if row.contract_amount %}
-          <div class="fin-row"><span class="fin-label">Contract</span><span>฿{{ row.contract_amount|floatformat:0|intcomma }}</span></div>
-          <div class="fin-row"><span class="fin-label">Earned</span><span style="color:#00b4d8">฿{{ row.earned_value|floatformat:0|intcomma }}</span></div>
-          <div class="fin-total"><span>Progress</span><span>{{ row.percent|floatformat:1 }}%</span></div>
+          {% if user.can_access_financial %}
+            {% if row.contract_amount %}
+            <div class="fin-row"><span class="fin-label">Contract</span><span>฿{{ row.contract_amount|floatformat:0|intcomma }}</span></div>
+            <div class="fin-row"><span class="fin-label">Earned</span><span style="color:#00b4d8">฿{{ row.earned_value|floatformat:0|intcomma }}</span></div>
+            <div class="fin-total"><span>Progress</span><span>{{ row.percent|floatformat:1 }}%</span></div>
+            {% else %}
+            <div class="fin-row" style="color:#64748b;font-style:italic"><span colspan="2"><i class="fas fa-info-circle me-1"></i>No BOQ items entered yet</span></div>
+            <div class="fin-row"><span class="fin-label">Contract value</span><span>฿{{ row.project.contract_value|floatformat:0|intcomma }}</span></div>
+            {% endif %}
           {% else %}
-          <div class="fin-row" style="color:#64748b;font-style:italic"><span colspan="2"><i class="fas fa-info-circle me-1"></i>No BOQ items entered yet</span></div>
-          <div class="fin-row"><span class="fin-label">Contract value</span><span>฿{{ row.project.contract_value|floatformat:0|intcomma }}</span></div>
+          <div class="fin-total"><span>Progress</span><span>{{ row.percent|floatformat:1 }}%</span></div>
           {% endif %}
           <div class="dark-progress mt-1">
             <div class="dark-progress-bar" style="width:{{ row.percent }}%;background:linear-gradient(to right,#00b4d8,#0077b6)"></div>
@@ -1172,7 +1182,7 @@
   </div>
 </div>
 
-{% if quantity_balance %}
+{% if quantity_balance and user.can_view_boq %}
 <div class="exec-section"><i class="fas fa-list-ol"></i>BOQ Quantity Balance</div>
 <div class="dark-card mb-4">
   <div class="dark-card-header">

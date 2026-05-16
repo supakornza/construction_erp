@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 
-from apps.accounts.mixins import AdminRequiredMixin
+from apps.accounts.mixins import FinancialViewMixin, FinancialWriteMixin
 from apps.projects.models import Project
 from .forms import ActualCostForm, BudgetItemForm, CostCodeForm
 from .models import ActualCost, BudgetItem, CostCode
@@ -14,7 +14,7 @@ from .services import (
 )
 
 
-class CostDashboardView(LoginRequiredMixin, TemplateView):
+class CostDashboardView(FinancialViewMixin, TemplateView):
     template_name = 'cost_control/dashboard.html'
 
     def get_context_data(self, **kwargs):
@@ -40,7 +40,7 @@ class CostDashboardView(LoginRequiredMixin, TemplateView):
 
 # ── Cost Codes ─────────────────────────────────────────────
 
-class CostCodeListView(LoginRequiredMixin, ListView):
+class CostCodeListView(FinancialViewMixin, ListView):
     model = CostCode
     template_name = 'cost_control/cost_code_list.html'
     context_object_name = 'cost_codes'
@@ -58,7 +58,7 @@ class CostCodeListView(LoginRequiredMixin, ListView):
         return ctx
 
 
-class CostCodeCreateView(LoginRequiredMixin, CreateView):
+class CostCodeCreateView(FinancialWriteMixin, CreateView):
     model = CostCode
     form_class = CostCodeForm
     template_name = 'cost_control/cost_code_form.html'
@@ -69,7 +69,7 @@ class CostCodeCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class CostCodeUpdateView(LoginRequiredMixin, UpdateView):
+class CostCodeUpdateView(FinancialWriteMixin, UpdateView):
     model = CostCode
     form_class = CostCodeForm
     template_name = 'cost_control/cost_code_form.html'
@@ -80,7 +80,7 @@ class CostCodeUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class CostCodeDeleteView(AdminRequiredMixin, DeleteView):
+class CostCodeDeleteView(FinancialWriteMixin, DeleteView):
     model = CostCode
     template_name = 'safety/confirm_delete.html'
     success_url = reverse_lazy('cost_control:cost_code_list')
@@ -88,7 +88,7 @@ class CostCodeDeleteView(AdminRequiredMixin, DeleteView):
 
 # ── Budget Items ───────────────────────────────────────────
 
-class BudgetItemListView(LoginRequiredMixin, ListView):
+class BudgetItemListView(FinancialViewMixin, ListView):
     model = BudgetItem
     template_name = 'cost_control/budget_list.html'
     context_object_name = 'budget_items'
@@ -108,7 +108,7 @@ class BudgetItemListView(LoginRequiredMixin, ListView):
         return ctx
 
 
-class BudgetItemCreateView(LoginRequiredMixin, CreateView):
+class BudgetItemCreateView(FinancialWriteMixin, CreateView):
     model = BudgetItem
     form_class = BudgetItemForm
     template_name = 'cost_control/budget_form.html'
@@ -119,7 +119,7 @@ class BudgetItemCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class BudgetItemUpdateView(LoginRequiredMixin, UpdateView):
+class BudgetItemUpdateView(FinancialWriteMixin, UpdateView):
     model = BudgetItem
     form_class = BudgetItemForm
     template_name = 'cost_control/budget_form.html'
@@ -130,7 +130,7 @@ class BudgetItemUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class BudgetItemDeleteView(AdminRequiredMixin, DeleteView):
+class BudgetItemDeleteView(FinancialWriteMixin, DeleteView):
     model = BudgetItem
     template_name = 'safety/confirm_delete.html'
     success_url = reverse_lazy('cost_control:budget_list')
@@ -138,7 +138,7 @@ class BudgetItemDeleteView(AdminRequiredMixin, DeleteView):
 
 # ── Actual Costs ───────────────────────────────────────────
 
-class ActualCostListView(LoginRequiredMixin, ListView):
+class ActualCostListView(FinancialViewMixin, ListView):
     model = ActualCost
     template_name = 'cost_control/actual_cost_list.html'
     context_object_name = 'costs'
@@ -163,7 +163,7 @@ class ActualCostListView(LoginRequiredMixin, ListView):
         return ctx
 
 
-class ActualCostCreateView(LoginRequiredMixin, CreateView):
+class ActualCostCreateView(FinancialWriteMixin, CreateView):
     model = ActualCost
     form_class = ActualCostForm
     template_name = 'cost_control/actual_cost_form.html'
@@ -175,7 +175,7 @@ class ActualCostCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ActualCostUpdateView(LoginRequiredMixin, UpdateView):
+class ActualCostUpdateView(FinancialWriteMixin, UpdateView):
     model = ActualCost
     form_class = ActualCostForm
     template_name = 'cost_control/actual_cost_form.html'
@@ -186,7 +186,7 @@ class ActualCostUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class ActualCostDeleteView(AdminRequiredMixin, DeleteView):
+class ActualCostDeleteView(FinancialWriteMixin, DeleteView):
     model = ActualCost
     template_name = 'safety/confirm_delete.html'
     success_url = reverse_lazy('cost_control:actual_cost_list')

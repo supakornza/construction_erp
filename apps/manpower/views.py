@@ -7,14 +7,14 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.utils.dateparse import parse_date
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView, View
-from apps.accounts.mixins import AdminRequiredMixin
+from apps.accounts.mixins import ManagerRequiredMixin, OperationalViewMixin, OperationalUpdateMixin
 from apps.projects.models import Project
 from .models import DailyManpowerRecord, ManpowerCategory
 from .forms import DailyManpowerRecordForm
 from .services import get_default_manpower_period, get_manpower_dashboard_metrics
 
 
-class ManpowerDashboardView(LoginRequiredMixin, TemplateView):
+class ManpowerDashboardView(OperationalViewMixin, TemplateView):
     template_name = 'manpower/dashboard.html'
 
     def get_context_data(self, **kwargs):
@@ -45,7 +45,7 @@ class ManpowerDashboardView(LoginRequiredMixin, TemplateView):
         return ctx
 
 
-class DailyManpowerRecordListView(LoginRequiredMixin, ListView):
+class DailyManpowerRecordListView(OperationalViewMixin, ListView):
     model = DailyManpowerRecord
     template_name = 'manpower/list.html'
     context_object_name = 'records'
@@ -67,7 +67,7 @@ class DailyManpowerRecordListView(LoginRequiredMixin, ListView):
         return ctx
 
 
-class DailyManpowerRecordCreateView(LoginRequiredMixin, CreateView):
+class DailyManpowerRecordCreateView(OperationalViewMixin, CreateView):
     model = DailyManpowerRecord
     form_class = DailyManpowerRecordForm
     template_name = 'manpower/form.html'
@@ -78,7 +78,7 @@ class DailyManpowerRecordCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class DailyManpowerRecordUpdateView(LoginRequiredMixin, UpdateView):
+class DailyManpowerRecordUpdateView(OperationalUpdateMixin, UpdateView):
     model = DailyManpowerRecord
     form_class = DailyManpowerRecordForm
     template_name = 'manpower/form.html'
@@ -89,13 +89,13 @@ class DailyManpowerRecordUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class DailyManpowerRecordDeleteView(AdminRequiredMixin, DeleteView):
+class DailyManpowerRecordDeleteView(ManagerRequiredMixin, DeleteView):
     model = DailyManpowerRecord
     template_name = 'manpower/confirm_delete.html'
     success_url = reverse_lazy('manpower:list')
 
 
-class ManpowerHistogramView(LoginRequiredMixin, View):
+class ManpowerHistogramView(OperationalViewMixin, View):
     def get(self, request):
         project_id = request.GET.get('project_id')
         end = date.today()

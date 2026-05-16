@@ -76,20 +76,25 @@
             <span class="sidebar-label">Materials</span>
         </a>
 
+        {% if user.can_view_procurement %}
         <div class="nav-section"><span class="sidebar-label">Procurement</span></div>
         <a href="{% url 'procurement:pr_list' %}" class="nav-link {% if request.resolver_match.namespace == 'procurement' %}active{% endif %}"
            data-bs-toggle="tooltip" data-bs-placement="right" title="Procurement">
             <i class="fas fa-shopping-cart nav-icon"></i>
             <span class="sidebar-label">Procurement</span>
         </a>
+        {% endif %}
 
+        {% if user.can_view_boq %}
         <div class="nav-section"><span class="sidebar-label">BOQ &amp; Progress</span></div>
         <a href="{% url 'boq:list' %}" class="nav-link {% if request.resolver_match.namespace == 'boq' %}active{% endif %}"
            data-bs-toggle="tooltip" data-bs-placement="right" title="BOQ &amp; Progress">
             <i class="fas fa-chart-line nav-icon"></i>
             <span class="sidebar-label">BOQ &amp; Progress</span>
         </a>
+        {% endif %}
 
+        {% if user.can_view_project_controls %}
         <div class="nav-section"><span class="sidebar-label">Project Controls</span></div>
         <a href="{% url 'project_controls:dashboard' %}" class="nav-link {% if vn == 'project_controls:dashboard' or vn == 'project_controls:rock_list' or vn == 'project_controls:sand_list' %}active{% endif %}"
            data-bs-toggle="tooltip" data-bs-placement="right" title="Rock &amp; Sand Control">
@@ -126,6 +131,7 @@
             <i class="fas fa-ship nav-icon"></i>
             <span class="sidebar-label">Transport Units</span>
         </a>
+        {% endif %}
 
         {% if user.can_access_financial %}
         <div class="nav-section"><span class="sidebar-label">Cost Control</span></div>
@@ -136,26 +142,32 @@
         </a>
         {% endif %}
 
+        {% if user.can_view_safety %}
         <div class="nav-section"><span class="sidebar-label">Safety</span></div>
         <a href="{% url 'safety:toolbox_list' %}" class="nav-link {% if request.resolver_match.namespace == 'safety' %}active{% endif %}"
            data-bs-toggle="tooltip" data-bs-placement="right" title="Safety">
             <i class="fas fa-shield-alt nav-icon"></i>
             <span class="sidebar-label">Safety</span>
         </a>
+        {% endif %}
 
+        {% if user.can_view_quality %}
         <div class="nav-section"><span class="sidebar-label">Quality</span></div>
         <a href="{% url 'quality:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'quality' %}active{% endif %}"
            data-bs-toggle="tooltip" data-bs-placement="right" title="Quality Control">
             <i class="fas fa-clipboard-check nav-icon"></i>
             <span class="sidebar-label">Quality Control</span>
         </a>
+        {% endif %}
 
+        {% if user.can_view_documents %}
         <div class="nav-section"><span class="sidebar-label">Documents</span></div>
         <a href="{% url 'documents:list' %}" class="nav-link {% if request.resolver_match.namespace == 'documents' %}active{% endif %}"
            data-bs-toggle="tooltip" data-bs-placement="right" title="Documents">
             <i class="fas fa-folder-open nav-icon"></i>
             <span class="sidebar-label">Documents</span>
         </a>
+        {% endif %}
 
         {% if user.role == 'admin' or user.is_superuser %}
         <div class="nav-section"><span class="sidebar-label">Admin</span></div>

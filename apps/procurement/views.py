@@ -4,33 +4,33 @@ from django.db import transaction
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from apps.accounts.mixins import AdminRequiredMixin, ApproverRequiredMixin
+from apps.accounts.mixins import ApproverRequiredMixin, FinancialWriteMixin
 from .models import Supplier, PurchaseRequest, PurchaseOrder
 from .forms import (SupplierForm, PurchaseRequestForm, PurchaseRequestItemFormSet,
                     PurchaseOrderForm, PurchaseOrderItemFormSet)
 
 
-class SupplierListView(LoginRequiredMixin, ListView):
+class SupplierListView(FinancialWriteMixin, ListView):
     model = Supplier
     template_name = 'procurement/supplier_list.html'
     context_object_name = 'suppliers'
 
 
-class SupplierCreateView(LoginRequiredMixin, CreateView):
+class SupplierCreateView(FinancialWriteMixin, CreateView):
     model = Supplier
     form_class = SupplierForm
     template_name = 'procurement/supplier_form.html'
     success_url = reverse_lazy('procurement:supplier_list')
 
 
-class SupplierUpdateView(LoginRequiredMixin, UpdateView):
+class SupplierUpdateView(FinancialWriteMixin, UpdateView):
     model = Supplier
     form_class = SupplierForm
     template_name = 'procurement/supplier_form.html'
     success_url = reverse_lazy('procurement:supplier_list')
 
 
-class PurchaseRequestListView(LoginRequiredMixin, ListView):
+class PurchaseRequestListView(FinancialWriteMixin, ListView):
     model = PurchaseRequest
     template_name = 'procurement/pr_list.html'
     context_object_name = 'prs'
@@ -44,7 +44,7 @@ class PurchaseRequestListView(LoginRequiredMixin, ListView):
         return qs
 
 
-class PurchaseRequestCreateView(LoginRequiredMixin, CreateView):
+class PurchaseRequestCreateView(FinancialWriteMixin, CreateView):
     model = PurchaseRequest
     form_class = PurchaseRequestForm
     template_name = 'procurement/pr_form.html'
@@ -70,20 +70,20 @@ class PurchaseRequestCreateView(LoginRequiredMixin, CreateView):
         return reverse_lazy('procurement:pr_detail', kwargs={'pk': self.object.pk})
 
 
-class PurchaseRequestDetailView(LoginRequiredMixin, DetailView):
+class PurchaseRequestDetailView(FinancialWriteMixin, DetailView):
     model = PurchaseRequest
     template_name = 'procurement/pr_detail.html'
     context_object_name = 'pr'
 
 
-class PurchaseOrderListView(LoginRequiredMixin, ListView):
+class PurchaseOrderListView(FinancialWriteMixin, ListView):
     model = PurchaseOrder
     template_name = 'procurement/po_list.html'
     context_object_name = 'pos'
     paginate_by = 20
 
 
-class PurchaseOrderCreateView(LoginRequiredMixin, CreateView):
+class PurchaseOrderCreateView(FinancialWriteMixin, CreateView):
     model = PurchaseOrder
     form_class = PurchaseOrderForm
     template_name = 'procurement/po_form.html'
@@ -111,7 +111,7 @@ class PurchaseOrderCreateView(LoginRequiredMixin, CreateView):
         return reverse_lazy('procurement:po_detail', kwargs={'pk': self.object.pk})
 
 
-class PurchaseOrderDetailView(LoginRequiredMixin, DetailView):
+class PurchaseOrderDetailView(FinancialWriteMixin, DetailView):
     model = PurchaseOrder
     template_name = 'procurement/po_detail.html'
     context_object_name = 'po'

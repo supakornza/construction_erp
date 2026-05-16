@@ -77,3 +77,113 @@ class ContractorBlockedMixin(LoginRequiredMixin):
         if request.user.role in self.BLOCKED_ROLES:
             raise PermissionDenied
         return result
+
+
+# ── Module-level permission mixins (enforce Role Permissions Reference) ──────
+
+class ProjectViewMixin(RoleRequiredMixin):
+    allowed_roles = ['admin', 'project_manager', 'engineer', 'inspector',
+                     'owner', 'quantity_surveyor', 'safety_officer',
+                     'site_engineer', 'storekeeper', 'viewer']
+
+
+class ProjectWriteMixin(RoleRequiredMixin):
+    allowed_roles = ['admin', 'project_manager']
+
+
+class DailyReportViewMixin(RoleRequiredMixin):
+    allowed_roles = ['admin', 'project_manager', 'engineer', 'inspector',
+                     'owner', 'safety_officer', 'site_engineer']
+
+
+class DailyReportCreateMixin(RoleRequiredMixin):
+    allowed_roles = ['admin', 'project_manager', 'engineer', 'inspector',
+                     'contractor', 'site_engineer']
+
+
+class DailyReportUpdateMixin(RoleRequiredMixin):
+    allowed_roles = ['admin', 'project_manager', 'engineer', 'inspector', 'site_engineer']
+
+
+class OperationalViewMixin(RoleRequiredMixin):
+    """Manpower & Equipment list/create — contractor included."""
+    allowed_roles = ['admin', 'project_manager', 'engineer', 'inspector',
+                     'contractor', 'site_engineer']
+
+
+class OperationalUpdateMixin(RoleRequiredMixin):
+    """Manpower & Equipment update — contractor excluded."""
+    allowed_roles = ['admin', 'project_manager', 'engineer', 'inspector', 'site_engineer']
+
+
+class MaterialsViewMixin(RoleRequiredMixin):
+    allowed_roles = ['admin', 'project_manager', 'engineer', 'contractor',
+                     'quantity_surveyor', 'storekeeper']
+
+
+class MaterialsWriteMixin(RoleRequiredMixin):
+    allowed_roles = ['admin', 'project_manager', 'contractor',
+                     'quantity_surveyor', 'storekeeper']
+
+
+class MaterialsDeleteMixin(RoleRequiredMixin):
+    allowed_roles = ['admin', 'project_manager', 'quantity_surveyor']
+
+
+class SafetyViewMixin(RoleRequiredMixin):
+    allowed_roles = ['admin', 'project_manager', 'engineer', 'inspector',
+                     'owner', 'safety_officer', 'site_engineer']
+
+
+class SafetyWriteMixin(RoleRequiredMixin):
+    allowed_roles = ['admin', 'project_manager', 'engineer', 'inspector',
+                     'safety_officer', 'site_engineer']
+
+
+class SafetyDeleteMixin(RoleRequiredMixin):
+    allowed_roles = ['admin', 'project_manager', 'safety_officer']
+
+
+class QualityViewMixin(RoleRequiredMixin):
+    allowed_roles = ['admin', 'project_manager', 'engineer', 'inspector', 'owner']
+
+
+class QualityInspectorMixin(RoleRequiredMixin):
+    """Inspection requests, NCRs, punch lists — inspector CRU."""
+    allowed_roles = ['admin', 'project_manager', 'engineer', 'inspector']
+
+
+class QualityEngineerMixin(RoleRequiredMixin):
+    """Quality checkpoints & delete — engineer Full, no inspector."""
+    allowed_roles = ['admin', 'project_manager', 'engineer']
+
+
+class FinancialViewMixin(RoleRequiredMixin):
+    """Cost Control view: Admin, PM, Engineer, Owner, QS."""
+    allowed_roles = ['admin', 'project_manager', 'engineer', 'owner', 'quantity_surveyor']
+
+
+class FinancialWriteMixin(RoleRequiredMixin):
+    """Cost Control / Procurement / BOQ write + delete: Admin, PM, QS."""
+    allowed_roles = ['admin', 'project_manager', 'quantity_surveyor']
+
+
+class BOQViewMixin(RoleRequiredMixin):
+    """BOQ view — wider than Cost Control (includes Inspector and Viewer)."""
+    allowed_roles = ['admin', 'project_manager', 'engineer', 'inspector',
+                     'owner', 'quantity_surveyor', 'viewer']
+
+
+class DocumentsMixin(RoleRequiredMixin):
+    """Documents read + write: Admin, PM, Engineer, QS."""
+    allowed_roles = ['admin', 'project_manager', 'engineer', 'quantity_surveyor']
+
+
+class ProjectControlsViewMixin(RoleRequiredMixin):
+    allowed_roles = ['admin', 'project_manager', 'engineer', 'inspector',
+                     'owner', 'quantity_surveyor', 'site_engineer']
+
+
+class ProjectControlsWriteMixin(RoleRequiredMixin):
+    """Project Controls CRU: Admin, PM, Engineer, Site Engineer."""
+    allowed_roles = ['admin', 'project_manager', 'engineer', 'site_engineer']

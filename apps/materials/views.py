@@ -5,7 +5,7 @@ from django.db.models.functions import Coalesce
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
-from apps.accounts.mixins import AdminRequiredMixin
+from apps.accounts.mixins import MaterialsViewMixin, MaterialsWriteMixin, MaterialsDeleteMixin
 from apps.projects.models import Project
 from .models import Material, MaterialDelivery, MaterialUsage, get_stock_balance
 from .forms import MaterialForm, MaterialDeliveryForm, MaterialUsageForm
@@ -40,7 +40,7 @@ def _filtered_deliveries(filters):
     return qs
 
 
-class MaterialDeliveryDashboardView(LoginRequiredMixin, TemplateView):
+class MaterialDeliveryDashboardView(MaterialsViewMixin, TemplateView):
     template_name = 'materials/dashboard.html'
 
     def get_context_data(self, **kwargs):
@@ -94,13 +94,13 @@ class MaterialDeliveryDashboardView(LoginRequiredMixin, TemplateView):
         return ctx
 
 
-class MaterialListView(LoginRequiredMixin, ListView):
+class MaterialListView(MaterialsViewMixin, ListView):
     model = Material
     template_name = 'materials/list.html'
     context_object_name = 'materials'
 
 
-class MaterialCreateView(LoginRequiredMixin, CreateView):
+class MaterialCreateView(MaterialsWriteMixin, CreateView):
     model = Material
     form_class = MaterialForm
     template_name = 'materials/form.html'
@@ -111,14 +111,14 @@ class MaterialCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class MaterialUpdateView(LoginRequiredMixin, UpdateView):
+class MaterialUpdateView(MaterialsWriteMixin, UpdateView):
     model = Material
     form_class = MaterialForm
     template_name = 'materials/form.html'
     success_url = reverse_lazy('materials:list')
 
 
-class MaterialDeliveryListView(LoginRequiredMixin, ListView):
+class MaterialDeliveryListView(MaterialsViewMixin, ListView):
     model = MaterialDelivery
     template_name = 'materials/delivery_list.html'
     context_object_name = 'deliveries'
@@ -142,7 +142,7 @@ class MaterialDeliveryListView(LoginRequiredMixin, ListView):
         return ctx
 
 
-class MaterialDeliveryCreateView(LoginRequiredMixin, CreateView):
+class MaterialDeliveryCreateView(MaterialsWriteMixin, CreateView):
     model = MaterialDelivery
     form_class = MaterialDeliveryForm
     template_name = 'materials/delivery_form.html'
@@ -153,34 +153,34 @@ class MaterialDeliveryCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class MaterialDeliveryUpdateView(LoginRequiredMixin, UpdateView):
+class MaterialDeliveryUpdateView(MaterialsWriteMixin, UpdateView):
     model = MaterialDelivery
     form_class = MaterialDeliveryForm
     template_name = 'materials/delivery_form.html'
     success_url = reverse_lazy('materials:delivery_list')
 
 
-class MaterialDeliveryDeleteView(AdminRequiredMixin, DeleteView):
+class MaterialDeliveryDeleteView(MaterialsDeleteMixin, DeleteView):
     model = MaterialDelivery
     template_name = 'materials/confirm_delete.html'
     success_url = reverse_lazy('materials:delivery_list')
 
 
-class MaterialUsageListView(LoginRequiredMixin, ListView):
+class MaterialUsageListView(MaterialsViewMixin, ListView):
     model = MaterialUsage
     template_name = 'materials/usage_list.html'
     context_object_name = 'usages'
     paginate_by = 30
 
 
-class MaterialUsageCreateView(LoginRequiredMixin, CreateView):
+class MaterialUsageCreateView(MaterialsWriteMixin, CreateView):
     model = MaterialUsage
     form_class = MaterialUsageForm
     template_name = 'materials/usage_form.html'
     success_url = reverse_lazy('materials:usage_list')
 
 
-class StockBalanceView(LoginRequiredMixin, ListView):
+class StockBalanceView(MaterialsViewMixin, ListView):
     model = Material
     template_name = 'materials/stock.html'
     context_object_name = 'materials'

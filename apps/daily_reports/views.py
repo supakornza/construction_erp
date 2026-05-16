@@ -6,14 +6,15 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, FormView, View
-from apps.accounts.mixins import ApproverRequiredMixin, AdminRequiredMixin
+from apps.accounts.mixins import (ApproverRequiredMixin, ManagerRequiredMixin,
+                                   DailyReportViewMixin, DailyReportCreateMixin, DailyReportUpdateMixin)
 from .models import DailyReport, DailyWorkActivity, DailyLookahead, DailyProblemRemark, DailyPhoto
 from .forms import (DailyReportForm, RejectionForm,
                     DailyWorkActivityFormSet, DailyLookaheadFormSet,
                     DailyProblemFormSet, DailyPhotoFormSet)
 
 
-class DailyReportListView(LoginRequiredMixin, ListView):
+class DailyReportListView(DailyReportViewMixin, ListView):
     model = DailyReport
     template_name = 'daily_reports/list.html'
     context_object_name = 'reports'
@@ -37,7 +38,7 @@ class DailyReportListView(LoginRequiredMixin, ListView):
         return ctx
 
 
-class DailyReportCreateView(LoginRequiredMixin, CreateView):
+class DailyReportCreateView(DailyReportCreateMixin, CreateView):
     model = DailyReport
     form_class = DailyReportForm
     template_name = 'daily_reports/form.html'
@@ -77,7 +78,7 @@ class DailyReportCreateView(LoginRequiredMixin, CreateView):
         return reverse_lazy('daily_reports:detail', kwargs={'pk': self.object.pk})
 
 
-class DailyReportDetailView(LoginRequiredMixin, DetailView):
+class DailyReportDetailView(DailyReportViewMixin, DetailView):
     model = DailyReport
     template_name = 'daily_reports/detail.html'
     context_object_name = 'report'
@@ -96,7 +97,7 @@ class DailyReportDetailView(LoginRequiredMixin, DetailView):
         return ctx
 
 
-class DailyReportUpdateView(LoginRequiredMixin, UpdateView):
+class DailyReportUpdateView(DailyReportUpdateMixin, UpdateView):
     model = DailyReport
     form_class = DailyReportForm
     template_name = 'daily_reports/form.html'
@@ -138,13 +139,13 @@ class DailyReportUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('daily_reports:detail', kwargs={'pk': self.object.pk})
 
 
-class DailyReportDeleteView(AdminRequiredMixin, DeleteView):
+class DailyReportDeleteView(ManagerRequiredMixin, DeleteView):
     model = DailyReport
     template_name = 'daily_reports/confirm_delete.html'
     success_url = reverse_lazy('daily_reports:list')
 
 
-class SubmitReportView(LoginRequiredMixin, View):
+class SubmitReportView(DailyReportCreateMixin, View):
     def post(self, request, pk):
         report = get_object_or_404(DailyReport, pk=pk, status='Draft')
         report.status = 'Submitted'
@@ -185,7 +186,7 @@ class RejectReportView(ApproverRequiredMixin, FormView):
         return redirect('daily_reports:detail', pk=report.pk)
 
 
-class ExportPDFView(LoginRequiredMixin, View):
+class ExportPDFView(DailyReportViewMixin, View):
     def get(self, request, pk):
         from apps.reports.pdf_generator import generate_daily_report_pdf
         report = get_object_or_404(DailyReport, pk=pk)
@@ -196,7 +197,7 @@ class ExportPDFView(LoginRequiredMixin, View):
         return response
 
 
-class PhotoReportPDFView(LoginRequiredMixin, View):
+class PhotoReportPDFView(DailyReportViewMixin, View):
     def get(self, request, pk):
         from apps.reports.pdf_generator import generate_photo_report_pdf
         report = get_object_or_404(DailyReport, pk=pk)
@@ -207,7 +208,7 @@ class PhotoReportPDFView(LoginRequiredMixin, View):
         return response
 
 
-class PhotoUploadView(LoginRequiredMixin, View):
+class PhotoUploadView(DailyReportCreateMixin, View):
     def post(self, request, pk):
         report = get_object_or_404(DailyReport, pk=pk)
         photo_file = request.FILES.get('photo')
@@ -228,7 +229,7 @@ class PhotoUploadView(LoginRequiredMixin, View):
         return redirect('daily_reports:detail', pk=pk)
 
 
-class PhotoDeleteView(LoginRequiredMixin, View):
+class PhotoDeleteView(DailyReportUpdateMixin, View):
     def post(self, request, pk, photo_pk):
         photo = get_object_or_404(DailyPhoto, pk=photo_pk, report_id=pk)
         photo.photo.delete(save=False)

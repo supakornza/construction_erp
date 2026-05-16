@@ -2,12 +2,12 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from apps.accounts.mixins import AdminRequiredMixin
+from apps.accounts.mixins import AdminRequiredMixin, ProjectViewMixin, ProjectWriteMixin
 from .models import Project, Stakeholder, WorkArea
 from .forms import ProjectForm, StakeholderForm, WorkAreaForm
 
 
-class ProjectListView(LoginRequiredMixin, ListView):
+class ProjectListView(ProjectViewMixin, ListView):
     model = Project
     template_name = 'projects/list.html'
     context_object_name = 'projects'
@@ -30,7 +30,7 @@ class ProjectListView(LoginRequiredMixin, ListView):
         return ctx
 
 
-class ProjectCreateView(LoginRequiredMixin, CreateView):
+class ProjectCreateView(ProjectWriteMixin, CreateView):
     model = Project
     form_class = ProjectForm
     template_name = 'projects/form.html'
@@ -42,7 +42,7 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ProjectDetailView(LoginRequiredMixin, DetailView):
+class ProjectDetailView(ProjectViewMixin, DetailView):
     model = Project
     template_name = 'projects/detail.html'
     context_object_name = 'project'
@@ -54,7 +54,7 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
         return ctx
 
 
-class ProjectUpdateView(LoginRequiredMixin, UpdateView):
+class ProjectUpdateView(ProjectWriteMixin, UpdateView):
     model = Project
     form_class = ProjectForm
     template_name = 'projects/form.html'
@@ -77,7 +77,7 @@ class ProjectDeleteView(AdminRequiredMixin, DeleteView):
         return super().form_valid(form)
 
 
-class StakeholderCreateView(LoginRequiredMixin, CreateView):
+class StakeholderCreateView(ProjectWriteMixin, CreateView):
     model = Stakeholder
     form_class = StakeholderForm
     template_name = 'projects/stakeholder_form.html'
@@ -99,7 +99,7 @@ class StakeholderCreateView(LoginRequiredMixin, CreateView):
         return ctx
 
 
-class WorkAreaCreateView(LoginRequiredMixin, CreateView):
+class WorkAreaCreateView(ProjectWriteMixin, CreateView):
     model = WorkArea
     form_class = WorkAreaForm
     template_name = 'projects/work_area_form.html'
@@ -121,7 +121,7 @@ class WorkAreaCreateView(LoginRequiredMixin, CreateView):
         return ctx
 
 
-class WorkAreaUpdateView(LoginRequiredMixin, UpdateView):
+class WorkAreaUpdateView(ProjectWriteMixin, UpdateView):
     model = WorkArea
     form_class = WorkAreaForm
     template_name = 'projects/work_area_form.html'

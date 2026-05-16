@@ -46,6 +46,36 @@ class User(AbstractUser):
     def can_create_records(self):
         return self.is_superuser or self.role in self.OPERATIONAL_ROLES
 
+    def can_view_boq(self):
+        return self.is_superuser or self.role in {
+            'admin', 'project_manager', 'engineer', 'inspector',
+            'owner', 'quantity_surveyor', 'viewer'}
+
+    def can_view_safety(self):
+        return self.is_superuser or self.role in {
+            'admin', 'project_manager', 'engineer', 'inspector',
+            'owner', 'safety_officer', 'site_engineer'}
+
+    def can_view_quality(self):
+        return self.is_superuser or self.role in {
+            'admin', 'project_manager', 'engineer', 'inspector', 'owner'}
+
+    def can_view_documents(self):
+        return self.is_superuser or self.role in {
+            'admin', 'project_manager', 'engineer', 'quantity_surveyor'}
+
+    def can_view_project_controls(self):
+        return self.is_superuser or self.role in {
+            'admin', 'project_manager', 'engineer', 'inspector',
+            'owner', 'quantity_surveyor', 'site_engineer'}
+
+    def can_view_procurement(self):
+        return self.is_superuser or self.role in {
+            'admin', 'project_manager', 'quantity_surveyor'}
+
+    def can_view_executive_desk(self):
+        return self.is_superuser or self.role in {'admin', 'project_manager', 'owner'}
+
     def is_contractor(self):
         return self.role == 'contractor'
 
