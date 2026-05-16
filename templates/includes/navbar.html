@@ -45,6 +45,11 @@
                         <i class="fas fa-id-card me-2 text-muted fa-fw"></i>Profile
                     </a>
                 </li>
+                <li>
+                    <a class="dropdown-item" href="{% url 'accounts:change_password' %}">
+                        <i class="fas fa-key me-2 text-muted fa-fw"></i>เปลี่ยนรหัสผ่าน
+                    </a>
+                </li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <form method="post" action="{% url 'accounts:logout' %}">

@@ -1,5 +1,5 @@
-from django.contrib.auth import login, logout
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login, logout, update_session_auth_hash
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
@@ -21,7 +21,28 @@ class LoginView(FormView):
 
     def form_valid(self, form):
         login(self.request, form.get_user())
+        if not self.request.POST.get('remember_me'):
+            self.request.session.set_expiry(0)
+        else:
+            self.request.session.set_expiry(1209600)  # 14 days
         return redirect(self.request.GET.get('next', 'dashboard:index'))
+
+
+class ChangePasswordView(LoginRequiredMixin, FormView):
+    template_name = 'registration/password_change_form.html'
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('accounts:profile')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        update_session_auth_hash(self.request, form.user)
+        messages.success(self.request, 'เปลี่ยนรหัสผ่านเรียบร้อยแล้ว')
+        return super().form_valid(form)
 
 
 class LogoutView(View):
