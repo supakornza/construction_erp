@@ -24,7 +24,7 @@ class DailyEquipmentRecordForm(forms.ModelForm):
     class Meta:
         model = DailyEquipmentRecord
         fields = ['project', 'report', 'report_date', 'equipment', 'status', 'working_hours', 'remarks']
-        widgets = {'report_date': forms.DateInput(attrs={'type': 'date'})}
+        widgets = {'report_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'})}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

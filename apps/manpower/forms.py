@@ -8,7 +8,7 @@ class DailyManpowerRecordForm(forms.ModelForm):
     class Meta:
         model = DailyManpowerRecord
         fields = ['project', 'report', 'report_date', 'category', 'company', 'quantity', 'remarks']
-        widgets = {'report_date': forms.DateInput(attrs={'type': 'date'})}
+        widgets = {'report_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'})}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

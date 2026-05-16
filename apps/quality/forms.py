@@ -14,7 +14,7 @@ class InspectionRequestForm(forms.ModelForm):
             'inspected_by', 'status', 'result', 'remarks',
         ]
         widgets = {
-            'inspection_date': forms.DateInput(attrs={'type': 'date'}),
+            'inspection_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'description': forms.Textarea(attrs={'rows': 3}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
         }
@@ -62,9 +62,9 @@ class NonConformanceForm(forms.ModelForm):
             'status', 'severity', 'attachment',
         ]
         widgets = {
-            'issued_date': forms.DateInput(attrs={'type': 'date'}),
-            'due_date': forms.DateInput(attrs={'type': 'date'}),
-            'closed_date': forms.DateInput(attrs={'type': 'date'}),
+            'issued_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'due_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'closed_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'description': forms.Textarea(attrs={'rows': 3}),
             'root_cause': forms.Textarea(attrs={'rows': 2}),
             'corrective_action': forms.Textarea(attrs={'rows': 2}),
@@ -93,8 +93,8 @@ class PunchListForm(forms.ModelForm):
         model = PunchList
         fields = ['project', 'description', 'location', 'responsible_person', 'target_date', 'closed_date', 'status', 'priority', 'attachment']
         widgets = {
-            'target_date': forms.DateInput(attrs={'type': 'date'}),
-            'closed_date': forms.DateInput(attrs={'type': 'date'}),
+            'target_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'closed_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'description': forms.Textarea(attrs={'rows': 3}),
         }
 

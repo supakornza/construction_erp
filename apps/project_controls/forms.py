@@ -112,8 +112,8 @@ class RockDashboardSettingsForm(forms.ModelForm):
         fields = ['project', 'target_quantity_ton', 'daily_target_placement_ton',
                   'planned_start_date', 'planned_finish_date', 'remarks']
         widgets = {
-            'planned_start_date': forms.DateInput(attrs={'type': 'date'}),
-            'planned_finish_date': forms.DateInput(attrs={'type': 'date'}),
+            'planned_start_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'planned_finish_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
         }
 
@@ -216,8 +216,8 @@ class SandDashboardSettingsForm(forms.ModelForm):
                   'daily_target_placement_ton', 'planned_start_date',
                   'planned_finish_date', 'remarks']
         widgets = {
-            'planned_start_date': forms.DateInput(attrs={'type': 'date'}),
-            'planned_finish_date': forms.DateInput(attrs={'type': 'date'}),
+            'planned_start_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'planned_finish_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
         }
 
@@ -236,7 +236,7 @@ class SandAllocationForm(forms.ModelForm):
         fields = ['project', 'calculation_date', 'total_sand_quantity',
                   'tct_percentage', 'mtp3_percentage', 'total_trips', 'remarks']
         widgets = {
-            'calculation_date': forms.DateInput(attrs={'type': 'date'}),
+            'calculation_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
         }
 
@@ -296,7 +296,7 @@ class RevetmentDailyItemForm(forms.ModelForm):
         fields = ['station', 'activity', 'quantity_done', 'status', 'inspection_date', 'remarks']
         widgets = {
             'quantity_done': forms.NumberInput(attrs={'step': '0.001', 'min': '0'}),
-            'inspection_date': forms.DateInput(attrs={'type': 'date'}),
+            'inspection_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'remarks': forms.TextInput(),
         }
 
@@ -327,8 +327,8 @@ class RecoveryPlanForm(forms.ModelForm):
         fields = ['project', 'plan_name', 'material_type', 'start_date', 'end_date',
                   'description', 'status', 'prepared_by', 'approved_by']
         widgets = {
-            'start_date': forms.DateInput(attrs={'type': 'date'}),
-            'end_date': forms.DateInput(attrs={'type': 'date'}),
+            'start_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'end_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'description': forms.Textarea(attrs={'rows': 2}),
         }
 
@@ -344,8 +344,8 @@ class RecoveryActionPlanForm(forms.ModelForm):
         fields = ['project', 'title', 'start_date', 'end_date', 'status',
                   'prepared_by', 'approved_by', 'remarks']
         widgets = {
-            'start_date': forms.DateInput(attrs={'type': 'date'}),
-            'end_date': forms.DateInput(attrs={'type': 'date'}),
+            'start_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'end_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
         }
 
@@ -379,7 +379,7 @@ class RecoveryActionDailyProgressForm(forms.ModelForm):
         model = RecoveryActionDailyProgress
         fields = ['progress_date', 'planned_quantity', 'actual_quantity', 'remarks']
         widgets = {
-            'progress_date': forms.DateInput(attrs={'type': 'date'}),
+            'progress_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
         }
 
@@ -393,8 +393,8 @@ class ProjectActionPlanForm(forms.ModelForm):
             'category', 'meeting_reference', 'remarks',
         ]
         widgets = {
-            'date_raised': forms.DateInput(attrs={'type': 'date'}),
-            'due_date': forms.DateInput(attrs={'type': 'date'}),
+            'date_raised': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'due_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'description_th': forms.Textarea(attrs={'rows': 3}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
         }

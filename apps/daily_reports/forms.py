@@ -11,7 +11,7 @@ class DailyReportForm(forms.ModelForm):
         fields = ['project', 'report_date', 'weather_morning', 'weather_afternoon',
                   'prepared_by', 'checked_by', 'remarks']
         widgets = {
-            'report_date': forms.DateInput(attrs={'type': 'date'}),
+            'report_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'remarks': forms.Textarea(attrs={'rows': 3}),
         }
 
@@ -52,7 +52,7 @@ DailyWorkActivityFormSet = inlineformset_factory(
 DailyLookaheadFormSet = inlineformset_factory(
     DailyReport, DailyLookahead,
     fields=['planned_activity', 'planned_date', 'responsible_person'],
-    widgets={'planned_date': forms.DateInput(attrs={'type': 'date'})},
+    widgets={'planned_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'})},
     extra=2, can_delete=True
 )
 
@@ -65,6 +65,6 @@ DailyProblemFormSet = inlineformset_factory(
 DailyPhotoFormSet = inlineformset_factory(
     DailyReport, DailyPhoto,
     fields=['caption', 'photo', 'location', 'taken_at'],
-    widgets={'taken_at': forms.DateTimeInput(attrs={'type': 'datetime-local'})},
+    widgets={'taken_at': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type': 'datetime-local'})},
     extra=1, can_delete=True
 )

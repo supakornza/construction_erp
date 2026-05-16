@@ -10,8 +10,8 @@ class ProjectForm(forms.ModelForm):
         fields = ['project_name', 'contract_no', 'owner', 'contractor', 'consultant',
                   'location', 'start_date', 'finish_date', 'contract_value', 'description', 'status']
         widgets = {
-            'start_date': forms.DateInput(attrs={'type': 'date'}),
-            'finish_date': forms.DateInput(attrs={'type': 'date'}),
+            'start_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'finish_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'description': forms.Textarea(attrs={'rows': 3}),
         }
 

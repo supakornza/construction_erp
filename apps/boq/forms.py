@@ -24,7 +24,7 @@ class DailyProgressRecordForm(forms.ModelForm):
     class Meta:
         model = DailyProgressRecord
         fields = ['project', 'boq_item', 'record_date', 'daily_quantity', 'remarks', 'allow_overrun']
-        widgets = {'record_date': forms.DateInput(attrs={'type': 'date'})}
+        widgets = {'record_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'})}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -42,9 +42,9 @@ class PaymentClaimForm(forms.ModelForm):
         model = PaymentClaim
         fields = ['project', 'claim_no', 'claim_date', 'period_from', 'period_to', 'total_claimed_amount', 'status']
         widgets = {
-            'claim_date': forms.DateInput(attrs={'type': 'date'}),
-            'period_from': forms.DateInput(attrs={'type': 'date'}),
-            'period_to': forms.DateInput(attrs={'type': 'date'}),
+            'claim_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'period_from': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'period_to': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
         }
 
     def __init__(self, *args, **kwargs):

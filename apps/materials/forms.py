@@ -26,7 +26,7 @@ class MaterialDeliveryForm(forms.ModelForm):
         model = MaterialDelivery
         fields = ['project', 'delivery_date', 'material', 'source', 'truck_no',
                   'delivery_note_no', 'quantity', 'unit_price', 'remarks']
-        widgets = {'delivery_date': forms.DateInput(attrs={'type': 'date'})}
+        widgets = {'delivery_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'})}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -44,7 +44,7 @@ class MaterialUsageForm(forms.ModelForm):
     class Meta:
         model = MaterialUsage
         fields = ['project', 'usage_date', 'material', 'work_area', 'quantity', 'remarks']
-        widgets = {'usage_date': forms.DateInput(attrs={'type': 'date'})}
+        widgets = {'usage_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'})}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

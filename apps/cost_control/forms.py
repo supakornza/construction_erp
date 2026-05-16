@@ -27,6 +27,6 @@ class ActualCostForm(forms.ModelForm):
         fields = ['project', 'cost_code', 'cost_date', 'description',
                   'amount', 'source_type', 'reference_no', 'remarks']
         widgets = {
-            'cost_date': forms.DateInput(attrs={'type': 'date'}),
+            'cost_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
         }

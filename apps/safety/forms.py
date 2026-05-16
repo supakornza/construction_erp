@@ -9,7 +9,7 @@ class ToolboxMeetingForm(forms.ModelForm):
         model = ToolboxMeeting
         fields = ['project', 'meeting_date', 'topic', 'location', 'conducted_by', 'attendee_count', 'attachment', 'remarks']
         widgets = {
-            'meeting_date': forms.DateInput(attrs={'type': 'date'}),
+            'meeting_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
         }
 
@@ -32,9 +32,9 @@ class SafetyInspectionForm(forms.ModelForm):
         fields = ['project', 'inspection_date', 'location', 'inspector', 'category',
                   'finding', 'action_required', 'responsible_person', 'due_date', 'status', 'close_date', 'attachment']
         widgets = {
-            'inspection_date': forms.DateInput(attrs={'type': 'date'}),
-            'due_date': forms.DateInput(attrs={'type': 'date'}),
-            'close_date': forms.DateInput(attrs={'type': 'date'}),
+            'inspection_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'due_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'close_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'finding': forms.Textarea(attrs={'rows': 3}),
             'action_required': forms.Textarea(attrs={'rows': 3}),
         }
@@ -59,7 +59,7 @@ class IncidentReportForm(forms.ModelForm):
         fields = ['project', 'incident_date', 'incident_time', 'location', 'type',
                   'description', 'injured_person', 'root_cause', 'corrective_action', 'reported_by', 'status']
         widgets = {
-            'incident_date': forms.DateInput(attrs={'type': 'date'}),
+            'incident_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'incident_time': forms.TimeInput(attrs={'type': 'time'}),
             'description': forms.Textarea(attrs={'rows': 3}),
             'root_cause': forms.Textarea(attrs={'rows': 2}),
@@ -84,7 +84,7 @@ class JSEARecordForm(forms.ModelForm):
     class Meta:
         model = JSEARecord
         fields = ['project', 'work_activity', 'date', 'work_area', 'prepared_by', 'approved_by', 'attachment']
-        widgets = {'date': forms.DateInput(attrs={'type': 'date'})}
+        widgets = {'date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'})}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

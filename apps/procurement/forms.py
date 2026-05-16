@@ -27,8 +27,8 @@ class PurchaseRequestForm(forms.ModelForm):
         model = PurchaseRequest
         fields = ['project', 'requested_by', 'request_date', 'required_date', 'remarks']
         widgets = {
-            'request_date': forms.DateInput(attrs={'type': 'date'}),
-            'required_date': forms.DateInput(attrs={'type': 'date'}),
+            'request_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'required_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
         }
 
@@ -55,8 +55,8 @@ class PurchaseOrderForm(forms.ModelForm):
         model = PurchaseOrder
         fields = ['pr', 'supplier', 'order_date', 'delivery_date', 'status']
         widgets = {
-            'order_date': forms.DateInput(attrs={'type': 'date'}),
-            'delivery_date': forms.DateInput(attrs={'type': 'date'}),
+            'order_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'delivery_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
         }
 
     def __init__(self, *args, **kwargs):
