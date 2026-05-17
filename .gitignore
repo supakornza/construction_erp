@@ -10,6 +10,7 @@ db.sqlite3
 media/
 staticfiles/
 .claude/
+.mcp.json
 *.log
 .DS_Store
 *.swp
