@@ -235,6 +235,57 @@
       </div>
       {% endif %}
 
+      {% if mat_del_summary and mat_del_summary.count > 0 %}
+      <!-- ─── Material Deliveries linked panel ─────────────────── -->
+      <section class="row g-3">
+        <div class="col-12">
+          <div class="rdb-panel">
+            <div class="rdb-pt">
+              <div class="ico" style="background:#fef3c7;color:#d97706"><i class="fas fa-truck-ramp-box"></i></div>
+              <h6>Material Deliveries → Rock Stock</h6>
+              <a href="{% url 'materials:dashboard' %}?project={{ selected_project.pk }}" class="ms-auto btn btn-sm btn-outline-secondary" style="font-size:.72rem">
+                <i class="fas fa-external-link-alt me-1"></i>Material Dashboard
+              </a>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-3">
+                <div class="p-3 rounded" style="background:#fffbeb;border:1px solid #fde68a">
+                  <div class="text-muted" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Total Delivered (Materials)</div>
+                  <div style="font-size:1.6rem;font-weight:900;color:#92400e">{{ mat_del_summary.total_qty|floatformat:2|intcomma }}</div>
+                  <div class="text-muted" style="font-size:.72rem">{{ mat_del_summary.count }} records</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="p-3 rounded" style="background:#ecfdf5;border:1px solid #a7f3d0">
+                  <div class="text-muted" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Stock Balance (Project Controls)</div>
+                  <div style="font-size:1.6rem;font-weight:900;color:#065f46">{{ data.available_stock_balance|default:0|floatformat:0|intcomma }}</div>
+                  <div class="text-muted" style="font-size:.72rem">tons (delivered − placed)</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="p-3 rounded" style="background:#eff6ff;border:1px solid #bfdbfe">
+                  <div class="text-muted" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">รถเข้าวันนี้</div>
+                  <div style="font-size:1.6rem;font-weight:900;color:#1d4ed8">{{ mat_del_summary.today_trucks }}</div>
+                  <div class="text-muted" style="font-size:.72rem">คัน · {{ mat_del_summary.today_qty|floatformat:2|intcomma }} units วันนี้</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="p-3 rounded" style="background:#f8fafc;border:1px solid #e2e8f0">
+                  <div class="text-muted" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">By Material</div>
+                  {% for m in mat_del_summary.by_material %}
+                  <div class="d-flex justify-content-between" style="font-size:.78rem;padding:2px 0;border-bottom:1px solid #f1f5f9">
+                    <span>{{ m.material__name }}</span>
+                    <span class="fw-bold">{{ m.qty|floatformat:1|intcomma }} {{ m.material__unit }}</span>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
       {% if data.has_data %}
 
       <!-- ─── Charts row 1 ──────────────────────────────────────── -->

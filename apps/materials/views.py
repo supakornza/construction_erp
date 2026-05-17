@@ -76,6 +76,15 @@ class MaterialDeliveryDashboardView(MaterialsViewMixin, TemplateView):
             .annotate(quantity=Coalesce(Sum('quantity'), 0, output_field=DecimalField()), count=Count('id'))
             .order_by('-quantity')[:8]
         )
+        today = timezone.localdate()
+        truck_rows_today = list(
+            MaterialDelivery.objects
+            .filter(delivery_date=today)
+            .exclude(truck_no='')
+            .values('truck_no')
+            .annotate(trips=Count('id'), quantity=Coalesce(Sum('quantity'), 0, output_field=DecimalField()))
+            .order_by('-trips')
+        )
         ctx.update({
             'filters': filters,
             'projects': Project.objects.filter(status='Active'),
@@ -90,6 +99,8 @@ class MaterialDeliveryDashboardView(MaterialsViewMixin, TemplateView):
             'material_rows': material_rows,
             'source_rows': source_rows,
             'project_rows': project_rows,
+            'truck_rows_today': truck_rows_today,
+            'today': today,
         })
         return ctx
 

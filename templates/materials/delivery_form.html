@@ -8,3 +8,38 @@
 </div>
 <div class="card"><div class="card-body">{% crispy form %}</div></div>
 {% endblock %}
+
+{% block extra_scripts %}
+<script>
+const workAreas = {{ form.work_areas_json|safe }};
+
+function filterDestination() {
+  const projectSelect = document.getElementById('id_project');
+  const destSelect = document.getElementById('id_destination');
+  if (!projectSelect || !destSelect) return;
+  const selectedProject = parseInt(projectSelect.value) || null;
+  const currentValue = destSelect.value;
+
+  // Remove all options except the empty one
+  while (destSelect.options.length > 1) destSelect.remove(1);
+
+  const filtered = selectedProject
+    ? workAreas.filter(wa => wa.project_id === selectedProject)
+    : workAreas;
+
+  filtered.forEach(wa => {
+    const opt = document.createElement('option');
+    opt.value = wa.id;
+    opt.textContent = wa.name;
+    if (String(wa.id) === currentValue) opt.selected = true;
+    destSelect.appendChild(opt);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  filterDestination();
+  const projectSelect = document.getElementById('id_project');
+  if (projectSelect) projectSelect.addEventListener('change', filterDestination);
+});
+</script>
+{% endblock %}

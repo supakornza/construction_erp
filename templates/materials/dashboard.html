@@ -71,7 +71,7 @@
 </div>
 
 <div class="row g-3 mb-4">
-  <div class="col-md-3">
+  <div class="col">
     <div class="card material-kpi border-primary">
       <div class="card-body">
         <div class="text-muted small">Total Delivered</div>
@@ -80,7 +80,7 @@
       </div>
     </div>
   </div>
-  <div class="col-md-3">
+  <div class="col">
     <div class="card material-kpi border-success">
       <div class="card-body">
         <div class="text-muted small">Delivery Value</div>
@@ -89,7 +89,7 @@
       </div>
     </div>
   </div>
-  <div class="col-md-3">
+  <div class="col">
     <div class="card material-kpi border-info">
       <div class="card-body">
         <div class="text-muted small">Delivery Records</div>
@@ -98,12 +98,30 @@
       </div>
     </div>
   </div>
-  <div class="col-md-3">
+  <div class="col">
     <div class="card material-kpi border-warning">
       <div class="card-body">
         <div class="text-muted small">Latest Delivery</div>
         <div class="fs-5 fw-bold">{% if latest_delivery %}{{ latest_delivery.delivery_date|thai_be_date }}{% else %}-{% endif %}</div>
         <div class="text-muted small">{% if latest_delivery %}{{ latest_delivery.material.name }}{% else %}No data{% endif %}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card material-kpi border-danger h-100">
+      <div class="card-body">
+        <div class="text-muted small d-flex align-items-center gap-1">
+          <i class="fas fa-truck text-danger"></i> รถเข้า Stockpile วันนี้
+        </div>
+        <div class="fs-2 fw-bold text-danger">{{ truck_rows_today|length }}</div>
+        <div class="text-muted small">คัน · {{ today }}</div>
+        {% if truck_rows_today %}
+        <div class="mt-2 d-flex flex-wrap gap-1">
+          {% for t in truck_rows_today %}
+          <span class="badge bg-light text-dark border" style="font-size:.7rem">{{ t.truck_no }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>

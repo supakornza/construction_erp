@@ -122,6 +122,64 @@ def _sand_form_helper_json(current_record=None):
     return json.dumps(data)
 
 
+def _get_material_delivery_summary(project, material_keyword, filters=None):
+    """Return Material Deliveries aggregated data for the given project filtered by material category keyword."""
+    if not project:
+        return None
+    from django.db.models import Count, DecimalField
+    from django.db.models.functions import Coalesce
+    from django.utils import timezone
+    from apps.materials.models import MaterialDelivery
+
+    filters = filters or {}
+    qs = MaterialDelivery.objects.filter(
+        project=project,
+        material__category__name__icontains=material_keyword,
+    ).select_related('material', 'material__category')
+
+    date_from = filters.get('date_from')
+    date_to = filters.get('date_to')
+    if date_from:
+        qs = qs.filter(delivery_date__gte=date_from)
+    if date_to:
+        qs = qs.filter(delivery_date__lte=date_to)
+
+    totals = qs.aggregate(
+        total_qty=Coalesce(Sum('quantity'), 0, output_field=DecimalField()),
+        count=Count('id'),
+    )
+
+    today = timezone.localdate()
+    qs_today = MaterialDelivery.objects.filter(
+        project=project,
+        material__category__name__icontains=material_keyword,
+        delivery_date=today,
+    )
+    today_trucks = qs_today.exclude(truck_no='').values('truck_no').distinct().count()
+    today_qty = qs_today.aggregate(qty=Coalesce(Sum('quantity'), 0, output_field=DecimalField()))['qty']
+
+    by_material = list(
+        qs.values('material__name', 'material__unit')
+        .annotate(qty=Coalesce(Sum('quantity'), 0, output_field=DecimalField()), cnt=Count('id'))
+        .order_by('-qty')[:6]
+    )
+    by_source = list(
+        qs.exclude(source='').values('source')
+        .annotate(qty=Coalesce(Sum('quantity'), 0, output_field=DecimalField()), cnt=Count('id'))
+        .order_by('-qty')[:5]
+    )
+
+    return {
+        'total_qty': totals['total_qty'],
+        'count': totals['count'],
+        'today_trucks': today_trucks,
+        'today_qty': today_qty,
+        'by_material': by_material,
+        'by_source': by_source,
+        'today': today,
+    }
+
+
 class ProjectControlsDashboardView(ProjectControlsViewMixin, TemplateView):
     template_name = 'project_controls/dashboard.html'
 
@@ -269,6 +327,9 @@ class RockDashboardView(ProjectControlsViewMixin, TemplateView):
         rock_data.setdefault('chart_data', '{}')
         rock_data.setdefault('barge_totals', [])
         rock_data.setdefault('station_rows', [])
+
+        mat_del_summary = _get_material_delivery_summary(selected, 'rock', filters)
+
         ctx.update({
             'projects': projects,
             'selected_project': selected,
@@ -276,6 +337,7 @@ class RockDashboardView(ProjectControlsViewMixin, TemplateView):
             'filters': filters,
             'barges': Equipment.objects.filter(status='Active').order_by('name'),
             'material_type_choices': RockDailyRecord.ROCK_MATERIAL_CHOICES,
+            'mat_del_summary': mat_del_summary,
         })
         return ctx
 
@@ -432,6 +494,9 @@ class SandDashboardView(ProjectControlsViewMixin, TemplateView):
         sand_data.setdefault('source_rows', [])
         sand_data.setdefault('area_rows', [])
         sand_data.setdefault('other_source_label', 'Other sources')
+
+        mat_del_summary = _get_material_delivery_summary(selected, 'sand', filters)
+
         ctx.update({
             'projects': projects,
             'barges': Equipment.objects.filter(status='Active').order_by('name'),
@@ -439,6 +504,7 @@ class SandDashboardView(ProjectControlsViewMixin, TemplateView):
             'sand_data': sand_data,
             'data': sand_data,
             'filters': filters,
+            'mat_del_summary': mat_del_summary,
         })
         return ctx
 

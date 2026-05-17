@@ -33,6 +33,7 @@ class MaterialDelivery(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='material_deliveries')
     delivery_date = models.DateField()
     material = models.ForeignKey(Material, on_delete=models.PROTECT)
+    destination = models.ForeignKey(WorkArea, on_delete=models.SET_NULL, null=True, blank=True, related_name='material_deliveries')
     source = models.CharField(max_length=200, blank=True)
     truck_no = models.CharField(max_length=50, blank=True)
     delivery_note_no = models.CharField(max_length=100, blank=True)
