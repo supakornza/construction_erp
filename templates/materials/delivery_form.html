@@ -25,35 +25,37 @@
   }
 })();
 
-// ─── filter Destination dropdown by Project ───────────────────────
+// ─── filter WorkArea dropdowns by Project ────────────────────────
 const workAreas = {{ form.work_areas_json|safe }};
 
-function filterDestination() {
-  const projectSelect = document.getElementById('id_project');
-  const destSelect = document.getElementById('id_destination');
-  if (!projectSelect || !destSelect) return;
-  const selectedProject = parseInt(projectSelect.value) || null;
-  const currentValue = destSelect.value;
-
-  while (destSelect.options.length > 1) destSelect.remove(1);
-
-  const filtered = selectedProject
-    ? workAreas.filter(wa => wa.project_id === selectedProject)
+function filterWorkAreaDropdown(selectId, projectId, keepValue) {
+  const select = document.getElementById(selectId);
+  if (!select) return;
+  while (select.options.length > 1) select.remove(1);
+  const filtered = projectId
+    ? workAreas.filter(wa => wa.project_id === projectId)
     : workAreas;
-
   filtered.forEach(wa => {
     const opt = document.createElement('option');
     opt.value = wa.id;
     opt.textContent = wa.name;
-    if (String(wa.id) === currentValue) opt.selected = true;
-    destSelect.appendChild(opt);
+    if (String(wa.id) === keepValue) opt.selected = true;
+    select.appendChild(opt);
   });
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  filterDestination();
   const projectSelect = document.getElementById('id_project');
-  if (projectSelect) projectSelect.addEventListener('change', filterDestination);
+  const initialProject = projectSelect ? (parseInt(projectSelect.value) || null) : null;
+  filterWorkAreaDropdown('id_source_area', initialProject, document.getElementById('id_source_area')?.value || '');
+  filterWorkAreaDropdown('id_destination', initialProject, document.getElementById('id_destination')?.value || '');
+  if (projectSelect) {
+    projectSelect.addEventListener('change', function () {
+      const pid = parseInt(this.value) || null;
+      filterWorkAreaDropdown('id_source_area', pid, '');
+      filterWorkAreaDropdown('id_destination', pid, '');
+    });
+  }
 });
 </script>
 {% endblock %}

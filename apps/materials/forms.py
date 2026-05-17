@@ -3,7 +3,7 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit, HTML
 from apps.projects.models import WorkArea
-from .models import DeliverySource, Material, MaterialDelivery, MaterialUsage
+from .models import Material, MaterialDelivery, MaterialUsage
 
 
 class MaterialForm(forms.ModelForm):
@@ -24,18 +24,12 @@ class MaterialForm(forms.ModelForm):
 
 
 class MaterialDeliveryForm(forms.ModelForm):
-    source = forms.ChoiceField(
-        required=False,
-        label='แหล่งวัสดุ',
-        widget=forms.Select(attrs={'class': 'form-select'}),
-    )
-
     class Meta:
         model = MaterialDelivery
         fields = [
             'project', 'delivery_date', 'delivery_time',
             'material', 'quantity', 'unit_price',
-            'destination', 'source',
+            'source_area', 'destination',
             'delivery_note_no', 'truck_no',
             'remarks',
         ]
@@ -46,6 +40,7 @@ class MaterialDeliveryForm(forms.ModelForm):
             'material': 'วัสดุ',
             'quantity': 'ปริมาณ',
             'unit_price': 'ราคาต่อหน่วย (บาท)',
+            'source_area': 'แหล่งวัสดุ (Work Area)',
             'destination': 'ปลายทาง (กอง/พื้นที่)',
             'delivery_note_no': 'เลขที่ใบส่งของ',
             'truck_no': 'ทะเบียนรถ',
@@ -60,19 +55,17 @@ class MaterialDeliveryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Destination dropdown filtered by project via JS
-        self.fields['destination'].queryset = WorkArea.objects.select_related('project').order_by('project__contract_no', 'name')
+        wa_qs = WorkArea.objects.select_related('project').order_by('project__contract_no', 'name')
+
+        # source_area — WorkArea dropdown (same as destination)
+        self.fields['source_area'].queryset = wa_qs
+        self.fields['source_area'].empty_label = '— เลือกแหล่งวัสดุ —'
+
+        # destination — WorkArea dropdown
+        self.fields['destination'].queryset = wa_qs
         self.fields['destination'].empty_label = '— เลือกปลายทาง —'
 
-        # Source dropdown from DeliverySource model
-        source_choices = [('', '— เลือกแหล่งวัสดุ —')] + [
-            (s.name, s.name) for s in DeliverySource.objects.all()
-        ]
-        self.fields['source'].choices = source_choices
-        if self.instance and self.instance.source:
-            self.initial['source'] = self.instance.source
-
-        # Serialize work areas for JS project-based filtering
+        # Serialize work areas for JS project-based filtering (shared by both dropdowns)
         work_areas = list(WorkArea.objects.values('id', 'project_id', 'name'))
         self.work_areas_json = json.dumps(work_areas)
 
@@ -87,7 +80,7 @@ class MaterialDeliveryForm(forms.ModelForm):
             HTML('</div>'),
 
             HTML('<div class="border rounded p-3 mb-3 bg-light"><div class="fw-semibold text-warning mb-2"><i class="fas fa-route me-1"></i>ต้นทาง / ปลายทาง</div>'),
-            Row(Column('source', css_class='col-md-6'), Column('destination', css_class='col-md-6')),
+            Row(Column('source_area', css_class='col-md-6'), Column('destination', css_class='col-md-6')),
             HTML('</div>'),
 
             HTML('<div class="border rounded p-3 mb-3 bg-light"><div class="fw-semibold text-info mb-2"><i class="fas fa-truck me-1"></i>ข้อมูลการขนส่ง</div>'),
