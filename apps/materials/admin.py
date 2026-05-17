@@ -1,5 +1,11 @@
 from django.contrib import admin
-from .models import MaterialCategory, Material, MaterialDelivery, MaterialUsage
+from .models import DeliverySource, MaterialCategory, Material, MaterialDelivery, MaterialUsage
+
+
+@admin.register(DeliverySource)
+class DeliverySourceAdmin(admin.ModelAdmin):
+    list_display = ['name', 'description']
+    search_fields = ['name']
 
 
 @admin.register(MaterialCategory)

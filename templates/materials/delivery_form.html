@@ -1,16 +1,31 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-{% block title %}Material Delivery Form – Construction ERP{% endblock %}
+{% block title %}บันทึกการรับวัสดุ – Construction ERP{% endblock %}
 {% block content %}
 <div class="d-flex align-items-center mb-4">
     <a href="{% url 'materials:delivery_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
-    <h4 class="mb-0">{% if form.instance.pk %}Edit{% else %}Record{% endif %} Material Delivery</h4>
+    <div>
+        <h4 class="mb-0">{% if form.instance.pk %}แก้ไข{% else %}บันทึก{% endif %}การรับวัสดุ</h4>
+        <div class="text-muted small">กรอกข้อมูลการรับวัสดุเข้ากองหรือพื้นที่จัดเก็บ</div>
+    </div>
 </div>
-<div class="card"><div class="card-body">{% crispy form %}</div></div>
+<div class="card shadow-sm"><div class="card-body">{% crispy form %}</div></div>
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
+// ─── auto-fill เวลาปัจจุบัน ───────────────────────────────────────
+(function () {
+  const timeInput = document.getElementById('id_delivery_time');
+  if (timeInput && !timeInput.value) {
+    const now = new Date();
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    timeInput.value = `${hh}:${mm}`;
+  }
+})();
+
+// ─── filter Destination dropdown by Project ───────────────────────
 const workAreas = {{ form.work_areas_json|safe }};
 
 function filterDestination() {
@@ -20,7 +35,6 @@ function filterDestination() {
   const selectedProject = parseInt(projectSelect.value) || null;
   const currentValue = destSelect.value;
 
-  // Remove all options except the empty one
   while (destSelect.options.length > 1) destSelect.remove(1);
 
   const filtered = selectedProject

@@ -1,9 +1,9 @@
 import json
 from django import forms
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Row, Column, Submit
+from crispy_forms.layout import Layout, Row, Column, Submit, HTML
 from apps.projects.models import WorkArea
-from .models import Material, MaterialDelivery, MaterialUsage
+from .models import DeliverySource, Material, MaterialDelivery, MaterialUsage
 
 
 class MaterialForm(forms.ModelForm):
@@ -19,32 +19,83 @@ class MaterialForm(forms.ModelForm):
             Row(Column('name', css_class='col-md-6'), Column('category', css_class='col-md-6')),
             Row(Column('unit', css_class='col-md-6'), Column('unit_weight', css_class='col-md-6')),
             'description',
-            Submit('submit', 'Save', css_class='btn btn-primary'),
+            Submit('submit', 'บันทึก', css_class='btn btn-primary'),
         )
 
 
 class MaterialDeliveryForm(forms.ModelForm):
+    source = forms.ChoiceField(
+        required=False,
+        label='แหล่งวัสดุ',
+        widget=forms.Select(attrs={'class': 'form-select'}),
+    )
+
     class Meta:
         model = MaterialDelivery
-        fields = ['project', 'delivery_date', 'material', 'destination', 'source', 'truck_no',
-                  'delivery_note_no', 'quantity', 'unit_price', 'remarks']
-        widgets = {'delivery_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'})}
+        fields = [
+            'project', 'delivery_date', 'delivery_time',
+            'material', 'quantity', 'unit_price',
+            'destination', 'source',
+            'delivery_note_no', 'truck_no',
+            'remarks',
+        ]
+        labels = {
+            'project': 'โครงการ',
+            'delivery_date': 'วันที่รับวัสดุ',
+            'delivery_time': 'เวลารับ',
+            'material': 'วัสดุ',
+            'quantity': 'ปริมาณ',
+            'unit_price': 'ราคาต่อหน่วย (บาท)',
+            'destination': 'ปลายทาง (กอง/พื้นที่)',
+            'delivery_note_no': 'เลขที่ใบส่งของ',
+            'truck_no': 'ทะเบียนรถ',
+            'remarks': 'หมายเหตุ',
+        }
+        widgets = {
+            'delivery_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'delivery_time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
+            'remarks': forms.Textarea(attrs={'rows': 2}),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # Destination dropdown filtered by project via JS
         self.fields['destination'].queryset = WorkArea.objects.select_related('project').order_by('project__contract_no', 'name')
         self.fields['destination'].empty_label = '— เลือกปลายทาง —'
-        # Serialize work areas for JS filtering
+
+        # Source dropdown from DeliverySource model
+        source_choices = [('', '— เลือกแหล่งวัสดุ —')] + [
+            (s.name, s.name) for s in DeliverySource.objects.all()
+        ]
+        self.fields['source'].choices = source_choices
+        if self.instance and self.instance.source:
+            self.initial['source'] = self.instance.source
+
+        # Serialize work areas for JS project-based filtering
         work_areas = list(WorkArea.objects.values('id', 'project_id', 'name'))
         self.work_areas_json = json.dumps(work_areas)
+
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            Row(Column('project', css_class='col-md-6'), Column('delivery_date', css_class='col-md-6')),
+            HTML('<div class="border rounded p-3 mb-3 bg-light"><div class="fw-semibold text-primary mb-2"><i class="fas fa-folder-open me-1"></i>ข้อมูลทั่วไป</div>'),
+            Row(Column('project', css_class='col-md-8'), Column('delivery_date', css_class='col-md-2'), Column('delivery_time', css_class='col-md-2')),
+            HTML('</div>'),
+
+            HTML('<div class="border rounded p-3 mb-3 bg-light"><div class="fw-semibold text-success mb-2"><i class="fas fa-boxes-stacking me-1"></i>ข้อมูลวัสดุ</div>'),
             Row(Column('material', css_class='col-md-6'), Column('quantity', css_class='col-md-3'), Column('unit_price', css_class='col-md-3')),
-            Row(Column('destination', css_class='col-md-6'), Column('source', css_class='col-md-6')),
-            Row(Column('delivery_note_no', css_class='col-md-4'), Column('truck_no', css_class='col-md-4')),
+            HTML('</div>'),
+
+            HTML('<div class="border rounded p-3 mb-3 bg-light"><div class="fw-semibold text-warning mb-2"><i class="fas fa-route me-1"></i>ต้นทาง / ปลายทาง</div>'),
+            Row(Column('source', css_class='col-md-6'), Column('destination', css_class='col-md-6')),
+            HTML('</div>'),
+
+            HTML('<div class="border rounded p-3 mb-3 bg-light"><div class="fw-semibold text-info mb-2"><i class="fas fa-truck me-1"></i>ข้อมูลการขนส่ง</div>'),
+            Row(Column('truck_no', css_class='col-md-6'), Column('delivery_note_no', css_class='col-md-6')),
+            HTML('</div>'),
+
             'remarks',
-            Submit('submit', 'Record Delivery', css_class='btn btn-primary'),
+            Submit('submit', 'บันทึกการรับวัสดุ', css_class='btn btn-primary btn-lg w-100 mt-2'),
         )
 
 
@@ -61,5 +112,5 @@ class MaterialUsageForm(forms.ModelForm):
             Row(Column('project', css_class='col-md-6'), Column('usage_date', css_class='col-md-6')),
             Row(Column('material', css_class='col-md-4'), Column('work_area', css_class='col-md-4'), Column('quantity', css_class='col-md-4')),
             'remarks',
-            Submit('submit', 'Record Usage', css_class='btn btn-primary'),
+            Submit('submit', 'บันทึกการใช้วัสดุ', css_class='btn btn-primary'),
         )

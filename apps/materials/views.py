@@ -85,6 +85,37 @@ class MaterialDeliveryDashboardView(MaterialsViewMixin, TemplateView):
             .annotate(trips=Count('id'), quantity=Coalesce(Sum('quantity'), 0, output_field=DecimalField()))
             .order_by('-trips')
         )
+
+        # Rock & Sand stock from Project Controls for selected project
+        rock_stock = sand_stock = None
+        selected_project_id = filters.get('project_id')
+        if selected_project_id:
+            from apps.project_controls.models import RockDailyRecord, SandDailyRecord
+            rock_latest = RockDailyRecord.objects.filter(project_id=selected_project_id).order_by('-record_date').first()
+            if rock_latest:
+                rock_stock = {
+                    'delivered': float(rock_latest.tct_accum_ton),
+                    'placed': float(rock_latest.placed_accum_ton),
+                    'balance': float(rock_latest.tct_accum_ton - rock_latest.placed_accum_ton),
+                    'date': rock_latest.record_date,
+                    'daily_delivered': float(rock_latest.tct_daily_ton),
+                    'daily_placed': float(rock_latest.placed_daily_ton),
+                    'trucks': rock_latest.tct_trucks,
+                    'trips': rock_latest.tct_trips,
+                }
+            sand_latest = SandDailyRecord.objects.filter(project_id=selected_project_id).order_by('-record_date').first()
+            if sand_latest:
+                sand_stock = {
+                    'delivered': float(sand_latest.total_accum_ton),
+                    'placed': float(sand_latest.total_placed),
+                    'tct_stock': float(sand_latest.remaining_tct),
+                    'mtp3_stock': float(sand_latest.remaining_mtp3),
+                    'date': sand_latest.record_date,
+                    'daily_delivered': float(sand_latest.total_daily_ton),
+                    'tct_trucks': sand_latest.tct_trucks,
+                    'tct_trips': sand_latest.tct_trips,
+                }
+
         ctx.update({
             'filters': filters,
             'projects': Project.objects.filter(status='Active'),
@@ -101,6 +132,8 @@ class MaterialDeliveryDashboardView(MaterialsViewMixin, TemplateView):
             'project_rows': project_rows,
             'truck_rows_today': truck_rows_today,
             'today': today,
+            'rock_stock': rock_stock,
+            'sand_stock': sand_stock,
         })
         return ctx
 
