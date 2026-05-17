@@ -1,0 +1,21 @@
+[Unit]
+Description=Construction ERP (gunicorn)
+After=network.target postgresql.service
+
+[Service]
+User=erp
+Group=erp
+WorkingDirectory=/var/www/construction_erp
+EnvironmentFile=/var/www/construction_erp/.env
+ExecStart=/var/www/construction_erp/venv/bin/gunicorn \
+    --workers 3 \
+    --bind unix:/run/construction_erp.sock \
+    --access-logfile /var/log/construction_erp/access.log \
+    --error-logfile /var/log/construction_erp/error.log \
+    config.wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
