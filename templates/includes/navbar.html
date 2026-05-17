@@ -1,3 +1,4 @@
+{% load i18n %}
 <nav id="topbar" class="navbar navbar-expand-lg navbar-light px-3 d-flex align-items-center gap-2">
     <!-- Hamburger (mobile only) -->
     <button class="btn btn-sm btn-outline-secondary d-md-none flex-shrink-0" id="sidebar-toggler" aria-label="Toggle menu">
@@ -6,9 +7,9 @@
 
     <!-- Back button -->
     <button type="button" class="btn btn-sm btn-outline-secondary no-print flex-shrink-0" id="page-back-btn"
-            data-fallback-url="{% url 'dashboard:index' %}" title="Back" aria-label="Go back">
+            data-fallback-url="{% url 'dashboard:index' %}" title="{% trans 'Back' %}" aria-label="{% trans 'Go back' %}">
         <i class="fas fa-arrow-left"></i>
-        <span class="d-none d-sm-inline ms-1">Back</span>
+        <span class="d-none d-sm-inline ms-1">{% trans "Back" %}</span>
     </button>
 
     <!-- Page title (desktop) -->
@@ -18,10 +19,35 @@
 
     <!-- Right side -->
     <div class="ms-auto d-flex align-items-center gap-2 flex-shrink-0">
+
+        <!-- Language switcher -->
+        <div class="d-flex gap-1 no-print" id="lang-switcher">
+            <form method="post" action="{% url 'set_language' %}" class="d-inline">
+                {% csrf_token %}
+                <input type="hidden" name="language" value="th">
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button type="submit"
+                        class="lang-btn {% if request.LANGUAGE_CODE == 'th' %}lang-btn-active{% endif %}"
+                        title="ภาษาไทย">
+                    TH
+                </button>
+            </form>
+            <form method="post" action="{% url 'set_language' %}" class="d-inline">
+                {% csrf_token %}
+                <input type="hidden" name="language" value="en">
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button type="submit"
+                        class="lang-btn {% if request.LANGUAGE_CODE == 'en' %}lang-btn-active{% endif %}"
+                        title="English">
+                    EN
+                </button>
+            </form>
+        </div>
+
+        <!-- User dropdown -->
         <div class="dropdown">
             <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2"
                     type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <!-- Avatar initial circle -->
                 <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white fw-bold flex-shrink-0"
                       style="width:26px;height:26px;font-size:.72rem;">
                     {{ user.get_full_name_or_username|first|upper }}
@@ -34,7 +60,6 @@
                 </span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-                <!-- Name shown on mobile since it's truncated in button -->
                 <li class="px-3 py-2 d-sm-none">
                     <div class="fw-semibold" style="font-size:.82rem;">{{ user.get_full_name_or_username }}</div>
                     <div class="text-muted" style="font-size:.72rem;">{{ user.get_role_display }}</div>
@@ -42,12 +67,12 @@
                 <li class="d-sm-none"><hr class="dropdown-divider"></li>
                 <li>
                     <a class="dropdown-item" href="{% url 'accounts:profile' %}">
-                        <i class="fas fa-id-card me-2 text-muted fa-fw"></i>Profile
+                        <i class="fas fa-id-card me-2 text-muted fa-fw"></i>{% trans "Profile" %}
                     </a>
                 </li>
                 <li>
                     <a class="dropdown-item" href="{% url 'accounts:change_password' %}">
-                        <i class="fas fa-key me-2 text-muted fa-fw"></i>เปลี่ยนรหัสผ่าน
+                        <i class="fas fa-key me-2 text-muted fa-fw"></i>{% trans "Change Password" %}
                     </a>
                 </li>
                 <li><hr class="dropdown-divider"></li>
@@ -55,7 +80,7 @@
                     <form method="post" action="{% url 'accounts:logout' %}">
                         {% csrf_token %}
                         <button class="dropdown-item text-danger" type="submit">
-                            <i class="fas fa-sign-out-alt me-2 fa-fw"></i>Logout
+                            <i class="fas fa-sign-out-alt me-2 fa-fw"></i>{% trans "Logout" %}
                         </button>
                     </form>
                 </li>

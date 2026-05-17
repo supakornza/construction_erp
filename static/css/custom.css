@@ -1230,3 +1230,26 @@ tr.formset-row-deleted td {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* ── Language switcher buttons ──────────────────────────────────── */
+#lang-switcher { align-items: center; }
+.lang-btn {
+    background: transparent;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    color: #6c757d;
+    cursor: pointer;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    line-height: 1;
+    padding: .28rem .48rem;
+    transition: background .15s, color .15s, border-color .15s;
+}
+.lang-btn:hover { background: #e9ecef; border-color: #adb5bd; color: #212529; }
+.lang-btn-active {
+    background: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+.lang-btn-active:hover { background: #0b5ed7; border-color: #0a58ca; color: #fff; }
