@@ -263,18 +263,42 @@
   </div>
   <div class="col-lg-4">
     <div class="card h-100">
-      <div class="card-header bg-white fw-semibold">แยกตามโครงการ</div>
-      <div class="table-responsive">
-        <table class="table table-sm mini-table mb-0">
-          <thead class="table-light"><tr><th>โครงการ</th><th class="text-end">ปริมาณ</th><th class="text-end">รายการ</th></tr></thead>
-          <tbody>
-            {% for row in project_rows %}
-            <tr><td><span class="fw-semibold">{{ row.project__contract_no }}</span><div class="text-muted small">{{ row.project__project_name|truncatechars:32 }}</div></td><td class="text-end">{{ row.quantity|floatformat:3|intcomma }}</td><td class="text-end">{{ row.count|intcomma }}</td></tr>
-            {% empty %}
-            <tr><td colspan="3" class="text-center text-muted py-4">ไม่มีข้อมูล</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <div class="card-header bg-white fw-semibold d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-truck text-danger me-2"></i>รถเข้า Stockpile วันนี้</span>
+        <span class="badge bg-danger">{{ truck_rows_today|length }} คัน</span>
+      </div>
+      <div class="card-body p-2" style="overflow-y:auto;max-height:340px">
+        {% if trucks_today_by_project %}
+          {% for proj in trucks_today_by_project %}
+          <div class="mb-2 p-2 rounded" style="background:#fff5f5;border-left:3px solid #dc3545">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="fw-semibold" style="font-size:.85rem">{{ proj.contract_no }}</div>
+              <span class="badge bg-danger" style="font-size:.7rem">{{ proj.total_trips }} เที่ยว</span>
+            </div>
+            <div class="text-muted mb-1" style="font-size:.72rem">{{ proj.project_name|truncatechars:36 }}</div>
+            {% if proj.by_source %}
+            <table class="table table-sm mini-table mb-0" style="font-size:.75rem">
+              <thead><tr><th class="py-0 text-muted fw-normal">แหล่งที่มา</th><th class="text-end py-0 text-muted fw-normal">เที่ยว</th><th class="text-end py-0 text-muted fw-normal">คัน</th><th class="text-end py-0 text-muted fw-normal">ปริมาณ</th></tr></thead>
+              <tbody>
+                {% for s in proj.by_source %}
+                <tr>
+                  <td class="py-0">{{ s.source }}</td>
+                  <td class="text-end py-0">{{ s.trips }}</td>
+                  <td class="text-end py-0">{{ s.truck_count }}</td>
+                  <td class="text-end py-0 fw-semibold">{{ s.quantity|floatformat:1 }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% endif %}
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="text-center text-muted py-5" style="font-size:.85rem">
+            <i class="fas fa-truck-loading mb-2 d-block" style="font-size:1.5rem;opacity:.3"></i>
+            ยังไม่มีรถเข้า Stockpile วันนี้
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>

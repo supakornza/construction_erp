@@ -71,11 +71,6 @@ class MaterialDeliveryDashboardView(MaterialsViewMixin, TemplateView):
             .annotate(quantity=Coalesce(Sum('quantity'), 0, output_field=DecimalField()), count=Count('id'))
             .order_by('-quantity')[:8]
         )
-        project_rows = list(
-            deliveries.values('project__contract_no', 'project__project_name')
-            .annotate(quantity=Coalesce(Sum('quantity'), 0, output_field=DecimalField()), count=Count('id'))
-            .order_by('-quantity')[:8]
-        )
         today = timezone.localdate()
         truck_rows_today = list(
             MaterialDelivery.objects
@@ -85,6 +80,39 @@ class MaterialDeliveryDashboardView(MaterialsViewMixin, TemplateView):
             .annotate(trips=Count('id'), quantity=Coalesce(Sum('quantity'), 0, output_field=DecimalField()))
             .order_by('-trips')
         )
+
+        # รถเข้า Stockpile วันนี้ แยกตามโครงการ + แหล่งที่มา
+        truck_source_today = list(
+            MaterialDelivery.objects
+            .filter(delivery_date=today)
+            .values('project__id', 'project__contract_no', 'project__project_name', 'source')
+            .annotate(
+                truck_count=Count('truck_no', distinct=True),
+                trips=Count('id'),
+                quantity=Coalesce(Sum('quantity'), 0, output_field=DecimalField()),
+            )
+            .order_by('project__contract_no', '-quantity')
+        )
+        project_today_map = {}
+        for row in truck_source_today:
+            pid = row['project__id']
+            if pid not in project_today_map:
+                project_today_map[pid] = {
+                    'contract_no': row['project__contract_no'],
+                    'project_name': row['project__project_name'],
+                    'total_trips': 0,
+                    'total_qty': 0.0,
+                    'by_source': [],
+                }
+            project_today_map[pid]['total_trips'] += row['trips']
+            project_today_map[pid]['total_qty'] += float(row['quantity'] or 0)
+            project_today_map[pid]['by_source'].append({
+                'source': row['source'] or '—',
+                'trips': row['trips'],
+                'truck_count': row['truck_count'],
+                'quantity': float(row['quantity'] or 0),
+            })
+        trucks_today_by_project = sorted(project_today_map.values(), key=lambda x: x['contract_no'] or '')
 
         # Rock & Sand stock from Project Controls for selected project
         rock_stock = sand_stock = None
@@ -129,8 +157,8 @@ class MaterialDeliveryDashboardView(MaterialsViewMixin, TemplateView):
             'daily_quantities': [float(row['quantity'] or 0) for row in daily_rows],
             'material_rows': material_rows,
             'source_rows': source_rows,
-            'project_rows': project_rows,
             'truck_rows_today': truck_rows_today,
+            'trucks_today_by_project': trucks_today_by_project,
             'today': today,
             'rock_stock': rock_stock,
             'sand_stock': sand_stock,
@@ -166,23 +194,47 @@ class MaterialDeliveryListView(MaterialsViewMixin, ListView):
     model = MaterialDelivery
     template_name = 'materials/delivery_list.html'
     context_object_name = 'deliveries'
-    paginate_by = 30
+    paginate_by = 50
+
+    _SORT_MAP = {
+        'date': 'delivery_date',
+        '-date': '-delivery_date',
+        'project': 'project__contract_no',
+        '-project': '-project__contract_no',
+        'material': 'material__name',
+        '-material': '-material__name',
+        'qty': 'quantity',
+        '-qty': '-quantity',
+    }
 
     def get_queryset(self):
         qs = super().get_queryset().select_related('project', 'material')
-        project_id = self.request.GET.get('project')
-        material_id = self.request.GET.get('material')
-        if project_id:
-            qs = qs.filter(project_id=project_id)
-        if material_id:
-            qs = qs.filter(material_id=material_id)
-        return qs
+        p = self.request.GET
+        if p.get('project'):
+            qs = qs.filter(project_id=p['project'])
+        if p.get('material'):
+            qs = qs.filter(material_id=p['material'])
+        if p.get('date_from'):
+            qs = qs.filter(delivery_date__gte=p['date_from'])
+        if p.get('date_to'):
+            qs = qs.filter(delivery_date__lte=p['date_to'])
+        if p.get('source', '').strip():
+            qs = qs.filter(source__icontains=p['source'].strip())
+        if p.get('truck_no', '').strip():
+            qs = qs.filter(truck_no__icontains=p['truck_no'].strip())
+        order = self._SORT_MAP.get(p.get('sort', ''), '-delivery_date')
+        return qs.order_by(order)
 
     def get_context_data(self, **kwargs):
         from apps.projects.models import Project
         ctx = super().get_context_data(**kwargs)
         ctx['projects'] = Project.objects.filter(status='Active')
         ctx['materials'] = Material.objects.all()
+        ctx['current_sort'] = self.request.GET.get('sort', '-date')
+        ctx['view_mode'] = self.request.GET.get('view', 'table')
+        get_copy = self.request.GET.copy()
+        get_copy.pop('page', None)
+        ctx['filter_params'] = get_copy.urlencode()
         return ctx
 
 
