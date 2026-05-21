@@ -1,9 +1,9 @@
 import io
-from datetime import date
+from datetime import date, timedelta
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import View
 from apps.daily_reports.models import DailyReport
 from apps.materials.models import MaterialDelivery, Material
@@ -189,6 +189,53 @@ class PMCDailyReportExcelView(LoginRequiredMixin, View):
             return redirect('daily_reports:detail', pk=pk)
         buf      = generate_pmc_excel(report)
         filename = f"{report.project.contract_no}-DR-{report.report_date:%Y%m%d}-Rev0.xlsx"
+        response = HttpResponse(
+            buf.read(),
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        )
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+
+
+class WeeklyReportView(LoginRequiredMixin, View):
+    """Show form to pick a week, then download the weekly Excel report."""
+
+    def _monday(self, d):
+        return d - timedelta(days=d.weekday())
+
+    def get(self, request, project_pk):
+        project = get_object_or_404(Project, pk=project_pk)
+        week_start_str = request.GET.get('week_start')
+        if week_start_str:
+            try:
+                from datetime import datetime
+                week_start = datetime.strptime(week_start_str, '%Y-%m-%d').date()
+                week_start = self._monday(week_start)
+            except ValueError:
+                week_start = self._monday(date.today())
+        else:
+            week_start = self._monday(date.today())
+        return render(request, 'reports/weekly_report.html', {
+            'project': project,
+            'week_start': week_start,
+            'week_end': week_start + timedelta(days=6),
+        })
+
+    def post(self, request, project_pk):
+        project = get_object_or_404(Project, pk=project_pk)
+        week_start_str = request.POST.get('week_start')
+        try:
+            from datetime import datetime
+            week_start = datetime.strptime(week_start_str, '%Y-%m-%d').date()
+            week_start = self._monday(week_start)
+        except (ValueError, TypeError):
+            messages.error(request, 'Invalid week date.')
+            return redirect('reports:weekly_report', project_pk=project_pk)
+
+        from apps.reports.weekly_excel_generator import generate_weekly_excel
+        buf = generate_weekly_excel(project, week_start)
+        week_end = week_start + timedelta(days=6)
+        filename = f"WeeklyReport_{project.contract_no}_{week_start}_{week_end}.xlsx"
         response = HttpResponse(
             buf.read(),
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

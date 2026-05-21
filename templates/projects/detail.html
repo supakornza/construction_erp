@@ -13,6 +13,9 @@
         <a href="{% url 'reports:boq_progress_excel' project.pk %}" class="btn btn-sm btn-outline-info">
             <i class="fas fa-file-excel me-1"></i>BOQ Excel
         </a>
+        <a href="{% url 'reports:weekly_report' project.pk %}" class="btn btn-sm btn-outline-success">
+            <i class="fas fa-calendar-week me-1"></i>Weekly Report
+        </a>
         <a href="{% url 'projects:update' project.pk %}" class="btn btn-sm btn-primary">
             <i class="fas fa-edit me-1"></i>Edit
         </a>

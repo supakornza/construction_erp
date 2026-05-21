@@ -10,4 +10,5 @@ urlpatterns = [
     path('project/<int:project_pk>/materials/excel/', views.MaterialDeliveryExcelView.as_view(), name='material_delivery_excel'),
     path('project/<int:project_pk>/boq/excel/', views.BOQProgressExcelView.as_view(), name='boq_progress_excel'),
     path('project/<int:project_pk>/safety/excel/', views.SafetyObservationExcelView.as_view(), name='safety_excel'),
+    path('project/<int:project_pk>/weekly/', views.WeeklyReportView.as_view(), name='weekly_report'),
 ]

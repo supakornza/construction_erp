@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Weekly Report – {{ project.contract_no }}{% endblock %}
+{% block page_title %}Weekly Site Report{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'projects:detail' project.pk %}" class="btn btn-sm btn-outline-secondary me-3">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <h4 class="mb-0"><i class="fas fa-calendar-week me-2 text-success"></i>Weekly Report — {{ project.contract_no }}</h4>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-file-excel me-2 text-success"></i>Download Weekly Excel Report</h6>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-3">
+                    เลือกวันใดก็ได้ในสัปดาห์ที่ต้องการ ระบบจะรวบรวมข้อมูลตั้งแต่ วันจันทร์ – วันอาทิตย์
+                    ของสัปดาห์นั้นโดยอัตโนมัติ
+                </p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">เลือกสัปดาห์</label>
+                        <input type="date" name="week_start" class="form-control"
+                               value="{{ week_start|date:'Y-m-d' }}" required>
+                        <div class="form-text">สัปดาห์: {{ week_start }} – {{ week_end }}</div>
+                    </div>
+
+                    <div class="card bg-light border-0 mb-3">
+                        <div class="card-body py-2 px-3">
+                            <p class="small mb-1 fw-semibold text-navy">รายงานประกอบด้วย 5 แผ่นงาน (Sheets):</p>
+                            <ul class="small mb-0 ps-3">
+                                <li><strong>Weekly Summary</strong> – ข้อมูลโครงการ ภาพรวมประจำสัปดาห์</li>
+                                <li><strong>Daily Activities</strong> – กิจกรรมงานแต่ละวัน</li>
+                                <li><strong>Manpower</strong> – กำลังคนรายวัน/รายหมวด</li>
+                                <li><strong>Equipment</strong> – ชั่วโมงทำงานเครื่องจักร</li>
+                                <li><strong>Safety</strong> – Toolbox, การตรวจสอบ, อุบัติเหตุ</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="fas fa-file-download me-2"></i>ดาวน์โหลด Excel
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-update week display when user changes the date
+document.querySelector('input[name="week_start"]').addEventListener('change', function () {
+    const d = new Date(this.value);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Monday
+    const monday = new Date(d.setDate(diff));
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+
+    const fmt = dt => dt.toISOString().split('T')[0];
+    document.querySelector('.form-text').textContent = `สัปดาห์: ${fmt(monday)} – ${fmt(sunday)}`;
+});
+</script>
+{% endblock %}
