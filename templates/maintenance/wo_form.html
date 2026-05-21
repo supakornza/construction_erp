@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{% if form.instance.pk %}Edit Work Order{% else %}New Work Order{% endif %} – Maintenance{% endblock %}
+{% block page_title %}{% if form.instance.pk %}Edit Work Order{% else %}New Work Order{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-wrench me-2 text-warning"></i>
+                    {% if form.instance.pk %}Edit: {{ form.instance.wo_no }}{% else %}Create Work Order{% endif %}
+                </h6>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {% crispy form %}
+                </form>
+            </div>
+        </div>
+        <div class="mt-2">
+            <a href="{% url 'maintenance:wo_list' %}" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to Work Orders
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}Attendance – {{ view_date }} – HR{% endblock %}
+{% block page_title %}Daily Attendance{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-3">
+    <h4 class="mb-0 me-3"><i class="fas fa-calendar-check me-2 text-primary"></i>Attendance</h4>
+    <div class="d-flex gap-1 align-items-center">
+        <a href="?date={{ prev_date }}{% if project_id %}&project={{ project_id }}{% endif %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-chevron-left"></i></a>
+        <input type="date" id="date-picker" class="form-control form-control-sm" style="width:150px" value="{{ view_date|date:'Y-m-d' }}">
+        <a href="?date={{ next_date }}{% if project_id %}&project={{ project_id }}{% endif %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-chevron-right"></i></a>
+    </div>
+    <form method="get" class="ms-3 d-flex gap-2 align-items-end">
+        <input type="hidden" name="date" value="{{ view_date|date:'Y-m-d' }}">
+        <select name="project" class="form-select form-select-sm" onchange="this.form.submit()">
+            <option value="">All Projects</option>
+            {% for p in projects %}<option value="{{ p.pk }}" {% if project_id == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.contract_no }}</option>{% endfor %}
+        </select>
+    </form>
+    <div class="ms-auto d-flex gap-2">
+        <a href="{% url 'hr:attendance_create' %}" class="btn btn-sm btn-outline-primary">
+            <i class="fas fa-plus me-1"></i>Manual Entry
+        </a>
+    </div>
+</div>
+
+<!-- Summary badges -->
+<div class="d-flex gap-2 mb-3 flex-wrap">
+    <span class="badge bg-success fs-6">Present: {{ summary.present }}</span>
+    <span class="badge bg-danger fs-6">Absent: {{ summary.absent }}</span>
+    <span class="badge bg-primary fs-6">Leave: {{ summary.leave }}</span>
+    <span class="badge bg-secondary fs-6">No Record: {{ summary.no_record }}</span>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-sm table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Employee</th>
+                        <th>Company</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Time In</th>
+                        <th>Time Out</th>
+                        <th>OT hrs</th>
+                        <th>Remarks</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for row in rows %}
+                <tr id="row-{{ row.employee.pk }}">
+                    <td class="fw-semibold small">{{ row.employee.full_name }}</td>
+                    <td class="small text-muted">{{ row.employee.company }}</td>
+                    <td class="small">{{ row.employee.category|default:'—' }}</td>
+                    <td>
+                        {% if row.attendance %}
+                        <span class="badge bg-{{ row.attendance.status_color }}">{{ row.attendance.get_status_display }}</span>
+                        {% else %}
+                        <span class="badge bg-light text-dark">—</span>
+                        {% endif %}
+                    </td>
+                    <td class="small">{{ row.attendance.time_in|default:'—' }}</td>
+                    <td class="small">{{ row.attendance.time_out|default:'—' }}</td>
+                    <td class="small">{{ row.attendance.overtime_hours|default:'—' }}</td>
+                    <td class="small">{{ row.attendance.remarks|default:'' }}</td>
+                    <td>
+                        <button type="button" class="btn btn-xs btn-outline-primary"
+                            data-bs-toggle="modal" data-bs-target="#attendanceModal"
+                            data-employee-id="{{ row.employee.pk }}"
+                            data-employee-name="{{ row.employee.full_name }}"
+                            data-status="{% if row.attendance %}{{ row.attendance.status }}{% else %}Present{% endif %}"
+                            data-time-in="{% if row.attendance %}{{ row.attendance.time_in|default:'' }}{% endif %}"
+                            data-time-out="{% if row.attendance %}{{ row.attendance.time_out|default:'' }}{% endif %}"
+                            data-ot="{% if row.attendance %}{{ row.attendance.overtime_hours }}{% else %}0{% endif %}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="9" class="text-center text-muted py-4">No active employees found.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Quick-edit modal -->
+<div class="modal fade" id="attendanceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Record Attendance — <span id="modal-emp-name"></span></h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{% url 'hr:attendance_save' %}">
+                {% csrf_token %}
+                <input type="hidden" name="record_date" value="{{ view_date|date:'Y-m-d' }}">
+                <input type="hidden" name="project" value="{{ project_id }}">
+                <input type="hidden" name="employee_id" id="modal-employee-id">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Status</label>
+                        <select name="status" id="modal-status" class="form-select">
+                            {% for val, lbl in status_choices %}
+                            <option value="{{ val }}">{{ lbl }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-4">
+                            <label class="form-label small">Time In</label>
+                            <input type="time" name="time_in" id="modal-time-in" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label small">Time Out</label>
+                            <input type="time" name="time_out" id="modal-time-out" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label small">OT Hours</label>
+                            <input type="number" name="overtime_hours" id="modal-ot" class="form-control form-control-sm" step="0.5" min="0" max="12">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Date picker navigation
+document.getElementById('date-picker').addEventListener('change', function () {
+    const url = new URL(window.location.href);
+    url.searchParams.set('date', this.value);
+    window.location.href = url.toString();
+});
+
+// Populate modal with row data
+document.getElementById('attendanceModal').addEventListener('show.bs.modal', function (e) {
+    const btn = e.relatedTarget;
+    document.getElementById('modal-emp-name').textContent    = btn.dataset.employeeName;
+    document.getElementById('modal-employee-id').value       = btn.dataset.employeeId;
+    document.getElementById('modal-status').value            = btn.dataset.status;
+    document.getElementById('modal-time-in').value           = btn.dataset.timeIn  || '';
+    document.getElementById('modal-time-out').value          = btn.dataset.timeOut || '';
+    document.getElementById('modal-ot').value                = btn.dataset.ot      || '0';
+});
+</script>
+{% endblock %}

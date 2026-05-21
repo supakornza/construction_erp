@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}PM Schedules – Maintenance{% endblock %}
+{% block page_title %}PM Schedules{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0"><i class="fas fa-calendar-alt me-2 text-primary"></i>Preventive Maintenance Schedules</h5>
+    <a href="{% url 'maintenance:schedule_create' %}" class="btn btn-sm btn-primary">
+        <i class="fas fa-plus me-1"></i>New Schedule
+    </a>
+</div>
+
+<!-- Filters -->
+<form method="get" class="card mb-3">
+    <div class="card-body py-2">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <select name="equipment" class="form-select form-select-sm">
+                    <option value="">All Equipment</option>
+                    {% for eq in equipment_list %}
+                    <option value="{{ eq.pk }}" {% if request.GET.equipment == eq.pk|stringformat:"s" %}selected{% endif %}>{{ eq.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="work_type" class="form-select form-select-sm">
+                    <option value="">All Types</option>
+                    {% for val, label in work_type_choices %}
+                    <option value="{{ val }}" {% if request.GET.work_type == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <div class="form-check mt-1">
+                    <input class="form-check-input" type="checkbox" name="overdue" value="1" id="overdueCheck"
+                        {% if request.GET.overdue %}checked{% endif %}>
+                    <label class="form-check-label small" for="overdueCheck">Overdue only</label>
+                </div>
+            </div>
+            <div class="col-md-2 d-flex gap-1">
+                <button type="submit" class="btn btn-sm btn-primary w-100">Filter</button>
+                <a href="{% url 'maintenance:schedule_list' %}" class="btn btn-sm btn-outline-secondary">Reset</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-sm table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Equipment</th>
+                        <th>Task / Title</th>
+                        <th>Type</th>
+                        <th>Interval</th>
+                        <th>Last Done</th>
+                        <th>Next Due</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for sched in schedules %}
+                {% with sl=sched.status_label %}
+                <tr>
+                    <td class="small fw-semibold">{{ sched.equipment }}</td>
+                    <td class="small">{{ sched.title }}</td>
+                    <td><span class="badge bg-secondary small">{{ sched.get_work_type_display }}</span></td>
+                    <td class="small">Every {{ sched.interval_value }} {{ sched.get_interval_type_display }}</td>
+                    <td class="small text-muted">{{ sched.last_done_date|default:"—" }}</td>
+                    <td class="small">
+                        {% if sched.next_due_date %}
+                        <span class="badge bg-{{ sl.1 }}">{{ sched.next_due_date }}</span>
+                        {% else %}—{% endif %}
+                    </td>
+                    <td><span class="badge bg-{{ sl.1 }}">{{ sl.0 }}</span></td>
+                    <td class="text-end">
+                        <div class="btn-group btn-group-sm">
+                            <a href="{% url 'maintenance:wo_create' %}?schedule={{ sched.pk }}"
+                               class="btn btn-outline-warning" title="Create WO">
+                                <i class="fas fa-wrench"></i>
+                            </a>
+                            <a href="{% url 'maintenance:schedule_update' sched.pk %}"
+                               class="btn btn-outline-secondary" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endwith %}
+                {% empty %}
+                <tr><td colspan="8" class="text-center text-muted py-4">No PM schedules found.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="mt-3">
+    <ul class="pagination pagination-sm justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.equipment %}&equipment={{ request.GET.equipment }}{% endif %}{% if request.GET.work_type %}&work_type={{ request.GET.work_type }}{% endif %}{% if request.GET.overdue %}&overdue=1{% endif %}">&laquo;</a></li>
+        {% endif %}
+        <li class="page-item disabled"><a class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</a></li>
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.equipment %}&equipment={{ request.GET.equipment }}{% endif %}{% if request.GET.work_type %}&work_type={{ request.GET.work_type }}{% endif %}{% if request.GET.overdue %}&overdue=1{% endif %}">&raquo;</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

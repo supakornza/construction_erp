@@ -133,6 +133,33 @@
         </a>
         {% endif %}
 
+        {% if user.can_view_hr %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "HR & Attendance" %}</span></div>
+        <a href="{% url 'hr:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'hr' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'HR & Attendance' %}">
+            <i class="fas fa-users-cog nav-icon"></i>
+            <span class="sidebar-label">{% trans "HR & Attendance" %}</span>
+        </a>
+        {% endif %}
+
+        {% if user.can_view_maintenance %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "Maintenance" %}</span></div>
+        <a href="{% url 'maintenance:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'maintenance' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Maintenance' %}">
+            <i class="fas fa-tools nav-icon"></i>
+            <span class="sidebar-label">{% trans "Maintenance" %}</span>
+        </a>
+        {% endif %}
+
+        {% if user.can_view_change_orders %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "Change Orders" %}</span></div>
+        <a href="{% url 'change_orders:list' %}" class="nav-link {% if request.resolver_match.namespace == 'change_orders' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Change Orders' %}">
+            <i class="fas fa-exchange-alt nav-icon"></i>
+            <span class="sidebar-label">{% trans "Change Orders" %}</span>
+        </a>
+        {% endif %}
+
         {% if user.can_access_financial %}
         <div class="nav-section"><span class="sidebar-label">{% trans "Cost Control" %}</span></div>
         <a href="{% url 'cost_control:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'cost_control' %}active{% endif %}"

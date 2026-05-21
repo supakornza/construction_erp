@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     'apps.cost_control',
     'apps.tide_monitor',
     'apps.turbidity_monitor',
+    'apps.change_orders',
+    'apps.hr',
+    'apps.maintenance',
 ]
 
 MIDDLEWARE = [

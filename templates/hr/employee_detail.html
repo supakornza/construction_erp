@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}{{ employee.full_name }} – HR{% endblock %}
+{% block page_title %}{{ employee.full_name }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'hr:employee_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="mb-0 me-3">{{ employee.full_name }}</h4>
+    <span class="badge bg-{% if employee.status == 'Active' %}success{% elif employee.status == 'Inactive' %}warning{% else %}danger{% endif %}">{{ employee.status }}</span>
+    <div class="ms-auto d-flex gap-2">
+        <a href="{% url 'hr:leave_create' %}?employee={{ employee.pk }}" class="btn btn-sm btn-outline-success">
+            <i class="fas fa-calendar-minus me-1"></i>Request Leave
+        </a>
+        <a href="{% url 'hr:employee_update' employee.pk %}" class="btn btn-sm btn-primary">
+            <i class="fas fa-edit me-1"></i>Edit
+        </a>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-header"><h6 class="mb-0">Personal Info</h6></div>
+            <div class="card-body">
+                {% if employee.photo %}
+                <div class="text-center mb-3">
+                    <img src="{{ employee.photo.url }}" class="rounded-circle" style="width:80px;height:80px;object-fit:cover">
+                </div>
+                {% endif %}
+                <dl class="row small mb-0">
+                    <dt class="col-5">EMP No</dt><dd class="col-7">{{ employee.employee_no }}</dd>
+                    <dt class="col-5">Nickname</dt><dd class="col-7">{{ employee.nickname|default:'—' }}</dd>
+                    <dt class="col-5">ID Card</dt><dd class="col-7">{{ employee.id_card_no|default:'—' }}</dd>
+                    <dt class="col-5">Nationality</dt><dd class="col-7">{{ employee.get_nationality_display }}</dd>
+                    <dt class="col-5">DOB</dt><dd class="col-7">{{ employee.date_of_birth|default:'—' }}</dd>
+                    <dt class="col-5">Phone</dt><dd class="col-7">{{ employee.phone|default:'—' }}</dd>
+                    <dt class="col-5">Email</dt><dd class="col-7">{{ employee.email|default:'—' }}</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"><h6 class="mb-0">Employment</h6></div>
+            <div class="card-body">
+                <dl class="row small mb-0">
+                    <dt class="col-5">Company</dt><dd class="col-7">{{ employee.company }}</dd>
+                    <dt class="col-5">Position</dt><dd class="col-7">{{ employee.position }}</dd>
+                    <dt class="col-5">Category</dt><dd class="col-7">{{ employee.category|default:'—' }}</dd>
+                    <dt class="col-5">Type</dt><dd class="col-7">{{ employee.get_employment_type_display }}</dd>
+                    <dt class="col-5">Project</dt><dd class="col-7">{{ employee.project.contract_no|default:'—' }}</dd>
+                    <dt class="col-5">Start</dt><dd class="col-7">{{ employee.start_date }}</dd>
+                    <dt class="col-5">End</dt><dd class="col-7">{{ employee.end_date|default:'Current' }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <!-- Attendance this month -->
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Attendance This Month</h6>
+                <span class="badge bg-success">{{ days_present_month }} days present</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive" style="max-height:250px;overflow-y:auto">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light sticky-top"><tr>
+                            <th>Date</th><th>Status</th><th>In</th><th>Out</th><th>OT hrs</th>
+                        </tr></thead>
+                        <tbody>
+                        {% for rec in attendance_this_month %}
+                        <tr>
+                            <td class="small">{{ rec.record_date }}</td>
+                            <td><span class="badge bg-{{ rec.status_color }} small">{{ rec.get_status_display }}</span></td>
+                            <td class="small">{{ rec.time_in|default:'—' }}</td>
+                            <td class="small">{{ rec.time_out|default:'—' }}</td>
+                            <td class="small">{{ rec.overtime_hours|default:'—' }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" class="text-center text-muted py-3">No attendance records.</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leave history -->
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Leave History</h6>
+                <a href="{% url 'hr:leave_create' %}" class="btn btn-xs btn-outline-success">New</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead class="table-light"><tr><th>Type</th><th>Start</th><th>End</th><th>Days</th><th>Status</th></tr></thead>
+                    <tbody>
+                    {% for lv in leave_history %}
+                    <tr>
+                        <td class="small">{{ lv.get_leave_type_display }}</td>
+                        <td class="small">{{ lv.start_date }}</td>
+                        <td class="small">{{ lv.end_date }}</td>
+                        <td>{{ lv.days }}</td>
+                        <td><span class="badge bg-{{ lv.status_color }} small">{{ lv.get_status_display }}</span></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-center text-muted py-2">No leave records.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

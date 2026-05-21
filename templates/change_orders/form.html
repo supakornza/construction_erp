@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags humanize %}
+{% block title %}{{ title }} – Construction ERP{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'change_orders:list' %}" class="btn btn-sm btn-outline-secondary me-3">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <h4 class="mb-0"><i class="fas fa-exchange-alt me-2 text-warning"></i>{{ title }}</h4>
+</div>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row g-3">
+        <!-- Main form -->
+        <div class="col-lg-8">
+            <div class="card mb-3">
+                <div class="card-header"><h6 class="mb-0">Change Order Details</h6></div>
+                <div class="card-body">
+                    {% crispy form %}
+                </div>
+            </div>
+
+            <!-- Line Items Formset -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Scope Items</h6>
+                    <button type="button" id="add-item-btn" class="btn btn-sm btn-outline-success">
+                        <i class="fas fa-plus me-1"></i>Add Item
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    {{ item_formset.management_form }}
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0" id="items-table">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th style="width:20%">BOQ Item</th>
+                                    <th style="width:22%">Description</th>
+                                    <th style="width:7%">Unit</th>
+                                    <th style="width:10%">Change Type</th>
+                                    <th style="width:9%">Orig. Qty</th>
+                                    <th style="width:9%">Rev. Qty</th>
+                                    <th style="width:10%">Unit Rate</th>
+                                    <th style="width:9%">Remarks</th>
+                                    <th style="width:4%">Del</th>
+                                </tr>
+                            </thead>
+                            <tbody id="items-tbody">
+                            {% for item_form in item_formset %}
+                            <tr class="item-row" data-row-index="{{ forloop.counter0 }}">
+                                {% for hidden in item_form.hidden_fields %}{{ hidden }}{% endfor %}
+                                <td>{{ item_form.boq_item }}</td>
+                                <td>{{ item_form.description }}</td>
+                                <td>{{ item_form.unit }}</td>
+                                <td>{{ item_form.change_type }}</td>
+                                <td>{{ item_form.original_quantity }}</td>
+                                <td>{{ item_form.revised_quantity }}</td>
+                                <td>{{ item_form.unit_rate }}</td>
+                                <td>{{ item_form.remarks }}</td>
+                                <td class="text-center">
+                                    {% if item_form.instance.pk %}
+                                    <div class="form-check">{{ item_form.DELETE }}</div>
+                                    {% else %}
+                                    <button type="button" class="btn btn-xs btn-outline-danger remove-row">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side panel -->
+        <div class="col-lg-4">
+            <div class="card bg-light border-0">
+                <div class="card-body">
+                    <h6 class="text-muted mb-3">Workflow</h6>
+                    <p class="small mb-1"><strong>Draft</strong> → Submitted → Under Review → <span class="text-success">Approved</span></p>
+                    <hr>
+                    <p class="small text-muted">
+                        After saving as Draft, use the <strong>Submit</strong> button on the detail page to start the approval workflow.
+                    </p>
+                </div>
+            </div>
+            <div class="mt-3 d-grid gap-2">
+                <button type="submit" class="btn btn-warning">
+                    <i class="fas fa-save me-1"></i>Save Change Order
+                </button>
+                <a href="{% url 'change_orders:list' %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+(function () {
+    'use strict';
+    const totalForms = document.getElementById('id_items-TOTAL_FORMS');
+    const tbody = document.getElementById('items-tbody');
+    const prefix = 'items';
+
+    // Field configs for new rows: [name, type, options]
+    const FIELD_DEFS = [
+        { name: 'boq_item',          tag: 'select' },
+        { name: 'description',       tag: 'input',  type: 'text' },
+        { name: 'unit',              tag: 'input',  type: 'text' },
+        { name: 'change_type',       tag: 'select' },
+        { name: 'original_quantity', tag: 'input',  type: 'number', step: '0.001' },
+        { name: 'revised_quantity',  tag: 'input',  type: 'number', step: '0.001' },
+        { name: 'unit_rate',         tag: 'input',  type: 'number', step: '0.01' },
+        { name: 'remarks',           tag: 'input',  type: 'text' },
+    ];
+
+    // Grab select options from first existing row to reuse in new rows
+    function getSelectOptions(fieldName) {
+        const existing = document.getElementById('id_' + prefix + '-0-' + fieldName);
+        return existing ? existing.cloneNode(true) : null;
+    }
+
+    document.getElementById('add-item-btn').addEventListener('click', function () {
+        const idx = parseInt(totalForms.value, 10);
+        const tr = document.createElement('tr');
+        tr.className = 'item-row';
+        tr.dataset.rowIndex = idx;
+
+        // hidden id field
+        const hiddenId = document.createElement('input');
+        hiddenId.type = 'hidden';
+        hiddenId.name = prefix + '-' + idx + '-id';
+        hiddenId.value = '';
+        tr.appendChild(hiddenId);
+
+        FIELD_DEFS.forEach(function (def) {
+            const td = document.createElement('td');
+            let el;
+            if (def.tag === 'select') {
+                const template = getSelectOptions(def.name);
+                if (template) {
+                    el = template;
+                    el.id   = 'id_' + prefix + '-' + idx + '-' + def.name;
+                    el.name = prefix + '-' + idx + '-' + def.name;
+                    el.selectedIndex = 0;
+                    el.className = 'form-select form-select-sm';
+                } else {
+                    el = document.createElement('select');
+                    el.className = 'form-select form-select-sm';
+                }
+            } else {
+                el = document.createElement('input');
+                el.type      = def.type || 'text';
+                el.className = 'form-control form-control-sm';
+                el.value     = '';
+                if (def.step) el.step = def.step;
+            }
+            el.id   = 'id_' + prefix + '-' + idx + '-' + def.name;
+            el.name = prefix + '-' + idx + '-' + def.name;
+            td.appendChild(el);
+            tr.appendChild(td);
+        });
+
+        // Remove button cell
+        const delTd = document.createElement('td');
+        delTd.className = 'text-center';
+        const btn = document.createElement('button');
+        btn.type      = 'button';
+        btn.className = 'btn btn-xs btn-outline-danger remove-row';
+        const icon = document.createElement('i');
+        icon.className = 'fas fa-times';
+        btn.appendChild(icon);
+        btn.addEventListener('click', function () { tr.remove(); totalForms.value = tbody.querySelectorAll('.item-row').length; });
+        delTd.appendChild(btn);
+        tr.appendChild(delTd);
+
+        tbody.appendChild(tr);
+        totalForms.value = idx + 1;
+    });
+
+    // Bind remove on existing new rows
+    tbody.querySelectorAll('.remove-row').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            btn.closest('tr').remove();
+            totalForms.value = tbody.querySelectorAll('.item-row').length;
+        });
+    });
+}());
+</script>
+{% endblock %}

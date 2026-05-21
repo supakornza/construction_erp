@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Reject {{ co.co_no }}{% endblock %}
+{% block page_title %}Reject Change Order{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h6 class="mb-0"><i class="fas fa-times-circle me-2"></i>Reject {{ co.co_no }}</h6>
+            </div>
+            <div class="card-body">
+                <p class="mb-3">Please provide a reason for rejecting <strong>{{ co.title }}</strong>.</p>
+                <form method="post">
+                    {% csrf_token %}
+                    {% crispy form %}
+                    <div class="d-flex gap-2 mt-3">
+                        <button type="submit" class="btn btn-danger">Confirm Rejection</button>
+                        <a href="{% url 'change_orders:detail' co.pk %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

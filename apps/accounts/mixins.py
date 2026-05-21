@@ -232,3 +232,57 @@ class ProjectControlsWriteMixin(RoleRequiredMixin):
         'admin', 'project_manager', 'construction_manager', 'office_engineer',
         'engineer', 'site_engineer', 'project_coordinator',
     ]
+
+
+class HRViewMixin(RoleRequiredMixin):
+    allowed_roles = [
+        'admin', 'project_manager', 'construction_manager', 'office_engineer',
+        'quantity_surveyor', 'project_coordinator', 'site_engineer',
+    ]
+
+
+class HRWriteMixin(RoleRequiredMixin):
+    allowed_roles = [
+        'admin', 'project_manager', 'construction_manager', 'office_engineer',
+        'project_coordinator', 'site_engineer',
+    ]
+
+
+class HRApproveMixin(RoleRequiredMixin):
+    allowed_roles = ['admin', 'project_manager', 'construction_manager']
+
+
+class ChangeOrderViewMixin(RoleRequiredMixin):
+    """Change Orders read access."""
+    allowed_roles = [
+        'admin', 'project_manager', 'construction_manager', 'office_engineer',
+        'engineer', 'quantity_surveyor', 'legal_officer', 'owner',
+        'senior_advisor', 'project_coordinator', 'viewer',
+    ]
+
+
+class ChangeOrderWriteMixin(RoleRequiredMixin):
+    """Change Orders create/edit: Admin, PM, CM, OE, QS."""
+    allowed_roles = [
+        'admin', 'project_manager', 'construction_manager', 'office_engineer',
+        'quantity_surveyor',
+    ]
+
+
+class ChangeOrderApproveMixin(RoleRequiredMixin):
+    """Change Orders approve/reject: Admin, PM, CM."""
+    allowed_roles = ['admin', 'project_manager', 'construction_manager']
+
+
+class MaintenanceViewMixin(RoleRequiredMixin):
+    allowed_roles = [
+        'admin', 'project_manager', 'construction_manager', 'office_engineer',
+        'engineer', 'site_engineer', 'inspector', 'storekeeper', 'project_coordinator',
+    ]
+
+
+class MaintenanceWriteMixin(RoleRequiredMixin):
+    allowed_roles = [
+        'admin', 'project_manager', 'construction_manager', 'office_engineer',
+        'engineer', 'site_engineer', 'storekeeper',
+    ]

@@ -90,6 +90,22 @@ class User(AbstractUser):
         return self.is_superuser or self.role in {
             'admin', 'project_manager', 'construction_manager', 'quantity_surveyor', 'office_engineer'}
 
+    def can_view_hr(self):
+        return self.is_superuser or self.role in {
+            'admin', 'project_manager', 'construction_manager', 'office_engineer',
+            'quantity_surveyor', 'project_coordinator', 'site_engineer'}
+
+    def can_view_change_orders(self):
+        return self.is_superuser or self.role in {
+            'admin', 'project_manager', 'construction_manager', 'office_engineer',
+            'engineer', 'quantity_surveyor', 'legal_officer', 'owner',
+            'senior_advisor', 'project_coordinator', 'viewer'}
+
+    def can_view_maintenance(self):
+        return self.is_superuser or self.role in {
+            'admin', 'project_manager', 'construction_manager', 'office_engineer',
+            'engineer', 'site_engineer', 'inspector', 'storekeeper', 'project_coordinator'}
+
     def can_view_executive_desk(self):
         return self.is_superuser or self.role in {
             'admin', 'project_manager', 'construction_manager', 'owner', 'senior_advisor'}

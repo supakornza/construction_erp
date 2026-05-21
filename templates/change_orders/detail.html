@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}{{ co.co_no }} – Change Order{% endblock %}
+{% block page_title %}{{ co.co_no }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-3">
+    <a href="{% url 'change_orders:list' %}" class="btn btn-sm btn-outline-secondary me-3">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <h4 class="mb-0 me-3"><i class="fas fa-exchange-alt me-2 text-warning"></i>{{ co.co_no }}</h4>
+    <span class="badge bg-{{ co.status_color }} fs-6">{{ co.get_status_display }}</span>
+
+    <div class="ms-auto d-flex gap-2 flex-wrap">
+        {% if co.is_editable %}
+        <a href="{% url 'change_orders:update' co.pk %}" class="btn btn-sm btn-outline-primary">
+            <i class="fas fa-edit me-1"></i>Edit
+        </a>
+        {% endif %}
+
+        {% if co.status == 'Draft' %}
+        <form method="post" action="{% url 'change_orders:submit' co.pk %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-info">
+                <i class="fas fa-paper-plane me-1"></i>Submit
+            </button>
+        </form>
+        {% endif %}
+
+        {% if user.is_approver and co.status == 'Submitted' %}
+        <form method="post" action="{% url 'change_orders:review' co.pk %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-warning">
+                <i class="fas fa-search me-1"></i>Mark Under Review
+            </button>
+        </form>
+        {% endif %}
+
+        {% if user.is_approver and co.status == 'Submitted' or user.is_approver and co.status == 'UnderReview' %}
+        <form method="post" action="{% url 'change_orders:approve' co.pk %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-success">
+                <i class="fas fa-check me-1"></i>Approve
+            </button>
+        </form>
+        <a href="{% url 'change_orders:reject' co.pk %}" class="btn btn-sm btn-danger">
+            <i class="fas fa-times me-1"></i>Reject
+        </a>
+        {% endif %}
+
+        {% if co.status != 'Approved' and co.status != 'Cancelled' %}
+        <form method="post" action="{% url 'change_orders:cancel' co.pk %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-dark"
+                onclick="return confirm('Cancel this change order?')">
+                <i class="fas fa-ban me-1"></i>Cancel
+            </button>
+        </form>
+        {% endif %}
+
+        {% if co.status in 'Draft Cancelled' %}
+        <a href="{% url 'change_orders:delete' co.pk %}" class="btn btn-sm btn-outline-danger">
+            <i class="fas fa-trash me-1"></i>Delete
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+{% if co.rejection_reason %}
+<div class="alert alert-danger">
+    <strong>Rejection Reason:</strong> {{ co.rejection_reason }}
+</div>
+{% endif %}
+
+<div class="row g-3">
+    <!-- Left: main info -->
+    <div class="col-lg-8">
+        <div class="card mb-3">
+            <div class="card-header"><h6 class="mb-0">Change Order Details</h6></div>
+            <div class="card-body">
+                <dl class="row small mb-0">
+                    <dt class="col-4">Project</dt>
+                    <dd class="col-8">{{ co.project }}</dd>
+                    <dt class="col-4">Title</dt>
+                    <dd class="col-8 fw-semibold">{{ co.title }}</dd>
+                    <dt class="col-4">Type</dt>
+                    <dd class="col-8"><span class="badge bg-secondary">{{ co.get_type_display }}</span></dd>
+                    <dt class="col-4">Initiated By</dt>
+                    <dd class="col-8">{{ co.get_initiated_by_display }}</dd>
+                    <dt class="col-4">Description</dt>
+                    <dd class="col-8">{{ co.description|linebreaksbr }}</dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Items -->
+        <div class="card">
+            <div class="card-header"><h6 class="mb-0">Scope Items</h6></div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>BOQ Item</th>
+                                <th>Description</th>
+                                <th>Unit</th>
+                                <th>Type</th>
+                                <th class="text-end">Orig Qty</th>
+                                <th class="text-end">Rev Qty</th>
+                                <th class="text-end">Δ Qty</th>
+                                <th class="text-end">Unit Rate</th>
+                                <th class="text-end">Amount (THB)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in co.items.all %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td class="small text-muted">{{ item.boq_item.item_no|default:'—' }}</td>
+                            <td>{{ item.description }}</td>
+                            <td>{{ item.unit }}</td>
+                            <td><span class="badge bg-{% if item.change_type == 'Add' %}success{% elif item.change_type == 'Delete' %}danger{% else %}warning{% endif %}">{{ item.get_change_type_display }}</span></td>
+                            <td class="text-end">{{ item.original_quantity|floatformat:3 }}</td>
+                            <td class="text-end">{{ item.revised_quantity|floatformat:3 }}</td>
+                            <td class="text-end {% if item.quantity_change > 0 %}text-success{% elif item.quantity_change < 0 %}text-danger{% endif %}">
+                                {% if item.quantity_change > 0 %}+{% endif %}{{ item.quantity_change|floatformat:3 }}
+                            </td>
+                            <td class="text-end">{{ item.unit_rate|floatformat:2|intcomma }}</td>
+                            <td class="text-end fw-semibold {% if item.amount > 0 %}text-success{% elif item.amount < 0 %}text-danger{% endif %}">
+                                {% if item.amount > 0 %}+{% endif %}{{ item.amount|floatformat:2|intcomma }}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="10" class="text-center text-muted py-3">No scope items defined.</td></tr>
+                        {% endfor %}
+                        </tbody>
+                        {% if co.items.all %}
+                        <tfoot>
+                            <tr class="table-dark fw-bold">
+                                <td colspan="9" class="text-end">Total Items Value:</td>
+                                <td class="text-end {% if items_total > 0 %}text-success{% elif items_total < 0 %}text-danger{% endif %}">
+                                    {% if items_total > 0 %}+{% endif %}{{ items_total|floatformat:2|intcomma }} THB
+                                </td>
+                            </tr>
+                        </tfoot>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: summary -->
+    <div class="col-lg-4">
+        <div class="card mb-3">
+            <div class="card-header"><h6 class="mb-0">Financial & Time Impact</h6></div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <div class="small text-muted">Contract Value Impact</div>
+                    <div class="fs-4 fw-bold {% if co.contract_value_impact > 0 %}text-success{% elif co.contract_value_impact < 0 %}text-danger{% else %}text-muted{% endif %}">
+                        {% if co.contract_value_impact > 0 %}+{% endif %}{{ co.contract_value_impact|floatformat:2|intcomma }} THB
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="small text-muted">Time Impact</div>
+                    <div class="fs-4 fw-bold {% if co.time_impact_days > 0 %}text-warning{% elif co.time_impact_days < 0 %}text-info{% else %}text-muted{% endif %}">
+                        {% if co.time_impact_days > 0 %}+{% endif %}{{ co.time_impact_days }} days
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header"><h6 class="mb-0">Timeline</h6></div>
+            <div class="card-body">
+                <dl class="row small mb-0">
+                    <dt class="col-6">Initiated</dt>
+                    <dd class="col-6">{{ co.initiated_date }}</dd>
+                    <dt class="col-6">Submitted</dt>
+                    <dd class="col-6">{{ co.submitted_date|default:'—' }}</dd>
+                    <dt class="col-6">Approved</dt>
+                    <dd class="col-6">{{ co.approved_date|default:'—' }}</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><h6 class="mb-0">Approval Chain</h6></div>
+            <div class="card-body">
+                <dl class="row small mb-0">
+                    <dt class="col-5">Prepared By</dt>
+                    <dd class="col-7">{{ co.prepared_by.get_full_name|default:co.prepared_by.username|default:'—' }}</dd>
+                    <dt class="col-5">Reviewed By</dt>
+                    <dd class="col-7">{{ co.reviewed_by.get_full_name|default:co.reviewed_by.username|default:'—' }}</dd>
+                    <dt class="col-5">Approved By</dt>
+                    <dd class="col-7">{{ co.approved_by.get_full_name|default:co.approved_by.username|default:'—' }}</dd>
+                </dl>
+                {% if co.attachment %}
+                <hr>
+                <a href="{{ co.attachment.url }}" target="_blank" class="btn btn-sm btn-outline-secondary w-100">
+                    <i class="fas fa-paperclip me-1"></i>View Attachment
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

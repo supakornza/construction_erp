@@ -24,6 +24,9 @@ urlpatterns = [
     path('cost-control/', include('apps.cost_control.urls', namespace='cost_control')),
     path('tide-monitor/', include('apps.tide_monitor.urls', namespace='tide_monitor')),
     path('turbidity-monitor/', include('apps.turbidity_monitor.urls', namespace='turbidity_monitor')),
+    path('change-orders/', include('apps.change_orders.urls', namespace='change_orders')),
+    path('hr/', include('apps.hr.urls', namespace='hr')),
+    path('maintenance/', include('apps.maintenance.urls', namespace='maintenance')),
 ]
 
 if settings.DEBUG:
