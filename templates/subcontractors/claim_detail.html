@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}{{ claim.claim_no }} – Payment Claim{% endblock %}
+{% block page_title %}Payment Claim Detail{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h5 class="mb-0 fw-bold">{{ claim.claim_no }}</h5>
+        <small class="text-muted">{{ claim.contract.subcontractor.name }} · {{ claim.contract.contract_no }}</small>
+    </div>
+    <div class="d-flex gap-2">
+        {% if claim.status == 'Draft' %}
+        <form method="post" action="{% url 'subcontractors:claim_submit' claim.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-primary">
+                <i class="fas fa-paper-plane me-1"></i>Submit for Certification
+            </button>
+        </form>
+        {% elif claim.status == 'Submitted' %}
+        <a href="{% url 'subcontractors:claim_certify' claim.pk %}" class="btn btn-sm btn-success">
+            <i class="fas fa-stamp me-1"></i>Certify
+        </a>
+        <form method="post" action="{% url 'subcontractors:claim_reject' claim.pk %}"
+              onsubmit="return confirm('Reject this claim?')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-danger">Reject</button>
+        </form>
+        {% elif claim.status == 'Certified' %}
+        <a href="{% url 'subcontractors:claim_pay' claim.pk %}" class="btn btn-sm btn-success">
+            <i class="fas fa-money-bill-wave me-1"></i>Mark as Paid
+        </a>
+        <form method="post" action="{% url 'subcontractors:claim_reject' claim.pk %}"
+              onsubmit="return confirm('Reject this certified claim?')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-danger">Reject</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Status Timeline -->
+<div class="card mb-3">
+    <div class="card-body py-2">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            {% for step, color in claim.STATUS_CHOICES %}
+            <div class="d-flex align-items-center gap-1">
+                <span class="badge {% if claim.status == step %}bg-{{ claim.status_color }}{% elif step == 'Rejected' and claim.status == 'Rejected' %}bg-danger{% else %}bg-light text-muted{% endif %}">
+                    {{ color }}
+                </span>
+                {% if not forloop.last and step != 'Rejected' %}<i class="fas fa-chevron-right text-muted small"></i>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header"><h6 class="mb-0">Claim Details</h6></div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-sm-4">
+                        <div class="small text-muted">Claim Date</div>
+                        <div class="fw-semibold">{{ claim.claim_date }}</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="small text-muted">Period From</div>
+                        <div>{{ claim.period_from|default:"—" }}</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="small text-muted">Period To</div>
+                        <div>{{ claim.period_to|default:"—" }}</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="small text-muted">Project</div>
+                        <div>{{ claim.contract.project.name }}</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="small text-muted">Contract</div>
+                        <div>
+                            <a href="{% url 'subcontractors:contract_detail' claim.contract.pk %}">
+                                {{ claim.contract.contract_no }} – {{ claim.contract.title }}
+                            </a>
+                        </div>
+                    </div>
+                    {% if claim.notes %}
+                    <div class="col-12">
+                        <div class="small text-muted">Notes</div>
+                        <div class="small">{{ claim.notes|linebreaksbr }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card mb-3">
+            <div class="card-header"><h6 class="mb-0">Amounts</h6></div>
+            <div class="card-body">
+                <dl class="row mb-0 small">
+                    <dt class="col-7 text-muted">Claimed Amount</dt>
+                    <dd class="col-5 fw-semibold">{{ claim.claimed_amount|floatformat:2|intcomma }} ฿</dd>
+                    <dt class="col-7 text-muted">Certified Amount</dt>
+                    <dd class="col-5 text-warning fw-semibold">{{ claim.certified_amount|floatformat:2|intcomma }} ฿</dd>
+                    <dt class="col-7 text-muted">Retention Deducted</dt>
+                    <dd class="col-5 text-danger">{{ claim.retention_deducted|floatformat:2|intcomma }} ฿</dd>
+                    <dt class="col-7 fw-semibold">Net Payable</dt>
+                    <dd class="col-5 fw-bold text-success fs-6">{{ claim.net_payable|floatformat:2|intcomma }} ฿</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><h6 class="mb-0">Audit</h6></div>
+            <div class="card-body">
+                <dl class="row mb-0 small">
+                    <dt class="col-5 text-muted">Created By</dt>
+                    <dd class="col-7">{{ claim.created_by|default:"—" }}</dd>
+                    <dt class="col-5 text-muted">Created</dt>
+                    <dd class="col-7">{{ claim.created_at|date:"d M Y" }}</dd>
+                    {% if claim.certified_by %}
+                    <dt class="col-5 text-muted">Certified By</dt>
+                    <dd class="col-7">{{ claim.certified_by }}</dd>
+                    <dt class="col-5 text-muted">Certified</dt>
+                    <dd class="col-7">{{ claim.certified_date|default:"—" }}</dd>
+                    {% endif %}
+                    {% if claim.paid_date %}
+                    <dt class="col-5 text-muted">Paid Date</dt>
+                    <dd class="col-7 text-success fw-semibold">{{ claim.paid_date }}</dd>
+                    {% endif %}
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a href="{% url 'subcontractors:contract_detail' claim.contract.pk %}"
+       class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Back to Contract
+    </a>
+</div>
+{% endblock %}

@@ -101,6 +101,17 @@ class User(AbstractUser):
             'engineer', 'quantity_surveyor', 'legal_officer', 'owner',
             'senior_advisor', 'project_coordinator', 'viewer'}
 
+    def can_view_drawings(self):
+        return self.is_superuser or self.role in {
+            'admin', 'project_manager', 'construction_manager', 'office_engineer',
+            'engineer', 'site_engineer', 'inspector', 'quantity_surveyor',
+            'document_controller', 'project_coordinator', 'legal_officer', 'owner', 'viewer'}
+
+    def can_view_subcontractors(self):
+        return self.is_superuser or self.role in {
+            'admin', 'project_manager', 'construction_manager', 'office_engineer',
+            'engineer', 'quantity_surveyor', 'legal_officer', 'project_coordinator'}
+
     def can_view_maintenance(self):
         return self.is_superuser or self.role in {
             'admin', 'project_manager', 'construction_manager', 'office_engineer',

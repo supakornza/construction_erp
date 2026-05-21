@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}{{ rfi.rfi_no }} – RFI{% endblock %}
+{% block page_title %}RFI Detail{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h5 class="mb-0 fw-bold">{{ rfi.rfi_no }}
+            <span class="badge bg-{{ rfi.priority_color }} ms-1">{{ rfi.priority }}</span>
+            {% if rfi.is_overdue %}<span class="badge bg-danger ms-1">Overdue</span>{% endif %}
+        </h5>
+        <small class="text-muted">{{ rfi.subject }}</small>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        {% if rfi.status == 'Open' %}
+        <form method="post" action="{% url 'drawings:rfi_submit' rfi.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-primary">
+                <i class="fas fa-paper-plane me-1"></i>Submit
+            </button>
+        </form>
+        {% elif rfi.status == 'Submitted' %}
+        <form method="post" action="{% url 'drawings:rfi_review' rfi.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-info text-white">Under Review</button>
+        </form>
+        <a href="{% url 'drawings:rfi_answer' rfi.pk %}" class="btn btn-sm btn-success">
+            <i class="fas fa-reply me-1"></i>Answer
+        </a>
+        {% elif rfi.status == 'UnderReview' %}
+        <a href="{% url 'drawings:rfi_answer' rfi.pk %}" class="btn btn-sm btn-success">
+            <i class="fas fa-reply me-1"></i>Answer
+        </a>
+        {% elif rfi.status == 'Answered' %}
+        <form method="post" action="{% url 'drawings:rfi_close' rfi.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-secondary">
+                <i class="fas fa-check-double me-1"></i>Close RFI
+            </button>
+        </form>
+        {% endif %}
+        {% if rfi.status not in 'Closed' and rfi.status != 'Void' %}
+        <a href="{% url 'drawings:rfi_update' rfi.pk %}" class="btn btn-sm btn-outline-secondary">
+            <i class="fas fa-edit me-1"></i>Edit
+        </a>
+        <form method="post" action="{% url 'drawings:rfi_void' rfi.pk %}"
+              onsubmit="return confirm('Void this RFI?')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-dark">Void</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Status Timeline -->
+<div class="card mb-3">
+    <div class="card-body py-2">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            {% for step, label in rfi.STATUS_CHOICES %}
+            {% if step != 'Void' %}
+            <div class="d-flex align-items-center gap-1">
+                <span class="badge {% if rfi.status == step %}bg-{{ rfi.status_color }}{% else %}bg-light text-muted border{% endif %}">
+                    {{ label }}
+                </span>
+                {% if not forloop.last %}<i class="fas fa-chevron-right text-muted small"></i>{% endif %}
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% if rfi.status == 'Void' %}
+            <span class="badge bg-dark ms-2">Void</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-8">
+        <!-- RFI Details -->
+        <div class="card mb-3">
+            <div class="card-header"><h6 class="mb-0">RFI Details</h6></div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <div class="small text-muted">Project</div>
+                        <div>{{ rfi.project.name }}</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="small text-muted">Related Drawing</div>
+                        {% if rfi.drawing %}
+                        <a href="{% url 'drawings:drawing_detail' rfi.drawing.pk %}">
+                            {{ rfi.drawing.drawing_no }} Rev.{{ rfi.drawing.revision }}
+                        </a>
+                        {% else %}
+                        <span class="text-muted">—</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="small text-muted">Submitted By</div>
+                        <div>{{ rfi.submitted_by|default:"—" }}</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="small text-muted">Submitted Date</div>
+                        <div>{{ rfi.submitted_date|default:"—" }}</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="small text-muted">Response Required</div>
+                        <div class="{% if rfi.is_overdue %}text-danger fw-bold{% endif %}">
+                            {{ rfi.response_required_date|default:"—" }}
+                        </div>
+                    </div>
+                    {% if rfi.description %}
+                    <div class="col-12">
+                        <div class="small text-muted">Description / Question</div>
+                        <div class="small border rounded p-2 bg-light">{{ rfi.description|linebreaksbr }}</div>
+                    </div>
+                    {% endif %}
+                    {% if rfi.attachment %}
+                    <div class="col-12">
+                        <div class="small text-muted">Attachment</div>
+                        <a href="{{ rfi.attachment.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-paperclip me-1"></i>Download Attachment
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Answer -->
+        {% if rfi.answer %}
+        <div class="card border-success">
+            <div class="card-header bg-success bg-opacity-10">
+                <h6 class="mb-0 text-success"><i class="fas fa-reply me-1"></i>Answer / Response</h6>
+            </div>
+            <div class="card-body">
+                <div class="small mb-2">{{ rfi.answer|linebreaksbr }}</div>
+                <small class="text-muted">
+                    Answered by <strong>{{ rfi.answered_by|default:"—" }}</strong>
+                    on {{ rfi.answered_date|default:"—" }}
+                </small>
+            </div>
+        </div>
+        {% elif rfi.status in 'SubmittedUnderReview' %}
+        <div class="card border-warning">
+            <div class="card-body text-center text-warning py-4">
+                <i class="fas fa-clock fa-2x mb-2"></i>
+                <div>Awaiting response…</div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header"><h6 class="mb-0">Audit</h6></div>
+            <div class="card-body">
+                <dl class="row mb-0 small">
+                    <dt class="col-5 text-muted">Created By</dt>
+                    <dd class="col-7">{{ rfi.created_by|default:"—" }}</dd>
+                    <dt class="col-5 text-muted">Created</dt>
+                    <dd class="col-7">{{ rfi.created_at|date:"d M Y" }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a href="{% url 'drawings:rfi_list' %}" class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Back to RFI List
+    </a>
+    <a href="{% url 'drawings:dashboard' %}" class="btn btn-sm btn-outline-primary ms-1">
+        <i class="fas fa-drafting-compass me-1"></i>Dashboard
+    </a>
+</div>
+{% endblock %}

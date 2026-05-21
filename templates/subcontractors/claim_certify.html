@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags humanize %}
+{% block title %}Certify {{ claim.claim_no }} – Subcontractors{% endblock %}
+{% block page_title %}Certify Payment Claim{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="alert alert-warning d-flex align-items-start mb-3">
+            <i class="fas fa-stamp me-2 mt-1"></i>
+            <div>
+                Certifying: <strong>{{ claim.claim_no }}</strong><br>
+                <small>{{ claim.contract.subcontractor.name }} · {{ claim.contract.contract_no }}
+                · Claimed: <strong>{{ claim.claimed_amount|floatformat:2|intcomma }} ฿</strong>
+                · Retention: {{ claim.contract.retention_pct }}%</small>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-stamp me-2 text-success"></i>Certify Claim</h6>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {% crispy form %}
+                </form>
+            </div>
+        </div>
+        <div class="mt-2">
+            <a href="{% url 'subcontractors:claim_detail' claim.pk %}"
+               class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

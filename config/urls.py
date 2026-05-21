@@ -27,6 +27,9 @@ urlpatterns = [
     path('change-orders/', include('apps.change_orders.urls', namespace='change_orders')),
     path('hr/', include('apps.hr.urls', namespace='hr')),
     path('maintenance/', include('apps.maintenance.urls', namespace='maintenance')),
+    path('subcontractors/', include('apps.subcontractors.urls', namespace='subcontractors')),
+    path('drawings/', include('apps.drawings.urls', namespace='drawings')),
+    path('notifications/', include('apps.notifications.urls', namespace='notifications')),
 ]
 
 if settings.DEBUG:

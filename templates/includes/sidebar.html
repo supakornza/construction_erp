@@ -142,6 +142,24 @@
         </a>
         {% endif %}
 
+        {% if user.can_view_drawings %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "Drawings & RFI" %}</span></div>
+        <a href="{% url 'drawings:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'drawings' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Drawings & RFI' %}">
+            <i class="fas fa-drafting-compass nav-icon"></i>
+            <span class="sidebar-label">{% trans "Drawings & RFI" %}</span>
+        </a>
+        {% endif %}
+
+        {% if user.can_view_subcontractors %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "Subcontractors" %}</span></div>
+        <a href="{% url 'subcontractors:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'subcontractors' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Subcontractors' %}">
+            <i class="fas fa-hard-hat nav-icon"></i>
+            <span class="sidebar-label">{% trans "Subcontractors" %}</span>
+        </a>
+        {% endif %}
+
         {% if user.can_view_maintenance %}
         <div class="nav-section"><span class="sidebar-label">{% trans "Maintenance" %}</span></div>
         <a href="{% url 'maintenance:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'maintenance' %}active{% endif %}"

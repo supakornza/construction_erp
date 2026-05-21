@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{% if form.instance.pk %}Edit RFI{% else %}New RFI{% endif %} – Drawings{% endblock %}
+{% block page_title %}{% if form.instance.pk %}Edit RFI{% else %}New RFI{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-question-circle me-2 text-warning"></i>
+                    {% if form.instance.pk %}Edit: {{ form.instance.rfi_no }}{% else %}Create RFI{% endif %}
+                </h6>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% crispy form %}
+                </form>
+            </div>
+        </div>
+        <div class="mt-2">
+            <a href="{% url 'drawings:rfi_list' %}" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to RFI List
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

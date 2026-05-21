@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Answer {{ rfi.rfi_no }} – RFI{% endblock %}
+{% block page_title %}Answer RFI{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="alert alert-info mb-3">
+            <strong>{{ rfi.rfi_no }}</strong>: {{ rfi.subject }}<br>
+            <small class="text-muted">
+                {{ rfi.project.name }}
+                {% if rfi.drawing %}· Drawing: {{ rfi.drawing.drawing_no }} Rev.{{ rfi.drawing.revision }}{% endif %}
+            </small>
+            {% if rfi.description %}
+            <hr class="my-1">
+            <small>{{ rfi.description|truncatechars:200 }}</small>
+            {% endif %}
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-reply me-2 text-success"></i>Submit Answer</h6>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {% crispy form %}
+                </form>
+            </div>
+        </div>
+        <div class="mt-2">
+            <a href="{% url 'drawings:rfi_detail' rfi.pk %}" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

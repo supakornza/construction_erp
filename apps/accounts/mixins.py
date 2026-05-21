@@ -274,6 +274,45 @@ class ChangeOrderApproveMixin(RoleRequiredMixin):
     allowed_roles = ['admin', 'project_manager', 'construction_manager']
 
 
+class DrawingsViewMixin(RoleRequiredMixin):
+    allowed_roles = [
+        'admin', 'project_manager', 'construction_manager', 'office_engineer',
+        'engineer', 'site_engineer', 'inspector', 'quantity_surveyor',
+        'document_controller', 'project_coordinator', 'legal_officer', 'owner', 'viewer',
+    ]
+
+
+class DrawingsWriteMixin(RoleRequiredMixin):
+    allowed_roles = [
+        'admin', 'project_manager', 'construction_manager', 'office_engineer',
+        'engineer', 'site_engineer', 'document_controller', 'project_coordinator',
+    ]
+
+
+class DrawingsApproveMixin(RoleRequiredMixin):
+    allowed_roles = [
+        'admin', 'project_manager', 'construction_manager', 'office_engineer', 'engineer',
+    ]
+
+
+class SubcontractorViewMixin(RoleRequiredMixin):
+    allowed_roles = [
+        'admin', 'project_manager', 'construction_manager', 'office_engineer',
+        'engineer', 'quantity_surveyor', 'legal_officer', 'project_coordinator',
+    ]
+
+
+class SubcontractorWriteMixin(RoleRequiredMixin):
+    allowed_roles = [
+        'admin', 'project_manager', 'construction_manager', 'office_engineer',
+        'quantity_surveyor',
+    ]
+
+
+class SubcontractorApproveMixin(RoleRequiredMixin):
+    allowed_roles = ['admin', 'project_manager', 'construction_manager']
+
+
 class MaintenanceViewMixin(RoleRequiredMixin):
     allowed_roles = [
         'admin', 'project_manager', 'construction_manager', 'office_engineer',

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags humanize %}
+{% block title %}Mark Paid {{ claim.claim_no }} – Subcontractors{% endblock %}
+{% block page_title %}Mark Payment Claim as Paid{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="alert alert-success d-flex align-items-start mb-3">
+            <i class="fas fa-money-bill-wave me-2 mt-1"></i>
+            <div>
+                <strong>{{ claim.claim_no }}</strong> — {{ claim.contract.subcontractor.name }}<br>
+                <small>Net Payable: <strong>{{ claim.net_payable|floatformat:2|intcomma }} ฿</strong></small>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-money-bill-wave me-2 text-success"></i>Record Payment</h6>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {% crispy form %}
+                </form>
+            </div>
+        </div>
+        <div class="mt-2">
+            <a href="{% url 'subcontractors:claim_detail' claim.pk %}"
+               class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

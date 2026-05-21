@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{% if form.instance.pk %}Edit Contract{% else %}New Contract{% endif %} – Subcontractors{% endblock %}
+{% block page_title %}{% if form.instance.pk %}Edit Contract{% else %}New Contract{% endif %}{% endblock %}
+
+{% block content %}
+<form method="post">
+{% csrf_token %}
+
+<div class="card mb-3">
+    <div class="card-header">
+        <h6 class="mb-0">
+            <i class="fas fa-file-signature me-2 text-warning"></i>
+            {% if form.instance.pk %}Edit: {{ form.instance.contract_no }}{% else %}Create Subcontractor Contract{% endif %}
+        </h6>
+    </div>
+    <div class="card-body">
+        {% crispy form %}
+    </div>
+</div>
+
+<!-- Work Items -->
+<div class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h6 class="mb-0"><i class="fas fa-list me-1 text-secondary"></i>Work Items / Bill of Works</h6>
+        <button type="button" class="btn btn-xs btn-outline-secondary" id="add-work-item">
+            <i class="fas fa-plus me-1"></i>Add Item
+        </button>
+    </div>
+    <div class="card-body p-0">
+        {{ work_item_formset.management_form }}
+        <table class="table table-sm mb-0" id="work-items-table">
+            <thead class="table-light">
+                <tr>
+                    <th style="min-width:200px">Description</th>
+                    <th style="width:80px">Unit</th>
+                    <th style="width:110px">Contract Qty</th>
+                    <th style="width:120px">Unit Rate (฿)</th>
+                    <th style="width:110px">Completed Qty</th>
+                    <th style="width:110px">Amount (฿)</th>
+                    <th style="width:50px">Del</th>
+                </tr>
+            </thead>
+            <tbody id="work-items-tbody">
+            {% for wf in work_item_formset %}
+            <tr class="work-item-row">
+                {% for hidden in wf.hidden_fields %}{{ hidden }}{% endfor %}
+                <td>{{ wf.description }}</td>
+                <td>{{ wf.unit }}</td>
+                <td>{{ wf.contract_qty }}</td>
+                <td>{{ wf.unit_rate }}</td>
+                <td>{{ wf.completed_qty }}</td>
+                <td class="small text-muted amount-cell">—</td>
+                <td>
+                    {% if wf.instance.pk %}
+                    <div class="form-check">{{ wf.DELETE }}</div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="d-flex gap-2">
+    <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save me-1"></i>Save Contract
+    </button>
+    <a href="{% url 'subcontractors:contract_list' %}" class="btn btn-outline-secondary">Cancel</a>
+</div>
+</form>
+
+<script>
+(function () {
+    var totalForms = document.getElementById('id_work_items-TOTAL_FORMS');
+
+    function updateAmounts() {
+        document.querySelectorAll('.work-item-row').forEach(function (row) {
+            var qty  = parseFloat(row.querySelector('[name$="-contract_qty"]').value) || 0;
+            var rate = parseFloat(row.querySelector('[name$="-unit_rate"]').value) || 0;
+            var cell = row.querySelector('.amount-cell');
+            if (cell) cell.textContent = (qty * rate).toLocaleString('th-TH', {minimumFractionDigits: 2});
+        });
+    }
+
+    document.getElementById('work-items-table').addEventListener('input', updateAmounts);
+    updateAmounts();
+
+    document.getElementById('add-work-item').addEventListener('click', function () {
+        var tbody = document.getElementById('work-items-tbody');
+        var rows  = tbody.querySelectorAll('.work-item-row');
+        var idx   = rows.length;
+        var tmpl  = rows[rows.length - 1];
+        var newRow = document.createElement('tr');
+        newRow.className = 'work-item-row';
+
+        tmpl.querySelectorAll('td').forEach(function (cell, ci) {
+            var newCell = document.createElement('td');
+            cell.querySelectorAll('input').forEach(function (inp) {
+                var newInp = document.createElement('input');
+                newInp.type      = inp.type;
+                newInp.name      = inp.name.replace(/work_items-\d+-/, 'work_items-' + idx + '-');
+                newInp.id        = inp.id.replace(/work_items-\d+-/, 'work_items-' + idx + '-');
+                newInp.className = inp.className;
+                newInp.value     = '';
+                newCell.appendChild(newInp);
+            });
+            if (ci === 5) {
+                newCell.className = 'small text-muted amount-cell';
+                newCell.textContent = '—';
+            }
+            newRow.appendChild(newCell);
+        });
+
+        tbody.appendChild(newRow);
+        totalForms.value = idx + 1;
+    });
+})();
+</script>
+{% endblock %}

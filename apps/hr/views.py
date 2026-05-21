@@ -12,6 +12,7 @@ from django.views.generic import (
 )
 
 from apps.accounts.mixins import HRViewMixin, HRWriteMixin, HRApproveMixin
+from apps.notifications.utils import notify
 from apps.projects.models import Project
 from .models import Employee, AttendanceRecord, LeaveRequest, OvertimeRequest
 from .forms import (
@@ -288,6 +289,11 @@ class LeaveApproveView(HRApproveMixin, View):
             leave.decided_at  = timezone.now()
             leave.save(update_fields=['status', 'approved_by', 'decided_at'])
             messages.success(request, f'Leave approved for {leave.employee.full_name}.')
+            if leave.employee.user:
+                notify(leave.employee.user, 'leave_approved',
+                       f'Leave Request Approved',
+                       f'Your {leave.get_leave_type_display()} leave ({leave.days} day(s)) has been approved.',
+                       reverse('hr:leave_detail', kwargs={'pk': leave.pk}))
         return redirect('hr:leave_detail', pk=pk)
 
 
@@ -310,6 +316,11 @@ class LeaveRejectView(HRApproveMixin, View):
             leave.decided_at       = timezone.now()
             leave.save(update_fields=['status', 'approved_by', 'rejection_reason', 'decided_at'])
             messages.warning(request, f'Leave rejected for {leave.employee.full_name}.')
+            if leave.employee.user:
+                notify(leave.employee.user, 'leave_rejected',
+                       f'Leave Request Rejected',
+                       f'Your {leave.get_leave_type_display()} leave request has been rejected.',
+                       reverse('hr:leave_detail', kwargs={'pk': leave.pk}))
         return redirect('hr:leave_detail', pk=pk)
 
 

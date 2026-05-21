@@ -44,6 +44,67 @@
             </form>
         </div>
 
+        <!-- Notification Bell -->
+        <div class="dropdown no-print">
+            <button class="btn btn-sm btn-outline-secondary position-relative"
+                    type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                    title="Notifications">
+                <i class="fas fa-bell"></i>
+                {% if notif_unread_count > 0 %}
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                      style="font-size:.6rem;">
+                    {{ notif_unread_count }}
+                </span>
+                {% endif %}
+            </button>
+            <div class="dropdown-menu dropdown-menu-end shadow" style="width:320px;max-height:420px;overflow-y:auto;">
+                <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
+                    <span class="fw-semibold small">Notifications</span>
+                    {% if notif_unread_count > 0 %}
+                    <form method="post" action="{% url 'notifications:mark_all_read' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-xs btn-link text-muted p-0 small">
+                            Mark all read
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+                {% if notif_recent %}
+                {% for notif in notif_recent %}
+                <div class="px-3 py-2 border-bottom {% if not notif.is_read %}bg-light{% endif %}"
+                     style="font-size:.82rem;">
+                    <div class="d-flex gap-2 align-items-start">
+                        <span class="text-{{ notif.color }} flex-shrink-0 mt-1" style="font-size:.9rem;">
+                            <i class="{{ notif.icon }}"></i>
+                        </span>
+                        <div class="flex-grow-1 min-width-0">
+                            <div class="fw-{% if not notif.is_read %}semibold{% else %}normal{% endif %} text-truncate">
+                                {{ notif.title }}
+                            </div>
+                            <div class="text-muted" style="font-size:.74rem;">{{ notif.created_at|timesince }} ago</div>
+                        </div>
+                        {% if notif.url %}
+                        <form method="post" action="{% url 'notifications:mark_read' notif.pk %}" class="flex-shrink-0">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-xs btn-link text-muted p-0">
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="px-3 py-4 text-center text-muted small">
+                    <i class="fas fa-bell-slash me-1"></i>No new notifications
+                </div>
+                {% endif %}
+                <div class="px-3 py-2 text-center border-top">
+                    <a href="{% url 'notifications:list' %}" class="small text-primary">View all notifications</a>
+                </div>
+            </div>
+        </div>
+
         <!-- User dropdown -->
         <div class="dropdown">
             <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2"

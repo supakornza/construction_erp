@@ -50,6 +50,9 @@ INSTALLED_APPS = [
     'apps.change_orders',
     'apps.hr',
     'apps.maintenance',
+    'apps.subcontractors',
+    'apps.drawings',
+    'apps.notifications',
 ]
 
 MIDDLEWARE = [
@@ -81,6 +84,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'apps.notifications.context_processors.notifications',
             ],
         },
     },
