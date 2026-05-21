@@ -415,7 +415,7 @@ def _build_safety(wb, project, week_start, week_dates):
     ).select_related('conducted_by').order_by('meeting_date')
     if not meetings:
         ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=6)
-        _cell(ws, r, 1, 'No toolbox meetings this week.', fill=_GREY_LIGHT, italic=True)
+        _cell(ws, r, 1, 'No toolbox meetings this week.', fill=_GREY_LIGHT)
         r += 1
     else:
         for m in meetings:
