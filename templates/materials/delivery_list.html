@@ -44,6 +44,10 @@
         <label class="form-label form-label-sm mb-1 text-muted">ทะเบียนรถ</label>
         <input type="text" name="truck_no" value="{{ request.GET.truck_no }}" class="form-control form-control-sm" placeholder="ค้นหา...">
       </div>
+      <div class="col-md-1 col-6">
+        <label class="form-label form-label-sm mb-1 text-muted">เลขที่ใบส่งของ</label>
+        <input type="text" name="dn" value="{{ request.GET.dn }}" class="form-control form-control-sm" placeholder="ค้นหา...">
+      </div>
       <div class="col-md-2 col-12 d-flex gap-1">
         <button class="btn btn-sm btn-primary flex-grow-1" type="submit"><i class="fas fa-search me-1"></i>ค้นหา</button>
         <a href="{% url 'materials:delivery_list' %}" class="btn btn-sm btn-outline-secondary">ล้าง</a>

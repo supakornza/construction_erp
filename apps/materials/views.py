@@ -231,6 +231,8 @@ class MaterialDeliveryListView(MaterialsViewMixin, ListView):
             qs = qs.filter(Q(source__icontains=q) | Q(source_area__name__icontains=q))
         if p.get('truck_no', '').strip():
             qs = qs.filter(truck_no__icontains=p['truck_no'].strip())
+        if p.get('dn', '').strip():
+            qs = qs.filter(delivery_note_no__icontains=p['dn'].strip())
         sort_key = p.get('sort', '') or self.DEFAULT_SORT
         order = self._SORT_MAP.get(sort_key, self._SORT_MAP[self.DEFAULT_SORT])
         return qs.order_by(order, '-id')
