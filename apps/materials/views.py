@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count, DecimalField, ExpressionWrapper, F, Sum
+from django.db.models import Count, DecimalField, ExpressionWrapper, F, Q, Sum
 from django.db.models.functions import Coalesce
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -67,7 +67,11 @@ class MaterialDeliveryDashboardView(MaterialsViewMixin, TemplateView):
             .order_by('-quantity')[:10]
         )
         source_rows = list(
-            deliveries.values('source')
+            deliveries.annotate(
+                source_label=Coalesce(F('source_area__name'), F('source'))
+            )
+            .exclude(source_label__isnull=True).exclude(source_label='')
+            .values(name=F('source_label'))
             .annotate(quantity=Coalesce(Sum('quantity'), 0, output_field=DecimalField()), count=Count('id'))
             .order_by('-quantity')[:8]
         )
@@ -85,7 +89,8 @@ class MaterialDeliveryDashboardView(MaterialsViewMixin, TemplateView):
         truck_source_today = list(
             MaterialDelivery.objects
             .filter(delivery_date=today)
-            .values('project__id', 'project__contract_no', 'project__project_name', 'source')
+            .annotate(source_label=Coalesce(F('source_area__name'), F('source')))
+            .values('project__id', 'project__contract_no', 'project__project_name', 'source_label')
             .annotate(
                 truck_count=Count('truck_no', distinct=True),
                 trips=Count('id'),
@@ -107,7 +112,7 @@ class MaterialDeliveryDashboardView(MaterialsViewMixin, TemplateView):
             project_today_map[pid]['total_trips'] += row['trips']
             project_today_map[pid]['total_qty'] += float(row['quantity'] or 0)
             project_today_map[pid]['by_source'].append({
-                'source': row['source'] or '—',
+                'source': row['source_label'] or '—',
                 'trips': row['trips'],
                 'truck_count': row['truck_count'],
                 'quantity': float(row['quantity'] or 0),
@@ -197,18 +202,21 @@ class MaterialDeliveryListView(MaterialsViewMixin, ListView):
     paginate_by = 50
 
     _SORT_MAP = {
-        'date': 'delivery_date',
-        '-date': '-delivery_date',
-        'project': 'project__contract_no',
-        '-project': '-project__contract_no',
-        'material': 'material__name',
-        '-material': '-material__name',
-        'qty': 'quantity',
-        '-qty': '-quantity',
+        'date': 'delivery_date', '-date': '-delivery_date',
+        'time': 'delivery_time', '-time': '-delivery_time',
+        'created': 'created_at', '-created': '-created_at',
+        'project': 'project__contract_no', '-project': '-project__contract_no',
+        'material': 'material__name', '-material': '-material__name',
+        'source': 'source_area__name', '-source': '-source_area__name',
+        'truck': 'truck_no', '-truck': '-truck_no',
+        'dn': 'delivery_note_no', '-dn': '-delivery_note_no',
+        'qty': 'quantity', '-qty': '-quantity',
+        'price': 'unit_price', '-price': '-unit_price',
     }
+    DEFAULT_SORT = '-created'
 
     def get_queryset(self):
-        qs = super().get_queryset().select_related('project', 'material')
+        qs = super().get_queryset().select_related('project', 'material', 'source_area')
         p = self.request.GET
         if p.get('project'):
             qs = qs.filter(project_id=p['project'])
@@ -219,22 +227,32 @@ class MaterialDeliveryListView(MaterialsViewMixin, ListView):
         if p.get('date_to'):
             qs = qs.filter(delivery_date__lte=p['date_to'])
         if p.get('source', '').strip():
-            qs = qs.filter(source__icontains=p['source'].strip())
+            q = p['source'].strip()
+            qs = qs.filter(Q(source__icontains=q) | Q(source_area__name__icontains=q))
         if p.get('truck_no', '').strip():
             qs = qs.filter(truck_no__icontains=p['truck_no'].strip())
-        order = self._SORT_MAP.get(p.get('sort', ''), '-delivery_date')
-        return qs.order_by(order)
+        sort_key = p.get('sort', '') or self.DEFAULT_SORT
+        order = self._SORT_MAP.get(sort_key, self._SORT_MAP[self.DEFAULT_SORT])
+        return qs.order_by(order, '-id')
 
     def get_context_data(self, **kwargs):
         from apps.projects.models import Project
         ctx = super().get_context_data(**kwargs)
         ctx['projects'] = Project.objects.filter(status='Active')
         ctx['materials'] = Material.objects.all()
-        ctx['current_sort'] = self.request.GET.get('sort', '-date')
+        ctx['current_sort'] = self.request.GET.get('sort') or self.DEFAULT_SORT
         ctx['view_mode'] = self.request.GET.get('view', 'table')
         get_copy = self.request.GET.copy()
         get_copy.pop('page', None)
         ctx['filter_params'] = get_copy.urlencode()
+        # Duplicate delivery_note_no detection (per project)
+        dup_pairs = (
+            MaterialDelivery.objects
+            .exclude(delivery_note_no='')
+            .values('project_id', 'delivery_note_no')
+            .annotate(c=Count('id')).filter(c__gt=1)
+        )
+        ctx['duplicate_dns_keys'] = {f"{d['project_id']}|{d['delivery_note_no']}" for d in dup_pairs}
         return ctx
 
 

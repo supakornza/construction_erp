@@ -1,0 +1,561 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link " Construction ERP" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: 
+        - generic [ref=e6]: Construction ERP
+      - button "" [ref=e7] [cursor=pointer]:
+        - generic [ref=e8]: 
+    - generic [ref=e9]:
+      - generic [ref=e10]: Dashboard
+      - link " Dashboard" [ref=e11] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e12]: 
+        - generic [ref=e13]: Dashboard
+      - link " Tide Monitor" [ref=e14] [cursor=pointer]:
+        - /url: /tide-monitor/
+        - generic [ref=e15]: 
+        - generic [ref=e16]: Tide Monitor
+      - link " Turbidity Monitor" [ref=e17] [cursor=pointer]:
+        - /url: /turbidity-monitor/
+        - generic [ref=e18]: 
+        - generic [ref=e19]: Turbidity Monitor
+      - link " Rock Progress" [ref=e20] [cursor=pointer]:
+        - /url: /project-controls/rock/dashboard/
+        - generic [ref=e21]: 
+        - generic [ref=e22]: Rock Progress
+      - link " Sand Progress" [ref=e23] [cursor=pointer]:
+        - /url: /project-controls/sand/dashboard/
+        - generic [ref=e24]: 
+        - generic [ref=e25]: Sand Progress
+      - generic [ref=e26]: Projects
+      - link " Projects" [ref=e27] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e28]: 
+        - generic [ref=e29]: Projects
+      - generic [ref=e30]: Daily Reports
+      - link " Daily Reports" [ref=e31] [cursor=pointer]:
+        - /url: /daily-reports/
+        - generic [ref=e32]: 
+        - generic [ref=e33]: Daily Reports
+      - link " Contractor Imports" [ref=e34] [cursor=pointer]:
+        - /url: /daily-reports/import/
+        - generic [ref=e35]: 
+        - generic [ref=e36]: Contractor Imports
+      - generic [ref=e37]: Resources
+      - link " Manpower" [ref=e38] [cursor=pointer]:
+        - /url: /manpower/dashboard/
+        - generic [ref=e39]: 
+        - generic [ref=e40]: Manpower
+      - link " Equipment" [ref=e41] [cursor=pointer]:
+        - /url: /equipment/
+        - generic [ref=e42]: 
+        - generic [ref=e43]: Equipment
+      - link " Materials" [ref=e44] [cursor=pointer]:
+        - /url: /materials/dashboard/
+        - generic [ref=e45]: 
+        - generic [ref=e46]: Materials
+      - generic [ref=e47]: Procurement
+      - link " Procurement" [ref=e48] [cursor=pointer]:
+        - /url: /procurement/pr/
+        - generic [ref=e49]: 
+        - generic [ref=e50]: Procurement
+      - generic [ref=e51]: BOQ & Progress
+      - link " BOQ & Progress" [ref=e52] [cursor=pointer]:
+        - /url: /boq/
+        - generic [ref=e53]: 
+        - generic [ref=e54]: BOQ & Progress
+      - generic [ref=e55]: Project Controls
+      - link " Rock & Sand Control" [ref=e56] [cursor=pointer]:
+        - /url: /project-controls/
+        - generic [ref=e57]: 
+        - generic [ref=e58]: Rock & Sand Control
+      - link " Revetment Progress" [ref=e59] [cursor=pointer]:
+        - /url: /project-controls/revetment/dashboard/
+        - generic [ref=e60]: 
+        - generic [ref=e61]: Revetment Progress
+      - link " Recovery Plans" [ref=e62] [cursor=pointer]:
+        - /url: /project-controls/recovery/plans/
+        - generic [ref=e63]: 
+        - generic [ref=e64]: Recovery Plans
+      - link " Project Action Plans" [ref=e65] [cursor=pointer]:
+        - /url: /project-controls/action-plans/
+        - generic [ref=e66]: 
+        - generic [ref=e67]: Project Action Plans
+      - link " Recovery Action Plans" [ref=e68] [cursor=pointer]:
+        - /url: /project-controls/recovery/rap/
+        - generic [ref=e69]: 
+        - generic [ref=e70]: Recovery Action Plans
+      - link " Logistics" [ref=e71] [cursor=pointer]:
+        - /url: /project-controls/logistics/
+        - generic [ref=e72]: 
+        - generic [ref=e73]: Logistics
+      - link " Transport Units" [ref=e74] [cursor=pointer]:
+        - /url: /project-controls/transport-units/
+        - generic [ref=e75]: 
+        - generic [ref=e76]: Transport Units
+      - generic [ref=e77]: HR & Attendance
+      - link " HR & Attendance" [ref=e78] [cursor=pointer]:
+        - /url: /hr/
+        - generic [ref=e79]: 
+        - generic [ref=e80]: HR & Attendance
+      - generic [ref=e81]: Drawings & RFI
+      - link " Drawings & RFI" [ref=e82] [cursor=pointer]:
+        - /url: /drawings/
+        - generic [ref=e83]: 
+        - generic [ref=e84]: Drawings & RFI
+      - generic [ref=e85]: Subcontractors
+      - link " Subcontractors" [ref=e86] [cursor=pointer]:
+        - /url: /subcontractors/
+        - generic [ref=e87]: 
+        - generic [ref=e88]: Subcontractors
+      - generic [ref=e89]: Maintenance
+      - link " Maintenance" [ref=e90] [cursor=pointer]:
+        - /url: /maintenance/
+        - generic [ref=e91]: 
+        - generic [ref=e92]: Maintenance
+      - generic [ref=e93]: Change Orders
+      - link " Change Orders" [ref=e94] [cursor=pointer]:
+        - /url: /change-orders/
+        - generic [ref=e95]: 
+        - generic [ref=e96]: Change Orders
+      - generic [ref=e97]: Cost Control
+      - link " Cost Control" [ref=e98] [cursor=pointer]:
+        - /url: /cost-control/
+        - generic [ref=e99]: 
+        - generic [ref=e100]: Cost Control
+      - generic [ref=e101]: Safety
+      - link " Safety" [ref=e102] [cursor=pointer]:
+        - /url: /safety/toolbox/
+        - generic [ref=e103]: 
+        - generic [ref=e104]: Safety
+      - generic [ref=e105]: Quality
+      - link " Quality Control" [ref=e106] [cursor=pointer]:
+        - /url: /quality/
+        - generic [ref=e107]: 
+        - generic [ref=e108]: Quality Control
+      - generic [ref=e109]: Documents
+      - link " Documents" [ref=e110] [cursor=pointer]:
+        - /url: /documents/
+        - generic [ref=e111]: 
+        - generic [ref=e112]: Documents
+      - generic [ref=e113]: Admin
+      - link " Users" [ref=e114] [cursor=pointer]:
+        - /url: /accounts/users/
+        - generic [ref=e115]: 
+        - generic [ref=e116]: Users
+      - link " Roles" [ref=e117] [cursor=pointer]:
+        - /url: /accounts/roles/
+        - generic [ref=e118]: 
+        - generic [ref=e119]: Roles
+      - link " Django Admin" [ref=e120] [cursor=pointer]:
+        - /url: /admin/
+        - generic [ref=e121]: 
+        - generic [ref=e122]: Django Admin
+  - generic [ref=e123]:
+    - navigation [ref=e124]:
+      - text: 
+      - button "Go back" [ref=e125] [cursor=pointer]:
+        - generic [ref=e126]: 
+        - text: Back
+      - generic [ref=e127]:
+        - generic [ref=e128]:
+          - button "TH" [ref=e130] [cursor=pointer]
+          - button "EN" [ref=e132] [cursor=pointer]
+        - generic [ref=e133]:
+          - button "" [ref=e134] [cursor=pointer]:
+            - generic [ref=e135]: 
+          - text: 
+        - generic [ref=e136]:
+          - button "A Admin User Admin" [ref=e137] [cursor=pointer]:
+            - generic [ref=e138]: A
+            - generic [ref=e139]: Admin User
+            - generic [ref=e140]: Admin
+          - text:   
+    - generic [ref=e141]:
+      - generic [ref=e142]:
+        - heading "Safety Inspections" [level=4] [ref=e143]
+        - link "+ New Inspection" [ref=e144] [cursor=pointer]:
+          - /url: /safety/inspections/create/
+          - generic [ref=e145]: +
+          - text: New Inspection
+      - generic [ref=e148]:
+        - combobox [ref=e149]:
+          - option "All Status" [selected]
+          - option "Open"
+          - option "In Progress"
+          - option "Closed"
+        - button "Filter" [ref=e150] [cursor=pointer]
+      - table [ref=e153]:
+        - rowgroup [ref=e154]:
+          - row "Date Project Category Finding Responsible Due Date Status" [ref=e155]:
+            - columnheader "Date" [ref=e156]
+            - columnheader "Project" [ref=e157]
+            - columnheader "Category" [ref=e158]
+            - columnheader "Finding" [ref=e159]
+            - columnheader "Responsible" [ref=e160]
+            - columnheader "Due Date" [ref=e161]
+            - columnheader "Status" [ref=e162]
+            - columnheader [ref=e163]
+        - rowgroup [ref=e164]:
+          - row "20/05/2569 CON-2024-001 Housekeeping Material improperly stored near work area Site Foreman 24/05/2569 Open   " [ref=e165]:
+            - cell "20/05/2569" [ref=e166]
+            - cell "CON-2024-001" [ref=e167]
+            - cell "Housekeeping" [ref=e168]
+            - cell "Material improperly stored near work area" [ref=e169]
+            - cell "Site Foreman" [ref=e170]
+            - cell "24/05/2569" [ref=e171]
+            - cell "Open" [ref=e172]:
+              - generic [ref=e173]: Open
+            - cell "  " [ref=e174]:
+              - link "" [ref=e175] [cursor=pointer]:
+                - /url: /safety/inspections/21/
+                - generic [ref=e176]: 
+              - link "" [ref=e177] [cursor=pointer]:
+                - /url: /safety/inspections/21/edit/
+                - generic [ref=e178]: 
+              - button "" [ref=e180] [cursor=pointer]:
+                - generic [ref=e181]: 
+          - row "17/05/2569 CON-2024-001 PPE Worker observed without safety helmet Site Foreman 24/05/2569 Open   " [ref=e182]:
+            - cell "17/05/2569" [ref=e183]
+            - cell "CON-2024-001" [ref=e184]
+            - cell "PPE" [ref=e185]
+            - cell "Worker observed without safety helmet" [ref=e186]
+            - cell "Site Foreman" [ref=e187]
+            - cell "24/05/2569" [ref=e188]
+            - cell "Open" [ref=e189]:
+              - generic [ref=e190]: Open
+            - cell "  " [ref=e191]:
+              - link "" [ref=e192] [cursor=pointer]:
+                - /url: /safety/inspections/22/
+                - generic [ref=e193]: 
+              - link "" [ref=e194] [cursor=pointer]:
+                - /url: /safety/inspections/22/edit/
+                - generic [ref=e195]: 
+              - button "" [ref=e197] [cursor=pointer]:
+                - generic [ref=e198]: 
+          - row "16/05/2569 CON-2024-001 Housekeeping Material improperly stored near work area Site Foreman 20/05/2569 Open   " [ref=e199]:
+            - cell "16/05/2569" [ref=e200]
+            - cell "CON-2024-001" [ref=e201]
+            - cell "Housekeeping" [ref=e202]
+            - cell "Material improperly stored near work area" [ref=e203]
+            - cell "Site Foreman" [ref=e204]
+            - cell "20/05/2569" [ref=e205]
+            - cell "Open" [ref=e206]:
+              - generic [ref=e207]: Open
+            - cell "  " [ref=e208]:
+              - link "" [ref=e209] [cursor=pointer]:
+                - /url: /safety/inspections/19/
+                - generic [ref=e210]: 
+              - link "" [ref=e211] [cursor=pointer]:
+                - /url: /safety/inspections/19/edit/
+                - generic [ref=e212]: 
+              - button "" [ref=e214] [cursor=pointer]:
+                - generic [ref=e215]: 
+          - row "14/05/2569 CON-2024-001 Housekeeping Material improperly stored near work area Site Foreman 18/05/2569 Open   " [ref=e216]:
+            - cell "14/05/2569" [ref=e217]
+            - cell "CON-2024-001" [ref=e218]
+            - cell "Housekeeping" [ref=e219]
+            - cell "Material improperly stored near work area" [ref=e220]
+            - cell "Site Foreman" [ref=e221]
+            - cell "18/05/2569" [ref=e222]
+            - cell "Open" [ref=e223]:
+              - generic [ref=e224]: Open
+            - cell "  " [ref=e225]:
+              - link "" [ref=e226] [cursor=pointer]:
+                - /url: /safety/inspections/9/
+                - generic [ref=e227]: 
+              - link "" [ref=e228] [cursor=pointer]:
+                - /url: /safety/inspections/9/edit/
+                - generic [ref=e229]: 
+              - button "" [ref=e231] [cursor=pointer]:
+                - generic [ref=e232]: 
+          - row "13/05/2569 CON-2024-001 Housekeeping Material improperly stored near work area Site Foreman 17/05/2569 Open   " [ref=e233]:
+            - cell "13/05/2569" [ref=e234]
+            - cell "CON-2024-001" [ref=e235]
+            - cell "Housekeeping" [ref=e236]
+            - cell "Material improperly stored near work area" [ref=e237]
+            - cell "Site Foreman" [ref=e238]
+            - cell "17/05/2569" [ref=e239]
+            - cell "Open" [ref=e240]:
+              - generic [ref=e241]: Open
+            - cell "  " [ref=e242]:
+              - link "" [ref=e243] [cursor=pointer]:
+                - /url: /safety/inspections/7/
+                - generic [ref=e244]: 
+              - link "" [ref=e245] [cursor=pointer]:
+                - /url: /safety/inspections/7/edit/
+                - generic [ref=e246]: 
+              - button "" [ref=e248] [cursor=pointer]:
+                - generic [ref=e249]: 
+          - row "13/05/2569 CON-2025-002 Equipment Crane operator certificate log not on site Site Engineer 20/05/2569 Open   " [ref=e250]:
+            - cell "13/05/2569" [ref=e251]
+            - cell "CON-2025-002" [ref=e252]
+            - cell "Equipment" [ref=e253]
+            - cell "Crane operator certificate log not on site" [ref=e254]
+            - cell "Site Engineer" [ref=e255]
+            - cell "20/05/2569" [ref=e256]
+            - cell "Open" [ref=e257]:
+              - generic [ref=e258]: Open
+            - cell "  " [ref=e259]:
+              - link "" [ref=e260] [cursor=pointer]:
+                - /url: /safety/inspections/18/
+                - generic [ref=e261]: 
+              - link "" [ref=e262] [cursor=pointer]:
+                - /url: /safety/inspections/18/edit/
+                - generic [ref=e263]: 
+              - button "" [ref=e265] [cursor=pointer]:
+                - generic [ref=e266]: 
+          - row "13/05/2569 CON-2024-001 PPE Worker observed without safety helmet Site Foreman 20/05/2569 Open   " [ref=e267]:
+            - cell "13/05/2569" [ref=e268]
+            - cell "CON-2024-001" [ref=e269]
+            - cell "PPE" [ref=e270]
+            - cell "Worker observed without safety helmet" [ref=e271]
+            - cell "Site Foreman" [ref=e272]
+            - cell "20/05/2569" [ref=e273]
+            - cell "Open" [ref=e274]:
+              - generic [ref=e275]: Open
+            - cell "  " [ref=e276]:
+              - link "" [ref=e277] [cursor=pointer]:
+                - /url: /safety/inspections/20/
+                - generic [ref=e278]: 
+              - link "" [ref=e279] [cursor=pointer]:
+                - /url: /safety/inspections/20/edit/
+                - generic [ref=e280]: 
+              - button "" [ref=e282] [cursor=pointer]:
+                - generic [ref=e283]: 
+          - row "12/05/2569 CON-2024-001 Housekeeping Material improperly stored near work area Site Foreman 16/05/2569 Open   " [ref=e284]:
+            - cell "12/05/2569" [ref=e285]
+            - cell "CON-2024-001" [ref=e286]
+            - cell "Housekeeping" [ref=e287]
+            - cell "Material improperly stored near work area" [ref=e288]
+            - cell "Site Foreman" [ref=e289]
+            - cell "16/05/2569" [ref=e290]
+            - cell "Open" [ref=e291]:
+              - generic [ref=e292]: Open
+            - cell "  " [ref=e293]:
+              - link "" [ref=e294] [cursor=pointer]:
+                - /url: /safety/inspections/5/
+                - generic [ref=e295]: 
+              - link "" [ref=e296] [cursor=pointer]:
+                - /url: /safety/inspections/5/edit/
+                - generic [ref=e297]: 
+              - button "" [ref=e299] [cursor=pointer]:
+                - generic [ref=e300]: 
+          - row "11/05/2569 CON-2024-001 Housekeeping Material improperly stored near work area Site Foreman 15/05/2569 Open   " [ref=e301]:
+            - cell "11/05/2569" [ref=e302]
+            - cell "CON-2024-001" [ref=e303]
+            - cell "Housekeeping" [ref=e304]
+            - cell "Material improperly stored near work area" [ref=e305]
+            - cell "Site Foreman" [ref=e306]
+            - cell "15/05/2569" [ref=e307]
+            - cell "Open" [ref=e308]:
+              - generic [ref=e309]: Open
+            - cell "  " [ref=e310]:
+              - link "" [ref=e311] [cursor=pointer]:
+                - /url: /safety/inspections/3/
+                - generic [ref=e312]: 
+              - link "" [ref=e313] [cursor=pointer]:
+                - /url: /safety/inspections/3/edit/
+                - generic [ref=e314]: 
+              - button "" [ref=e316] [cursor=pointer]:
+                - generic [ref=e317]: 
+          - row "11/05/2569 CON-2024-001 PPE Worker observed without safety helmet Site Foreman 18/05/2569 Open   " [ref=e318]:
+            - cell "11/05/2569" [ref=e319]
+            - cell "CON-2024-001" [ref=e320]
+            - cell "PPE" [ref=e321]
+            - cell "Worker observed without safety helmet" [ref=e322]
+            - cell "Site Foreman" [ref=e323]
+            - cell "18/05/2569" [ref=e324]
+            - cell "Open" [ref=e325]:
+              - generic [ref=e326]: Open
+            - cell "  " [ref=e327]:
+              - link "" [ref=e328] [cursor=pointer]:
+                - /url: /safety/inspections/10/
+                - generic [ref=e329]: 
+              - link "" [ref=e330] [cursor=pointer]:
+                - /url: /safety/inspections/10/edit/
+                - generic [ref=e331]: 
+              - button "" [ref=e333] [cursor=pointer]:
+                - generic [ref=e334]: 
+          - row "10/05/2569 CON-2024-001 Housekeeping Material improperly stored near work area Site Foreman 14/05/2569 Closed   " [ref=e335]:
+            - cell "10/05/2569" [ref=e336]
+            - cell "CON-2024-001" [ref=e337]
+            - cell "Housekeeping" [ref=e338]
+            - cell "Material improperly stored near work area" [ref=e339]
+            - cell "Site Foreman" [ref=e340]
+            - cell "14/05/2569" [ref=e341]
+            - cell "Closed" [ref=e342]:
+              - generic [ref=e343]: Closed
+            - cell "  " [ref=e344]:
+              - link "" [ref=e345] [cursor=pointer]:
+                - /url: /safety/inspections/1/
+                - generic [ref=e346]: 
+              - link "" [ref=e347] [cursor=pointer]:
+                - /url: /safety/inspections/1/edit/
+                - generic [ref=e348]: 
+              - button "" [ref=e350] [cursor=pointer]:
+                - generic [ref=e351]: 
+          - row "10/05/2569 CON-2024-001 PPE Worker observed without safety helmet Site Foreman 17/05/2569 Open   " [ref=e352]:
+            - cell "10/05/2569" [ref=e353]
+            - cell "CON-2024-001" [ref=e354]
+            - cell "PPE" [ref=e355]
+            - cell "Worker observed without safety helmet" [ref=e356]
+            - cell "Site Foreman" [ref=e357]
+            - cell "17/05/2569" [ref=e358]
+            - cell "Open" [ref=e359]:
+              - generic [ref=e360]: Open
+            - cell "  " [ref=e361]:
+              - link "" [ref=e362] [cursor=pointer]:
+                - /url: /safety/inspections/8/
+                - generic [ref=e363]: 
+              - link "" [ref=e364] [cursor=pointer]:
+                - /url: /safety/inspections/8/edit/
+                - generic [ref=e365]: 
+              - button "" [ref=e367] [cursor=pointer]:
+                - generic [ref=e368]: 
+          - row "09/05/2569 CON-2024-001 PPE Worker observed without safety helmet Site Foreman 16/05/2569 Open   " [ref=e369]:
+            - cell "09/05/2569" [ref=e370]
+            - cell "CON-2024-001" [ref=e371]
+            - cell "PPE" [ref=e372]
+            - cell "Worker observed without safety helmet" [ref=e373]
+            - cell "Site Foreman" [ref=e374]
+            - cell "16/05/2569" [ref=e375]
+            - cell "Open" [ref=e376]:
+              - generic [ref=e377]: Open
+            - cell "  " [ref=e378]:
+              - link "" [ref=e379] [cursor=pointer]:
+                - /url: /safety/inspections/6/
+                - generic [ref=e380]: 
+              - link "" [ref=e381] [cursor=pointer]:
+                - /url: /safety/inspections/6/edit/
+                - generic [ref=e382]: 
+              - button "" [ref=e384] [cursor=pointer]:
+                - generic [ref=e385]: 
+          - row "08/05/2569 CON-2024-001 PPE Worker observed without safety helmet Site Foreman 15/05/2569 Open   " [ref=e386]:
+            - cell "08/05/2569" [ref=e387]
+            - cell "CON-2024-001" [ref=e388]
+            - cell "PPE" [ref=e389]
+            - cell "Worker observed without safety helmet" [ref=e390]
+            - cell "Site Foreman" [ref=e391]
+            - cell "15/05/2569" [ref=e392]
+            - cell "Open" [ref=e393]:
+              - generic [ref=e394]: Open
+            - cell "  " [ref=e395]:
+              - link "" [ref=e396] [cursor=pointer]:
+                - /url: /safety/inspections/4/
+                - generic [ref=e397]: 
+              - link "" [ref=e398] [cursor=pointer]:
+                - /url: /safety/inspections/4/edit/
+                - generic [ref=e399]: 
+              - button "" [ref=e401] [cursor=pointer]:
+                - generic [ref=e402]: 
+          - row "07/05/2569 CON-2024-001 PPE Worker observed without safety helmet Site Foreman 14/05/2569 Closed   " [ref=e403]:
+            - cell "07/05/2569" [ref=e404]
+            - cell "CON-2024-001" [ref=e405]
+            - cell "PPE" [ref=e406]
+            - cell "Worker observed without safety helmet" [ref=e407]
+            - cell "Site Foreman" [ref=e408]
+            - cell "14/05/2569" [ref=e409]
+            - cell "Closed" [ref=e410]:
+              - generic [ref=e411]: Closed
+            - cell "  " [ref=e412]:
+              - link "" [ref=e413] [cursor=pointer]:
+                - /url: /safety/inspections/2/
+                - generic [ref=e414]: 
+              - link "" [ref=e415] [cursor=pointer]:
+                - /url: /safety/inspections/2/edit/
+                - generic [ref=e416]: 
+              - button "" [ref=e418] [cursor=pointer]:
+                - generic [ref=e419]: 
+          - row "06/05/2569 CON-2025-002 Health Generator exhaust directed towards workers Site Engineer 13/05/2569 Open   " [ref=e420]:
+            - cell "06/05/2569" [ref=e421]
+            - cell "CON-2025-002" [ref=e422]
+            - cell "Health" [ref=e423]
+            - cell "Generator exhaust directed towards workers" [ref=e424]
+            - cell "Site Engineer" [ref=e425]
+            - cell "13/05/2569" [ref=e426]
+            - cell "Open" [ref=e427]:
+              - generic [ref=e428]: Open
+            - cell "  " [ref=e429]:
+              - link "" [ref=e430] [cursor=pointer]:
+                - /url: /safety/inspections/17/
+                - generic [ref=e431]: 
+              - link "" [ref=e432] [cursor=pointer]:
+                - /url: /safety/inspections/17/edit/
+                - generic [ref=e433]: 
+              - button "" [ref=e435] [cursor=pointer]:
+                - generic [ref=e436]: 
+          - row "20/01/2569 CON-2025-002 Edge Protection Insufficient barricading at breakwater edge Site Engineer 27/01/2569 Open   " [ref=e437]:
+            - cell "20/01/2569" [ref=e438]
+            - cell "CON-2025-002" [ref=e439]
+            - cell "Edge Protection" [ref=e440]
+            - cell "Insufficient barricading at breakwater edge" [ref=e441]
+            - cell "Site Engineer" [ref=e442]
+            - cell "27/01/2569" [ref=e443]
+            - cell "Open" [ref=e444]:
+              - generic [ref=e445]: Open
+            - cell "  " [ref=e446]:
+              - link "" [ref=e447] [cursor=pointer]:
+                - /url: /safety/inspections/16/
+                - generic [ref=e448]: 
+              - link "" [ref=e449] [cursor=pointer]:
+                - /url: /safety/inspections/16/edit/
+                - generic [ref=e450]: 
+              - button "" [ref=e452] [cursor=pointer]:
+                - generic [ref=e453]: 
+          - row "05/01/2569 CON-2025-002 Fire Safety Fire extinguisher overdue for inspection Site Engineer 12/01/2569 Closed   " [ref=e454]:
+            - cell "05/01/2569" [ref=e455]
+            - cell "CON-2025-002" [ref=e456]
+            - cell "Fire Safety" [ref=e457]
+            - cell "Fire extinguisher overdue for inspection" [ref=e458]
+            - cell "Site Engineer" [ref=e459]
+            - cell "12/01/2569" [ref=e460]
+            - cell "Closed" [ref=e461]:
+              - generic [ref=e462]: Closed
+            - cell "  " [ref=e463]:
+              - link "" [ref=e464] [cursor=pointer]:
+                - /url: /safety/inspections/15/
+                - generic [ref=e465]: 
+              - link "" [ref=e466] [cursor=pointer]:
+                - /url: /safety/inspections/15/edit/
+                - generic [ref=e467]: 
+              - button "" [ref=e469] [cursor=pointer]:
+                - generic [ref=e470]: 
+          - row "21/12/2568 CON-2025-002 Working at Height Worker at height without safety harness Site Engineer 28/12/2568 InProgress   " [ref=e471]:
+            - cell "21/12/2568" [ref=e472]
+            - cell "CON-2025-002" [ref=e473]
+            - cell "Working at Height" [ref=e474]
+            - cell "Worker at height without safety harness" [ref=e475]
+            - cell "Site Engineer" [ref=e476]
+            - cell "28/12/2568" [ref=e477]
+            - cell "InProgress" [ref=e478]:
+              - generic [ref=e479]: InProgress
+            - cell "  " [ref=e480]:
+              - link "" [ref=e481] [cursor=pointer]:
+                - /url: /safety/inspections/14/
+                - generic [ref=e482]: 
+              - link "" [ref=e483] [cursor=pointer]:
+                - /url: /safety/inspections/14/edit/
+                - generic [ref=e484]: 
+              - button "" [ref=e486] [cursor=pointer]:
+                - generic [ref=e487]: 
+          - row "06/12/2568 CON-2025-002 Housekeeping Debris and loose rocks on working deck Site Engineer 13/12/2568 Closed   " [ref=e488]:
+            - cell "06/12/2568" [ref=e489]
+            - cell "CON-2025-002" [ref=e490]
+            - cell "Housekeeping" [ref=e491]
+            - cell "Debris and loose rocks on working deck" [ref=e492]
+            - cell "Site Engineer" [ref=e493]
+            - cell "13/12/2568" [ref=e494]
+            - cell "Closed" [ref=e495]:
+              - generic [ref=e496]: Closed
+            - cell "  " [ref=e497]:
+              - link "" [ref=e498] [cursor=pointer]:
+                - /url: /safety/inspections/13/
+                - generic [ref=e499]: 
+              - link "" [ref=e500] [cursor=pointer]:
+                - /url: /safety/inspections/13/edit/
+                - generic [ref=e501]: 
+              - button "" [ref=e503] [cursor=pointer]:
+                - generic [ref=e504]: 

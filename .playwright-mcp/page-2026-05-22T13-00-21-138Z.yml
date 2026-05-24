@@ -1,0 +1,116 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - heading "Page not found (404)" [level=1] [ref=e3]
+    - table [ref=e4]:
+      - rowgroup [ref=e5]:
+        - 'row "Request Method: GET" [ref=e6]':
+          - rowheader "Request Method:" [ref=e7]
+          - cell "GET" [ref=e8]
+        - 'row "Request URL: http://127.0.0.1:8000/procurement/" [ref=e9]':
+          - rowheader "Request URL:" [ref=e10]
+          - cell "http://127.0.0.1:8000/procurement/" [ref=e11]
+  - main [ref=e12]:
+    - paragraph [ref=e13]:
+      - text: Using the URLconf defined in
+      - code [ref=e14]: config.urls
+      - text: ", Django tried these URL patterns, in this order:"
+    - list [ref=e15]:
+      - listitem [ref=e16]:
+        - code [ref=e17]: admin/
+      - listitem [ref=e18]:
+        - code [ref=e19]: i18n/
+      - listitem [ref=e20]:
+        - code
+        - code [ref=e21]: "[name='index']"
+      - listitem [ref=e22]:
+        - code
+        - code [ref=e23]: chart-data/ [name='chart_data']
+      - listitem [ref=e24]:
+        - code
+        - code [ref=e25]: scurve/ [name='scurve_data']
+      - listitem [ref=e26]:
+        - code [ref=e27]: accounts/
+      - listitem [ref=e28]:
+        - code [ref=e29]: projects/
+      - listitem [ref=e30]:
+        - code [ref=e31]: daily-reports/
+      - listitem [ref=e32]:
+        - code [ref=e33]: manpower/
+      - listitem [ref=e34]:
+        - code [ref=e35]: equipment/
+      - listitem [ref=e36]:
+        - code [ref=e37]: materials/
+      - listitem [ref=e38]:
+        - code [ref=e39]: procurement/
+        - code [ref=e40]: suppliers/ [name='supplier_list']
+      - listitem [ref=e41]:
+        - code [ref=e42]: procurement/
+        - code [ref=e43]: suppliers/create/ [name='supplier_create']
+      - listitem [ref=e44]:
+        - code [ref=e45]: procurement/
+        - code [ref=e46]: suppliers/<int:pk>/edit/ [name='supplier_update']
+      - listitem [ref=e47]:
+        - code [ref=e48]: procurement/
+        - code [ref=e49]: pr/ [name='pr_list']
+      - listitem [ref=e50]:
+        - code [ref=e51]: procurement/
+        - code [ref=e52]: pr/create/ [name='pr_create']
+      - listitem [ref=e53]:
+        - code [ref=e54]: procurement/
+        - code [ref=e55]: pr/<int:pk>/ [name='pr_detail']
+      - listitem [ref=e56]:
+        - code [ref=e57]: procurement/
+        - code [ref=e58]: po/ [name='po_list']
+      - listitem [ref=e59]:
+        - code [ref=e60]: procurement/
+        - code [ref=e61]: po/create/ [name='po_create']
+      - listitem [ref=e62]:
+        - code [ref=e63]: procurement/
+        - code [ref=e64]: po/<int:pk>/ [name='po_detail']
+      - listitem [ref=e65]:
+        - code [ref=e66]: boq/
+      - listitem [ref=e67]:
+        - code [ref=e68]: safety/
+      - listitem [ref=e69]:
+        - code [ref=e70]: quality/
+      - listitem [ref=e71]:
+        - code [ref=e72]: documents/
+      - listitem [ref=e73]:
+        - code [ref=e74]: reports/
+      - listitem [ref=e75]:
+        - code [ref=e76]: api/v1/
+      - listitem [ref=e77]:
+        - code [ref=e78]: project-controls/
+      - listitem [ref=e79]:
+        - code [ref=e80]: cost-control/
+      - listitem [ref=e81]:
+        - code [ref=e82]: tide-monitor/
+      - listitem [ref=e83]:
+        - code [ref=e84]: turbidity-monitor/
+      - listitem [ref=e85]:
+        - code [ref=e86]: change-orders/
+      - listitem [ref=e87]:
+        - code [ref=e88]: hr/
+      - listitem [ref=e89]:
+        - code [ref=e90]: maintenance/
+      - listitem [ref=e91]:
+        - code [ref=e92]: subcontractors/
+      - listitem [ref=e93]:
+        - code [ref=e94]: drawings/
+      - listitem [ref=e95]:
+        - code [ref=e96]: notifications/
+      - listitem [ref=e97]:
+        - code [ref=e98]: ^media/(?P<path>.*)$
+      - listitem [ref=e99]:
+        - code [ref=e100]: ^static/(?P<path>.*)$
+    - paragraph [ref=e101]:
+      - text: The current path,
+      - code [ref=e102]: procurement/
+      - text: ", didn’t match any of these."
+  - contentinfo [ref=e103]:
+    - paragraph [ref=e104]:
+      - text: You’re seeing this error because you have
+      - code [ref=e105]: DEBUG = True
+      - text: in your Django settings file. Change that to
+      - code [ref=e106]: "False"
+      - text: ", and Django will display a standard 404 page."

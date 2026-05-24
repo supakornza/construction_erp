@@ -1,0 +1,38 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e4]: 
+    - generic [ref=e5]: Construction ERP
+    - generic [ref=e6]: Project Management System
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - generic [ref=e9]: 
+      - text: กรุณาเข้าสู่ระบบก่อนดำเนินการต่อ
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - generic [ref=e12]: Username
+        - generic [ref=e13]:
+          - generic [ref=e15]: 
+          - textbox "Username" [ref=e16]:
+            - /placeholder: Enter username
+      - generic [ref=e17]:
+        - generic [ref=e18]: Password
+        - generic [ref=e19]:
+          - generic [ref=e21]: 
+          - textbox "Password" [ref=e22]:
+            - /placeholder: Enter password
+          - button "" [ref=e23] [cursor=pointer]:
+            - generic [ref=e24]: 
+      - generic [ref=e25]:
+        - generic [ref=e26] [cursor=pointer]:
+          - checkbox "จดจำฉัน (14 วัน)" [ref=e27]
+          - text: จดจำฉัน (14 วัน)
+        - link "Forgot Password?" [ref=e28] [cursor=pointer]:
+          - /url: /accounts/password-reset/
+      - button " Sign In" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: 
+        - text: Sign In
+  - generic [ref=e31]:
+    - generic [ref=e32]:
+      - generic [ref=e33]: 
+      - text: Secure Field Environment
+    - generic [ref=e34]: Construction ERP © 2026

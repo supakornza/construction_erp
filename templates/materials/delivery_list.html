@@ -18,7 +18,7 @@
         <label class="form-label form-label-sm mb-1 text-muted">โครงการ</label>
         <select name="project" class="form-select form-select-sm">
           <option value="">ทุกโครงการ</option>
-          {% for p in projects %}<option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.contract_no }}</option>{% endfor %}
+          {% for p in projects %}<option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.contract_no }} — {{ p.project_name }}</option>{% endfor %}
         </select>
       </div>
       <div class="col-md-2 col-6">
@@ -88,14 +88,26 @@
           วัสดุ
           {% if current_sort == 'material' %}<i class="fas fa-sort-up ms-1"></i>{% elif current_sort == '-material' %}<i class="fas fa-sort-down ms-1"></i>{% else %}<i class="fas fa-sort ms-1" style="opacity:.4"></i>{% endif %}
         </th>
-        <th>แหล่งวัสดุ</th>
-        <th>ทะเบียนรถ</th>
-        <th>เลขที่ DN</th>
+        <th class="sort-col" onclick="dlSort('source',true)">
+          แหล่งวัสดุ
+          {% if current_sort == 'source' %}<i class="fas fa-sort-up ms-1"></i>{% elif current_sort == '-source' %}<i class="fas fa-sort-down ms-1"></i>{% else %}<i class="fas fa-sort ms-1" style="opacity:.4"></i>{% endif %}
+        </th>
+        <th class="sort-col" onclick="dlSort('truck',true)">
+          ทะเบียนรถ
+          {% if current_sort == 'truck' %}<i class="fas fa-sort-up ms-1"></i>{% elif current_sort == '-truck' %}<i class="fas fa-sort-down ms-1"></i>{% else %}<i class="fas fa-sort ms-1" style="opacity:.4"></i>{% endif %}
+        </th>
+        <th class="sort-col" onclick="dlSort('dn',true)">
+          เลขที่ใบส่งของ
+          {% if current_sort == 'dn' %}<i class="fas fa-sort-up ms-1"></i>{% elif current_sort == '-dn' %}<i class="fas fa-sort-down ms-1"></i>{% else %}<i class="fas fa-sort ms-1" style="opacity:.4"></i>{% endif %}
+        </th>
         <th class="text-end sort-col" onclick="dlSort('qty',false)">
           ปริมาณ
           {% if current_sort == 'qty' %}<i class="fas fa-sort-up ms-1"></i>{% elif current_sort == '-qty' %}<i class="fas fa-sort-down ms-1"></i>{% else %}<i class="fas fa-sort ms-1" style="opacity:.4"></i>{% endif %}
         </th>
-        <th class="text-end">ราคา/หน่วย</th>
+        <th class="text-end sort-col" onclick="dlSort('price',false)">
+          ราคา/หน่วย
+          {% if current_sort == 'price' %}<i class="fas fa-sort-up ms-1"></i>{% elif current_sort == '-price' %}<i class="fas fa-sort-down ms-1"></i>{% else %}<i class="fas fa-sort ms-1" style="opacity:.4"></i>{% endif %}
+        </th>
         <th class="text-end">มูลค่า</th>
         <th>หมายเหตุ</th>
         <th></th>
@@ -110,9 +122,16 @@
       </td>
       <td class="text-nowrap">{{ d.project.contract_no }}</td>
       <td>{{ d.material.name }}</td>
-      <td>{{ d.source|default:"—" }}</td>
+      <td>
+        {{ d.source_area.name|default:"—" }}
+        {% if d.source %}<br><span class="text-muted" style="font-size:.72rem">{{ d.source }}</span>{% endif %}
+      </td>
       <td>{{ d.truck_no|default:"—" }}</td>
-      <td>{{ d.delivery_note_no|default:"—" }}</td>
+      <td>
+        {{ d.delivery_note_no|default:"—" }}
+        {% if d.delivery_note_no and d.project_id|stringformat:"s"|add:"|"|add:d.delivery_note_no in duplicate_dns_keys %}<span class="badge bg-warning text-dark ms-1" title="เลขที่ใบส่งของซ้ำในโครงการนี้">ซ้ำ</span>{% endif %}
+        {% if d.delivery_image %} <a href="{{ d.delivery_image.url }}" target="_blank" title="ดูรูปตั๋ว"><i class="fas fa-image text-success ms-1"></i></a>{% endif %}
+      </td>
       <td class="text-end text-nowrap fw-semibold">{{ d.quantity|floatformat:3|intcomma }} <span class="text-muted fw-normal">{{ d.material.unit }}</span></td>
       <td class="text-end">{{ d.unit_price|default:"—" }}</td>
       <td class="text-end">{% if d.total_amount %}{{ d.total_amount|floatformat:2|intcomma }}{% else %}—{% endif %}</td>
@@ -151,13 +170,26 @@
           วัสดุ
           {% if current_sort == 'material' %}<i class="fas fa-sort-up text-primary ms-1"></i>{% elif current_sort == '-material' %}<i class="fas fa-sort-down text-primary ms-1"></i>{% else %}<i class="fas fa-sort text-muted ms-1" style="opacity:.4"></i>{% endif %}
         </th>
-        <th>DN No</th>
-        <th>ทะเบียนรถ</th>
+        <th class="sort-col" onclick="dlSort('source',true)">
+          แหล่งวัสดุ
+          {% if current_sort == 'source' %}<i class="fas fa-sort-up text-primary ms-1"></i>{% elif current_sort == '-source' %}<i class="fas fa-sort-down text-primary ms-1"></i>{% else %}<i class="fas fa-sort text-muted ms-1" style="opacity:.4"></i>{% endif %}
+        </th>
+        <th class="sort-col" onclick="dlSort('dn',true)">
+          เลขที่ใบส่งของ
+          {% if current_sort == 'dn' %}<i class="fas fa-sort-up text-primary ms-1"></i>{% elif current_sort == '-dn' %}<i class="fas fa-sort-down text-primary ms-1"></i>{% else %}<i class="fas fa-sort text-muted ms-1" style="opacity:.4"></i>{% endif %}
+        </th>
+        <th class="sort-col" onclick="dlSort('truck',true)">
+          ทะเบียนรถ
+          {% if current_sort == 'truck' %}<i class="fas fa-sort-up text-primary ms-1"></i>{% elif current_sort == '-truck' %}<i class="fas fa-sort-down text-primary ms-1"></i>{% else %}<i class="fas fa-sort text-muted ms-1" style="opacity:.4"></i>{% endif %}
+        </th>
         <th class="text-end sort-col" onclick="dlSort('qty',false)">
           ปริมาณ
           {% if current_sort == 'qty' %}<i class="fas fa-sort-up text-primary ms-1"></i>{% elif current_sort == '-qty' %}<i class="fas fa-sort-down text-primary ms-1"></i>{% else %}<i class="fas fa-sort text-muted ms-1" style="opacity:.4"></i>{% endif %}
         </th>
-        <th class="text-end">ราคา/หน่วย</th>
+        <th class="text-end sort-col" onclick="dlSort('price',false)">
+          ราคา/หน่วย
+          {% if current_sort == 'price' %}<i class="fas fa-sort-up text-primary ms-1"></i>{% elif current_sort == '-price' %}<i class="fas fa-sort-down text-primary ms-1"></i>{% else %}<i class="fas fa-sort text-muted ms-1" style="opacity:.4"></i>{% endif %}
+        </th>
         <th class="text-end">มูลค่า</th>
         <th></th>
       </tr>
@@ -165,10 +197,21 @@
     <tbody>
     {% for d in deliveries %}
     <tr>
-      <td>{{ d.delivery_date|thai_be_date }}</td>
+      <td class="text-nowrap">
+        {{ d.delivery_date|thai_be_date }}
+        {% if d.delivery_time %}<br><span class="text-muted small"><i class="fas fa-clock me-1"></i>{{ d.delivery_time|time:"H:i" }}</span>{% endif %}
+      </td>
       <td>{{ d.project.contract_no }}</td>
       <td>{{ d.material.name }}</td>
-      <td>{{ d.delivery_note_no|default:'-' }}</td>
+      <td>
+        {{ d.source_area.name|default:'-' }}
+        {% if d.source %}<br><span class="text-muted small">{{ d.source }}</span>{% endif %}
+      </td>
+      <td>
+        {{ d.delivery_note_no|default:'-' }}
+        {% if d.delivery_note_no and d.project_id|stringformat:"s"|add:"|"|add:d.delivery_note_no in duplicate_dns_keys %}<span class="badge bg-warning text-dark ms-1" title="เลขที่ใบส่งของซ้ำในโครงการนี้">ซ้ำ</span>{% endif %}
+        {% if d.delivery_image %} <a href="{{ d.delivery_image.url }}" target="_blank" title="ดูรูปตั๋ว"><i class="fas fa-image text-success ms-1"></i></a>{% endif %}
+      </td>
       <td>{{ d.truck_no|default:'-' }}</td>
       <td class="text-end fw-semibold">{{ d.quantity|floatformat:3|intcomma }} {{ d.material.unit }}</td>
       <td class="text-end">{{ d.unit_price|default:'-' }}</td>
@@ -183,7 +226,7 @@
       </td>
     </tr>
     {% empty %}
-    <tr><td colspan="9" class="text-center text-muted py-5">ไม่มีข้อมูลที่ตรงกับเงื่อนไข</td></tr>
+    <tr><td colspan="10" class="text-center text-muted py-5">ไม่มีข้อมูลที่ตรงกับเงื่อนไข</td></tr>
     {% endfor %}
     </tbody>
   </table>

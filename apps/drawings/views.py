@@ -23,7 +23,6 @@ class DrawingsDashboardView(DrawingsViewMixin, TemplateView):
     def get_context_data(self, **kwargs):
         ctx   = super().get_context_data(**kwargs)
         today = date.today()
-        ctx['total_drawings']   = Drawing.objects.filter(is_current=True).count()
         ctx['total_drawings']   = Drawing.objects.exclude(
             status__in=('Superseded', 'Cancelled')).count()
         ctx['ifc_drawings']     = Drawing.objects.filter(status='IFC').count()

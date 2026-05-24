@@ -1,0 +1,244 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link " Construction ERP" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: 
+        - generic [ref=e6]: Construction ERP
+      - button "" [ref=e7] [cursor=pointer]:
+        - generic [ref=e8]: 
+    - generic [ref=e9]:
+      - generic [ref=e10]: Dashboard
+      - link " Dashboard" [ref=e11] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e12]: 
+        - generic [ref=e13]: Dashboard
+      - link " Tide Monitor" [ref=e14] [cursor=pointer]:
+        - /url: /tide-monitor/
+        - generic [ref=e15]: 
+        - generic [ref=e16]: Tide Monitor
+      - link " Turbidity Monitor" [ref=e17] [cursor=pointer]:
+        - /url: /turbidity-monitor/
+        - generic [ref=e18]: 
+        - generic [ref=e19]: Turbidity Monitor
+      - link " Rock Progress" [ref=e20] [cursor=pointer]:
+        - /url: /project-controls/rock/dashboard/
+        - generic [ref=e21]: 
+        - generic [ref=e22]: Rock Progress
+      - link " Sand Progress" [ref=e23] [cursor=pointer]:
+        - /url: /project-controls/sand/dashboard/
+        - generic [ref=e24]: 
+        - generic [ref=e25]: Sand Progress
+      - generic [ref=e26]: Projects
+      - link " Projects" [ref=e27] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e28]: 
+        - generic [ref=e29]: Projects
+      - generic [ref=e30]: Daily Reports
+      - link " Daily Reports" [ref=e31] [cursor=pointer]:
+        - /url: /daily-reports/
+        - generic [ref=e32]: 
+        - generic [ref=e33]: Daily Reports
+      - link " Contractor Imports" [ref=e34] [cursor=pointer]:
+        - /url: /daily-reports/import/
+        - generic [ref=e35]: 
+        - generic [ref=e36]: Contractor Imports
+      - generic [ref=e37]: Resources
+      - link " Manpower" [ref=e38] [cursor=pointer]:
+        - /url: /manpower/dashboard/
+        - generic [ref=e39]: 
+        - generic [ref=e40]: Manpower
+      - link " Equipment" [ref=e41] [cursor=pointer]:
+        - /url: /equipment/
+        - generic [ref=e42]: 
+        - generic [ref=e43]: Equipment
+      - link " Materials" [ref=e44] [cursor=pointer]:
+        - /url: /materials/dashboard/
+        - generic [ref=e45]: 
+        - generic [ref=e46]: Materials
+      - generic [ref=e47]: Procurement
+      - link " Procurement" [ref=e48] [cursor=pointer]:
+        - /url: /procurement/pr/
+        - generic [ref=e49]: 
+        - generic [ref=e50]: Procurement
+      - generic [ref=e51]: BOQ & Progress
+      - link " BOQ & Progress" [ref=e52] [cursor=pointer]:
+        - /url: /boq/
+        - generic [ref=e53]: 
+        - generic [ref=e54]: BOQ & Progress
+      - generic [ref=e55]: Project Controls
+      - link " Rock & Sand Control" [ref=e56] [cursor=pointer]:
+        - /url: /project-controls/
+        - generic [ref=e57]: 
+        - generic [ref=e58]: Rock & Sand Control
+      - link " Revetment Progress" [ref=e59] [cursor=pointer]:
+        - /url: /project-controls/revetment/dashboard/
+        - generic [ref=e60]: 
+        - generic [ref=e61]: Revetment Progress
+      - link " Recovery Plans" [ref=e62] [cursor=pointer]:
+        - /url: /project-controls/recovery/plans/
+        - generic [ref=e63]: 
+        - generic [ref=e64]: Recovery Plans
+      - link " Project Action Plans" [ref=e65] [cursor=pointer]:
+        - /url: /project-controls/action-plans/
+        - generic [ref=e66]: 
+        - generic [ref=e67]: Project Action Plans
+      - link " Recovery Action Plans" [ref=e68] [cursor=pointer]:
+        - /url: /project-controls/recovery/rap/
+        - generic [ref=e69]: 
+        - generic [ref=e70]: Recovery Action Plans
+      - link " Logistics" [ref=e71] [cursor=pointer]:
+        - /url: /project-controls/logistics/
+        - generic [ref=e72]: 
+        - generic [ref=e73]: Logistics
+      - link " Transport Units" [ref=e74] [cursor=pointer]:
+        - /url: /project-controls/transport-units/
+        - generic [ref=e75]: 
+        - generic [ref=e76]: Transport Units
+      - generic [ref=e77]: HR & Attendance
+      - link " HR & Attendance" [ref=e78] [cursor=pointer]:
+        - /url: /hr/
+        - generic [ref=e79]: 
+        - generic [ref=e80]: HR & Attendance
+      - generic [ref=e81]: Drawings & RFI
+      - link " Drawings & RFI" [ref=e82] [cursor=pointer]:
+        - /url: /drawings/
+        - generic [ref=e83]: 
+        - generic [ref=e84]: Drawings & RFI
+      - generic [ref=e85]: Subcontractors
+      - link " Subcontractors" [ref=e86] [cursor=pointer]:
+        - /url: /subcontractors/
+        - generic [ref=e87]: 
+        - generic [ref=e88]: Subcontractors
+      - generic [ref=e89]: Maintenance
+      - link " Maintenance" [ref=e90] [cursor=pointer]:
+        - /url: /maintenance/
+        - generic [ref=e91]: 
+        - generic [ref=e92]: Maintenance
+      - generic [ref=e93]: Change Orders
+      - link " Change Orders" [ref=e94] [cursor=pointer]:
+        - /url: /change-orders/
+        - generic [ref=e95]: 
+        - generic [ref=e96]: Change Orders
+      - generic [ref=e97]: Cost Control
+      - link " Cost Control" [ref=e98] [cursor=pointer]:
+        - /url: /cost-control/
+        - generic [ref=e99]: 
+        - generic [ref=e100]: Cost Control
+      - generic [ref=e101]: Safety
+      - link " Safety" [ref=e102] [cursor=pointer]:
+        - /url: /safety/toolbox/
+        - generic [ref=e103]: 
+        - generic [ref=e104]: Safety
+      - generic [ref=e105]: Quality
+      - link " Quality Control" [ref=e106] [cursor=pointer]:
+        - /url: /quality/
+        - generic [ref=e107]: 
+        - generic [ref=e108]: Quality Control
+      - generic [ref=e109]: Documents
+      - link " Documents" [ref=e110] [cursor=pointer]:
+        - /url: /documents/
+        - generic [ref=e111]: 
+        - generic [ref=e112]: Documents
+      - generic [ref=e113]: Admin
+      - link " Users" [ref=e114] [cursor=pointer]:
+        - /url: /accounts/users/
+        - generic [ref=e115]: 
+        - generic [ref=e116]: Users
+      - link " Roles" [ref=e117] [cursor=pointer]:
+        - /url: /accounts/roles/
+        - generic [ref=e118]: 
+        - generic [ref=e119]: Roles
+      - link " Django Admin" [ref=e120] [cursor=pointer]:
+        - /url: /admin/
+        - generic [ref=e121]: 
+        - generic [ref=e122]: Django Admin
+  - generic [ref=e123]:
+    - navigation [ref=e124]:
+      - text: 
+      - button "Go back" [ref=e125] [cursor=pointer]:
+        - generic [ref=e126]: 
+        - text: Back
+      - generic [ref=e127]:
+        - generic [ref=e128]:
+          - button "TH" [ref=e130] [cursor=pointer]
+          - button "EN" [ref=e132] [cursor=pointer]
+        - generic [ref=e133]:
+          - button "" [ref=e134] [cursor=pointer]:
+            - generic [ref=e135]: 
+          - text: 
+        - generic [ref=e136]:
+          - button "A Admin User Admin" [ref=e137] [cursor=pointer]:
+            - generic [ref=e138]: A
+            - generic [ref=e139]: Admin User
+            - generic [ref=e140]: Admin
+          - text:   
+    - generic [ref=e141]:
+      - generic [ref=e142]:
+        - heading "Quality Control" [level=4] [ref=e143]
+        - link "+ New Inspection Request" [ref=e144] [cursor=pointer]:
+          - /url: /quality/inspections/create/
+          - generic [ref=e145]: +
+          - text: New Inspection Request
+      - group "Quality navigation" [ref=e146]:
+        - link "Overview" [ref=e147] [cursor=pointer]:
+          - /url: /quality/
+        - link "Inspections" [ref=e148] [cursor=pointer]:
+          - /url: /quality/inspections/
+        - link "NCR" [ref=e149] [cursor=pointer]:
+          - /url: /quality/ncr/
+        - link "Punch List" [ref=e150] [cursor=pointer]:
+          - /url: /quality/punch-list/
+        - link "Checkpoints" [ref=e151] [cursor=pointer]:
+          - /url: /quality/checkpoints/
+      - generic [ref=e152]:
+        - generic [ref=e155]:
+          - generic [ref=e156]: Pending Inspection
+          - heading "3" [level=3] [ref=e157]
+        - generic [ref=e160]:
+          - generic [ref=e161]: NCR Open
+          - heading "1" [level=3] [ref=e162]
+        - generic [ref=e165]:
+          - generic [ref=e166]: Punch List Open
+          - heading "0" [level=3] [ref=e167]
+        - generic [ref=e170]:
+          - generic [ref=e171]: Approval Rate
+          - heading "50.0%" [level=3] [ref=e172]
+      - generic [ref=e173]:
+        - generic [ref=e175]:
+          - generic [ref=e176]: Overdue NCR
+          - table [ref=e178]:
+            - rowgroup [ref=e179]:
+              - row "NCR Project Due Severity" [ref=e180]:
+                - columnheader "NCR" [ref=e181]
+                - columnheader "Project" [ref=e182]
+                - columnheader "Due" [ref=e183]
+                - columnheader "Severity" [ref=e184]
+            - rowgroup [ref=e185]:
+              - row "No overdue NCR" [ref=e186]:
+                - cell "No overdue NCR" [ref=e187]
+        - generic [ref=e189]:
+          - generic [ref=e190]: Pending Inspections
+          - table [ref=e192]:
+            - rowgroup [ref=e193]:
+              - row "Date Project Type Status" [ref=e194]:
+                - columnheader "Date" [ref=e195]
+                - columnheader "Project" [ref=e196]
+                - columnheader "Type" [ref=e197]
+                - columnheader "Status" [ref=e198]
+            - rowgroup [ref=e199]:
+              - row "19/02/2569 CON-2025-002 Armour Rock Placement Survey Submitted" [ref=e200]:
+                - cell "19/02/2569" [ref=e201]
+                - cell "CON-2025-002" [ref=e202]
+                - cell "Armour Rock Placement Survey" [ref=e203]
+                - cell "Submitted" [ref=e204]
+              - row "09/05/2569 CON-2025-002 Revetment Surface Level Check Submitted" [ref=e205]:
+                - cell "09/05/2569" [ref=e206]
+                - cell "CON-2025-002" [ref=e207]
+                - cell "Revetment Surface Level Check" [ref=e208]
+                - cell "Submitted" [ref=e209]
+              - row "14/05/2569 CON-2025-002 Armour Rock Gradation Batch 3 Draft" [ref=e210]:
+                - cell "14/05/2569" [ref=e211]
+                - cell "CON-2025-002" [ref=e212]
+                - cell "Armour Rock Gradation Batch 3" [ref=e213]
+                - cell "Draft" [ref=e214]

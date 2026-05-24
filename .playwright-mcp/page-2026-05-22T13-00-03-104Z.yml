@@ -1,0 +1,673 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link " Construction ERP" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: 
+        - generic [ref=e6]: Construction ERP
+      - button "" [ref=e7] [cursor=pointer]:
+        - generic [ref=e8]: 
+    - generic [ref=e9]:
+      - generic [ref=e10]: Dashboard
+      - link " Dashboard" [ref=e11] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e12]: 
+        - generic [ref=e13]: Dashboard
+      - link " Tide Monitor" [ref=e14] [cursor=pointer]:
+        - /url: /tide-monitor/
+        - generic [ref=e15]: 
+        - generic [ref=e16]: Tide Monitor
+      - link " Turbidity Monitor" [ref=e17] [cursor=pointer]:
+        - /url: /turbidity-monitor/
+        - generic [ref=e18]: 
+        - generic [ref=e19]: Turbidity Monitor
+      - link " Rock Progress" [ref=e20] [cursor=pointer]:
+        - /url: /project-controls/rock/dashboard/
+        - generic [ref=e21]: 
+        - generic [ref=e22]: Rock Progress
+      - link " Sand Progress" [ref=e23] [cursor=pointer]:
+        - /url: /project-controls/sand/dashboard/
+        - generic [ref=e24]: 
+        - generic [ref=e25]: Sand Progress
+      - generic [ref=e26]: Projects
+      - link " Projects" [ref=e27] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e28]: 
+        - generic [ref=e29]: Projects
+      - generic [ref=e30]: Daily Reports
+      - link " Daily Reports" [ref=e31] [cursor=pointer]:
+        - /url: /daily-reports/
+        - generic [ref=e32]: 
+        - generic [ref=e33]: Daily Reports
+      - link " Contractor Imports" [ref=e34] [cursor=pointer]:
+        - /url: /daily-reports/import/
+        - generic [ref=e35]: 
+        - generic [ref=e36]: Contractor Imports
+      - generic [ref=e37]: Resources
+      - link " Manpower" [ref=e38] [cursor=pointer]:
+        - /url: /manpower/dashboard/
+        - generic [ref=e39]: 
+        - generic [ref=e40]: Manpower
+      - link " Equipment" [ref=e41] [cursor=pointer]:
+        - /url: /equipment/
+        - generic [ref=e42]: 
+        - generic [ref=e43]: Equipment
+      - link " Materials" [ref=e44] [cursor=pointer]:
+        - /url: /materials/dashboard/
+        - generic [ref=e45]: 
+        - generic [ref=e46]: Materials
+      - generic [ref=e47]: Procurement
+      - link " Procurement" [ref=e48] [cursor=pointer]:
+        - /url: /procurement/pr/
+        - generic [ref=e49]: 
+        - generic [ref=e50]: Procurement
+      - generic [ref=e51]: BOQ & Progress
+      - link " BOQ & Progress" [ref=e52] [cursor=pointer]:
+        - /url: /boq/
+        - generic [ref=e53]: 
+        - generic [ref=e54]: BOQ & Progress
+      - generic [ref=e55]: Project Controls
+      - link " Rock & Sand Control" [ref=e56] [cursor=pointer]:
+        - /url: /project-controls/
+        - generic [ref=e57]: 
+        - generic [ref=e58]: Rock & Sand Control
+      - link " Revetment Progress" [ref=e59] [cursor=pointer]:
+        - /url: /project-controls/revetment/dashboard/
+        - generic [ref=e60]: 
+        - generic [ref=e61]: Revetment Progress
+      - link " Recovery Plans" [ref=e62] [cursor=pointer]:
+        - /url: /project-controls/recovery/plans/
+        - generic [ref=e63]: 
+        - generic [ref=e64]: Recovery Plans
+      - link " Project Action Plans" [ref=e65] [cursor=pointer]:
+        - /url: /project-controls/action-plans/
+        - generic [ref=e66]: 
+        - generic [ref=e67]: Project Action Plans
+      - link " Recovery Action Plans" [ref=e68] [cursor=pointer]:
+        - /url: /project-controls/recovery/rap/
+        - generic [ref=e69]: 
+        - generic [ref=e70]: Recovery Action Plans
+      - link " Logistics" [ref=e71] [cursor=pointer]:
+        - /url: /project-controls/logistics/
+        - generic [ref=e72]: 
+        - generic [ref=e73]: Logistics
+      - link " Transport Units" [ref=e74] [cursor=pointer]:
+        - /url: /project-controls/transport-units/
+        - generic [ref=e75]: 
+        - generic [ref=e76]: Transport Units
+      - generic [ref=e77]: HR & Attendance
+      - link " HR & Attendance" [ref=e78] [cursor=pointer]:
+        - /url: /hr/
+        - generic [ref=e79]: 
+        - generic [ref=e80]: HR & Attendance
+      - generic [ref=e81]: Drawings & RFI
+      - link " Drawings & RFI" [ref=e82] [cursor=pointer]:
+        - /url: /drawings/
+        - generic [ref=e83]: 
+        - generic [ref=e84]: Drawings & RFI
+      - generic [ref=e85]: Subcontractors
+      - link " Subcontractors" [ref=e86] [cursor=pointer]:
+        - /url: /subcontractors/
+        - generic [ref=e87]: 
+        - generic [ref=e88]: Subcontractors
+      - generic [ref=e89]: Maintenance
+      - link " Maintenance" [ref=e90] [cursor=pointer]:
+        - /url: /maintenance/
+        - generic [ref=e91]: 
+        - generic [ref=e92]: Maintenance
+      - generic [ref=e93]: Change Orders
+      - link " Change Orders" [ref=e94] [cursor=pointer]:
+        - /url: /change-orders/
+        - generic [ref=e95]: 
+        - generic [ref=e96]: Change Orders
+      - generic [ref=e97]: Cost Control
+      - link " Cost Control" [ref=e98] [cursor=pointer]:
+        - /url: /cost-control/
+        - generic [ref=e99]: 
+        - generic [ref=e100]: Cost Control
+      - generic [ref=e101]: Safety
+      - link " Safety" [ref=e102] [cursor=pointer]:
+        - /url: /safety/toolbox/
+        - generic [ref=e103]: 
+        - generic [ref=e104]: Safety
+      - generic [ref=e105]: Quality
+      - link " Quality Control" [ref=e106] [cursor=pointer]:
+        - /url: /quality/
+        - generic [ref=e107]: 
+        - generic [ref=e108]: Quality Control
+      - generic [ref=e109]: Documents
+      - link " Documents" [ref=e110] [cursor=pointer]:
+        - /url: /documents/
+        - generic [ref=e111]: 
+        - generic [ref=e112]: Documents
+      - generic [ref=e113]: Admin
+      - link " Users" [ref=e114] [cursor=pointer]:
+        - /url: /accounts/users/
+        - generic [ref=e115]: 
+        - generic [ref=e116]: Users
+      - link " Roles" [ref=e117] [cursor=pointer]:
+        - /url: /accounts/roles/
+        - generic [ref=e118]: 
+        - generic [ref=e119]: Roles
+      - link " Django Admin" [ref=e120] [cursor=pointer]:
+        - /url: /admin/
+        - generic [ref=e121]: 
+        - generic [ref=e122]: Django Admin
+  - generic [ref=e123]:
+    - navigation [ref=e124]:
+      - text: 
+      - button "Go back" [ref=e125] [cursor=pointer]:
+        - generic [ref=e126]: 
+        - text: Back
+      - generic [ref=e127]:
+        - generic [ref=e128]:
+          - button "TH" [ref=e130] [cursor=pointer]
+          - button "EN" [ref=e132] [cursor=pointer]
+        - generic [ref=e133]:
+          - button "" [ref=e134] [cursor=pointer]:
+            - generic [ref=e135]: 
+          - text: 
+        - generic [ref=e136]:
+          - button "A Admin User Admin" [ref=e137] [cursor=pointer]:
+            - generic [ref=e138]: A
+            - generic [ref=e139]: Admin User
+            - generic [ref=e140]: Admin
+          - text:   
+    - generic [ref=e141]:
+      - generic [ref=e142]:
+        - heading " Daily Reports" [level=4] [ref=e143]:
+          - generic [ref=e144]: 
+          - text: Daily Reports
+        - link "+ New Report" [ref=e145] [cursor=pointer]:
+          - /url: /daily-reports/create/
+          - generic [ref=e146]: +
+          - text: New Report
+      - generic [ref=e149]:
+        - generic [ref=e150]:
+          - generic [ref=e151]: Project
+          - combobox [ref=e152]:
+            - option "All Projects" [selected]
+            - option "CON-2025-002"
+            - option "P06643"
+            - option "CON-2024-001"
+        - generic [ref=e153]:
+          - generic [ref=e154]: Status
+          - combobox [ref=e155]:
+            - option "All Status" [selected]
+            - option "Draft"
+            - option "Submitted"
+            - option "Approved"
+            - option "Rejected"
+        - button "Filter" [ref=e156] [cursor=pointer]
+      - generic [ref=e157]:
+        - table [ref=e159]:
+          - rowgroup [ref=e160]:
+            - row "Date Project Weather Prepared By Status Actions" [ref=e161]:
+              - columnheader "Date" [ref=e162]
+              - columnheader "Project" [ref=e163]
+              - columnheader "Weather" [ref=e164]
+              - columnheader "Prepared By" [ref=e165]
+              - columnheader "Status" [ref=e166]
+              - columnheader "Actions" [ref=e167]
+          - rowgroup [ref=e168]:
+            - row "21/05/2569 CON-2024-001  Cloudy / Sunny Sara Lee Draft    " [ref=e169]:
+              - cell "21/05/2569" [ref=e170]:
+                - link "21/05/2569" [ref=e171] [cursor=pointer]:
+                  - /url: /daily-reports/211/
+              - cell "CON-2024-001" [ref=e172]
+              - cell " Cloudy / Sunny" [ref=e173]:
+                - generic [ref=e174]: 
+                - text: Cloudy / Sunny
+              - cell "Sara Lee" [ref=e175]
+              - cell "Draft" [ref=e176]:
+                - generic [ref=e177]: Draft
+              - cell "   " [ref=e178]:
+                - link "" [ref=e179] [cursor=pointer]:
+                  - /url: /daily-reports/211/
+                  - generic [ref=e180]: 
+                - link "" [ref=e181] [cursor=pointer]:
+                  - /url: /daily-reports/211/edit/
+                  - generic [ref=e182]: 
+                - button "" [ref=e184] [cursor=pointer]:
+                  - generic [ref=e185]: 
+                - link "" [ref=e186] [cursor=pointer]:
+                  - /url: /daily-reports/211/pdf/
+                  - generic [ref=e187]: 
+            - row "20/05/2569 CON-2024-001  Cloudy / Partly Cloudy Sara Lee Draft    " [ref=e188]:
+              - cell "20/05/2569" [ref=e189]:
+                - link "20/05/2569" [ref=e190] [cursor=pointer]:
+                  - /url: /daily-reports/210/
+              - cell "CON-2024-001" [ref=e191]
+              - cell " Cloudy / Partly Cloudy" [ref=e192]:
+                - generic [ref=e193]: 
+                - text: Cloudy / Partly Cloudy
+              - cell "Sara Lee" [ref=e194]
+              - cell "Draft" [ref=e195]:
+                - generic [ref=e196]: Draft
+              - cell "   " [ref=e197]:
+                - link "" [ref=e198] [cursor=pointer]:
+                  - /url: /daily-reports/210/
+                  - generic [ref=e199]: 
+                - link "" [ref=e200] [cursor=pointer]:
+                  - /url: /daily-reports/210/edit/
+                  - generic [ref=e201]: 
+                - button "" [ref=e203] [cursor=pointer]:
+                  - generic [ref=e204]: 
+                - link "" [ref=e205] [cursor=pointer]:
+                  - /url: /daily-reports/210/pdf/
+                  - generic [ref=e206]: 
+            - row "19/05/2569 CON-2024-001  Partly Cloudy / Partly Cloudy Sara Lee Draft    " [ref=e207]:
+              - cell "19/05/2569" [ref=e208]:
+                - link "19/05/2569" [ref=e209] [cursor=pointer]:
+                  - /url: /daily-reports/209/
+              - cell "CON-2024-001" [ref=e210]
+              - cell " Partly Cloudy / Partly Cloudy" [ref=e211]:
+                - generic [ref=e212]: 
+                - text: Partly Cloudy / Partly Cloudy
+              - cell "Sara Lee" [ref=e213]
+              - cell "Draft" [ref=e214]:
+                - generic [ref=e215]: Draft
+              - cell "   " [ref=e216]:
+                - link "" [ref=e217] [cursor=pointer]:
+                  - /url: /daily-reports/209/
+                  - generic [ref=e218]: 
+                - link "" [ref=e219] [cursor=pointer]:
+                  - /url: /daily-reports/209/edit/
+                  - generic [ref=e220]: 
+                - button "" [ref=e222] [cursor=pointer]:
+                  - generic [ref=e223]: 
+                - link "" [ref=e224] [cursor=pointer]:
+                  - /url: /daily-reports/209/pdf/
+                  - generic [ref=e225]: 
+            - row "18/05/2569 CON-2024-001  Cloudy / Rainy Sara Lee Draft    " [ref=e226]:
+              - cell "18/05/2569" [ref=e227]:
+                - link "18/05/2569" [ref=e228] [cursor=pointer]:
+                  - /url: /daily-reports/208/
+              - cell "CON-2024-001" [ref=e229]
+              - cell " Cloudy / Rainy" [ref=e230]:
+                - generic [ref=e231]: 
+                - text: Cloudy / Rainy
+              - cell "Sara Lee" [ref=e232]
+              - cell "Draft" [ref=e233]:
+                - generic [ref=e234]: Draft
+              - cell "   " [ref=e235]:
+                - link "" [ref=e236] [cursor=pointer]:
+                  - /url: /daily-reports/208/
+                  - generic [ref=e237]: 
+                - link "" [ref=e238] [cursor=pointer]:
+                  - /url: /daily-reports/208/edit/
+                  - generic [ref=e239]: 
+                - button "" [ref=e241] [cursor=pointer]:
+                  - generic [ref=e242]: 
+                - link "" [ref=e243] [cursor=pointer]:
+                  - /url: /daily-reports/208/pdf/
+                  - generic [ref=e244]: 
+            - row "17/05/2569 CON-2024-001  Partly Cloudy / Sunny Sara Lee Draft    " [ref=e245]:
+              - cell "17/05/2569" [ref=e246]:
+                - link "17/05/2569" [ref=e247] [cursor=pointer]:
+                  - /url: /daily-reports/207/
+              - cell "CON-2024-001" [ref=e248]
+              - cell " Partly Cloudy / Sunny" [ref=e249]:
+                - generic [ref=e250]: 
+                - text: Partly Cloudy / Sunny
+              - cell "Sara Lee" [ref=e251]
+              - cell "Draft" [ref=e252]:
+                - generic [ref=e253]: Draft
+              - cell "   " [ref=e254]:
+                - link "" [ref=e255] [cursor=pointer]:
+                  - /url: /daily-reports/207/
+                  - generic [ref=e256]: 
+                - link "" [ref=e257] [cursor=pointer]:
+                  - /url: /daily-reports/207/edit/
+                  - generic [ref=e258]: 
+                - button "" [ref=e260] [cursor=pointer]:
+                  - generic [ref=e261]: 
+                - link "" [ref=e262] [cursor=pointer]:
+                  - /url: /daily-reports/207/pdf/
+                  - generic [ref=e263]: 
+            - row "16/05/2569 CON-2024-001  Cloudy / Rainy Sara Lee Draft    " [ref=e264]:
+              - cell "16/05/2569" [ref=e265]:
+                - link "16/05/2569" [ref=e266] [cursor=pointer]:
+                  - /url: /daily-reports/206/
+              - cell "CON-2024-001" [ref=e267]
+              - cell " Cloudy / Rainy" [ref=e268]:
+                - generic [ref=e269]: 
+                - text: Cloudy / Rainy
+              - cell "Sara Lee" [ref=e270]
+              - cell "Draft" [ref=e271]:
+                - generic [ref=e272]: Draft
+              - cell "   " [ref=e273]:
+                - link "" [ref=e274] [cursor=pointer]:
+                  - /url: /daily-reports/206/
+                  - generic [ref=e275]: 
+                - link "" [ref=e276] [cursor=pointer]:
+                  - /url: /daily-reports/206/edit/
+                  - generic [ref=e277]: 
+                - button "" [ref=e279] [cursor=pointer]:
+                  - generic [ref=e280]: 
+                - link "" [ref=e281] [cursor=pointer]:
+                  - /url: /daily-reports/206/pdf/
+                  - generic [ref=e282]: 
+            - row "16/05/2569 CON-2025-002  Sunny / Sunny Sara Lee Draft    " [ref=e283]:
+              - cell "16/05/2569" [ref=e284]:
+                - link "16/05/2569" [ref=e285] [cursor=pointer]:
+                  - /url: /daily-reports/205/
+              - cell "CON-2025-002" [ref=e286]
+              - cell " Sunny / Sunny" [ref=e287]:
+                - generic [ref=e288]: 
+                - text: Sunny / Sunny
+              - cell "Sara Lee" [ref=e289]
+              - cell "Draft" [ref=e290]:
+                - generic [ref=e291]: Draft
+              - cell "   " [ref=e292]:
+                - link "" [ref=e293] [cursor=pointer]:
+                  - /url: /daily-reports/205/
+                  - generic [ref=e294]: 
+                - link "" [ref=e295] [cursor=pointer]:
+                  - /url: /daily-reports/205/edit/
+                  - generic [ref=e296]: 
+                - button "" [ref=e298] [cursor=pointer]:
+                  - generic [ref=e299]: 
+                - link "" [ref=e300] [cursor=pointer]:
+                  - /url: /daily-reports/205/pdf/
+                  - generic [ref=e301]: 
+            - row "15/05/2569 CON-2024-001  Partly Cloudy / Rainy Sara Lee Draft    " [ref=e302]:
+              - cell "15/05/2569" [ref=e303]:
+                - link "15/05/2569" [ref=e304] [cursor=pointer]:
+                  - /url: /daily-reports/36/
+              - cell "CON-2024-001" [ref=e305]
+              - cell " Partly Cloudy / Rainy" [ref=e306]:
+                - generic [ref=e307]: 
+                - text: Partly Cloudy / Rainy
+              - cell "Sara Lee" [ref=e308]
+              - cell "Draft" [ref=e309]:
+                - generic [ref=e310]: Draft
+              - cell "   " [ref=e311]:
+                - link "" [ref=e312] [cursor=pointer]:
+                  - /url: /daily-reports/36/
+                  - generic [ref=e313]: 
+                - link "" [ref=e314] [cursor=pointer]:
+                  - /url: /daily-reports/36/edit/
+                  - generic [ref=e315]: 
+                - button "" [ref=e317] [cursor=pointer]:
+                  - generic [ref=e318]: 
+                - link "" [ref=e319] [cursor=pointer]:
+                  - /url: /daily-reports/36/pdf/
+                  - generic [ref=e320]: 
+            - row "15/05/2569 CON-2025-002  Rainy / Rainy Sara Lee Draft    " [ref=e321]:
+              - cell "15/05/2569" [ref=e322]:
+                - link "15/05/2569" [ref=e323] [cursor=pointer]:
+                  - /url: /daily-reports/204/
+              - cell "CON-2025-002" [ref=e324]
+              - cell " Rainy / Rainy" [ref=e325]:
+                - generic [ref=e326]: 
+                - text: Rainy / Rainy
+              - cell "Sara Lee" [ref=e327]
+              - cell "Draft" [ref=e328]:
+                - generic [ref=e329]: Draft
+              - cell "   " [ref=e330]:
+                - link "" [ref=e331] [cursor=pointer]:
+                  - /url: /daily-reports/204/
+                  - generic [ref=e332]: 
+                - link "" [ref=e333] [cursor=pointer]:
+                  - /url: /daily-reports/204/edit/
+                  - generic [ref=e334]: 
+                - button "" [ref=e336] [cursor=pointer]:
+                  - generic [ref=e337]: 
+                - link "" [ref=e338] [cursor=pointer]:
+                  - /url: /daily-reports/204/pdf/
+                  - generic [ref=e339]: 
+            - row "14/05/2569 CON-2024-001  Partly Cloudy / Sunny Sara Lee Draft    " [ref=e340]:
+              - cell "14/05/2569" [ref=e341]:
+                - link "14/05/2569" [ref=e342] [cursor=pointer]:
+                  - /url: /daily-reports/35/
+              - cell "CON-2024-001" [ref=e343]
+              - cell " Partly Cloudy / Sunny" [ref=e344]:
+                - generic [ref=e345]: 
+                - text: Partly Cloudy / Sunny
+              - cell "Sara Lee" [ref=e346]
+              - cell "Draft" [ref=e347]:
+                - generic [ref=e348]: Draft
+              - cell "   " [ref=e349]:
+                - link "" [ref=e350] [cursor=pointer]:
+                  - /url: /daily-reports/35/
+                  - generic [ref=e351]: 
+                - link "" [ref=e352] [cursor=pointer]:
+                  - /url: /daily-reports/35/edit/
+                  - generic [ref=e353]: 
+                - button "" [ref=e355] [cursor=pointer]:
+                  - generic [ref=e356]: 
+                - link "" [ref=e357] [cursor=pointer]:
+                  - /url: /daily-reports/35/pdf/
+                  - generic [ref=e358]: 
+            - row "14/05/2569 CON-2025-002  Heavy Rain / Rainy Sara Lee Draft    " [ref=e359]:
+              - cell "14/05/2569" [ref=e360]:
+                - link "14/05/2569" [ref=e361] [cursor=pointer]:
+                  - /url: /daily-reports/203/
+              - cell "CON-2025-002" [ref=e362]
+              - cell " Heavy Rain / Rainy" [ref=e363]:
+                - generic [ref=e364]: 
+                - text: Heavy Rain / Rainy
+              - cell "Sara Lee" [ref=e365]
+              - cell "Draft" [ref=e366]:
+                - generic [ref=e367]: Draft
+              - cell "   " [ref=e368]:
+                - link "" [ref=e369] [cursor=pointer]:
+                  - /url: /daily-reports/203/
+                  - generic [ref=e370]: 
+                - link "" [ref=e371] [cursor=pointer]:
+                  - /url: /daily-reports/203/edit/
+                  - generic [ref=e372]: 
+                - button "" [ref=e374] [cursor=pointer]:
+                  - generic [ref=e375]: 
+                - link "" [ref=e376] [cursor=pointer]:
+                  - /url: /daily-reports/203/pdf/
+                  - generic [ref=e377]: 
+            - row "13/05/2569 CON-2024-001  Cloudy / Sunny Sara Lee Draft    " [ref=e378]:
+              - cell "13/05/2569" [ref=e379]:
+                - link "13/05/2569" [ref=e380] [cursor=pointer]:
+                  - /url: /daily-reports/34/
+              - cell "CON-2024-001" [ref=e381]
+              - cell " Cloudy / Sunny" [ref=e382]:
+                - generic [ref=e383]: 
+                - text: Cloudy / Sunny
+              - cell "Sara Lee" [ref=e384]
+              - cell "Draft" [ref=e385]:
+                - generic [ref=e386]: Draft
+              - cell "   " [ref=e387]:
+                - link "" [ref=e388] [cursor=pointer]:
+                  - /url: /daily-reports/34/
+                  - generic [ref=e389]: 
+                - link "" [ref=e390] [cursor=pointer]:
+                  - /url: /daily-reports/34/edit/
+                  - generic [ref=e391]: 
+                - button "" [ref=e393] [cursor=pointer]:
+                  - generic [ref=e394]: 
+                - link "" [ref=e395] [cursor=pointer]:
+                  - /url: /daily-reports/34/pdf/
+                  - generic [ref=e396]: 
+            - row "13/05/2569 CON-2025-002  Rainy / Rainy Sara Lee Draft    " [ref=e397]:
+              - cell "13/05/2569" [ref=e398]:
+                - link "13/05/2569" [ref=e399] [cursor=pointer]:
+                  - /url: /daily-reports/202/
+              - cell "CON-2025-002" [ref=e400]
+              - cell " Rainy / Rainy" [ref=e401]:
+                - generic [ref=e402]: 
+                - text: Rainy / Rainy
+              - cell "Sara Lee" [ref=e403]
+              - cell "Draft" [ref=e404]:
+                - generic [ref=e405]: Draft
+              - cell "   " [ref=e406]:
+                - link "" [ref=e407] [cursor=pointer]:
+                  - /url: /daily-reports/202/
+                  - generic [ref=e408]: 
+                - link "" [ref=e409] [cursor=pointer]:
+                  - /url: /daily-reports/202/edit/
+                  - generic [ref=e410]: 
+                - button "" [ref=e412] [cursor=pointer]:
+                  - generic [ref=e413]: 
+                - link "" [ref=e414] [cursor=pointer]:
+                  - /url: /daily-reports/202/pdf/
+                  - generic [ref=e415]: 
+            - row "12/05/2569 CON-2024-001  Sunny / Sunny Sara Lee Approved  " [ref=e416]:
+              - cell "12/05/2569" [ref=e417]:
+                - link "12/05/2569" [ref=e418] [cursor=pointer]:
+                  - /url: /daily-reports/31/
+              - cell "CON-2024-001" [ref=e419]
+              - cell " Sunny / Sunny" [ref=e420]:
+                - generic [ref=e421]: 
+                - text: Sunny / Sunny
+              - cell "Sara Lee" [ref=e422]
+              - cell "Approved" [ref=e423]:
+                - generic [ref=e424]: Approved
+              - cell " " [ref=e425]:
+                - link "" [ref=e426] [cursor=pointer]:
+                  - /url: /daily-reports/31/
+                  - generic [ref=e427]: 
+                - link "" [ref=e428] [cursor=pointer]:
+                  - /url: /daily-reports/31/pdf/
+                  - generic [ref=e429]: 
+            - row "12/05/2569 CON-2025-002  Cloudy / Sunny Sara Lee Draft    " [ref=e430]:
+              - cell "12/05/2569" [ref=e431]:
+                - link "12/05/2569" [ref=e432] [cursor=pointer]:
+                  - /url: /daily-reports/201/
+              - cell "CON-2025-002" [ref=e433]
+              - cell " Cloudy / Sunny" [ref=e434]:
+                - generic [ref=e435]: 
+                - text: Cloudy / Sunny
+              - cell "Sara Lee" [ref=e436]
+              - cell "Draft" [ref=e437]:
+                - generic [ref=e438]: Draft
+              - cell "   " [ref=e439]:
+                - link "" [ref=e440] [cursor=pointer]:
+                  - /url: /daily-reports/201/
+                  - generic [ref=e441]: 
+                - link "" [ref=e442] [cursor=pointer]:
+                  - /url: /daily-reports/201/edit/
+                  - generic [ref=e443]: 
+                - button "" [ref=e445] [cursor=pointer]:
+                  - generic [ref=e446]: 
+                - link "" [ref=e447] [cursor=pointer]:
+                  - /url: /daily-reports/201/pdf/
+                  - generic [ref=e448]: 
+            - row "11/05/2569 CON-2024-001  Partly Cloudy / Sunny Sara Lee Draft    " [ref=e449]:
+              - cell "11/05/2569" [ref=e450]:
+                - link "11/05/2569" [ref=e451] [cursor=pointer]:
+                  - /url: /daily-reports/33/
+              - cell "CON-2024-001" [ref=e452]
+              - cell " Partly Cloudy / Sunny" [ref=e453]:
+                - generic [ref=e454]: 
+                - text: Partly Cloudy / Sunny
+              - cell "Sara Lee" [ref=e455]
+              - cell "Draft" [ref=e456]:
+                - generic [ref=e457]: Draft
+              - cell "   " [ref=e458]:
+                - link "" [ref=e459] [cursor=pointer]:
+                  - /url: /daily-reports/33/
+                  - generic [ref=e460]: 
+                - link "" [ref=e461] [cursor=pointer]:
+                  - /url: /daily-reports/33/edit/
+                  - generic [ref=e462]: 
+                - button "" [ref=e464] [cursor=pointer]:
+                  - generic [ref=e465]: 
+                - link "" [ref=e466] [cursor=pointer]:
+                  - /url: /daily-reports/33/pdf/
+                  - generic [ref=e467]: 
+            - row "11/05/2569 CON-2025-002  Rainy / Rainy Sara Lee Draft    " [ref=e468]:
+              - cell "11/05/2569" [ref=e469]:
+                - link "11/05/2569" [ref=e470] [cursor=pointer]:
+                  - /url: /daily-reports/200/
+              - cell "CON-2025-002" [ref=e471]
+              - cell " Rainy / Rainy" [ref=e472]:
+                - generic [ref=e473]: 
+                - text: Rainy / Rainy
+              - cell "Sara Lee" [ref=e474]
+              - cell "Draft" [ref=e475]:
+                - generic [ref=e476]: Draft
+              - cell "   " [ref=e477]:
+                - link "" [ref=e478] [cursor=pointer]:
+                  - /url: /daily-reports/200/
+                  - generic [ref=e479]: 
+                - link "" [ref=e480] [cursor=pointer]:
+                  - /url: /daily-reports/200/edit/
+                  - generic [ref=e481]: 
+                - button "" [ref=e483] [cursor=pointer]:
+                  - generic [ref=e484]: 
+                - link "" [ref=e485] [cursor=pointer]:
+                  - /url: /daily-reports/200/pdf/
+                  - generic [ref=e486]: 
+            - row "10/05/2569 CON-2024-001  Cloudy / Partly Cloudy Sara Lee Draft    " [ref=e487]:
+              - cell "10/05/2569" [ref=e488]:
+                - link "10/05/2569" [ref=e489] [cursor=pointer]:
+                  - /url: /daily-reports/29/
+              - cell "CON-2024-001" [ref=e490]
+              - cell " Cloudy / Partly Cloudy" [ref=e491]:
+                - generic [ref=e492]: 
+                - text: Cloudy / Partly Cloudy
+              - cell "Sara Lee" [ref=e493]
+              - cell "Draft" [ref=e494]:
+                - generic [ref=e495]: Draft
+              - cell "   " [ref=e496]:
+                - link "" [ref=e497] [cursor=pointer]:
+                  - /url: /daily-reports/29/
+                  - generic [ref=e498]: 
+                - link "" [ref=e499] [cursor=pointer]:
+                  - /url: /daily-reports/29/edit/
+                  - generic [ref=e500]: 
+                - button "" [ref=e502] [cursor=pointer]:
+                  - generic [ref=e503]: 
+                - link "" [ref=e504] [cursor=pointer]:
+                  - /url: /daily-reports/29/pdf/
+                  - generic [ref=e505]: 
+            - row "09/05/2569 CON-2024-001  Partly Cloudy / Sunny Sara Lee Draft    " [ref=e506]:
+              - cell "09/05/2569" [ref=e507]:
+                - link "09/05/2569" [ref=e508] [cursor=pointer]:
+                  - /url: /daily-reports/28/
+              - cell "CON-2024-001" [ref=e509]
+              - cell " Partly Cloudy / Sunny" [ref=e510]:
+                - generic [ref=e511]: 
+                - text: Partly Cloudy / Sunny
+              - cell "Sara Lee" [ref=e512]
+              - cell "Draft" [ref=e513]:
+                - generic [ref=e514]: Draft
+              - cell "   " [ref=e515]:
+                - link "" [ref=e516] [cursor=pointer]:
+                  - /url: /daily-reports/28/
+                  - generic [ref=e517]: 
+                - link "" [ref=e518] [cursor=pointer]:
+                  - /url: /daily-reports/28/edit/
+                  - generic [ref=e519]: 
+                - button "" [ref=e521] [cursor=pointer]:
+                  - generic [ref=e522]: 
+                - link "" [ref=e523] [cursor=pointer]:
+                  - /url: /daily-reports/28/pdf/
+                  - generic [ref=e524]: 
+            - row "09/05/2569 CON-2025-002  Cloudy / Sunny Sara Lee Draft    " [ref=e525]:
+              - cell "09/05/2569" [ref=e526]:
+                - link "09/05/2569" [ref=e527] [cursor=pointer]:
+                  - /url: /daily-reports/199/
+              - cell "CON-2025-002" [ref=e528]
+              - cell " Cloudy / Sunny" [ref=e529]:
+                - generic [ref=e530]: 
+                - text: Cloudy / Sunny
+              - cell "Sara Lee" [ref=e531]
+              - cell "Draft" [ref=e532]:
+                - generic [ref=e533]: Draft
+              - cell "   " [ref=e534]:
+                - link "" [ref=e535] [cursor=pointer]:
+                  - /url: /daily-reports/199/
+                  - generic [ref=e536]: 
+                - link "" [ref=e537] [cursor=pointer]:
+                  - /url: /daily-reports/199/edit/
+                  - generic [ref=e538]: 
+                - button "" [ref=e540] [cursor=pointer]:
+                  - generic [ref=e541]: 
+                - link "" [ref=e542] [cursor=pointer]:
+                  - /url: /daily-reports/199/pdf/
+                  - generic [ref=e543]: 
+        - list [ref=e545]:
+          - listitem [ref=e546]:
+            - generic: 1/11
+          - listitem [ref=e547]:
+            - link "Next" [ref=e548] [cursor=pointer]:
+              - /url: "?page=2"

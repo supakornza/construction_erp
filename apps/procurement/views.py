@@ -3,11 +3,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from apps.accounts.mixins import ApproverRequiredMixin, FinancialWriteMixin
 from .models import Supplier, PurchaseRequest, PurchaseOrder
 from .forms import (SupplierForm, PurchaseRequestForm, PurchaseRequestItemFormSet,
                     PurchaseOrderForm, PurchaseOrderItemFormSet)
+
+
+class ProcurementIndexView(View):
+    def get(self, request):
+        return redirect('procurement:pr_list')
 
 
 class SupplierListView(FinancialWriteMixin, ListView):

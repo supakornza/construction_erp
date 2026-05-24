@@ -1,0 +1,344 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link " Construction ERP" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: 
+        - generic [ref=e6]: Construction ERP
+      - button "" [ref=e7] [cursor=pointer]:
+        - generic [ref=e8]: 
+    - generic [ref=e9]:
+      - generic [ref=e10]: Dashboard
+      - link " Dashboard" [ref=e11] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e12]: 
+        - generic [ref=e13]: Dashboard
+      - link " Tide Monitor" [ref=e14] [cursor=pointer]:
+        - /url: /tide-monitor/
+        - generic [ref=e15]: 
+        - generic [ref=e16]: Tide Monitor
+      - link " Turbidity Monitor" [ref=e17] [cursor=pointer]:
+        - /url: /turbidity-monitor/
+        - generic [ref=e18]: 
+        - generic [ref=e19]: Turbidity Monitor
+      - link " Rock Progress" [ref=e20] [cursor=pointer]:
+        - /url: /project-controls/rock/dashboard/
+        - generic [ref=e21]: 
+        - generic [ref=e22]: Rock Progress
+      - link " Sand Progress" [ref=e23] [cursor=pointer]:
+        - /url: /project-controls/sand/dashboard/
+        - generic [ref=e24]: 
+        - generic [ref=e25]: Sand Progress
+      - generic [ref=e26]: Projects
+      - link " Projects" [ref=e27] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e28]: 
+        - generic [ref=e29]: Projects
+      - generic [ref=e30]: Daily Reports
+      - link " Daily Reports" [ref=e31] [cursor=pointer]:
+        - /url: /daily-reports/
+        - generic [ref=e32]: 
+        - generic [ref=e33]: Daily Reports
+      - link " Contractor Imports" [ref=e34] [cursor=pointer]:
+        - /url: /daily-reports/import/
+        - generic [ref=e35]: 
+        - generic [ref=e36]: Contractor Imports
+      - generic [ref=e37]: Resources
+      - link " Manpower" [ref=e38] [cursor=pointer]:
+        - /url: /manpower/dashboard/
+        - generic [ref=e39]: 
+        - generic [ref=e40]: Manpower
+      - link " Equipment" [ref=e41] [cursor=pointer]:
+        - /url: /equipment/
+        - generic [ref=e42]: 
+        - generic [ref=e43]: Equipment
+      - link " Materials" [ref=e44] [cursor=pointer]:
+        - /url: /materials/dashboard/
+        - generic [ref=e45]: 
+        - generic [ref=e46]: Materials
+      - generic [ref=e47]: Procurement
+      - link " Procurement" [ref=e48] [cursor=pointer]:
+        - /url: /procurement/pr/
+        - generic [ref=e49]: 
+        - generic [ref=e50]: Procurement
+      - generic [ref=e51]: BOQ & Progress
+      - link " BOQ & Progress" [ref=e52] [cursor=pointer]:
+        - /url: /boq/
+        - generic [ref=e53]: 
+        - generic [ref=e54]: BOQ & Progress
+      - generic [ref=e55]: Project Controls
+      - link " Rock & Sand Control" [ref=e56] [cursor=pointer]:
+        - /url: /project-controls/
+        - generic [ref=e57]: 
+        - generic [ref=e58]: Rock & Sand Control
+      - link " Revetment Progress" [ref=e59] [cursor=pointer]:
+        - /url: /project-controls/revetment/dashboard/
+        - generic [ref=e60]: 
+        - generic [ref=e61]: Revetment Progress
+      - link " Recovery Plans" [ref=e62] [cursor=pointer]:
+        - /url: /project-controls/recovery/plans/
+        - generic [ref=e63]: 
+        - generic [ref=e64]: Recovery Plans
+      - link " Project Action Plans" [ref=e65] [cursor=pointer]:
+        - /url: /project-controls/action-plans/
+        - generic [ref=e66]: 
+        - generic [ref=e67]: Project Action Plans
+      - link " Recovery Action Plans" [ref=e68] [cursor=pointer]:
+        - /url: /project-controls/recovery/rap/
+        - generic [ref=e69]: 
+        - generic [ref=e70]: Recovery Action Plans
+      - link " Logistics" [ref=e71] [cursor=pointer]:
+        - /url: /project-controls/logistics/
+        - generic [ref=e72]: 
+        - generic [ref=e73]: Logistics
+      - link " Transport Units" [ref=e74] [cursor=pointer]:
+        - /url: /project-controls/transport-units/
+        - generic [ref=e75]: 
+        - generic [ref=e76]: Transport Units
+      - generic [ref=e77]: HR & Attendance
+      - link " HR & Attendance" [ref=e78] [cursor=pointer]:
+        - /url: /hr/
+        - generic [ref=e79]: 
+        - generic [ref=e80]: HR & Attendance
+      - generic [ref=e81]: Drawings & RFI
+      - link " Drawings & RFI" [ref=e82] [cursor=pointer]:
+        - /url: /drawings/
+        - generic [ref=e83]: 
+        - generic [ref=e84]: Drawings & RFI
+      - generic [ref=e85]: Subcontractors
+      - link " Subcontractors" [ref=e86] [cursor=pointer]:
+        - /url: /subcontractors/
+        - generic [ref=e87]: 
+        - generic [ref=e88]: Subcontractors
+      - generic [ref=e89]: Maintenance
+      - link " Maintenance" [ref=e90] [cursor=pointer]:
+        - /url: /maintenance/
+        - generic [ref=e91]: 
+        - generic [ref=e92]: Maintenance
+      - generic [ref=e93]: Change Orders
+      - link " Change Orders" [ref=e94] [cursor=pointer]:
+        - /url: /change-orders/
+        - generic [ref=e95]: 
+        - generic [ref=e96]: Change Orders
+      - generic [ref=e97]: Cost Control
+      - link " Cost Control" [ref=e98] [cursor=pointer]:
+        - /url: /cost-control/
+        - generic [ref=e99]: 
+        - generic [ref=e100]: Cost Control
+      - generic [ref=e101]: Safety
+      - link " Safety" [ref=e102] [cursor=pointer]:
+        - /url: /safety/toolbox/
+        - generic [ref=e103]: 
+        - generic [ref=e104]: Safety
+      - generic [ref=e105]: Quality
+      - link " Quality Control" [ref=e106] [cursor=pointer]:
+        - /url: /quality/
+        - generic [ref=e107]: 
+        - generic [ref=e108]: Quality Control
+      - generic [ref=e109]: Documents
+      - link " Documents" [ref=e110] [cursor=pointer]:
+        - /url: /documents/
+        - generic [ref=e111]: 
+        - generic [ref=e112]: Documents
+      - generic [ref=e113]: Admin
+      - link " Users" [ref=e114] [cursor=pointer]:
+        - /url: /accounts/users/
+        - generic [ref=e115]: 
+        - generic [ref=e116]: Users
+      - link " Roles" [ref=e117] [cursor=pointer]:
+        - /url: /accounts/roles/
+        - generic [ref=e118]: 
+        - generic [ref=e119]: Roles
+      - link " Django Admin" [ref=e120] [cursor=pointer]:
+        - /url: /admin/
+        - generic [ref=e121]: 
+        - generic [ref=e122]: Django Admin
+  - generic [ref=e123]:
+    - navigation [ref=e124]:
+      - text: 
+      - button "Go back" [ref=e125] [cursor=pointer]:
+        - generic [ref=e126]: 
+        - text: Back
+      - generic [ref=e127]:
+        - generic [ref=e128]:
+          - button "TH" [ref=e130] [cursor=pointer]
+          - button "EN" [ref=e132] [cursor=pointer]
+        - generic [ref=e133]:
+          - button "" [ref=e134] [cursor=pointer]:
+            - generic [ref=e135]: 
+          - text: 
+        - generic [ref=e136]:
+          - button "A Admin User Admin" [ref=e137] [cursor=pointer]:
+            - generic [ref=e138]: A
+            - generic [ref=e139]: Admin User
+            - generic [ref=e140]: Admin
+          - text:   
+    - generic [ref=e141]:
+      - generic [ref=e142]:
+        - heading " Cost Control Dashboard" [level=4] [ref=e143]:
+          - generic [ref=e144]: 
+          - text: Cost Control Dashboard
+        - generic [ref=e145]:
+          - link "+ Record Cost" [ref=e146] [cursor=pointer]:
+            - /url: /cost-control/actuals/new/
+            - generic [ref=e147]: +
+            - text: Record Cost
+          - link "+ Add Budget" [ref=e148] [cursor=pointer]:
+            - /url: /cost-control/budget/new/
+            - generic [ref=e149]: +
+            - text: Add Budget
+          - link " Cost Codes" [ref=e150] [cursor=pointer]:
+            - /url: /cost-control/codes/
+            - generic [ref=e151]: 
+            - text: Cost Codes
+      - generic [ref=e154]:
+        - generic [ref=e155]: "Project:"
+        - combobox [ref=e156]:
+          - option "All Active Projects" [selected]
+          - option "Land Recliamation Chang Project"
+          - option "Port Expansion Project Phase 1"
+          - option "Sattahip Port Breakwater Phase 2"
+      - generic [ref=e157]:
+        - generic [ref=e160]:
+          - generic [ref=e162]: 
+          - generic [ref=e163]: ฿252,410,500
+          - generic [ref=e164]: Total Contract Value
+          - generic [ref=e165]: All Active Projects
+        - generic [ref=e168]:
+          - generic [ref=e170]: 
+          - generic [ref=e171]: ฿64,127,191
+          - generic [ref=e172]: Total Earned Value
+          - generic [ref=e173]: Certified by BOQ progress
+        - generic [ref=e176]:
+          - generic [ref=e178]: 
+          - generic [ref=e179]: ฿188,283,309
+          - generic [ref=e180]: Remaining Value
+          - generic [ref=e181]: Contract − Earned
+      - generic [ref=e182]:
+        - generic [ref=e185]:
+          - generic [ref=e186]: ฿95,000,000
+          - generic [ref=e187]: Total Budget
+          - generic [ref=e188]: "Committed: ฿0"
+        - generic [ref=e191]:
+          - generic [ref=e192]: ฿50,620,000
+          - generic [ref=e193]: Actual Cost
+          - generic [ref=e194]: "EV: ฿64,127,191"
+        - generic [ref=e197]:
+          - generic [ref=e198]: +฿13,507,191
+          - generic [ref=e199]: Cost Variance
+          - generic [ref=e200]: EV − Actual
+        - generic [ref=e203]:
+          - generic [ref=e204]: "1.27"
+          - generic [ref=e205]: CPI
+          - generic [ref=e206]: Cost Performance Index
+        - generic [ref=e209]:
+          - generic [ref=e210]: ฿74,803,150
+          - generic [ref=e211]: EAC
+          - generic [ref=e212]: Estimate at Completion
+        - generic [ref=e215]:
+          - generic [ref=e216]: Good
+          - generic [ref=e217]: Cost Status
+          - generic [ref=e218]: "BOQ Progress: %"
+      - generic [ref=e219]:
+        - generic [ref=e222]:
+          - generic [ref=e223]: 
+          - text: Budget vs Actual by Project
+        - generic [ref=e227]:
+          - generic [ref=e228]:
+            - generic [ref=e229]: 
+            - text: Cost by Source Type
+          - paragraph [ref=e231]: No cost data for selected filter.
+      - generic [ref=e232]:
+        - generic [ref=e233]:
+          - generic [ref=e234]:
+            - generic [ref=e235]: 
+            - text: Project Financial Overview
+          - generic [ref=e236]: Contract Value vs Cost Performance
+        - table [ref=e238]:
+          - rowgroup [ref=e239]:
+            - row "Project Contract (฿) Budget (฿) Actual Cost (฿) Earned Value (฿) Cost Variance (฿) CPI EAC (฿) BOQ % Status" [ref=e240]:
+              - columnheader "Project" [ref=e241]
+              - columnheader "Contract (฿)" [ref=e242]
+              - columnheader "Budget (฿)" [ref=e243]
+              - columnheader "Actual Cost (฿)" [ref=e244]
+              - columnheader "Earned Value (฿)" [ref=e245]
+              - columnheader "Cost Variance (฿)" [ref=e246]
+              - columnheader "CPI" [ref=e247]
+              - columnheader "EAC (฿)" [ref=e248]
+              - columnheader "BOQ %" [ref=e249]
+              - columnheader "Status" [ref=e250]
+          - rowgroup [ref=e251]:
+            - row "Sattahip Port Breakwater Phase 2 CON-2025-002 95,000,000 95,000,000 50,620,000 64,127,191 +13,507,191 1.27 ฿74,803,150 67.5% Good" [ref=e252]:
+              - cell "Sattahip Port Breakwater Phase 2 CON-2025-002" [ref=e253]:
+                - generic [ref=e254]: Sattahip Port Breakwater Phase 2
+                - generic [ref=e255]: CON-2025-002
+              - cell "95,000,000" [ref=e256]
+              - cell "95,000,000" [ref=e257]
+              - cell "50,620,000" [ref=e258]
+              - cell "64,127,191" [ref=e259]
+              - cell "+13,507,191" [ref=e260]
+              - cell "1.27" [ref=e261]
+              - cell "฿74,803,150" [ref=e262]
+              - cell "67.5%" [ref=e263]:
+                - generic [ref=e266]: 67.5%
+              - cell "Good" [ref=e267]:
+                - generic [ref=e268]: Good
+            - row "Land Recliamation Chang Project P06643 7,410,500 0 0 0 +0 N/A – 0.0% N/A" [ref=e269]:
+              - cell "Land Recliamation Chang Project P06643" [ref=e270]:
+                - generic [ref=e271]: Land Recliamation Chang Project
+                - generic [ref=e272]: P06643
+              - cell "7,410,500" [ref=e273]
+              - cell "0" [ref=e274]
+              - cell "0" [ref=e275]
+              - cell "0" [ref=e276]
+              - cell "+0" [ref=e277]
+              - cell "N/A" [ref=e278]
+              - cell "–" [ref=e279]
+              - cell "0.0%" [ref=e280]:
+                - generic [ref=e282]: 0.0%
+              - cell "N/A" [ref=e283]:
+                - generic [ref=e284]: N/A
+            - row "Port Expansion Project Phase 1 CON-2024-001 150,000,000 0 0 0 +0 N/A – 3.3% N/A" [ref=e285]:
+              - cell "Port Expansion Project Phase 1 CON-2024-001" [ref=e286]:
+                - generic [ref=e287]: Port Expansion Project Phase 1
+                - generic [ref=e288]: CON-2024-001
+              - cell "150,000,000" [ref=e289]
+              - cell "0" [ref=e290]
+              - cell "0" [ref=e291]
+              - cell "0" [ref=e292]
+              - cell "+0" [ref=e293]
+              - cell "N/A" [ref=e294]
+              - cell "–" [ref=e295]
+              - cell "3.3%" [ref=e296]:
+                - generic [ref=e299]: 3.3%
+              - cell "N/A" [ref=e300]:
+                - generic [ref=e301]: N/A
+          - rowgroup [ref=e302]:
+            - row "Total 252,410,500 95,000,000 50,620,000 64,127,191 +13,507,191 1.27 ฿74,803,150 Good" [ref=e303]:
+              - cell "Total" [ref=e304]
+              - cell "252,410,500" [ref=e305]
+              - cell "95,000,000" [ref=e306]
+              - cell "50,620,000" [ref=e307]
+              - cell "64,127,191" [ref=e308]
+              - cell "+13,507,191" [ref=e309]
+              - cell "1.27" [ref=e310]
+              - cell "฿74,803,150" [ref=e311]
+              - cell [ref=e312]
+              - cell "Good" [ref=e313]:
+                - generic [ref=e314]: Good
+      - generic [ref=e315]:
+        - link " Cost Codes Manage project cost codes" [ref=e317] [cursor=pointer]:
+          - /url: /cost-control/codes/
+          - generic [ref=e318]: 
+          - generic [ref=e319]: Cost Codes
+          - generic [ref=e320]: Manage project cost codes
+        - link " Budget Items Define and manage budgets" [ref=e322] [cursor=pointer]:
+          - /url: /cost-control/budget/
+          - generic [ref=e323]: 
+          - generic [ref=e324]: Budget Items
+          - generic [ref=e325]: Define and manage budgets
+        - link " Actual Costs Record and review actual expenditure" [ref=e327] [cursor=pointer]:
+          - /url: /cost-control/actuals/
+          - generic [ref=e328]: 
+          - generic [ref=e329]: Actual Costs
+          - generic [ref=e330]: Record and review actual expenditure

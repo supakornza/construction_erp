@@ -1,0 +1,36 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e4]: 
+    - generic [ref=e5]: Construction ERP
+    - generic [ref=e6]: Project Management System
+  - generic [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e10]: Username
+      - generic [ref=e11]:
+        - generic [ref=e13]: 
+        - textbox "Username" [active] [ref=e14]:
+          - /placeholder: Enter username
+          - text: admin
+    - generic [ref=e15]:
+      - generic [ref=e16]: Password
+      - generic [ref=e17]:
+        - generic [ref=e19]: 
+        - textbox "Password" [ref=e20]:
+          - /placeholder: Enter password
+          - text: Admin@1234
+        - button "" [ref=e21] [cursor=pointer]:
+          - generic [ref=e22]: 
+    - generic [ref=e23]:
+      - generic [ref=e24] [cursor=pointer]:
+        - checkbox "จดจำฉัน (14 วัน)" [ref=e25]
+        - text: จดจำฉัน (14 วัน)
+      - link "Forgot Password?" [ref=e26] [cursor=pointer]:
+        - /url: /accounts/password-reset/
+    - button " Sign In" [ref=e27] [cursor=pointer]:
+      - generic [ref=e28]: 
+      - text: Sign In
+  - generic [ref=e29]:
+    - generic [ref=e30]:
+      - generic [ref=e31]: 
+      - text: Secure Field Environment
+    - generic [ref=e32]: Construction ERP © 2026

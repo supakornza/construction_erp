@@ -1,0 +1,567 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link " Construction ERP" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: 
+        - generic [ref=e6]: Construction ERP
+      - button "" [ref=e7] [cursor=pointer]:
+        - generic [ref=e8]: 
+    - generic [ref=e9]:
+      - generic [ref=e10]: Dashboard
+      - link " Dashboard" [ref=e11] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e12]: 
+        - generic [ref=e13]: Dashboard
+      - link " Tide Monitor" [ref=e14] [cursor=pointer]:
+        - /url: /tide-monitor/
+        - generic [ref=e15]: 
+        - generic [ref=e16]: Tide Monitor
+      - link " Turbidity Monitor" [ref=e17] [cursor=pointer]:
+        - /url: /turbidity-monitor/
+        - generic [ref=e18]: 
+        - generic [ref=e19]: Turbidity Monitor
+      - link " Rock Progress" [ref=e20] [cursor=pointer]:
+        - /url: /project-controls/rock/dashboard/
+        - generic [ref=e21]: 
+        - generic [ref=e22]: Rock Progress
+      - link " Sand Progress" [ref=e23] [cursor=pointer]:
+        - /url: /project-controls/sand/dashboard/
+        - generic [ref=e24]: 
+        - generic [ref=e25]: Sand Progress
+      - generic [ref=e26]: Projects
+      - link " Projects" [ref=e27] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e28]: 
+        - generic [ref=e29]: Projects
+      - generic [ref=e30]: Daily Reports
+      - link " Daily Reports" [ref=e31] [cursor=pointer]:
+        - /url: /daily-reports/
+        - generic [ref=e32]: 
+        - generic [ref=e33]: Daily Reports
+      - link " Contractor Imports" [ref=e34] [cursor=pointer]:
+        - /url: /daily-reports/import/
+        - generic [ref=e35]: 
+        - generic [ref=e36]: Contractor Imports
+      - generic [ref=e37]: Resources
+      - link " Manpower" [ref=e38] [cursor=pointer]:
+        - /url: /manpower/dashboard/
+        - generic [ref=e39]: 
+        - generic [ref=e40]: Manpower
+      - link " Equipment" [ref=e41] [cursor=pointer]:
+        - /url: /equipment/
+        - generic [ref=e42]: 
+        - generic [ref=e43]: Equipment
+      - link " Materials" [ref=e44] [cursor=pointer]:
+        - /url: /materials/dashboard/
+        - generic [ref=e45]: 
+        - generic [ref=e46]: Materials
+      - generic [ref=e47]: Procurement
+      - link " Procurement" [ref=e48] [cursor=pointer]:
+        - /url: /procurement/pr/
+        - generic [ref=e49]: 
+        - generic [ref=e50]: Procurement
+      - generic [ref=e51]: BOQ & Progress
+      - link " BOQ & Progress" [ref=e52] [cursor=pointer]:
+        - /url: /boq/
+        - generic [ref=e53]: 
+        - generic [ref=e54]: BOQ & Progress
+      - generic [ref=e55]: Project Controls
+      - link " Rock & Sand Control" [ref=e56] [cursor=pointer]:
+        - /url: /project-controls/
+        - generic [ref=e57]: 
+        - generic [ref=e58]: Rock & Sand Control
+      - link " Revetment Progress" [ref=e59] [cursor=pointer]:
+        - /url: /project-controls/revetment/dashboard/
+        - generic [ref=e60]: 
+        - generic [ref=e61]: Revetment Progress
+      - link " Recovery Plans" [ref=e62] [cursor=pointer]:
+        - /url: /project-controls/recovery/plans/
+        - generic [ref=e63]: 
+        - generic [ref=e64]: Recovery Plans
+      - link " Project Action Plans" [ref=e65] [cursor=pointer]:
+        - /url: /project-controls/action-plans/
+        - generic [ref=e66]: 
+        - generic [ref=e67]: Project Action Plans
+      - link " Recovery Action Plans" [ref=e68] [cursor=pointer]:
+        - /url: /project-controls/recovery/rap/
+        - generic [ref=e69]: 
+        - generic [ref=e70]: Recovery Action Plans
+      - link " Logistics" [ref=e71] [cursor=pointer]:
+        - /url: /project-controls/logistics/
+        - generic [ref=e72]: 
+        - generic [ref=e73]: Logistics
+      - link " Transport Units" [ref=e74] [cursor=pointer]:
+        - /url: /project-controls/transport-units/
+        - generic [ref=e75]: 
+        - generic [ref=e76]: Transport Units
+      - generic [ref=e77]: HR & Attendance
+      - link " HR & Attendance" [ref=e78] [cursor=pointer]:
+        - /url: /hr/
+        - generic [ref=e79]: 
+        - generic [ref=e80]: HR & Attendance
+      - generic [ref=e81]: Drawings & RFI
+      - link " Drawings & RFI" [ref=e82] [cursor=pointer]:
+        - /url: /drawings/
+        - generic [ref=e83]: 
+        - generic [ref=e84]: Drawings & RFI
+      - generic [ref=e85]: Subcontractors
+      - link " Subcontractors" [ref=e86] [cursor=pointer]:
+        - /url: /subcontractors/
+        - generic [ref=e87]: 
+        - generic [ref=e88]: Subcontractors
+      - generic [ref=e89]: Maintenance
+      - link " Maintenance" [ref=e90] [cursor=pointer]:
+        - /url: /maintenance/
+        - generic [ref=e91]: 
+        - generic [ref=e92]: Maintenance
+      - generic [ref=e93]: Change Orders
+      - link " Change Orders" [ref=e94] [cursor=pointer]:
+        - /url: /change-orders/
+        - generic [ref=e95]: 
+        - generic [ref=e96]: Change Orders
+      - generic [ref=e97]: Cost Control
+      - link " Cost Control" [ref=e98] [cursor=pointer]:
+        - /url: /cost-control/
+        - generic [ref=e99]: 
+        - generic [ref=e100]: Cost Control
+      - generic [ref=e101]: Safety
+      - link " Safety" [ref=e102] [cursor=pointer]:
+        - /url: /safety/toolbox/
+        - generic [ref=e103]: 
+        - generic [ref=e104]: Safety
+      - generic [ref=e105]: Quality
+      - link " Quality Control" [ref=e106] [cursor=pointer]:
+        - /url: /quality/
+        - generic [ref=e107]: 
+        - generic [ref=e108]: Quality Control
+      - generic [ref=e109]: Documents
+      - link " Documents" [ref=e110] [cursor=pointer]:
+        - /url: /documents/
+        - generic [ref=e111]: 
+        - generic [ref=e112]: Documents
+      - generic [ref=e113]: Admin
+      - link " Users" [ref=e114] [cursor=pointer]:
+        - /url: /accounts/users/
+        - generic [ref=e115]: 
+        - generic [ref=e116]: Users
+      - link " Roles" [ref=e117] [cursor=pointer]:
+        - /url: /accounts/roles/
+        - generic [ref=e118]: 
+        - generic [ref=e119]: Roles
+      - link " Django Admin" [ref=e120] [cursor=pointer]:
+        - /url: /admin/
+        - generic [ref=e121]: 
+        - generic [ref=e122]: Django Admin
+  - generic [ref=e123]:
+    - navigation [ref=e124]:
+      - text: 
+      - button "Go back" [ref=e125] [cursor=pointer]:
+        - generic [ref=e126]: 
+        - text: Back
+      - generic [ref=e127]:
+        - generic [ref=e128]:
+          - button "TH" [ref=e130] [cursor=pointer]
+          - button "EN" [ref=e132] [cursor=pointer]
+        - generic [ref=e133]:
+          - button "" [ref=e134] [cursor=pointer]:
+            - generic [ref=e135]: 
+          - text: 
+        - generic [ref=e136]:
+          - button "A Admin User Admin" [ref=e137] [cursor=pointer]:
+            - generic [ref=e138]: A
+            - generic [ref=e139]: Admin User
+            - generic [ref=e140]: Admin
+          - text:   
+    - generic [ref=e141]:
+      - generic [ref=e142]:
+        - heading " Manpower Records" [level=4] [ref=e143]:
+          - generic [ref=e144]: 
+          - text: Manpower Records
+        - generic [ref=e145]:
+          - link " Dashboard" [ref=e146] [cursor=pointer]:
+            - /url: /manpower/dashboard/
+            - generic [ref=e147]: 
+            - text: Dashboard
+          - link "+ Add Record" [ref=e148] [cursor=pointer]:
+            - /url: /manpower/create/
+            - generic [ref=e149]: +
+            - text: Add Record
+      - generic [ref=e152]:
+        - combobox [ref=e153]:
+          - option "All Projects" [selected]
+          - option "CON-2025-002"
+          - option "P06643"
+          - option "CON-2024-001"
+        - textbox [ref=e154]
+        - button "Filter" [ref=e155] [cursor=pointer]
+      - table [ref=e158]:
+        - rowgroup [ref=e159]:
+          - row "Date Project Category Company Qty Actions" [ref=e160]:
+            - columnheader "Date" [ref=e161]
+            - columnheader "Project" [ref=e162]
+            - columnheader "Category" [ref=e163]
+            - columnheader "Company" [ref=e164]
+            - columnheader "Qty" [ref=e165]
+            - columnheader "Actions" [ref=e166]
+        - rowgroup [ref=e167]:
+          - row "21/05/2569 CON-2024-001 Driver Demo Construction Co. 10  " [ref=e168]:
+            - cell "21/05/2569" [ref=e169]
+            - cell "CON-2024-001" [ref=e170]
+            - cell "Driver" [ref=e171]
+            - cell "Demo Construction Co." [ref=e172]
+            - cell "10" [ref=e173]
+            - cell " " [ref=e174]:
+              - link "" [ref=e175] [cursor=pointer]:
+                - /url: /manpower/1570/edit/
+                - generic [ref=e176]: 
+              - button "" [ref=e178] [cursor=pointer]:
+                - generic [ref=e179]: 
+          - row "21/05/2569 CON-2024-001 Engineer Demo Construction Co. 5  " [ref=e180]:
+            - cell "21/05/2569" [ref=e181]
+            - cell "CON-2024-001" [ref=e182]
+            - cell "Engineer" [ref=e183]
+            - cell "Demo Construction Co." [ref=e184]
+            - cell "5" [ref=e185]
+            - cell " " [ref=e186]:
+              - link "" [ref=e187] [cursor=pointer]:
+                - /url: /manpower/1571/edit/
+                - generic [ref=e188]: 
+              - button "" [ref=e190] [cursor=pointer]:
+                - generic [ref=e191]: 
+          - row "21/05/2569 CON-2024-001 Foreman Demo Construction Co. 5  " [ref=e192]:
+            - cell "21/05/2569" [ref=e193]
+            - cell "CON-2024-001" [ref=e194]
+            - cell "Foreman" [ref=e195]
+            - cell "Demo Construction Co." [ref=e196]
+            - cell "5" [ref=e197]
+            - cell " " [ref=e198]:
+              - link "" [ref=e199] [cursor=pointer]:
+                - /url: /manpower/1572/edit/
+                - generic [ref=e200]: 
+              - button "" [ref=e202] [cursor=pointer]:
+                - generic [ref=e203]: 
+          - row "21/05/2569 CON-2024-001 General Worker Demo Construction Co. 40  " [ref=e204]:
+            - cell "21/05/2569" [ref=e205]
+            - cell "CON-2024-001" [ref=e206]
+            - cell "General Worker" [ref=e207]
+            - cell "Demo Construction Co." [ref=e208]
+            - cell "40" [ref=e209]
+            - cell " " [ref=e210]:
+              - link "" [ref=e211] [cursor=pointer]:
+                - /url: /manpower/1573/edit/
+                - generic [ref=e212]: 
+              - button "" [ref=e214] [cursor=pointer]:
+                - generic [ref=e215]: 
+          - row "21/05/2569 CON-2024-001 Operator Demo Construction Co. 5  " [ref=e216]:
+            - cell "21/05/2569" [ref=e217]
+            - cell "CON-2024-001" [ref=e218]
+            - cell "Operator" [ref=e219]
+            - cell "Demo Construction Co." [ref=e220]
+            - cell "5" [ref=e221]
+            - cell " " [ref=e222]:
+              - link "" [ref=e223] [cursor=pointer]:
+                - /url: /manpower/1574/edit/
+                - generic [ref=e224]: 
+              - button "" [ref=e226] [cursor=pointer]:
+                - generic [ref=e227]: 
+          - row "21/05/2569 CON-2024-001 Other Demo Construction Co. 5  " [ref=e228]:
+            - cell "21/05/2569" [ref=e229]
+            - cell "CON-2024-001" [ref=e230]
+            - cell "Other" [ref=e231]
+            - cell "Demo Construction Co." [ref=e232]
+            - cell "5" [ref=e233]
+            - cell " " [ref=e234]:
+              - link "" [ref=e235] [cursor=pointer]:
+                - /url: /manpower/1575/edit/
+                - generic [ref=e236]: 
+              - button "" [ref=e238] [cursor=pointer]:
+                - generic [ref=e239]: 
+          - row "21/05/2569 CON-2024-001 Safety Officer Demo Construction Co. 3  " [ref=e240]:
+            - cell "21/05/2569" [ref=e241]
+            - cell "CON-2024-001" [ref=e242]
+            - cell "Safety Officer" [ref=e243]
+            - cell "Demo Construction Co." [ref=e244]
+            - cell "3" [ref=e245]
+            - cell " " [ref=e246]:
+              - link "" [ref=e247] [cursor=pointer]:
+                - /url: /manpower/1576/edit/
+                - generic [ref=e248]: 
+              - button "" [ref=e250] [cursor=pointer]:
+                - generic [ref=e251]: 
+          - row "21/05/2569 CON-2024-001 Surveyor Demo Construction Co. 3  " [ref=e252]:
+            - cell "21/05/2569" [ref=e253]
+            - cell "CON-2024-001" [ref=e254]
+            - cell "Surveyor" [ref=e255]
+            - cell "Demo Construction Co." [ref=e256]
+            - cell "3" [ref=e257]
+            - cell " " [ref=e258]:
+              - link "" [ref=e259] [cursor=pointer]:
+                - /url: /manpower/1577/edit/
+                - generic [ref=e260]: 
+              - button "" [ref=e262] [cursor=pointer]:
+                - generic [ref=e263]: 
+          - row "20/05/2569 CON-2024-001 Driver Demo Construction Co. 8  " [ref=e264]:
+            - cell "20/05/2569" [ref=e265]
+            - cell "CON-2024-001" [ref=e266]
+            - cell "Driver" [ref=e267]
+            - cell "Demo Construction Co." [ref=e268]
+            - cell "8" [ref=e269]
+            - cell " " [ref=e270]:
+              - link "" [ref=e271] [cursor=pointer]:
+                - /url: /manpower/1562/edit/
+                - generic [ref=e272]: 
+              - button "" [ref=e274] [cursor=pointer]:
+                - generic [ref=e275]: 
+          - row "20/05/2569 CON-2024-001 Engineer Demo Construction Co. 3  " [ref=e276]:
+            - cell "20/05/2569" [ref=e277]
+            - cell "CON-2024-001" [ref=e278]
+            - cell "Engineer" [ref=e279]
+            - cell "Demo Construction Co." [ref=e280]
+            - cell "3" [ref=e281]
+            - cell " " [ref=e282]:
+              - link "" [ref=e283] [cursor=pointer]:
+                - /url: /manpower/1563/edit/
+                - generic [ref=e284]: 
+              - button "" [ref=e286] [cursor=pointer]:
+                - generic [ref=e287]: 
+          - row "20/05/2569 CON-2024-001 Foreman Demo Construction Co. 6  " [ref=e288]:
+            - cell "20/05/2569" [ref=e289]
+            - cell "CON-2024-001" [ref=e290]
+            - cell "Foreman" [ref=e291]
+            - cell "Demo Construction Co." [ref=e292]
+            - cell "6" [ref=e293]
+            - cell " " [ref=e294]:
+              - link "" [ref=e295] [cursor=pointer]:
+                - /url: /manpower/1564/edit/
+                - generic [ref=e296]: 
+              - button "" [ref=e298] [cursor=pointer]:
+                - generic [ref=e299]: 
+          - row "20/05/2569 CON-2024-001 General Worker Demo Construction Co. 40  " [ref=e300]:
+            - cell "20/05/2569" [ref=e301]
+            - cell "CON-2024-001" [ref=e302]
+            - cell "General Worker" [ref=e303]
+            - cell "Demo Construction Co." [ref=e304]
+            - cell "40" [ref=e305]
+            - cell " " [ref=e306]:
+              - link "" [ref=e307] [cursor=pointer]:
+                - /url: /manpower/1565/edit/
+                - generic [ref=e308]: 
+              - button "" [ref=e310] [cursor=pointer]:
+                - generic [ref=e311]: 
+          - row "20/05/2569 CON-2024-001 Operator Demo Construction Co. 7  " [ref=e312]:
+            - cell "20/05/2569" [ref=e313]
+            - cell "CON-2024-001" [ref=e314]
+            - cell "Operator" [ref=e315]
+            - cell "Demo Construction Co." [ref=e316]
+            - cell "7" [ref=e317]
+            - cell " " [ref=e318]:
+              - link "" [ref=e319] [cursor=pointer]:
+                - /url: /manpower/1566/edit/
+                - generic [ref=e320]: 
+              - button "" [ref=e322] [cursor=pointer]:
+                - generic [ref=e323]: 
+          - row "20/05/2569 CON-2024-001 Other Demo Construction Co. 5  " [ref=e324]:
+            - cell "20/05/2569" [ref=e325]
+            - cell "CON-2024-001" [ref=e326]
+            - cell "Other" [ref=e327]
+            - cell "Demo Construction Co." [ref=e328]
+            - cell "5" [ref=e329]
+            - cell " " [ref=e330]:
+              - link "" [ref=e331] [cursor=pointer]:
+                - /url: /manpower/1567/edit/
+                - generic [ref=e332]: 
+              - button "" [ref=e334] [cursor=pointer]:
+                - generic [ref=e335]: 
+          - row "20/05/2569 CON-2024-001 Safety Officer Demo Construction Co. 4  " [ref=e336]:
+            - cell "20/05/2569" [ref=e337]
+            - cell "CON-2024-001" [ref=e338]
+            - cell "Safety Officer" [ref=e339]
+            - cell "Demo Construction Co." [ref=e340]
+            - cell "4" [ref=e341]
+            - cell " " [ref=e342]:
+              - link "" [ref=e343] [cursor=pointer]:
+                - /url: /manpower/1568/edit/
+                - generic [ref=e344]: 
+              - button "" [ref=e346] [cursor=pointer]:
+                - generic [ref=e347]: 
+          - row "20/05/2569 CON-2024-001 Surveyor Demo Construction Co. 3  " [ref=e348]:
+            - cell "20/05/2569" [ref=e349]
+            - cell "CON-2024-001" [ref=e350]
+            - cell "Surveyor" [ref=e351]
+            - cell "Demo Construction Co." [ref=e352]
+            - cell "3" [ref=e353]
+            - cell " " [ref=e354]:
+              - link "" [ref=e355] [cursor=pointer]:
+                - /url: /manpower/1569/edit/
+                - generic [ref=e356]: 
+              - button "" [ref=e358] [cursor=pointer]:
+                - generic [ref=e359]: 
+          - row "19/05/2569 CON-2024-001 Driver Demo Construction Co. 8  " [ref=e360]:
+            - cell "19/05/2569" [ref=e361]
+            - cell "CON-2024-001" [ref=e362]
+            - cell "Driver" [ref=e363]
+            - cell "Demo Construction Co." [ref=e364]
+            - cell "8" [ref=e365]
+            - cell " " [ref=e366]:
+              - link "" [ref=e367] [cursor=pointer]:
+                - /url: /manpower/1554/edit/
+                - generic [ref=e368]: 
+              - button "" [ref=e370] [cursor=pointer]:
+                - generic [ref=e371]: 
+          - row "19/05/2569 CON-2024-001 Engineer Demo Construction Co. 5  " [ref=e372]:
+            - cell "19/05/2569" [ref=e373]
+            - cell "CON-2024-001" [ref=e374]
+            - cell "Engineer" [ref=e375]
+            - cell "Demo Construction Co." [ref=e376]
+            - cell "5" [ref=e377]
+            - cell " " [ref=e378]:
+              - link "" [ref=e379] [cursor=pointer]:
+                - /url: /manpower/1555/edit/
+                - generic [ref=e380]: 
+              - button "" [ref=e382] [cursor=pointer]:
+                - generic [ref=e383]: 
+          - row "19/05/2569 CON-2024-001 Foreman Demo Construction Co. 6  " [ref=e384]:
+            - cell "19/05/2569" [ref=e385]
+            - cell "CON-2024-001" [ref=e386]
+            - cell "Foreman" [ref=e387]
+            - cell "Demo Construction Co." [ref=e388]
+            - cell "6" [ref=e389]
+            - cell " " [ref=e390]:
+              - link "" [ref=e391] [cursor=pointer]:
+                - /url: /manpower/1556/edit/
+                - generic [ref=e392]: 
+              - button "" [ref=e394] [cursor=pointer]:
+                - generic [ref=e395]: 
+          - row "19/05/2569 CON-2024-001 General Worker Demo Construction Co. 39  " [ref=e396]:
+            - cell "19/05/2569" [ref=e397]
+            - cell "CON-2024-001" [ref=e398]
+            - cell "General Worker" [ref=e399]
+            - cell "Demo Construction Co." [ref=e400]
+            - cell "39" [ref=e401]
+            - cell " " [ref=e402]:
+              - link "" [ref=e403] [cursor=pointer]:
+                - /url: /manpower/1557/edit/
+                - generic [ref=e404]: 
+              - button "" [ref=e406] [cursor=pointer]:
+                - generic [ref=e407]: 
+          - row "19/05/2569 CON-2024-001 Operator Demo Construction Co. 4  " [ref=e408]:
+            - cell "19/05/2569" [ref=e409]
+            - cell "CON-2024-001" [ref=e410]
+            - cell "Operator" [ref=e411]
+            - cell "Demo Construction Co." [ref=e412]
+            - cell "4" [ref=e413]
+            - cell " " [ref=e414]:
+              - link "" [ref=e415] [cursor=pointer]:
+                - /url: /manpower/1558/edit/
+                - generic [ref=e416]: 
+              - button "" [ref=e418] [cursor=pointer]:
+                - generic [ref=e419]: 
+          - row "19/05/2569 CON-2024-001 Other Demo Construction Co. 7  " [ref=e420]:
+            - cell "19/05/2569" [ref=e421]
+            - cell "CON-2024-001" [ref=e422]
+            - cell "Other" [ref=e423]
+            - cell "Demo Construction Co." [ref=e424]
+            - cell "7" [ref=e425]
+            - cell " " [ref=e426]:
+              - link "" [ref=e427] [cursor=pointer]:
+                - /url: /manpower/1559/edit/
+                - generic [ref=e428]: 
+              - button "" [ref=e430] [cursor=pointer]:
+                - generic [ref=e431]: 
+          - row "19/05/2569 CON-2024-001 Safety Officer Demo Construction Co. 4  " [ref=e432]:
+            - cell "19/05/2569" [ref=e433]
+            - cell "CON-2024-001" [ref=e434]
+            - cell "Safety Officer" [ref=e435]
+            - cell "Demo Construction Co." [ref=e436]
+            - cell "4" [ref=e437]
+            - cell " " [ref=e438]:
+              - link "" [ref=e439] [cursor=pointer]:
+                - /url: /manpower/1560/edit/
+                - generic [ref=e440]: 
+              - button "" [ref=e442] [cursor=pointer]:
+                - generic [ref=e443]: 
+          - row "19/05/2569 CON-2024-001 Surveyor Demo Construction Co. 1  " [ref=e444]:
+            - cell "19/05/2569" [ref=e445]
+            - cell "CON-2024-001" [ref=e446]
+            - cell "Surveyor" [ref=e447]
+            - cell "Demo Construction Co." [ref=e448]
+            - cell "1" [ref=e449]
+            - cell " " [ref=e450]:
+              - link "" [ref=e451] [cursor=pointer]:
+                - /url: /manpower/1561/edit/
+                - generic [ref=e452]: 
+              - button "" [ref=e454] [cursor=pointer]:
+                - generic [ref=e455]: 
+          - row "18/05/2569 CON-2024-001 Driver Demo Construction Co. 10  " [ref=e456]:
+            - cell "18/05/2569" [ref=e457]
+            - cell "CON-2024-001" [ref=e458]
+            - cell "Driver" [ref=e459]
+            - cell "Demo Construction Co." [ref=e460]
+            - cell "10" [ref=e461]
+            - cell " " [ref=e462]:
+              - link "" [ref=e463] [cursor=pointer]:
+                - /url: /manpower/1546/edit/
+                - generic [ref=e464]: 
+              - button "" [ref=e466] [cursor=pointer]:
+                - generic [ref=e467]: 
+          - row "18/05/2569 CON-2024-001 Engineer Demo Construction Co. 5  " [ref=e468]:
+            - cell "18/05/2569" [ref=e469]
+            - cell "CON-2024-001" [ref=e470]
+            - cell "Engineer" [ref=e471]
+            - cell "Demo Construction Co." [ref=e472]
+            - cell "5" [ref=e473]
+            - cell " " [ref=e474]:
+              - link "" [ref=e475] [cursor=pointer]:
+                - /url: /manpower/1547/edit/
+                - generic [ref=e476]: 
+              - button "" [ref=e478] [cursor=pointer]:
+                - generic [ref=e479]: 
+          - row "18/05/2569 CON-2024-001 Foreman Demo Construction Co. 5  " [ref=e480]:
+            - cell "18/05/2569" [ref=e481]
+            - cell "CON-2024-001" [ref=e482]
+            - cell "Foreman" [ref=e483]
+            - cell "Demo Construction Co." [ref=e484]
+            - cell "5" [ref=e485]
+            - cell " " [ref=e486]:
+              - link "" [ref=e487] [cursor=pointer]:
+                - /url: /manpower/1548/edit/
+                - generic [ref=e488]: 
+              - button "" [ref=e490] [cursor=pointer]:
+                - generic [ref=e491]: 
+          - row "18/05/2569 CON-2024-001 General Worker Demo Construction Co. 39  " [ref=e492]:
+            - cell "18/05/2569" [ref=e493]
+            - cell "CON-2024-001" [ref=e494]
+            - cell "General Worker" [ref=e495]
+            - cell "Demo Construction Co." [ref=e496]
+            - cell "39" [ref=e497]
+            - cell " " [ref=e498]:
+              - link "" [ref=e499] [cursor=pointer]:
+                - /url: /manpower/1549/edit/
+                - generic [ref=e500]: 
+              - button "" [ref=e502] [cursor=pointer]:
+                - generic [ref=e503]: 
+          - row "18/05/2569 CON-2024-001 Operator Demo Construction Co. 6  " [ref=e504]:
+            - cell "18/05/2569" [ref=e505]
+            - cell "CON-2024-001" [ref=e506]
+            - cell "Operator" [ref=e507]
+            - cell "Demo Construction Co." [ref=e508]
+            - cell "6" [ref=e509]
+            - cell " " [ref=e510]:
+              - link "" [ref=e511] [cursor=pointer]:
+                - /url: /manpower/1550/edit/
+                - generic [ref=e512]: 
+              - button "" [ref=e514] [cursor=pointer]:
+                - generic [ref=e515]: 
+          - row "18/05/2569 CON-2024-001 Other Demo Construction Co. 3  " [ref=e516]:
+            - cell "18/05/2569" [ref=e517]
+            - cell "CON-2024-001" [ref=e518]
+            - cell "Other" [ref=e519]
+            - cell "Demo Construction Co." [ref=e520]
+            - cell "3" [ref=e521]
+            - cell " " [ref=e522]:
+              - link "" [ref=e523] [cursor=pointer]:
+                - /url: /manpower/1551/edit/
+                - generic [ref=e524]: 
+              - button "" [ref=e526] [cursor=pointer]:
+                - generic [ref=e527]: 

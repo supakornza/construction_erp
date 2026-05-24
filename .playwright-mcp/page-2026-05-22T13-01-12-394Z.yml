@@ -1,0 +1,497 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link " Construction ERP" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: 
+        - generic [ref=e6]: Construction ERP
+      - button "" [ref=e7] [cursor=pointer]:
+        - generic [ref=e8]: 
+    - generic [ref=e9]:
+      - generic [ref=e10]: Dashboard
+      - link " Dashboard" [ref=e11] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e12]: 
+        - generic [ref=e13]: Dashboard
+      - link " Tide Monitor" [ref=e14] [cursor=pointer]:
+        - /url: /tide-monitor/
+        - generic [ref=e15]: 
+        - generic [ref=e16]: Tide Monitor
+      - link " Turbidity Monitor" [ref=e17] [cursor=pointer]:
+        - /url: /turbidity-monitor/
+        - generic [ref=e18]: 
+        - generic [ref=e19]: Turbidity Monitor
+      - link " Rock Progress" [ref=e20] [cursor=pointer]:
+        - /url: /project-controls/rock/dashboard/
+        - generic [ref=e21]: 
+        - generic [ref=e22]: Rock Progress
+      - link " Sand Progress" [ref=e23] [cursor=pointer]:
+        - /url: /project-controls/sand/dashboard/
+        - generic [ref=e24]: 
+        - generic [ref=e25]: Sand Progress
+      - generic [ref=e26]: Projects
+      - link " Projects" [ref=e27] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e28]: 
+        - generic [ref=e29]: Projects
+      - generic [ref=e30]: Daily Reports
+      - link " Daily Reports" [ref=e31] [cursor=pointer]:
+        - /url: /daily-reports/
+        - generic [ref=e32]: 
+        - generic [ref=e33]: Daily Reports
+      - link " Contractor Imports" [ref=e34] [cursor=pointer]:
+        - /url: /daily-reports/import/
+        - generic [ref=e35]: 
+        - generic [ref=e36]: Contractor Imports
+      - generic [ref=e37]: Resources
+      - link " Manpower" [ref=e38] [cursor=pointer]:
+        - /url: /manpower/dashboard/
+        - generic [ref=e39]: 
+        - generic [ref=e40]: Manpower
+      - link " Equipment" [ref=e41] [cursor=pointer]:
+        - /url: /equipment/
+        - generic [ref=e42]: 
+        - generic [ref=e43]: Equipment
+      - link " Materials" [ref=e44] [cursor=pointer]:
+        - /url: /materials/dashboard/
+        - generic [ref=e45]: 
+        - generic [ref=e46]: Materials
+      - generic [ref=e47]: Procurement
+      - link " Procurement" [ref=e48] [cursor=pointer]:
+        - /url: /procurement/pr/
+        - generic [ref=e49]: 
+        - generic [ref=e50]: Procurement
+      - generic [ref=e51]: BOQ & Progress
+      - link " BOQ & Progress" [ref=e52] [cursor=pointer]:
+        - /url: /boq/
+        - generic [ref=e53]: 
+        - generic [ref=e54]: BOQ & Progress
+      - generic [ref=e55]: Project Controls
+      - link " Rock & Sand Control" [ref=e56] [cursor=pointer]:
+        - /url: /project-controls/
+        - generic [ref=e57]: 
+        - generic [ref=e58]: Rock & Sand Control
+      - link " Revetment Progress" [ref=e59] [cursor=pointer]:
+        - /url: /project-controls/revetment/dashboard/
+        - generic [ref=e60]: 
+        - generic [ref=e61]: Revetment Progress
+      - link " Recovery Plans" [ref=e62] [cursor=pointer]:
+        - /url: /project-controls/recovery/plans/
+        - generic [ref=e63]: 
+        - generic [ref=e64]: Recovery Plans
+      - link " Project Action Plans" [ref=e65] [cursor=pointer]:
+        - /url: /project-controls/action-plans/
+        - generic [ref=e66]: 
+        - generic [ref=e67]: Project Action Plans
+      - link " Recovery Action Plans" [ref=e68] [cursor=pointer]:
+        - /url: /project-controls/recovery/rap/
+        - generic [ref=e69]: 
+        - generic [ref=e70]: Recovery Action Plans
+      - link " Logistics" [ref=e71] [cursor=pointer]:
+        - /url: /project-controls/logistics/
+        - generic [ref=e72]: 
+        - generic [ref=e73]: Logistics
+      - link " Transport Units" [ref=e74] [cursor=pointer]:
+        - /url: /project-controls/transport-units/
+        - generic [ref=e75]: 
+        - generic [ref=e76]: Transport Units
+      - generic [ref=e77]: HR & Attendance
+      - link " HR & Attendance" [ref=e78] [cursor=pointer]:
+        - /url: /hr/
+        - generic [ref=e79]: 
+        - generic [ref=e80]: HR & Attendance
+      - generic [ref=e81]: Drawings & RFI
+      - link " Drawings & RFI" [ref=e82] [cursor=pointer]:
+        - /url: /drawings/
+        - generic [ref=e83]: 
+        - generic [ref=e84]: Drawings & RFI
+      - generic [ref=e85]: Subcontractors
+      - link " Subcontractors" [ref=e86] [cursor=pointer]:
+        - /url: /subcontractors/
+        - generic [ref=e87]: 
+        - generic [ref=e88]: Subcontractors
+      - generic [ref=e89]: Maintenance
+      - link " Maintenance" [ref=e90] [cursor=pointer]:
+        - /url: /maintenance/
+        - generic [ref=e91]: 
+        - generic [ref=e92]: Maintenance
+      - generic [ref=e93]: Change Orders
+      - link " Change Orders" [ref=e94] [cursor=pointer]:
+        - /url: /change-orders/
+        - generic [ref=e95]: 
+        - generic [ref=e96]: Change Orders
+      - generic [ref=e97]: Cost Control
+      - link " Cost Control" [ref=e98] [cursor=pointer]:
+        - /url: /cost-control/
+        - generic [ref=e99]: 
+        - generic [ref=e100]: Cost Control
+      - generic [ref=e101]: Safety
+      - link " Safety" [ref=e102] [cursor=pointer]:
+        - /url: /safety/toolbox/
+        - generic [ref=e103]: 
+        - generic [ref=e104]: Safety
+      - generic [ref=e105]: Quality
+      - link " Quality Control" [ref=e106] [cursor=pointer]:
+        - /url: /quality/
+        - generic [ref=e107]: 
+        - generic [ref=e108]: Quality Control
+      - generic [ref=e109]: Documents
+      - link " Documents" [ref=e110] [cursor=pointer]:
+        - /url: /documents/
+        - generic [ref=e111]: 
+        - generic [ref=e112]: Documents
+      - generic [ref=e113]: Admin
+      - link " Users" [ref=e114] [cursor=pointer]:
+        - /url: /accounts/users/
+        - generic [ref=e115]: 
+        - generic [ref=e116]: Users
+      - link " Roles" [ref=e117] [cursor=pointer]:
+        - /url: /accounts/roles/
+        - generic [ref=e118]: 
+        - generic [ref=e119]: Roles
+      - link " Django Admin" [ref=e120] [cursor=pointer]:
+        - /url: /admin/
+        - generic [ref=e121]: 
+        - generic [ref=e122]: Django Admin
+  - generic [ref=e123]:
+    - navigation [ref=e124]:
+      - text: 
+      - button "Go back" [ref=e125] [cursor=pointer]:
+        - generic [ref=e126]: 
+        - text: Back
+      - generic [ref=e127]:
+        - generic [ref=e128]:
+          - button "TH" [ref=e130] [cursor=pointer]
+          - button "EN" [ref=e132] [cursor=pointer]
+        - generic [ref=e133]:
+          - button "" [ref=e134] [cursor=pointer]:
+            - generic [ref=e135]: 
+          - text: 
+        - generic [ref=e136]:
+          - button "A Admin User Admin" [ref=e137] [cursor=pointer]:
+            - generic [ref=e138]: A
+            - generic [ref=e139]: Admin User
+            - generic [ref=e140]: Admin
+          - text:   
+    - generic [ref=e141]:
+      - generic [ref=e142]:
+        - heading " BOQ Items" [level=4] [ref=e143]:
+          - generic [ref=e144]: 
+          - text: BOQ Items
+        - generic [ref=e145]:
+          - link "Daily Progress" [ref=e146] [cursor=pointer]:
+            - /url: /boq/progress/
+          - link "Payment Claims" [ref=e147] [cursor=pointer]:
+            - /url: /boq/claims/
+          - link "+ Add Item" [ref=e148] [cursor=pointer]:
+            - /url: /boq/create/
+            - generic [ref=e149]: +
+            - text: Add Item
+      - generic [ref=e152]:
+        - combobox [ref=e153]:
+          - option "All Projects" [selected]
+          - option "CON-2025-002"
+          - option "P06643"
+          - option "CON-2024-001"
+        - button "Filter" [ref=e154] [cursor=pointer]
+      - table [ref=e157]:
+        - rowgroup [ref=e158]:
+          - row "Item No Description Contract Qty Unit Cumulative % Complete Contract Amt Earned Value" [ref=e159]:
+            - columnheader "Item No" [ref=e160]
+            - columnheader "Description" [ref=e161]
+            - columnheader "Contract Qty" [ref=e162]
+            - columnheader "Unit" [ref=e163]
+            - columnheader "Cumulative" [ref=e164]
+            - columnheader "% Complete" [ref=e165]
+            - columnheader "Contract Amt" [ref=e166]
+            - columnheader "Earned Value" [ref=e167]
+            - columnheader [ref=e168]
+        - rowgroup [ref=e169]:
+          - row "1.1 Mobilization & Demobilization 1.000 LS LS 0.000 LS 0.0% 2,500,000 0  " [ref=e170]:
+            - cell "1.1" [ref=e171]
+            - cell "Mobilization & Demobilization" [ref=e172]
+            - cell "1.000 LS" [ref=e173]
+            - cell "LS" [ref=e174]
+            - cell "0.000 LS" [ref=e175]
+            - cell "0.0%" [ref=e176]:
+              - generic [ref=e179]: 0.0%
+            - cell "2,500,000" [ref=e180]
+            - cell "0" [ref=e181]
+            - cell " " [ref=e182]:
+              - link "" [ref=e183] [cursor=pointer]:
+                - /url: /boq/1/edit/
+                - generic [ref=e184]: 
+              - button "" [ref=e186] [cursor=pointer]:
+                - generic [ref=e187]: 
+          - row "1.1 Mobilization & Demobilization 1.000 LS LS 1.030 LS 103.0% 2,000,000 2,060,000  " [ref=e188]:
+            - cell "1.1" [ref=e189]
+            - cell "Mobilization & Demobilization" [ref=e190]
+            - cell "1.000 LS" [ref=e191]
+            - cell "LS" [ref=e192]
+            - cell "1.030 LS" [ref=e193]
+            - cell "103.0%" [ref=e194]:
+              - generic [ref=e198]: 103.0%
+            - cell "2,000,000" [ref=e199]
+            - cell "2,060,000" [ref=e200]
+            - cell " " [ref=e201]:
+              - link "" [ref=e202] [cursor=pointer]:
+                - /url: /boq/11/edit/
+                - generic [ref=e203]: 
+              - button "" [ref=e205] [cursor=pointer]:
+                - generic [ref=e206]: 
+          - row "2.1 Temporary Works & Cofferdams 2,000.000 m² m² 0.000 m² 0.0% 2,400,000 0  " [ref=e207]:
+            - cell "2.1" [ref=e208]
+            - cell "Temporary Works & Cofferdams" [ref=e209]
+            - cell "2,000.000 m²" [ref=e210]
+            - cell "m²" [ref=e211]
+            - cell "0.000 m²" [ref=e212]
+            - cell "0.0%" [ref=e213]:
+              - generic [ref=e216]: 0.0%
+            - cell "2,400,000" [ref=e217]
+            - cell "0" [ref=e218]
+            - cell " " [ref=e219]:
+              - link "" [ref=e220] [cursor=pointer]:
+                - /url: /boq/2/edit/
+                - generic [ref=e221]: 
+              - button "" [ref=e223] [cursor=pointer]:
+                - generic [ref=e224]: 
+          - row "2.1 Temporary Works & Cofferdam 1.000 LS LS 0.820 LS 82.0% 3,500,000 2,870,000  " [ref=e225]:
+            - cell "2.1" [ref=e226]
+            - cell "Temporary Works & Cofferdam" [ref=e227]
+            - cell "1.000 LS" [ref=e228]
+            - cell "LS" [ref=e229]
+            - cell "0.820 LS" [ref=e230]
+            - cell "82.0%" [ref=e231]:
+              - generic [ref=e235]: 82.0%
+            - cell "3,500,000" [ref=e236]
+            - cell "2,870,000" [ref=e237]
+            - cell " " [ref=e238]:
+              - link "" [ref=e239] [cursor=pointer]:
+                - /url: /boq/12/edit/
+                - generic [ref=e240]: 
+              - button "" [ref=e242] [cursor=pointer]:
+                - generic [ref=e243]: 
+          - row "3.1 Dredging & Excavation 50,000.000 m³ m³ 7,560.800 m³ 15.1% 12,500,000 1,890,200  " [ref=e244]:
+            - cell "3.1" [ref=e245]
+            - cell "Dredging & Excavation" [ref=e246]
+            - cell "50,000.000 m³" [ref=e247]
+            - cell "m³" [ref=e248]
+            - cell "7,560.800 m³" [ref=e249]
+            - cell "15.1%" [ref=e250]:
+              - generic [ref=e254]: 15.1%
+            - cell "12,500,000" [ref=e255]
+            - cell "1,890,200" [ref=e256]
+            - cell " " [ref=e257]:
+              - link "" [ref=e258] [cursor=pointer]:
+                - /url: /boq/3/edit/
+                - generic [ref=e259]: 
+              - button "" [ref=e261] [cursor=pointer]:
+                - generic [ref=e262]: 
+          - row "3.1 Core Rock Supply & Placement 60,000.000 Ton Ton 53,246.860 Ton 88.7% 45,000,000 39,935,145  " [ref=e263]:
+            - cell "3.1" [ref=e264]
+            - cell "Core Rock Supply & Placement" [ref=e265]
+            - cell "60,000.000 Ton" [ref=e266]
+            - cell "Ton" [ref=e267]
+            - cell "53,246.860 Ton" [ref=e268]
+            - cell "88.7%" [ref=e269]:
+              - generic [ref=e273]: 88.7%
+            - cell "45,000,000" [ref=e274]
+            - cell "39,935,145" [ref=e275]
+            - cell " " [ref=e276]:
+              - link "" [ref=e277] [cursor=pointer]:
+                - /url: /boq/13/edit/
+                - generic [ref=e278]: 
+              - button "" [ref=e280] [cursor=pointer]:
+                - generic [ref=e281]: 
+          - row "3.2 Disposal of Dredged Material 50,000.000 m³ m³ 6,504.400 m³ 13.0% 4,000,000 520,352  " [ref=e282]:
+            - cell "3.2" [ref=e283]
+            - cell "Disposal of Dredged Material" [ref=e284]
+            - cell "50,000.000 m³" [ref=e285]
+            - cell "m³" [ref=e286]
+            - cell "6,504.400 m³" [ref=e287]
+            - cell "13.0%" [ref=e288]:
+              - generic [ref=e292]: 13.0%
+            - cell "4,000,000" [ref=e293]
+            - cell "520,352" [ref=e294]
+            - cell " " [ref=e295]:
+              - link "" [ref=e296] [cursor=pointer]:
+                - /url: /boq/4/edit/
+                - generic [ref=e297]: 
+              - button "" [ref=e299] [cursor=pointer]:
+                - generic [ref=e300]: 
+          - row "3.2 Armour Rock (1-3T) Supply & Placement 12,000.000 Ton Ton 5,299.410 Ton 44.2% 16,800,000 7,419,174  " [ref=e301]:
+            - cell "3.2" [ref=e302]
+            - cell "Armour Rock (1-3T) Supply & Placement" [ref=e303]
+            - cell "12,000.000 Ton" [ref=e304]
+            - cell "Ton" [ref=e305]
+            - cell "5,299.410 Ton" [ref=e306]
+            - cell "44.2%" [ref=e307]:
+              - generic [ref=e311]: 44.2%
+            - cell "16,800,000" [ref=e312]
+            - cell "7,419,174" [ref=e313]
+            - cell " " [ref=e314]:
+              - link "" [ref=e315] [cursor=pointer]:
+                - /url: /boq/14/edit/
+                - generic [ref=e316]: 
+              - button "" [ref=e318] [cursor=pointer]:
+                - generic [ref=e319]: 
+          - row "4.1 Core Rock Supply & Placement 120,000.000 Ton Ton 7,927.100 Ton 6.6% 54,000,000 3,567,195  " [ref=e320]:
+            - cell "4.1" [ref=e321]
+            - cell "Core Rock Supply & Placement" [ref=e322]
+            - cell "120,000.000 Ton" [ref=e323]
+            - cell "Ton" [ref=e324]
+            - cell "7,927.100 Ton" [ref=e325]
+            - cell "6.6%" [ref=e326]:
+              - generic [ref=e330]: 6.6%
+            - cell "54,000,000" [ref=e331]
+            - cell "3,567,195" [ref=e332]
+            - cell " " [ref=e333]:
+              - link "" [ref=e334] [cursor=pointer]:
+                - /url: /boq/5/edit/
+                - generic [ref=e335]: 
+              - button "" [ref=e337] [cursor=pointer]:
+                - generic [ref=e338]: 
+          - row "4.1 Geotextile Filter Layer Installation 18,000.000 m² m² 11,095.160 m² 61.6% 1,710,000 1,054,040  " [ref=e339]:
+            - cell "4.1" [ref=e340]
+            - cell "Geotextile Filter Layer Installation" [ref=e341]
+            - cell "18,000.000 m²" [ref=e342]
+            - cell "m²" [ref=e343]
+            - cell "11,095.160 m²" [ref=e344]
+            - cell "61.6%" [ref=e345]:
+              - generic [ref=e349]: 61.6%
+            - cell "1,710,000" [ref=e350]
+            - cell "1,054,040" [ref=e351]
+            - cell " " [ref=e352]:
+              - link "" [ref=e353] [cursor=pointer]:
+                - /url: /boq/15/edit/
+                - generic [ref=e354]: 
+              - button "" [ref=e356] [cursor=pointer]:
+                - generic [ref=e357]: 
+          - row "4.2 Armour Rock Supply & Placement 45,000.000 Ton Ton 0.000 Ton 0.0% 38,250,000 0  " [ref=e358]:
+            - cell "4.2" [ref=e359]
+            - cell "Armour Rock Supply & Placement" [ref=e360]
+            - cell "45,000.000 Ton" [ref=e361]
+            - cell "Ton" [ref=e362]
+            - cell "0.000 Ton" [ref=e363]
+            - cell "0.0%" [ref=e364]:
+              - generic [ref=e367]: 0.0%
+            - cell "38,250,000" [ref=e368]
+            - cell "0" [ref=e369]
+            - cell " " [ref=e370]:
+              - link "" [ref=e371] [cursor=pointer]:
+                - /url: /boq/6/edit/
+                - generic [ref=e372]: 
+              - button "" [ref=e374] [cursor=pointer]:
+                - generic [ref=e375]: 
+          - row "4.2 Revetment Works (Concrete Armour Block) 4,500.000 m² m² 0.000 m² 0.0% 8,100,000 0  " [ref=e376]:
+            - cell "4.2" [ref=e377]
+            - cell "Revetment Works (Concrete Armour Block)" [ref=e378]
+            - cell "4,500.000 m²" [ref=e379]
+            - cell "m²" [ref=e380]
+            - cell "0.000 m²" [ref=e381]
+            - cell "0.0%" [ref=e382]:
+              - generic [ref=e385]: 0.0%
+            - cell "8,100,000" [ref=e386]
+            - cell "0" [ref=e387]
+            - cell " " [ref=e388]:
+              - link "" [ref=e389] [cursor=pointer]:
+                - /url: /boq/16/edit/
+                - generic [ref=e390]: 
+              - button "" [ref=e392] [cursor=pointer]:
+                - generic [ref=e393]: 
+          - row "4.3 Geotextile Filter Layer 85,000.000 m² m² 0.000 m² 0.0% 10,200,000 0  " [ref=e394]:
+            - cell "4.3" [ref=e395]
+            - cell "Geotextile Filter Layer" [ref=e396]
+            - cell "85,000.000 m²" [ref=e397]
+            - cell "m²" [ref=e398]
+            - cell "0.000 m²" [ref=e399]
+            - cell "0.0%" [ref=e400]:
+              - generic [ref=e403]: 0.0%
+            - cell "10,200,000" [ref=e404]
+            - cell "0" [ref=e405]
+            - cell " " [ref=e406]:
+              - link "" [ref=e407] [cursor=pointer]:
+                - /url: /boq/7/edit/
+                - generic [ref=e408]: 
+              - button "" [ref=e410] [cursor=pointer]:
+                - generic [ref=e411]: 
+          - row "5.1 Concrete Quay Wall (Precast) 600.000 m m 0.000 m 0.0% 21,000,000 0  " [ref=e412]:
+            - cell "5.1" [ref=e413]
+            - cell "Concrete Quay Wall (Precast)" [ref=e414]
+            - cell "600.000 m" [ref=e415]
+            - cell "m" [ref=e416]
+            - cell "0.000 m" [ref=e417]
+            - cell "0.0%" [ref=e418]:
+              - generic [ref=e421]: 0.0%
+            - cell "21,000,000" [ref=e422]
+            - cell "0" [ref=e423]
+            - cell " " [ref=e424]:
+              - link "" [ref=e425] [cursor=pointer]:
+                - /url: /boq/8/edit/
+                - generic [ref=e426]: 
+              - button "" [ref=e428] [cursor=pointer]:
+                - generic [ref=e429]: 
+          - row "5.1 Marine Dredging 25,000.000 m³ m³ 16,979.020 m³ 67.9% 7,000,000 4,754,126  " [ref=e430]:
+            - cell "5.1" [ref=e431]
+            - cell "Marine Dredging" [ref=e432]
+            - cell "25,000.000 m³" [ref=e433]
+            - cell "m³" [ref=e434]
+            - cell "16,979.020 m³" [ref=e435]
+            - cell "67.9%" [ref=e436]:
+              - generic [ref=e440]: 67.9%
+            - cell "7,000,000" [ref=e441]
+            - cell "4,754,126" [ref=e442]
+            - cell " " [ref=e443]:
+              - link "" [ref=e444] [cursor=pointer]:
+                - /url: /boq/17/edit/
+                - generic [ref=e445]: 
+              - button "" [ref=e447] [cursor=pointer]:
+                - generic [ref=e448]: 
+          - row "5.2 Steel Pipe Pile Driving 8,000.000 m m 0.000 m 0.0% 17,600,000 0  " [ref=e449]:
+            - cell "5.2" [ref=e450]
+            - cell "Steel Pipe Pile Driving" [ref=e451]
+            - cell "8,000.000 m" [ref=e452]
+            - cell "m" [ref=e453]
+            - cell "0.000 m" [ref=e454]
+            - cell "0.0%" [ref=e455]:
+              - generic [ref=e458]: 0.0%
+            - cell "17,600,000" [ref=e459]
+            - cell "0" [ref=e460]
+            - cell " " [ref=e461]:
+              - link "" [ref=e462] [cursor=pointer]:
+                - /url: /boq/9/edit/
+                - generic [ref=e463]: 
+              - button "" [ref=e465] [cursor=pointer]:
+                - generic [ref=e466]: 
+          - row "6.1 Yard Pavement & Drainage 25,000.000 m² m² 0.000 m² 0.0% 20,000,000 0  " [ref=e467]:
+            - cell "6.1" [ref=e468]
+            - cell "Yard Pavement & Drainage" [ref=e469]
+            - cell "25,000.000 m²" [ref=e470]
+            - cell "m²" [ref=e471]
+            - cell "0.000 m²" [ref=e472]
+            - cell "0.0%" [ref=e473]:
+              - generic [ref=e476]: 0.0%
+            - cell "20,000,000" [ref=e477]
+            - cell "0" [ref=e478]
+            - cell " " [ref=e479]:
+              - link "" [ref=e480] [cursor=pointer]:
+                - /url: /boq/10/edit/
+                - generic [ref=e481]: 
+              - button "" [ref=e483] [cursor=pointer]:
+                - generic [ref=e484]: 
+          - row "6.1 Yard Improvement & Drainage 3,000.000 m² m² 0.000 m² 0.0% 1,950,000 0  " [ref=e485]:
+            - cell "6.1" [ref=e486]
+            - cell "Yard Improvement & Drainage" [ref=e487]
+            - cell "3,000.000 m²" [ref=e488]
+            - cell "m²" [ref=e489]
+            - cell "0.000 m²" [ref=e490]
+            - cell "0.0%" [ref=e491]:
+              - generic [ref=e494]: 0.0%
+            - cell "1,950,000" [ref=e495]
+            - cell "0" [ref=e496]
+            - cell " " [ref=e497]:
+              - link "" [ref=e498] [cursor=pointer]:
+                - /url: /boq/18/edit/
+                - generic [ref=e499]: 
+              - button "" [ref=e501] [cursor=pointer]:
+                - generic [ref=e502]: 

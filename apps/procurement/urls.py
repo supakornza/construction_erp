@@ -4,6 +4,7 @@ from . import views
 app_name = 'procurement'
 
 urlpatterns = [
+    path('', views.ProcurementIndexView.as_view(), name='index'),
     path('suppliers/', views.SupplierListView.as_view(), name='supplier_list'),
     path('suppliers/create/', views.SupplierCreateView.as_view(), name='supplier_create'),
     path('suppliers/<int:pk>/edit/', views.SupplierUpdateView.as_view(), name='supplier_update'),

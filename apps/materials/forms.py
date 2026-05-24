@@ -30,7 +30,9 @@ class MaterialDeliveryForm(forms.ModelForm):
             'project', 'delivery_date', 'delivery_time',
             'material', 'quantity', 'unit_price',
             'source_area', 'destination',
+            'source',
             'delivery_note_no', 'truck_no',
+            'delivery_image',
             'remarks',
         ]
         labels = {
@@ -42,15 +44,37 @@ class MaterialDeliveryForm(forms.ModelForm):
             'unit_price': 'ราคาต่อหน่วย (บาท)',
             'source_area': 'แหล่งวัสดุ (Work Area)',
             'destination': 'ปลายทาง (กอง/พื้นที่)',
+            'source': 'ชื่อผู้ส่ง / Supplier',
             'delivery_note_no': 'เลขที่ใบส่งของ',
             'truck_no': 'ทะเบียนรถ',
+            'delivery_image': 'รูปตั๋ว / ใบส่งของ',
             'remarks': 'หมายเหตุ',
         }
         widgets = {
             'delivery_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'delivery_time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
             'remarks': forms.Textarea(attrs={'rows': 2}),
+            'source': forms.TextInput(attrs={'placeholder': 'เช่น บริษัท ABC จำกัด'}),
+            'delivery_image': forms.ClearableFileInput(attrs={'accept': 'image/*', 'capture': 'environment'}),
         }
+
+    def clean_delivery_note_no(self):
+        dn = (self.cleaned_data.get('delivery_note_no') or '').strip()
+        if not dn:
+            return dn
+        project = self.cleaned_data.get('project') or getattr(self.instance, 'project_id', None)
+        if not project:
+            return dn
+        qs = MaterialDelivery.objects.filter(project=project, delivery_note_no__iexact=dn)
+        if self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+        existing = qs.select_related('material').first()
+        if existing:
+            raise forms.ValidationError(
+                f'เลขที่ใบส่งของ "{dn}" นี้ถูกบันทึกไปแล้วเมื่อ {existing.delivery_date} '
+                f'({existing.material.name}). หากต้องการบันทึกซ้ำ โปรดเว้นว่างหรือใช้เลขอื่น.'
+            )
+        return dn
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -80,12 +104,16 @@ class MaterialDeliveryForm(forms.ModelForm):
             HTML('</div>'),
 
             HTML('<div class="border rounded p-3 mb-3 bg-light"><div class="fw-semibold text-warning mb-2"><i class="fas fa-route me-1"></i>ต้นทาง / ปลายทาง</div>'),
-            Row(Column('source_area', css_class='col-md-6'), Column('destination', css_class='col-md-6')),
+            Row(Column('source_area', css_class='col-md-4'), Column('destination', css_class='col-md-4'), Column('source', css_class='col-md-4')),
             HTML('</div>'),
 
             HTML('<div class="border rounded p-3 mb-3 bg-light"><div class="fw-semibold text-info mb-2"><i class="fas fa-truck me-1"></i>ข้อมูลการขนส่ง</div>'),
             Row(Column('truck_no', css_class='col-md-6'), Column('delivery_note_no', css_class='col-md-6')),
             HTML('</div>'),
+
+            HTML('<div class="border rounded p-3 mb-3 bg-light"><div class="fw-semibold text-secondary mb-2"><i class="fas fa-camera me-1"></i>รูปตั๋ว / ใบส่งของ</div>'),
+            'delivery_image',
+            HTML('<div class="form-text">ถ่ายรูปหรืออัปโหลดภาพตั๋ว (เพื่อใช้ตรวจสอบและ OCR ในอนาคต)</div></div>'),
 
             'remarks',
             Submit('submit', 'บันทึกการรับวัสดุ', css_class='btn btn-primary btn-lg w-100 mt-2'),

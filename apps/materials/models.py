@@ -55,6 +55,7 @@ class MaterialDelivery(models.Model):
     quantity = models.DecimalField(max_digits=15, decimal_places=3, verbose_name='ปริมาณ')
     unit_price = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, verbose_name='ราคาต่อหน่วย')
     remarks = models.CharField(max_length=300, blank=True, verbose_name='หมายเหตุ')
+    delivery_image = models.ImageField(upload_to='deliveries/%Y/%m/', null=True, blank=True, verbose_name='รูปตั๋ว/ใบส่งของ')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

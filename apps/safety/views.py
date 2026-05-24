@@ -1,10 +1,17 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from apps.accounts.mixins import SafetyViewMixin, SafetyWriteMixin, SafetyDeleteMixin
 from .models import ToolboxMeeting, SafetyInspection, IncidentReport, JSEARecord
 from .forms import ToolboxMeetingForm, SafetyInspectionForm, IncidentReportForm, JSEARecordForm
+
+
+class SafetyIndexView(View):
+    def get(self, request):
+        return redirect('safety:inspection_list')
 
 
 class ToolboxMeetingListView(SafetyViewMixin, ListView):

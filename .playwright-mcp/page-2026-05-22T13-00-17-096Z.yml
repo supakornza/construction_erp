@@ -1,0 +1,254 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link " Construction ERP" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: 
+        - generic [ref=e6]: Construction ERP
+      - button "" [ref=e7] [cursor=pointer]:
+        - generic [ref=e8]: 
+    - generic [ref=e9]:
+      - generic [ref=e10]: Dashboard
+      - link " Dashboard" [ref=e11] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e12]: 
+        - generic [ref=e13]: Dashboard
+      - link " Tide Monitor" [ref=e14] [cursor=pointer]:
+        - /url: /tide-monitor/
+        - generic [ref=e15]: 
+        - generic [ref=e16]: Tide Monitor
+      - link " Turbidity Monitor" [ref=e17] [cursor=pointer]:
+        - /url: /turbidity-monitor/
+        - generic [ref=e18]: 
+        - generic [ref=e19]: Turbidity Monitor
+      - link " Rock Progress" [ref=e20] [cursor=pointer]:
+        - /url: /project-controls/rock/dashboard/
+        - generic [ref=e21]: 
+        - generic [ref=e22]: Rock Progress
+      - link " Sand Progress" [ref=e23] [cursor=pointer]:
+        - /url: /project-controls/sand/dashboard/
+        - generic [ref=e24]: 
+        - generic [ref=e25]: Sand Progress
+      - generic [ref=e26]: Projects
+      - link " Projects" [ref=e27] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e28]: 
+        - generic [ref=e29]: Projects
+      - generic [ref=e30]: Daily Reports
+      - link " Daily Reports" [ref=e31] [cursor=pointer]:
+        - /url: /daily-reports/
+        - generic [ref=e32]: 
+        - generic [ref=e33]: Daily Reports
+      - link " Contractor Imports" [ref=e34] [cursor=pointer]:
+        - /url: /daily-reports/import/
+        - generic [ref=e35]: 
+        - generic [ref=e36]: Contractor Imports
+      - generic [ref=e37]: Resources
+      - link " Manpower" [ref=e38] [cursor=pointer]:
+        - /url: /manpower/dashboard/
+        - generic [ref=e39]: 
+        - generic [ref=e40]: Manpower
+      - link " Equipment" [ref=e41] [cursor=pointer]:
+        - /url: /equipment/
+        - generic [ref=e42]: 
+        - generic [ref=e43]: Equipment
+      - link " Materials" [ref=e44] [cursor=pointer]:
+        - /url: /materials/dashboard/
+        - generic [ref=e45]: 
+        - generic [ref=e46]: Materials
+      - generic [ref=e47]: Procurement
+      - link " Procurement" [ref=e48] [cursor=pointer]:
+        - /url: /procurement/pr/
+        - generic [ref=e49]: 
+        - generic [ref=e50]: Procurement
+      - generic [ref=e51]: BOQ & Progress
+      - link " BOQ & Progress" [ref=e52] [cursor=pointer]:
+        - /url: /boq/
+        - generic [ref=e53]: 
+        - generic [ref=e54]: BOQ & Progress
+      - generic [ref=e55]: Project Controls
+      - link " Rock & Sand Control" [ref=e56] [cursor=pointer]:
+        - /url: /project-controls/
+        - generic [ref=e57]: 
+        - generic [ref=e58]: Rock & Sand Control
+      - link " Revetment Progress" [ref=e59] [cursor=pointer]:
+        - /url: /project-controls/revetment/dashboard/
+        - generic [ref=e60]: 
+        - generic [ref=e61]: Revetment Progress
+      - link " Recovery Plans" [ref=e62] [cursor=pointer]:
+        - /url: /project-controls/recovery/plans/
+        - generic [ref=e63]: 
+        - generic [ref=e64]: Recovery Plans
+      - link " Project Action Plans" [ref=e65] [cursor=pointer]:
+        - /url: /project-controls/action-plans/
+        - generic [ref=e66]: 
+        - generic [ref=e67]: Project Action Plans
+      - link " Recovery Action Plans" [ref=e68] [cursor=pointer]:
+        - /url: /project-controls/recovery/rap/
+        - generic [ref=e69]: 
+        - generic [ref=e70]: Recovery Action Plans
+      - link " Logistics" [ref=e71] [cursor=pointer]:
+        - /url: /project-controls/logistics/
+        - generic [ref=e72]: 
+        - generic [ref=e73]: Logistics
+      - link " Transport Units" [ref=e74] [cursor=pointer]:
+        - /url: /project-controls/transport-units/
+        - generic [ref=e75]: 
+        - generic [ref=e76]: Transport Units
+      - generic [ref=e77]: HR & Attendance
+      - link " HR & Attendance" [ref=e78] [cursor=pointer]:
+        - /url: /hr/
+        - generic [ref=e79]: 
+        - generic [ref=e80]: HR & Attendance
+      - generic [ref=e81]: Drawings & RFI
+      - link " Drawings & RFI" [ref=e82] [cursor=pointer]:
+        - /url: /drawings/
+        - generic [ref=e83]: 
+        - generic [ref=e84]: Drawings & RFI
+      - generic [ref=e85]: Subcontractors
+      - link " Subcontractors" [ref=e86] [cursor=pointer]:
+        - /url: /subcontractors/
+        - generic [ref=e87]: 
+        - generic [ref=e88]: Subcontractors
+      - generic [ref=e89]: Maintenance
+      - link " Maintenance" [ref=e90] [cursor=pointer]:
+        - /url: /maintenance/
+        - generic [ref=e91]: 
+        - generic [ref=e92]: Maintenance
+      - generic [ref=e93]: Change Orders
+      - link " Change Orders" [ref=e94] [cursor=pointer]:
+        - /url: /change-orders/
+        - generic [ref=e95]: 
+        - generic [ref=e96]: Change Orders
+      - generic [ref=e97]: Cost Control
+      - link " Cost Control" [ref=e98] [cursor=pointer]:
+        - /url: /cost-control/
+        - generic [ref=e99]: 
+        - generic [ref=e100]: Cost Control
+      - generic [ref=e101]: Safety
+      - link " Safety" [ref=e102] [cursor=pointer]:
+        - /url: /safety/toolbox/
+        - generic [ref=e103]: 
+        - generic [ref=e104]: Safety
+      - generic [ref=e105]: Quality
+      - link " Quality Control" [ref=e106] [cursor=pointer]:
+        - /url: /quality/
+        - generic [ref=e107]: 
+        - generic [ref=e108]: Quality Control
+      - generic [ref=e109]: Documents
+      - link " Documents" [ref=e110] [cursor=pointer]:
+        - /url: /documents/
+        - generic [ref=e111]: 
+        - generic [ref=e112]: Documents
+      - generic [ref=e113]: Admin
+      - link " Users" [ref=e114] [cursor=pointer]:
+        - /url: /accounts/users/
+        - generic [ref=e115]: 
+        - generic [ref=e116]: Users
+      - link " Roles" [ref=e117] [cursor=pointer]:
+        - /url: /accounts/roles/
+        - generic [ref=e118]: 
+        - generic [ref=e119]: Roles
+      - link " Django Admin" [ref=e120] [cursor=pointer]:
+        - /url: /admin/
+        - generic [ref=e121]: 
+        - generic [ref=e122]: Django Admin
+  - generic [ref=e123]:
+    - navigation [ref=e124]:
+      - text: 
+      - button "Go back" [ref=e125] [cursor=pointer]:
+        - generic [ref=e126]: 
+        - text: Back
+      - generic [ref=e127]:
+        - generic [ref=e128]:
+          - button "TH" [ref=e130] [cursor=pointer]
+          - button "EN" [ref=e132] [cursor=pointer]
+        - generic [ref=e133]:
+          - button "" [ref=e134] [cursor=pointer]:
+            - generic [ref=e135]: 
+          - text: 
+        - generic [ref=e136]:
+          - button "A Admin User Admin" [ref=e137] [cursor=pointer]:
+            - generic [ref=e138]: A
+            - generic [ref=e139]: Admin User
+            - generic [ref=e140]: Admin
+          - text:   
+    - generic [ref=e141]:
+      - generic [ref=e142]:
+        - heading " Materials" [level=4] [ref=e143]:
+          - generic [ref=e144]: 
+          - text: Materials
+        - generic [ref=e145]:
+          - link "Deliveries" [ref=e146] [cursor=pointer]:
+            - /url: /materials/deliveries/
+          - link "Usage" [ref=e147] [cursor=pointer]:
+            - /url: /materials/usage/
+          - link "Stock Balance" [ref=e148] [cursor=pointer]:
+            - /url: /materials/stock/
+          - link "+ Add Material" [ref=e149] [cursor=pointer]:
+            - /url: /materials/create/
+            - generic [ref=e150]: +
+            - text: Add Material
+      - table [ref=e153]:
+        - rowgroup [ref=e154]:
+          - row "Name Category Unit Unit Weight Actions" [ref=e155]:
+            - columnheader "Name" [ref=e156]
+            - columnheader "Category" [ref=e157]
+            - columnheader "Unit" [ref=e158]
+            - columnheader "Unit Weight" [ref=e159]
+            - columnheader "Actions" [ref=e160]
+        - rowgroup [ref=e161]:
+          - row "Armour Rock (1-3T) Rock Ton 1.000 " [ref=e162]:
+            - cell "Armour Rock (1-3T)" [ref=e163]
+            - cell "Rock" [ref=e164]
+            - cell "Ton" [ref=e165]
+            - cell "1.000" [ref=e166]
+            - cell "" [ref=e167]:
+              - link "" [ref=e168] [cursor=pointer]:
+                - /url: /materials/3/edit/
+                - generic [ref=e169]: 
+          - row "Concrete Barrier Concrete nos 0.500 " [ref=e170]:
+            - cell "Concrete Barrier" [ref=e171]
+            - cell "Concrete" [ref=e172]
+            - cell "nos" [ref=e173]
+            - cell "0.500" [ref=e174]
+            - cell "" [ref=e175]:
+              - link "" [ref=e176] [cursor=pointer]:
+                - /url: /materials/6/edit/
+                - generic [ref=e177]: 
+          - row "Core Rock (300-500kg) Rock Ton 1.000 " [ref=e178]:
+            - cell "Core Rock (300-500kg)" [ref=e179]
+            - cell "Rock" [ref=e180]
+            - cell "Ton" [ref=e181]
+            - cell "1.000" [ref=e182]
+            - cell "" [ref=e183]:
+              - link "" [ref=e184] [cursor=pointer]:
+                - /url: /materials/2/edit/
+                - generic [ref=e185]: 
+          - row "Geotextile Geotextile m² 0.001 " [ref=e186]:
+            - cell "Geotextile" [ref=e187]
+            - cell "Geotextile" [ref=e188]
+            - cell "m²" [ref=e189]
+            - cell "0.001" [ref=e190]
+            - cell "" [ref=e191]:
+              - link "" [ref=e192] [cursor=pointer]:
+                - /url: /materials/4/edit/
+                - generic [ref=e193]: 
+          - row "Sand Aggregate m³ 1.600 " [ref=e194]:
+            - cell "Sand" [ref=e195]
+            - cell "Aggregate" [ref=e196]
+            - cell "m³" [ref=e197]
+            - cell "1.600" [ref=e198]
+            - cell "" [ref=e199]:
+              - link "" [ref=e200] [cursor=pointer]:
+                - /url: /materials/1/edit/
+                - generic [ref=e201]: 
+          - row "Steel Pipe Pile Steel m 0.050 " [ref=e202]:
+            - cell "Steel Pipe Pile" [ref=e203]
+            - cell "Steel" [ref=e204]
+            - cell "m" [ref=e205]
+            - cell "0.050" [ref=e206]
+            - cell "" [ref=e207]:
+              - link "" [ref=e208] [cursor=pointer]:
+                - /url: /materials/5/edit/
+                - generic [ref=e209]: 

@@ -1,0 +1,970 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#content-start"
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - link "Django administration" [ref=e7] [cursor=pointer]:
+        - /url: /admin/
+      - generic [ref=e8]:
+        - text: Welcome,
+        - strong [ref=e9]: Admin
+        - text: .
+        - link "View site" [ref=e10] [cursor=pointer]:
+          - /url: /
+        - text: /
+        - link "Change password" [ref=e11] [cursor=pointer]:
+          - /url: /admin/password_change/
+        - text: /
+        - button "Log out" [ref=e13] [cursor=pointer]
+        - 'button "Toggle theme (current theme: auto)" [ref=e14] [cursor=pointer]':
+          - generic [ref=e15]: "Toggle theme (current theme: auto)"
+          - img [ref=e16]
+    - main [ref=e19]:
+      - generic [ref=e20]:
+        - heading "Site administration" [level=1] [ref=e21]
+        - generic [ref=e22]:
+          - table "Accounts" [ref=e24]:
+            - caption [ref=e25]:
+              - link "Accounts" [ref=e26] [cursor=pointer]:
+                - /url: /admin/accounts/
+            - rowgroup [ref=e27]:
+              - row "Model name Add link Change or view list link" [ref=e28]:
+                - columnheader "Model name" [ref=e29]
+                - columnheader "Add link" [ref=e30]
+                - columnheader "Change or view list link" [ref=e31]
+            - rowgroup [ref=e32]:
+              - row "User profiles Add Change" [ref=e33]:
+                - rowheader "User profiles" [ref=e34]:
+                  - link "User profiles" [ref=e35] [cursor=pointer]:
+                    - /url: /admin/accounts/userprofile/
+                - cell "Add" [ref=e36]:
+                  - link "Add" [ref=e37] [cursor=pointer]:
+                    - /url: /admin/accounts/userprofile/add/
+                - cell "Change" [ref=e38]:
+                  - link "Change" [ref=e39] [cursor=pointer]:
+                    - /url: /admin/accounts/userprofile/
+              - row "Users Add Change" [ref=e40]:
+                - rowheader "Users" [ref=e41]:
+                  - link "Users" [ref=e42] [cursor=pointer]:
+                    - /url: /admin/accounts/user/
+                - cell "Add" [ref=e43]:
+                  - link "Add" [ref=e44] [cursor=pointer]:
+                    - /url: /admin/accounts/user/add/
+                - cell "Change" [ref=e45]:
+                  - link "Change" [ref=e46] [cursor=pointer]:
+                    - /url: /admin/accounts/user/
+          - table "Authentication and Authorization" [ref=e48]:
+            - caption [ref=e49]:
+              - link "Authentication and Authorization" [ref=e50] [cursor=pointer]:
+                - /url: /admin/auth/
+            - rowgroup [ref=e51]:
+              - row "Model name Add link Change or view list link" [ref=e52]:
+                - columnheader "Model name" [ref=e53]
+                - columnheader "Add link" [ref=e54]
+                - columnheader "Change or view list link" [ref=e55]
+            - rowgroup [ref=e56]:
+              - row "Groups Add Change" [ref=e57]:
+                - rowheader "Groups" [ref=e58]:
+                  - link "Groups" [ref=e59] [cursor=pointer]:
+                    - /url: /admin/auth/group/
+                - cell "Add" [ref=e60]:
+                  - link "Add" [ref=e61] [cursor=pointer]:
+                    - /url: /admin/auth/group/add/
+                - cell "Change" [ref=e62]:
+                  - link "Change" [ref=e63] [cursor=pointer]:
+                    - /url: /admin/auth/group/
+          - table "Boq" [ref=e65]:
+            - caption [ref=e66]:
+              - link "Boq" [ref=e67] [cursor=pointer]:
+                - /url: /admin/boq/
+            - rowgroup [ref=e68]:
+              - row "Model name Add link Change or view list link" [ref=e69]:
+                - columnheader "Model name" [ref=e70]
+                - columnheader "Add link" [ref=e71]
+                - columnheader "Change or view list link" [ref=e72]
+            - rowgroup [ref=e73]:
+              - row "Boq items Add Change" [ref=e74]:
+                - rowheader "Boq items" [ref=e75]:
+                  - link "Boq items" [ref=e76] [cursor=pointer]:
+                    - /url: /admin/boq/boqitem/
+                - cell "Add" [ref=e77]:
+                  - link "Add" [ref=e78] [cursor=pointer]:
+                    - /url: /admin/boq/boqitem/add/
+                - cell "Change" [ref=e79]:
+                  - link "Change" [ref=e80] [cursor=pointer]:
+                    - /url: /admin/boq/boqitem/
+              - row "Daily progress records Add Change" [ref=e81]:
+                - rowheader "Daily progress records" [ref=e82]:
+                  - link "Daily progress records" [ref=e83] [cursor=pointer]:
+                    - /url: /admin/boq/dailyprogressrecord/
+                - cell "Add" [ref=e84]:
+                  - link "Add" [ref=e85] [cursor=pointer]:
+                    - /url: /admin/boq/dailyprogressrecord/add/
+                - cell "Change" [ref=e86]:
+                  - link "Change" [ref=e87] [cursor=pointer]:
+                    - /url: /admin/boq/dailyprogressrecord/
+              - row "Payment claims Add Change" [ref=e88]:
+                - rowheader "Payment claims" [ref=e89]:
+                  - link "Payment claims" [ref=e90] [cursor=pointer]:
+                    - /url: /admin/boq/paymentclaim/
+                - cell "Add" [ref=e91]:
+                  - link "Add" [ref=e92] [cursor=pointer]:
+                    - /url: /admin/boq/paymentclaim/add/
+                - cell "Change" [ref=e93]:
+                  - link "Change" [ref=e94] [cursor=pointer]:
+                    - /url: /admin/boq/paymentclaim/
+          - table "Change Orders" [ref=e96]:
+            - caption [ref=e97]:
+              - link "Change Orders" [ref=e98] [cursor=pointer]:
+                - /url: /admin/change_orders/
+            - rowgroup [ref=e99]:
+              - row "Model name Add link Change or view list link" [ref=e100]:
+                - columnheader "Model name" [ref=e101]
+                - columnheader "Add link" [ref=e102]
+                - columnheader "Change or view list link" [ref=e103]
+            - rowgroup [ref=e104]:
+              - row "Change orders Add Change" [ref=e105]:
+                - rowheader "Change orders" [ref=e106]:
+                  - link "Change orders" [ref=e107] [cursor=pointer]:
+                    - /url: /admin/change_orders/changeorder/
+                - cell "Add" [ref=e108]:
+                  - link "Add" [ref=e109] [cursor=pointer]:
+                    - /url: /admin/change_orders/changeorder/add/
+                - cell "Change" [ref=e110]:
+                  - link "Change" [ref=e111] [cursor=pointer]:
+                    - /url: /admin/change_orders/changeorder/
+          - table "Cost Control" [ref=e113]:
+            - caption [ref=e114]:
+              - link "Cost Control" [ref=e115] [cursor=pointer]:
+                - /url: /admin/cost_control/
+            - rowgroup [ref=e116]:
+              - row "Model name Add link Change or view list link" [ref=e117]:
+                - columnheader "Model name" [ref=e118]
+                - columnheader "Add link" [ref=e119]
+                - columnheader "Change or view list link" [ref=e120]
+            - rowgroup [ref=e121]:
+              - row "Actual Costs Add Change" [ref=e122]:
+                - rowheader "Actual Costs" [ref=e123]:
+                  - link "Actual Costs" [ref=e124] [cursor=pointer]:
+                    - /url: /admin/cost_control/actualcost/
+                - cell "Add" [ref=e125]:
+                  - link "Add" [ref=e126] [cursor=pointer]:
+                    - /url: /admin/cost_control/actualcost/add/
+                - cell "Change" [ref=e127]:
+                  - link "Change" [ref=e128] [cursor=pointer]:
+                    - /url: /admin/cost_control/actualcost/
+              - row "Budget Items Add Change" [ref=e129]:
+                - rowheader "Budget Items" [ref=e130]:
+                  - link "Budget Items" [ref=e131] [cursor=pointer]:
+                    - /url: /admin/cost_control/budgetitem/
+                - cell "Add" [ref=e132]:
+                  - link "Add" [ref=e133] [cursor=pointer]:
+                    - /url: /admin/cost_control/budgetitem/add/
+                - cell "Change" [ref=e134]:
+                  - link "Change" [ref=e135] [cursor=pointer]:
+                    - /url: /admin/cost_control/budgetitem/
+              - row "Cost Codes Add Change" [ref=e136]:
+                - rowheader "Cost Codes" [ref=e137]:
+                  - link "Cost Codes" [ref=e138] [cursor=pointer]:
+                    - /url: /admin/cost_control/costcode/
+                - cell "Add" [ref=e139]:
+                  - link "Add" [ref=e140] [cursor=pointer]:
+                    - /url: /admin/cost_control/costcode/add/
+                - cell "Change" [ref=e141]:
+                  - link "Change" [ref=e142] [cursor=pointer]:
+                    - /url: /admin/cost_control/costcode/
+          - table "Daily_Reports" [ref=e144]:
+            - caption [ref=e145]:
+              - link "Daily_Reports" [ref=e146] [cursor=pointer]:
+                - /url: /admin/daily_reports/
+            - rowgroup [ref=e147]:
+              - row "Model name Add link Change or view list link" [ref=e148]:
+                - columnheader "Model name" [ref=e149]
+                - columnheader "Add link" [ref=e150]
+                - columnheader "Change or view list link" [ref=e151]
+            - rowgroup [ref=e152]:
+              - row "Daily problem remarks Add Change" [ref=e153]:
+                - rowheader "Daily problem remarks" [ref=e154]:
+                  - link "Daily problem remarks" [ref=e155] [cursor=pointer]:
+                    - /url: /admin/daily_reports/dailyproblemremark/
+                - cell "Add" [ref=e156]:
+                  - link "Add" [ref=e157] [cursor=pointer]:
+                    - /url: /admin/daily_reports/dailyproblemremark/add/
+                - cell "Change" [ref=e158]:
+                  - link "Change" [ref=e159] [cursor=pointer]:
+                    - /url: /admin/daily_reports/dailyproblemremark/
+              - row "Daily reports Add Change" [ref=e160]:
+                - rowheader "Daily reports" [ref=e161]:
+                  - link "Daily reports" [ref=e162] [cursor=pointer]:
+                    - /url: /admin/daily_reports/dailyreport/
+                - cell "Add" [ref=e163]:
+                  - link "Add" [ref=e164] [cursor=pointer]:
+                    - /url: /admin/daily_reports/dailyreport/add/
+                - cell "Change" [ref=e165]:
+                  - link "Change" [ref=e166] [cursor=pointer]:
+                    - /url: /admin/daily_reports/dailyreport/
+          - table "Dashboard" [ref=e168]:
+            - caption [ref=e169]:
+              - link "Dashboard" [ref=e170] [cursor=pointer]:
+                - /url: /admin/dashboard/
+            - rowgroup [ref=e171]:
+              - row "Model name Add link Change or view list link" [ref=e172]:
+                - columnheader "Model name" [ref=e173]
+                - columnheader "Add link" [ref=e174]
+                - columnheader "Change or view list link" [ref=e175]
+            - rowgroup [ref=e176]:
+              - row "Owner Decision Items Add Change" [ref=e177]:
+                - rowheader "Owner Decision Items" [ref=e178]:
+                  - link "Owner Decision Items" [ref=e179] [cursor=pointer]:
+                    - /url: /admin/dashboard/ownerdecisionitem/
+                - cell "Add" [ref=e180]:
+                  - link "Add" [ref=e181] [cursor=pointer]:
+                    - /url: /admin/dashboard/ownerdecisionitem/add/
+                - cell "Change" [ref=e182]:
+                  - link "Change" [ref=e183] [cursor=pointer]:
+                    - /url: /admin/dashboard/ownerdecisionitem/
+          - table "Documents" [ref=e185]:
+            - caption [ref=e186]:
+              - link "Documents" [ref=e187] [cursor=pointer]:
+                - /url: /admin/documents/
+            - rowgroup [ref=e188]:
+              - row "Model name Add link Change or view list link" [ref=e189]:
+                - columnheader "Model name" [ref=e190]
+                - columnheader "Add link" [ref=e191]
+                - columnheader "Change or view list link" [ref=e192]
+            - rowgroup [ref=e193]:
+              - row "Document Categories Add Change" [ref=e194]:
+                - rowheader "Document Categories" [ref=e195]:
+                  - link "Document Categories" [ref=e196] [cursor=pointer]:
+                    - /url: /admin/documents/documentcategory/
+                - cell "Add" [ref=e197]:
+                  - link "Add" [ref=e198] [cursor=pointer]:
+                    - /url: /admin/documents/documentcategory/add/
+                - cell "Change" [ref=e199]:
+                  - link "Change" [ref=e200] [cursor=pointer]:
+                    - /url: /admin/documents/documentcategory/
+              - row "Documents Add Change" [ref=e201]:
+                - rowheader "Documents" [ref=e202]:
+                  - link "Documents" [ref=e203] [cursor=pointer]:
+                    - /url: /admin/documents/document/
+                - cell "Add" [ref=e204]:
+                  - link "Add" [ref=e205] [cursor=pointer]:
+                    - /url: /admin/documents/document/add/
+                - cell "Change" [ref=e206]:
+                  - link "Change" [ref=e207] [cursor=pointer]:
+                    - /url: /admin/documents/document/
+          - table "Drawings" [ref=e209]:
+            - caption [ref=e210]:
+              - link "Drawings" [ref=e211] [cursor=pointer]:
+                - /url: /admin/drawings/
+            - rowgroup [ref=e212]:
+              - row "Model name Add link Change or view list link" [ref=e213]:
+                - columnheader "Model name" [ref=e214]
+                - columnheader "Add link" [ref=e215]
+                - columnheader "Change or view list link" [ref=e216]
+            - rowgroup [ref=e217]:
+              - row "Drawings Add Change" [ref=e218]:
+                - rowheader "Drawings" [ref=e219]:
+                  - link "Drawings" [ref=e220] [cursor=pointer]:
+                    - /url: /admin/drawings/drawing/
+                - cell "Add" [ref=e221]:
+                  - link "Add" [ref=e222] [cursor=pointer]:
+                    - /url: /admin/drawings/drawing/add/
+                - cell "Change" [ref=e223]:
+                  - link "Change" [ref=e224] [cursor=pointer]:
+                    - /url: /admin/drawings/drawing/
+              - row "RFIs Add Change" [ref=e225]:
+                - rowheader "RFIs" [ref=e226]:
+                  - link "RFIs" [ref=e227] [cursor=pointer]:
+                    - /url: /admin/drawings/rfi/
+                - cell "Add" [ref=e228]:
+                  - link "Add" [ref=e229] [cursor=pointer]:
+                    - /url: /admin/drawings/rfi/add/
+                - cell "Change" [ref=e230]:
+                  - link "Change" [ref=e231] [cursor=pointer]:
+                    - /url: /admin/drawings/rfi/
+          - table "Equipment" [ref=e233]:
+            - caption [ref=e234]:
+              - link "Equipment" [ref=e235] [cursor=pointer]:
+                - /url: /admin/equipment/
+            - rowgroup [ref=e236]:
+              - row "Model name Add link Change or view list link" [ref=e237]:
+                - columnheader "Model name" [ref=e238]
+                - columnheader "Add link" [ref=e239]
+                - columnheader "Change or view list link" [ref=e240]
+            - rowgroup [ref=e241]:
+              - row "Daily equipment records Add Change" [ref=e242]:
+                - rowheader "Daily equipment records" [ref=e243]:
+                  - link "Daily equipment records" [ref=e244] [cursor=pointer]:
+                    - /url: /admin/equipment/dailyequipmentrecord/
+                - cell "Add" [ref=e245]:
+                  - link "Add" [ref=e246] [cursor=pointer]:
+                    - /url: /admin/equipment/dailyequipmentrecord/add/
+                - cell "Change" [ref=e247]:
+                  - link "Change" [ref=e248] [cursor=pointer]:
+                    - /url: /admin/equipment/dailyequipmentrecord/
+              - row "Equipment Add Change" [ref=e249]:
+                - rowheader "Equipment" [ref=e250]:
+                  - link "Equipment" [ref=e251] [cursor=pointer]:
+                    - /url: /admin/equipment/equipment/
+                - cell "Add" [ref=e252]:
+                  - link "Add" [ref=e253] [cursor=pointer]:
+                    - /url: /admin/equipment/equipment/add/
+                - cell "Change" [ref=e254]:
+                  - link "Change" [ref=e255] [cursor=pointer]:
+                    - /url: /admin/equipment/equipment/
+              - row "Equipment Categories Add Change" [ref=e256]:
+                - rowheader "Equipment Categories" [ref=e257]:
+                  - link "Equipment Categories" [ref=e258] [cursor=pointer]:
+                    - /url: /admin/equipment/equipmentcategory/
+                - cell "Add" [ref=e259]:
+                  - link "Add" [ref=e260] [cursor=pointer]:
+                    - /url: /admin/equipment/equipmentcategory/add/
+                - cell "Change" [ref=e261]:
+                  - link "Change" [ref=e262] [cursor=pointer]:
+                    - /url: /admin/equipment/equipmentcategory/
+          - table "HR & Attendance" [ref=e264]:
+            - caption [ref=e265]:
+              - link "HR & Attendance" [ref=e266] [cursor=pointer]:
+                - /url: /admin/hr/
+            - rowgroup [ref=e267]:
+              - row "Model name Add link Change or view list link" [ref=e268]:
+                - columnheader "Model name" [ref=e269]
+                - columnheader "Add link" [ref=e270]
+                - columnheader "Change or view list link" [ref=e271]
+            - rowgroup [ref=e272]:
+              - row "Attendance records Add Change" [ref=e273]:
+                - rowheader "Attendance records" [ref=e274]:
+                  - link "Attendance records" [ref=e275] [cursor=pointer]:
+                    - /url: /admin/hr/attendancerecord/
+                - cell "Add" [ref=e276]:
+                  - link "Add" [ref=e277] [cursor=pointer]:
+                    - /url: /admin/hr/attendancerecord/add/
+                - cell "Change" [ref=e278]:
+                  - link "Change" [ref=e279] [cursor=pointer]:
+                    - /url: /admin/hr/attendancerecord/
+              - row "Employees Add Change" [ref=e280]:
+                - rowheader "Employees" [ref=e281]:
+                  - link "Employees" [ref=e282] [cursor=pointer]:
+                    - /url: /admin/hr/employee/
+                - cell "Add" [ref=e283]:
+                  - link "Add" [ref=e284] [cursor=pointer]:
+                    - /url: /admin/hr/employee/add/
+                - cell "Change" [ref=e285]:
+                  - link "Change" [ref=e286] [cursor=pointer]:
+                    - /url: /admin/hr/employee/
+              - row "Leave requests Add Change" [ref=e287]:
+                - rowheader "Leave requests" [ref=e288]:
+                  - link "Leave requests" [ref=e289] [cursor=pointer]:
+                    - /url: /admin/hr/leaverequest/
+                - cell "Add" [ref=e290]:
+                  - link "Add" [ref=e291] [cursor=pointer]:
+                    - /url: /admin/hr/leaverequest/add/
+                - cell "Change" [ref=e292]:
+                  - link "Change" [ref=e293] [cursor=pointer]:
+                    - /url: /admin/hr/leaverequest/
+              - row "Overtime requests Add Change" [ref=e294]:
+                - rowheader "Overtime requests" [ref=e295]:
+                  - link "Overtime requests" [ref=e296] [cursor=pointer]:
+                    - /url: /admin/hr/overtimerequest/
+                - cell "Add" [ref=e297]:
+                  - link "Add" [ref=e298] [cursor=pointer]:
+                    - /url: /admin/hr/overtimerequest/add/
+                - cell "Change" [ref=e299]:
+                  - link "Change" [ref=e300] [cursor=pointer]:
+                    - /url: /admin/hr/overtimerequest/
+          - table "Maintenance" [ref=e302]:
+            - caption [ref=e303]:
+              - link "Maintenance" [ref=e304] [cursor=pointer]:
+                - /url: /admin/maintenance/
+            - rowgroup [ref=e305]:
+              - row "Model name Add link Change or view list link" [ref=e306]:
+                - columnheader "Model name" [ref=e307]
+                - columnheader "Add link" [ref=e308]
+                - columnheader "Change or view list link" [ref=e309]
+            - rowgroup [ref=e310]:
+              - row "Maintenance schedules Add Change" [ref=e311]:
+                - rowheader "Maintenance schedules" [ref=e312]:
+                  - link "Maintenance schedules" [ref=e313] [cursor=pointer]:
+                    - /url: /admin/maintenance/maintenanceschedule/
+                - cell "Add" [ref=e314]:
+                  - link "Add" [ref=e315] [cursor=pointer]:
+                    - /url: /admin/maintenance/maintenanceschedule/add/
+                - cell "Change" [ref=e316]:
+                  - link "Change" [ref=e317] [cursor=pointer]:
+                    - /url: /admin/maintenance/maintenanceschedule/
+              - row "Maintenance work orders Add Change" [ref=e318]:
+                - rowheader "Maintenance work orders" [ref=e319]:
+                  - link "Maintenance work orders" [ref=e320] [cursor=pointer]:
+                    - /url: /admin/maintenance/maintenanceworkorder/
+                - cell "Add" [ref=e321]:
+                  - link "Add" [ref=e322] [cursor=pointer]:
+                    - /url: /admin/maintenance/maintenanceworkorder/add/
+                - cell "Change" [ref=e323]:
+                  - link "Change" [ref=e324] [cursor=pointer]:
+                    - /url: /admin/maintenance/maintenanceworkorder/
+          - table "Manpower" [ref=e326]:
+            - caption [ref=e327]:
+              - link "Manpower" [ref=e328] [cursor=pointer]:
+                - /url: /admin/manpower/
+            - rowgroup [ref=e329]:
+              - row "Model name Add link Change or view list link" [ref=e330]:
+                - columnheader "Model name" [ref=e331]
+                - columnheader "Add link" [ref=e332]
+                - columnheader "Change or view list link" [ref=e333]
+            - rowgroup [ref=e334]:
+              - row "Daily manpower records Add Change" [ref=e335]:
+                - rowheader "Daily manpower records" [ref=e336]:
+                  - link "Daily manpower records" [ref=e337] [cursor=pointer]:
+                    - /url: /admin/manpower/dailymanpowerrecord/
+                - cell "Add" [ref=e338]:
+                  - link "Add" [ref=e339] [cursor=pointer]:
+                    - /url: /admin/manpower/dailymanpowerrecord/add/
+                - cell "Change" [ref=e340]:
+                  - link "Change" [ref=e341] [cursor=pointer]:
+                    - /url: /admin/manpower/dailymanpowerrecord/
+              - row "Manpower Categories Add Change" [ref=e342]:
+                - rowheader "Manpower Categories" [ref=e343]:
+                  - link "Manpower Categories" [ref=e344] [cursor=pointer]:
+                    - /url: /admin/manpower/manpowercategory/
+                - cell "Add" [ref=e345]:
+                  - link "Add" [ref=e346] [cursor=pointer]:
+                    - /url: /admin/manpower/manpowercategory/add/
+                - cell "Change" [ref=e347]:
+                  - link "Change" [ref=e348] [cursor=pointer]:
+                    - /url: /admin/manpower/manpowercategory/
+          - table "Materials" [ref=e350]:
+            - caption [ref=e351]:
+              - link "Materials" [ref=e352] [cursor=pointer]:
+                - /url: /admin/materials/
+            - rowgroup [ref=e353]:
+              - row "Model name Add link Change or view list link" [ref=e354]:
+                - columnheader "Model name" [ref=e355]
+                - columnheader "Add link" [ref=e356]
+                - columnheader "Change or view list link" [ref=e357]
+            - rowgroup [ref=e358]:
+              - row "Material Categories Add Change" [ref=e359]:
+                - rowheader "Material Categories" [ref=e360]:
+                  - link "Material Categories" [ref=e361] [cursor=pointer]:
+                    - /url: /admin/materials/materialcategory/
+                - cell "Add" [ref=e362]:
+                  - link "Add" [ref=e363] [cursor=pointer]:
+                    - /url: /admin/materials/materialcategory/add/
+                - cell "Change" [ref=e364]:
+                  - link "Change" [ref=e365] [cursor=pointer]:
+                    - /url: /admin/materials/materialcategory/
+              - row "Material Deliveries Add Change" [ref=e366]:
+                - rowheader "Material Deliveries" [ref=e367]:
+                  - link "Material Deliveries" [ref=e368] [cursor=pointer]:
+                    - /url: /admin/materials/materialdelivery/
+                - cell "Add" [ref=e369]:
+                  - link "Add" [ref=e370] [cursor=pointer]:
+                    - /url: /admin/materials/materialdelivery/add/
+                - cell "Change" [ref=e371]:
+                  - link "Change" [ref=e372] [cursor=pointer]:
+                    - /url: /admin/materials/materialdelivery/
+              - row "Material usages Add Change" [ref=e373]:
+                - rowheader "Material usages" [ref=e374]:
+                  - link "Material usages" [ref=e375] [cursor=pointer]:
+                    - /url: /admin/materials/materialusage/
+                - cell "Add" [ref=e376]:
+                  - link "Add" [ref=e377] [cursor=pointer]:
+                    - /url: /admin/materials/materialusage/add/
+                - cell "Change" [ref=e378]:
+                  - link "Change" [ref=e379] [cursor=pointer]:
+                    - /url: /admin/materials/materialusage/
+              - row "Materials Add Change" [ref=e380]:
+                - rowheader "Materials" [ref=e381]:
+                  - link "Materials" [ref=e382] [cursor=pointer]:
+                    - /url: /admin/materials/material/
+                - cell "Add" [ref=e383]:
+                  - link "Add" [ref=e384] [cursor=pointer]:
+                    - /url: /admin/materials/material/add/
+                - cell "Change" [ref=e385]:
+                  - link "Change" [ref=e386] [cursor=pointer]:
+                    - /url: /admin/materials/material/
+              - row "แหล่งวัสดุ Add Change" [ref=e387]:
+                - rowheader "แหล่งวัสดุ" [ref=e388]:
+                  - link "แหล่งวัสดุ" [ref=e389] [cursor=pointer]:
+                    - /url: /admin/materials/deliverysource/
+                - cell "Add" [ref=e390]:
+                  - link "Add" [ref=e391] [cursor=pointer]:
+                    - /url: /admin/materials/deliverysource/add/
+                - cell "Change" [ref=e392]:
+                  - link "Change" [ref=e393] [cursor=pointer]:
+                    - /url: /admin/materials/deliverysource/
+          - table "Notifications" [ref=e395]:
+            - caption [ref=e396]:
+              - link "Notifications" [ref=e397] [cursor=pointer]:
+                - /url: /admin/notifications/
+            - rowgroup [ref=e398]:
+              - row "Model name Add link Change or view list link" [ref=e399]:
+                - columnheader "Model name" [ref=e400]
+                - columnheader "Add link" [ref=e401]
+                - columnheader "Change or view list link" [ref=e402]
+            - rowgroup [ref=e403]:
+              - row "Notifications Add Change" [ref=e404]:
+                - rowheader "Notifications" [ref=e405]:
+                  - link "Notifications" [ref=e406] [cursor=pointer]:
+                    - /url: /admin/notifications/notification/
+                - cell "Add" [ref=e407]:
+                  - link "Add" [ref=e408] [cursor=pointer]:
+                    - /url: /admin/notifications/notification/add/
+                - cell "Change" [ref=e409]:
+                  - link "Change" [ref=e410] [cursor=pointer]:
+                    - /url: /admin/notifications/notification/
+          - table "Procurement" [ref=e412]:
+            - caption [ref=e413]:
+              - link "Procurement" [ref=e414] [cursor=pointer]:
+                - /url: /admin/procurement/
+            - rowgroup [ref=e415]:
+              - row "Model name Add link Change or view list link" [ref=e416]:
+                - columnheader "Model name" [ref=e417]
+                - columnheader "Add link" [ref=e418]
+                - columnheader "Change or view list link" [ref=e419]
+            - rowgroup [ref=e420]:
+              - row "Purchase orders Add Change" [ref=e421]:
+                - rowheader "Purchase orders" [ref=e422]:
+                  - link "Purchase orders" [ref=e423] [cursor=pointer]:
+                    - /url: /admin/procurement/purchaseorder/
+                - cell "Add" [ref=e424]:
+                  - link "Add" [ref=e425] [cursor=pointer]:
+                    - /url: /admin/procurement/purchaseorder/add/
+                - cell "Change" [ref=e426]:
+                  - link "Change" [ref=e427] [cursor=pointer]:
+                    - /url: /admin/procurement/purchaseorder/
+              - row "Purchase requests Add Change" [ref=e428]:
+                - rowheader "Purchase requests" [ref=e429]:
+                  - link "Purchase requests" [ref=e430] [cursor=pointer]:
+                    - /url: /admin/procurement/purchaserequest/
+                - cell "Add" [ref=e431]:
+                  - link "Add" [ref=e432] [cursor=pointer]:
+                    - /url: /admin/procurement/purchaserequest/add/
+                - cell "Change" [ref=e433]:
+                  - link "Change" [ref=e434] [cursor=pointer]:
+                    - /url: /admin/procurement/purchaserequest/
+              - row "Suppliers Add Change" [ref=e435]:
+                - rowheader "Suppliers" [ref=e436]:
+                  - link "Suppliers" [ref=e437] [cursor=pointer]:
+                    - /url: /admin/procurement/supplier/
+                - cell "Add" [ref=e438]:
+                  - link "Add" [ref=e439] [cursor=pointer]:
+                    - /url: /admin/procurement/supplier/add/
+                - cell "Change" [ref=e440]:
+                  - link "Change" [ref=e441] [cursor=pointer]:
+                    - /url: /admin/procurement/supplier/
+          - table "Project Controls" [ref=e443]:
+            - caption [ref=e444]:
+              - link "Project Controls" [ref=e445] [cursor=pointer]:
+                - /url: /admin/project_controls/
+            - rowgroup [ref=e446]:
+              - row "Model name Add link Change or view list link" [ref=e447]:
+                - columnheader "Model name" [ref=e448]
+                - columnheader "Add link" [ref=e449]
+                - columnheader "Change or view list link" [ref=e450]
+            - rowgroup [ref=e451]:
+              - row "Barges Add Change" [ref=e452]:
+                - rowheader "Barges" [ref=e453]:
+                  - link "Barges" [ref=e454] [cursor=pointer]:
+                    - /url: /admin/project_controls/barge/
+                - cell "Add" [ref=e455]:
+                  - link "Add" [ref=e456] [cursor=pointer]:
+                    - /url: /admin/project_controls/barge/add/
+                - cell "Change" [ref=e457]:
+                  - link "Change" [ref=e458] [cursor=pointer]:
+                    - /url: /admin/project_controls/barge/
+              - row "Import logs Add Change" [ref=e459]:
+                - rowheader "Import logs" [ref=e460]:
+                  - link "Import logs" [ref=e461] [cursor=pointer]:
+                    - /url: /admin/project_controls/importlog/
+                - cell "Add" [ref=e462]:
+                  - link "Add" [ref=e463] [cursor=pointer]:
+                    - /url: /admin/project_controls/importlog/add/
+                - cell "Change" [ref=e464]:
+                  - link "Change" [ref=e465] [cursor=pointer]:
+                    - /url: /admin/project_controls/importlog/
+              - row "Logistics scenarios Add Change" [ref=e466]:
+                - rowheader "Logistics scenarios" [ref=e467]:
+                  - link "Logistics scenarios" [ref=e468] [cursor=pointer]:
+                    - /url: /admin/project_controls/logisticsscenario/
+                - cell "Add" [ref=e469]:
+                  - link "Add" [ref=e470] [cursor=pointer]:
+                    - /url: /admin/project_controls/logisticsscenario/add/
+                - cell "Change" [ref=e471]:
+                  - link "Change" [ref=e472] [cursor=pointer]:
+                    - /url: /admin/project_controls/logisticsscenario/
+              - row "Project action plans Add Change" [ref=e473]:
+                - rowheader "Project action plans" [ref=e474]:
+                  - link "Project action plans" [ref=e475] [cursor=pointer]:
+                    - /url: /admin/project_controls/projectactionplan/
+                - cell "Add" [ref=e476]:
+                  - link "Add" [ref=e477] [cursor=pointer]:
+                    - /url: /admin/project_controls/projectactionplan/add/
+                - cell "Change" [ref=e478]:
+                  - link "Change" [ref=e479] [cursor=pointer]:
+                    - /url: /admin/project_controls/projectactionplan/
+              - row "Recovery action items Add Change" [ref=e480]:
+                - rowheader "Recovery action items" [ref=e481]:
+                  - link "Recovery action items" [ref=e482] [cursor=pointer]:
+                    - /url: /admin/project_controls/recoveryactionitem/
+                - cell "Add" [ref=e483]:
+                  - link "Add" [ref=e484] [cursor=pointer]:
+                    - /url: /admin/project_controls/recoveryactionitem/add/
+                - cell "Change" [ref=e485]:
+                  - link "Change" [ref=e486] [cursor=pointer]:
+                    - /url: /admin/project_controls/recoveryactionitem/
+              - row "Recovery action plans Add Change" [ref=e487]:
+                - rowheader "Recovery action plans" [ref=e488]:
+                  - link "Recovery action plans" [ref=e489] [cursor=pointer]:
+                    - /url: /admin/project_controls/recoveryactionplan/
+                - cell "Add" [ref=e490]:
+                  - link "Add" [ref=e491] [cursor=pointer]:
+                    - /url: /admin/project_controls/recoveryactionplan/add/
+                - cell "Change" [ref=e492]:
+                  - link "Change" [ref=e493] [cursor=pointer]:
+                    - /url: /admin/project_controls/recoveryactionplan/
+              - row "Recovery plans Add Change" [ref=e494]:
+                - rowheader "Recovery plans" [ref=e495]:
+                  - link "Recovery plans" [ref=e496] [cursor=pointer]:
+                    - /url: /admin/project_controls/recoveryplan/
+                - cell "Add" [ref=e497]:
+                  - link "Add" [ref=e498] [cursor=pointer]:
+                    - /url: /admin/project_controls/recoveryplan/add/
+                - cell "Change" [ref=e499]:
+                  - link "Change" [ref=e500] [cursor=pointer]:
+                    - /url: /admin/project_controls/recoveryplan/
+              - row "Revetment activitys Add Change" [ref=e501]:
+                - rowheader "Revetment activitys" [ref=e502]:
+                  - link "Revetment activitys" [ref=e503] [cursor=pointer]:
+                    - /url: /admin/project_controls/revetmentactivity/
+                - cell "Add" [ref=e504]:
+                  - link "Add" [ref=e505] [cursor=pointer]:
+                    - /url: /admin/project_controls/revetmentactivity/add/
+                - cell "Change" [ref=e506]:
+                  - link "Change" [ref=e507] [cursor=pointer]:
+                    - /url: /admin/project_controls/revetmentactivity/
+              - row "Revetment daily records Add Change" [ref=e508]:
+                - rowheader "Revetment daily records" [ref=e509]:
+                  - link "Revetment daily records" [ref=e510] [cursor=pointer]:
+                    - /url: /admin/project_controls/revetmentdailyrecord/
+                - cell "Add" [ref=e511]:
+                  - link "Add" [ref=e512] [cursor=pointer]:
+                    - /url: /admin/project_controls/revetmentdailyrecord/add/
+                - cell "Change" [ref=e513]:
+                  - link "Change" [ref=e514] [cursor=pointer]:
+                    - /url: /admin/project_controls/revetmentdailyrecord/
+              - row "Revetment stations Add Change" [ref=e515]:
+                - rowheader "Revetment stations" [ref=e516]:
+                  - link "Revetment stations" [ref=e517] [cursor=pointer]:
+                    - /url: /admin/project_controls/revetmentstation/
+                - cell "Add" [ref=e518]:
+                  - link "Add" [ref=e519] [cursor=pointer]:
+                    - /url: /admin/project_controls/revetmentstation/add/
+                - cell "Change" [ref=e520]:
+                  - link "Change" [ref=e521] [cursor=pointer]:
+                    - /url: /admin/project_controls/revetmentstation/
+              - row "Rock Dashboard Settings Add Change" [ref=e522]:
+                - rowheader "Rock Dashboard Settings" [ref=e523]:
+                  - link "Rock Dashboard Settings" [ref=e524] [cursor=pointer]:
+                    - /url: /admin/project_controls/rockdashboardsettings/
+                - cell "Add" [ref=e525]:
+                  - link "Add" [ref=e526] [cursor=pointer]:
+                    - /url: /admin/project_controls/rockdashboardsettings/add/
+                - cell "Change" [ref=e527]:
+                  - link "Change" [ref=e528] [cursor=pointer]:
+                    - /url: /admin/project_controls/rockdashboardsettings/
+              - row "Rock daily records Add Change" [ref=e529]:
+                - rowheader "Rock daily records" [ref=e530]:
+                  - link "Rock daily records" [ref=e531] [cursor=pointer]:
+                    - /url: /admin/project_controls/rockdailyrecord/
+                - cell "Add" [ref=e532]:
+                  - link "Add" [ref=e533] [cursor=pointer]:
+                    - /url: /admin/project_controls/rockdailyrecord/add/
+                - cell "Change" [ref=e534]:
+                  - link "Change" [ref=e535] [cursor=pointer]:
+                    - /url: /admin/project_controls/rockdailyrecord/
+              - row "Rock station progresss Add Change" [ref=e536]:
+                - rowheader "Rock station progresss" [ref=e537]:
+                  - link "Rock station progresss" [ref=e538] [cursor=pointer]:
+                    - /url: /admin/project_controls/rockstationprogress/
+                - cell "Add" [ref=e539]:
+                  - link "Add" [ref=e540] [cursor=pointer]:
+                    - /url: /admin/project_controls/rockstationprogress/add/
+                - cell "Change" [ref=e541]:
+                  - link "Change" [ref=e542] [cursor=pointer]:
+                    - /url: /admin/project_controls/rockstationprogress/
+              - row "Sand Dashboard Settings Add Change" [ref=e543]:
+                - rowheader "Sand Dashboard Settings" [ref=e544]:
+                  - link "Sand Dashboard Settings" [ref=e545] [cursor=pointer]:
+                    - /url: /admin/project_controls/sanddashboardsettings/
+                - cell "Add" [ref=e546]:
+                  - link "Add" [ref=e547] [cursor=pointer]:
+                    - /url: /admin/project_controls/sanddashboardsettings/add/
+                - cell "Change" [ref=e548]:
+                  - link "Change" [ref=e549] [cursor=pointer]:
+                    - /url: /admin/project_controls/sanddashboardsettings/
+              - row "Sand allocations Add Change" [ref=e550]:
+                - rowheader "Sand allocations" [ref=e551]:
+                  - link "Sand allocations" [ref=e552] [cursor=pointer]:
+                    - /url: /admin/project_controls/sandallocation/
+                - cell "Add" [ref=e553]:
+                  - link "Add" [ref=e554] [cursor=pointer]:
+                    - /url: /admin/project_controls/sandallocation/add/
+                - cell "Change" [ref=e555]:
+                  - link "Change" [ref=e556] [cursor=pointer]:
+                    - /url: /admin/project_controls/sandallocation/
+              - row "Sand area progresss Add Change" [ref=e557]:
+                - rowheader "Sand area progresss" [ref=e558]:
+                  - link "Sand area progresss" [ref=e559] [cursor=pointer]:
+                    - /url: /admin/project_controls/sandareaprogress/
+                - cell "Add" [ref=e560]:
+                  - link "Add" [ref=e561] [cursor=pointer]:
+                    - /url: /admin/project_controls/sandareaprogress/add/
+                - cell "Change" [ref=e562]:
+                  - link "Change" [ref=e563] [cursor=pointer]:
+                    - /url: /admin/project_controls/sandareaprogress/
+              - row "Sand daily records Add Change" [ref=e564]:
+                - rowheader "Sand daily records" [ref=e565]:
+                  - link "Sand daily records" [ref=e566] [cursor=pointer]:
+                    - /url: /admin/project_controls/sanddailyrecord/
+                - cell "Add" [ref=e567]:
+                  - link "Add" [ref=e568] [cursor=pointer]:
+                    - /url: /admin/project_controls/sanddailyrecord/add/
+                - cell "Change" [ref=e569]:
+                  - link "Change" [ref=e570] [cursor=pointer]:
+                    - /url: /admin/project_controls/sanddailyrecord/
+          - table "Projects" [ref=e572]:
+            - caption [ref=e573]:
+              - link "Projects" [ref=e574] [cursor=pointer]:
+                - /url: /admin/projects/
+            - rowgroup [ref=e575]:
+              - row "Model name Add link Change or view list link" [ref=e576]:
+                - columnheader "Model name" [ref=e577]
+                - columnheader "Add link" [ref=e578]
+                - columnheader "Change or view list link" [ref=e579]
+            - rowgroup [ref=e580]:
+              - row "Projects Add Change" [ref=e581]:
+                - rowheader "Projects" [ref=e582]:
+                  - link "Projects" [ref=e583] [cursor=pointer]:
+                    - /url: /admin/projects/project/
+                - cell "Add" [ref=e584]:
+                  - link "Add" [ref=e585] [cursor=pointer]:
+                    - /url: /admin/projects/project/add/
+                - cell "Change" [ref=e586]:
+                  - link "Change" [ref=e587] [cursor=pointer]:
+                    - /url: /admin/projects/project/
+              - row "Stakeholders Add Change" [ref=e588]:
+                - rowheader "Stakeholders" [ref=e589]:
+                  - link "Stakeholders" [ref=e590] [cursor=pointer]:
+                    - /url: /admin/projects/stakeholder/
+                - cell "Add" [ref=e591]:
+                  - link "Add" [ref=e592] [cursor=pointer]:
+                    - /url: /admin/projects/stakeholder/add/
+                - cell "Change" [ref=e593]:
+                  - link "Change" [ref=e594] [cursor=pointer]:
+                    - /url: /admin/projects/stakeholder/
+              - row "Work areas Add Change" [ref=e595]:
+                - rowheader "Work areas" [ref=e596]:
+                  - link "Work areas" [ref=e597] [cursor=pointer]:
+                    - /url: /admin/projects/workarea/
+                - cell "Add" [ref=e598]:
+                  - link "Add" [ref=e599] [cursor=pointer]:
+                    - /url: /admin/projects/workarea/add/
+                - cell "Change" [ref=e600]:
+                  - link "Change" [ref=e601] [cursor=pointer]:
+                    - /url: /admin/projects/workarea/
+          - table "Quality" [ref=e603]:
+            - caption [ref=e604]:
+              - link "Quality" [ref=e605] [cursor=pointer]:
+                - /url: /admin/quality/
+            - rowgroup [ref=e606]:
+              - row "Model name Add link Change or view list link" [ref=e607]:
+                - columnheader "Model name" [ref=e608]
+                - columnheader "Add link" [ref=e609]
+                - columnheader "Change or view list link" [ref=e610]
+            - rowgroup [ref=e611]:
+              - row "Inspection requests Add Change" [ref=e612]:
+                - rowheader "Inspection requests" [ref=e613]:
+                  - link "Inspection requests" [ref=e614] [cursor=pointer]:
+                    - /url: /admin/quality/inspectionrequest/
+                - cell "Add" [ref=e615]:
+                  - link "Add" [ref=e616] [cursor=pointer]:
+                    - /url: /admin/quality/inspectionrequest/add/
+                - cell "Change" [ref=e617]:
+                  - link "Change" [ref=e618] [cursor=pointer]:
+                    - /url: /admin/quality/inspectionrequest/
+              - row "Non conformances Add Change" [ref=e619]:
+                - rowheader "Non conformances" [ref=e620]:
+                  - link "Non conformances" [ref=e621] [cursor=pointer]:
+                    - /url: /admin/quality/nonconformance/
+                - cell "Add" [ref=e622]:
+                  - link "Add" [ref=e623] [cursor=pointer]:
+                    - /url: /admin/quality/nonconformance/add/
+                - cell "Change" [ref=e624]:
+                  - link "Change" [ref=e625] [cursor=pointer]:
+                    - /url: /admin/quality/nonconformance/
+              - row "Punch lists Add Change" [ref=e626]:
+                - rowheader "Punch lists" [ref=e627]:
+                  - link "Punch lists" [ref=e628] [cursor=pointer]:
+                    - /url: /admin/quality/punchlist/
+                - cell "Add" [ref=e629]:
+                  - link "Add" [ref=e630] [cursor=pointer]:
+                    - /url: /admin/quality/punchlist/add/
+                - cell "Change" [ref=e631]:
+                  - link "Change" [ref=e632] [cursor=pointer]:
+                    - /url: /admin/quality/punchlist/
+              - row "Quality checkpoints Add Change" [ref=e633]:
+                - rowheader "Quality checkpoints" [ref=e634]:
+                  - link "Quality checkpoints" [ref=e635] [cursor=pointer]:
+                    - /url: /admin/quality/qualitycheckpoint/
+                - cell "Add" [ref=e636]:
+                  - link "Add" [ref=e637] [cursor=pointer]:
+                    - /url: /admin/quality/qualitycheckpoint/add/
+                - cell "Change" [ref=e638]:
+                  - link "Change" [ref=e639] [cursor=pointer]:
+                    - /url: /admin/quality/qualitycheckpoint/
+          - table "Safety" [ref=e641]:
+            - caption [ref=e642]:
+              - link "Safety" [ref=e643] [cursor=pointer]:
+                - /url: /admin/safety/
+            - rowgroup [ref=e644]:
+              - row "Model name Add link Change or view list link" [ref=e645]:
+                - columnheader "Model name" [ref=e646]
+                - columnheader "Add link" [ref=e647]
+                - columnheader "Change or view list link" [ref=e648]
+            - rowgroup [ref=e649]:
+              - row "Incident reports Add Change" [ref=e650]:
+                - rowheader "Incident reports" [ref=e651]:
+                  - link "Incident reports" [ref=e652] [cursor=pointer]:
+                    - /url: /admin/safety/incidentreport/
+                - cell "Add" [ref=e653]:
+                  - link "Add" [ref=e654] [cursor=pointer]:
+                    - /url: /admin/safety/incidentreport/add/
+                - cell "Change" [ref=e655]:
+                  - link "Change" [ref=e656] [cursor=pointer]:
+                    - /url: /admin/safety/incidentreport/
+              - row "JSEA Records Add Change" [ref=e657]:
+                - rowheader "JSEA Records" [ref=e658]:
+                  - link "JSEA Records" [ref=e659] [cursor=pointer]:
+                    - /url: /admin/safety/jsearecord/
+                - cell "Add" [ref=e660]:
+                  - link "Add" [ref=e661] [cursor=pointer]:
+                    - /url: /admin/safety/jsearecord/add/
+                - cell "Change" [ref=e662]:
+                  - link "Change" [ref=e663] [cursor=pointer]:
+                    - /url: /admin/safety/jsearecord/
+              - row "Safety inspections Add Change" [ref=e664]:
+                - rowheader "Safety inspections" [ref=e665]:
+                  - link "Safety inspections" [ref=e666] [cursor=pointer]:
+                    - /url: /admin/safety/safetyinspection/
+                - cell "Add" [ref=e667]:
+                  - link "Add" [ref=e668] [cursor=pointer]:
+                    - /url: /admin/safety/safetyinspection/add/
+                - cell "Change" [ref=e669]:
+                  - link "Change" [ref=e670] [cursor=pointer]:
+                    - /url: /admin/safety/safetyinspection/
+              - row "Toolbox meetings Add Change" [ref=e671]:
+                - rowheader "Toolbox meetings" [ref=e672]:
+                  - link "Toolbox meetings" [ref=e673] [cursor=pointer]:
+                    - /url: /admin/safety/toolboxmeeting/
+                - cell "Add" [ref=e674]:
+                  - link "Add" [ref=e675] [cursor=pointer]:
+                    - /url: /admin/safety/toolboxmeeting/add/
+                - cell "Change" [ref=e676]:
+                  - link "Change" [ref=e677] [cursor=pointer]:
+                    - /url: /admin/safety/toolboxmeeting/
+          - table "Subcontractors" [ref=e679]:
+            - caption [ref=e680]:
+              - link "Subcontractors" [ref=e681] [cursor=pointer]:
+                - /url: /admin/subcontractors/
+            - rowgroup [ref=e682]:
+              - row "Model name Add link Change or view list link" [ref=e683]:
+                - columnheader "Model name" [ref=e684]
+                - columnheader "Add link" [ref=e685]
+                - columnheader "Change or view list link" [ref=e686]
+            - rowgroup [ref=e687]:
+              - row "Payment claims Add Change" [ref=e688]:
+                - rowheader "Payment claims" [ref=e689]:
+                  - link "Payment claims" [ref=e690] [cursor=pointer]:
+                    - /url: /admin/subcontractors/paymentclaim/
+                - cell "Add" [ref=e691]:
+                  - link "Add" [ref=e692] [cursor=pointer]:
+                    - /url: /admin/subcontractors/paymentclaim/add/
+                - cell "Change" [ref=e693]:
+                  - link "Change" [ref=e694] [cursor=pointer]:
+                    - /url: /admin/subcontractors/paymentclaim/
+              - row "Subcontractor contracts Add Change" [ref=e695]:
+                - rowheader "Subcontractor contracts" [ref=e696]:
+                  - link "Subcontractor contracts" [ref=e697] [cursor=pointer]:
+                    - /url: /admin/subcontractors/subcontractorcontract/
+                - cell "Add" [ref=e698]:
+                  - link "Add" [ref=e699] [cursor=pointer]:
+                    - /url: /admin/subcontractors/subcontractorcontract/add/
+                - cell "Change" [ref=e700]:
+                  - link "Change" [ref=e701] [cursor=pointer]:
+                    - /url: /admin/subcontractors/subcontractorcontract/
+              - row "Subcontractors Add Change" [ref=e702]:
+                - rowheader "Subcontractors" [ref=e703]:
+                  - link "Subcontractors" [ref=e704] [cursor=pointer]:
+                    - /url: /admin/subcontractors/subcontractor/
+                - cell "Add" [ref=e705]:
+                  - link "Add" [ref=e706] [cursor=pointer]:
+                    - /url: /admin/subcontractors/subcontractor/add/
+                - cell "Change" [ref=e707]:
+                  - link "Change" [ref=e708] [cursor=pointer]:
+                    - /url: /admin/subcontractors/subcontractor/
+        - generic [ref=e710]:
+          - heading "Recent actions" [level=2] [ref=e711]
+          - heading "My actions" [level=3] [ref=e712]
+          - list [ref=e713]:
+            - listitem [ref=e714]:
+              - generic [ref=e715]: "Changed:"
+              - link "viewer_tom" [ref=e716] [cursor=pointer]:
+                - /url: /admin/accounts/user/7/change/
+              - text: User
+            - listitem [ref=e717]:
+              - generic [ref=e718]: "Changed:"
+              - link "viewer_tom" [ref=e719] [cursor=pointer]:
+                - /url: /admin/accounts/user/7/change/
+              - text: User
+            - listitem [ref=e720]:
+              - generic [ref=e721]: "Changed:"
+              - link "store_bob" [ref=e722] [cursor=pointer]:
+                - /url: /admin/accounts/user/6/change/
+              - text: User
+            - listitem [ref=e723]:
+              - generic [ref=e724]: "Changed:"
+              - link "store_bob" [ref=e725] [cursor=pointer]:
+                - /url: /admin/accounts/user/6/change/
+              - text: User
+            - listitem [ref=e726]:
+              - generic [ref=e727]: "Changed:"
+              - link "pm_john" [ref=e728] [cursor=pointer]:
+                - /url: /admin/accounts/user/2/change/
+              - text: User
+            - listitem [ref=e729]:
+              - generic [ref=e730]: "Changed:"
+              - link "pm_john" [ref=e731] [cursor=pointer]:
+                - /url: /admin/accounts/user/2/change/
+              - text: User
+            - listitem [ref=e732]:
+              - generic [ref=e733]: "Changed:"
+              - link "eng_sara" [ref=e734] [cursor=pointer]:
+                - /url: /admin/accounts/user/3/change/
+              - text: User
+            - listitem [ref=e735]:
+              - generic [ref=e736]: "Changed:"
+              - link "eng_sara" [ref=e737] [cursor=pointer]:
+                - /url: /admin/accounts/user/3/change/
+              - text: User
+            - listitem [ref=e738]:
+              - generic [ref=e739]: "Changed:"
+              - link "store_bob" [ref=e740] [cursor=pointer]:
+                - /url: /admin/accounts/user/6/change/
+              - text: User
+            - listitem [ref=e741]:
+              - generic [ref=e742]: "Changed:"
+              - link "viewer_tom" [ref=e743] [cursor=pointer]:
+                - /url: /admin/accounts/user/7/change/
+              - text: User
+    - contentinfo

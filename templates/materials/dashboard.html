@@ -252,7 +252,7 @@
           <thead class="table-light"><tr><th>แหล่ง</th><th class="text-end">ปริมาณ</th><th class="text-end">รายการ</th></tr></thead>
           <tbody>
             {% for row in source_rows %}
-            <tr><td>{{ row.source|default:"-" }}</td><td class="text-end">{{ row.quantity|floatformat:3|intcomma }}</td><td class="text-end">{{ row.count|intcomma }}</td></tr>
+            <tr><td>{{ row.name|default:"-" }}</td><td class="text-end">{{ row.quantity|floatformat:3|intcomma }}</td><td class="text-end">{{ row.count|intcomma }}</td></tr>
             {% empty %}
             <tr><td colspan="3" class="text-center text-muted py-4">ไม่มีข้อมูล</td></tr>
             {% endfor %}

@@ -4,6 +4,7 @@ from . import views
 app_name = 'safety'
 
 urlpatterns = [
+    path('', views.SafetyIndexView.as_view(), name='index'),
     path('toolbox/', views.ToolboxMeetingListView.as_view(), name='toolbox_list'),
     path('toolbox/create/', views.ToolboxMeetingCreateView.as_view(), name='toolbox_create'),
     path('toolbox/<int:pk>/edit/', views.ToolboxMeetingUpdateView.as_view(), name='toolbox_update'),
