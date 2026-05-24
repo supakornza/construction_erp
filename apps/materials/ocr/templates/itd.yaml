@@ -1,0 +1,46 @@
+# Italian-Thai Development weight ticket (ITD)
+# 2-row table: รถเข้า / รถออก
+key: itd
+supplier_name: "บริษัท อิตาเลียนไทย ดีเวล็อปเมนต์ จำกัด (มหาชน)"
+priority: 10
+
+detect:
+  any_of:
+    - "อิตาเลียนไทย"
+    - "ดีเวล็อปเมนต์"
+    - "ใบชั่งน้ำหนัก"
+  min_matches: 2   # require at least 2 keywords to claim this template
+
+fields:
+  delivery_note_no:
+    anchor: "เลขที่"
+    direction: right
+    regex: '\d{4,12}'
+
+  truck_no:
+    anchor: "ทะเบียนรถ"
+    direction: right
+    extractor: truck_plate
+
+  source:
+    anchor: "บริษัท"
+    prefer_occurrence: 2       # 1st occurrence = header company; 2nd = supplier in body
+    direction: right
+    max_words: 4
+
+  material_name:
+    anchor: "สินค้า"
+    direction: right
+    max_words: 2
+
+  delivery_date:
+    doc_extractor: delivery_row_date    # find LAST "dd/mm/yyyy hh:mm weight" line
+
+  delivery_time:
+    doc_extractor: delivery_row_time
+
+  quantity_kg:
+    anchor: "น้ำหนักสุทธิ"
+    direction: right_or_down
+    extractor: weight_kg
+    fallback_anchor: "สุทธิ"

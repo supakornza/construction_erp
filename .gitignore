@@ -9,6 +9,7 @@ db.sqlite3
 *.sqlite3
 media/
 staticfiles/
+tessdata/
 .claude/
 .mcp.json
 *.log

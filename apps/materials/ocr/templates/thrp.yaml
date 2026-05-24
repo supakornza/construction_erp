@@ -1,0 +1,50 @@
+# Tha Worn Phu Ri stone quarry (THRP)
+# Single-row table; supplier IS the quarry, "ผู้ซื้อ" = ITD (the buyer)
+key: thrp
+supplier_name: "โรงโม่หินถาวรภูรี"
+priority: 10
+
+detect:
+  any_of:
+    - "ถาวรภูรี"
+    - "โรงโม่หิน"
+    - "ROONG SIN CHAI"        # English letterhead/watermark seen on these tickets
+    - "038-017984"             # phone number is a strong fingerprint
+  min_matches: 1
+
+fields:
+  delivery_note_no:
+    anchor: "เลขที่บัตรชั่ง"
+    direction: right
+    regex: '[A-Za-z0-9]{4,20}'
+    fallback_anchor: "เลขที่"
+
+  truck_no:
+    anchor: "ทะเบียนรถ"
+    direction: right_or_down
+    extractor: truck_plate
+
+  source:
+    constant: "โรงโม่หินถาวรภูรี"
+
+  material_name:
+    anchor: "สินค้า"
+    direction: right
+    max_words: 2
+
+  delivery_date:
+    anchor: "วันที่"
+    direction: right_or_down
+    extractor: thai_date
+
+  delivery_time:
+    anchor: "เวลาออก"
+    direction: right_or_down
+    extractor: time
+    fallback_anchor: "ออก"
+
+  quantity_kg:
+    anchor: "น้ำหนักสุทธิ"
+    direction: right_or_down
+    extractor: weight_kg
+    fallback_anchor: "สุทธิ"

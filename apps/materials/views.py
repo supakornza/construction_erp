@@ -1,9 +1,15 @@
+import json
+import tempfile
+from pathlib import Path
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, DecimalField, ExpressionWrapper, F, Q, Sum
 from django.db.models.functions import Coalesce
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.views.decorators.http import require_POST
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from apps.accounts.mixins import MaterialsViewMixin, MaterialsWriteMixin, MaterialsDeleteMixin
 from apps.projects.models import Project
@@ -258,6 +264,24 @@ class MaterialDeliveryListView(MaterialsViewMixin, ListView):
         return ctx
 
 
+def _attach_ocr_metadata(form_instance, request):
+    """Pull OCR audit fields out of the POST body (set by the form's JS after
+    a successful ocr-preview call) and onto the model instance."""
+    tmpl = request.POST.get('ocr_template', '').strip()
+    if not tmpl:
+        return
+    form_instance.ocr_template = tmpl[:50]
+    raw = request.POST.get('ocr_raw_text', '')
+    if raw:
+        form_instance.ocr_raw_text = raw[:20000]
+    try:
+        c = float(request.POST.get('ocr_confidence', ''))
+        form_instance.ocr_confidence = round(c, 3)
+    except (TypeError, ValueError):
+        pass
+    form_instance.ocr_processed_at = timezone.now()
+
+
 class MaterialDeliveryCreateView(MaterialsWriteMixin, CreateView):
     model = MaterialDelivery
     form_class = MaterialDeliveryForm
@@ -265,6 +289,7 @@ class MaterialDeliveryCreateView(MaterialsWriteMixin, CreateView):
     success_url = reverse_lazy('materials:delivery_list')
 
     def form_valid(self, form):
+        _attach_ocr_metadata(form.instance, self.request)
         messages.success(self.request, 'Delivery recorded.')
         return super().form_valid(form)
 
@@ -274,6 +299,10 @@ class MaterialDeliveryUpdateView(MaterialsWriteMixin, UpdateView):
     form_class = MaterialDeliveryForm
     template_name = 'materials/delivery_form.html'
     success_url = reverse_lazy('materials:delivery_list')
+
+    def form_valid(self, form):
+        _attach_ocr_metadata(form.instance, self.request)
+        return super().form_valid(form)
 
 
 class MaterialDeliveryDeleteView(MaterialsDeleteMixin, DeleteView):
@@ -322,3 +351,135 @@ class StockBalanceView(MaterialsViewMixin, ListView):
             except Project.DoesNotExist:
                 pass
         return ctx
+
+
+# ─── OCR preview endpoint ──────────────────────────────────────────────
+
+MAX_OCR_IMAGE_BYTES = 10 * 1024 * 1024  # 10 MB
+ALLOWED_OCR_MIME = {'image/jpeg', 'image/jpg', 'image/png', 'image/webp'}
+
+
+@require_POST
+@login_required
+def ocr_preview(request):
+    """Accept a multipart 'image' upload, run OCR + template extraction,
+    return JSON with pre-fill values for the delivery form.
+
+    Response shape: {ok, template, supplier, fields, field_confidence,
+                     warnings, raw_text, duration_ms, overall_confidence}
+    """
+    img = request.FILES.get('image')
+    if not img:
+        return JsonResponse({'ok': False, 'error': 'no image uploaded'}, status=400)
+    if img.size > MAX_OCR_IMAGE_BYTES:
+        return JsonResponse({'ok': False, 'error': 'image too large (max 10 MB)'}, status=400)
+    if img.content_type and img.content_type.lower() not in ALLOWED_OCR_MIME:
+        return JsonResponse(
+            {'ok': False, 'error': f'unsupported type: {img.content_type}'}, status=400,
+        )
+
+    # Lazy import — keeps server boot fast and avoids pytesseract import cost
+    # when this endpoint is not used.
+    from apps.materials.ocr.service import run_ocr
+    from apps.materials.ocr.normalize import normalize, kg_to_unit
+    from apps.materials.ocr.template_engine import extract
+
+    # Tesseract reads from disk; write upload to a temp file.
+    with tempfile.NamedTemporaryFile(suffix=Path(img.name).suffix or '.jpg',
+                                     delete=False) as tmp:
+        for chunk in img.chunks():
+            tmp.write(chunk)
+        tmp_path = tmp.name
+
+    try:
+        try:
+            ocr_result = run_ocr(tmp_path)
+        except Exception as e:
+            return JsonResponse(
+                {'ok': False, 'error': f'OCR engine failed: {e}'}, status=500,
+            )
+        normalized = normalize(ocr_result.raw_text)
+        ext = extract(ocr_result.words, normalized)
+
+        # Map extracted fields to form field names + apply unit conversion
+        # (quantity_kg -> quantity, converted to material.unit if FK resolved)
+        fields_out: dict = {}
+        confidence_out: dict = {}
+        project_id = request.POST.get('project') or ''
+
+        for k, fv in ext.fields.items():
+            v = fv.value
+            if k == 'quantity_kg':
+                continue  # handled below with material context
+            if k == 'material_name':
+                continue  # handled below with fuzzy match
+            if k == 'delivery_note_no':
+                fields_out['delivery_note_no'] = str(v) if v else ''
+            elif k == 'truck_no':
+                fields_out['truck_no'] = str(v) if v else ''
+            elif k == 'source':
+                fields_out['source'] = str(v) if v else ''
+            elif k == 'delivery_date':
+                fields_out['delivery_date'] = v
+            elif k == 'delivery_time':
+                fields_out['delivery_time'] = v
+            confidence_out[k] = round(fv.confidence, 2)
+
+        # Material fuzzy-match against actual DB rows
+        material_id = None
+        material_name = None
+        if 'material_name' in ext.fields:
+            from rapidfuzz import process as fz_process
+            mat_text = (ext.fields['material_name'].value or '').strip()
+            if mat_text:
+                candidates = list(Material.objects.values_list('id', 'name', 'unit'))
+                if candidates:
+                    names = [c[1] for c in candidates]
+                    best = fz_process.extractOne(mat_text, names)
+                    if best and best[1] >= 65:   # score 0..100
+                        matched_idx = best[2]
+                        material_id, matched_name, matched_unit = candidates[matched_idx]
+                        material_name = matched_name
+                        confidence_out['material_id'] = round(best[1] / 100.0, 2)
+                        # quantity conversion: kg -> ton if material.unit is ton
+                        if 'quantity_kg' in ext.fields:
+                            qkg = ext.fields['quantity_kg'].value
+                            if qkg is not None:
+                                qty = kg_to_unit(float(qkg), matched_unit or '')
+                                fields_out['quantity'] = str(qty)
+                                confidence_out['quantity'] = round(
+                                    ext.fields['quantity_kg'].confidence, 2,
+                                )
+
+        if material_id is not None:
+            fields_out['material'] = str(material_id)
+            fields_out['_material_display'] = material_name
+        elif 'quantity_kg' in ext.fields:
+            # quantity available but no material matched — pass raw kg so
+            # the user sees it (they'll pick the material manually and may
+            # need to adjust unit)
+            qkg = ext.fields['quantity_kg'].value
+            if qkg is not None:
+                fields_out['quantity'] = str(qkg)
+                fields_out['_quantity_unit_hint'] = 'kg'
+                confidence_out['quantity'] = round(
+                    ext.fields['quantity_kg'].confidence, 2,
+                )
+
+        return JsonResponse({
+            'ok': True,
+            'template': ext.template_key,
+            'supplier': ext.template_supplier,
+            'detect_score': ext.detect_score,
+            'overall_confidence': round(ocr_result.avg_confidence, 2),
+            'fields': fields_out,
+            'field_confidence': confidence_out,
+            'warnings': ext.warnings,
+            'raw_text': normalized[:5000],   # cap response size
+            'duration_ms': ocr_result.duration_ms,
+        })
+    finally:
+        try:
+            Path(tmp_path).unlink(missing_ok=True)
+        except Exception:
+            pass

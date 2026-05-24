@@ -9,7 +9,16 @@
         <div class="text-muted small">กรอกข้อมูลการรับวัสดุเข้ากองหรือพื้นที่จัดเก็บ</div>
     </div>
 </div>
-<div class="card shadow-sm"><div class="card-body">{% crispy form %}</div></div>
+<div class="card shadow-sm"><div class="card-body">
+{% crispy form %}
+{# hidden fields populated by JS after a successful OCR preview call #}
+<input type="hidden" name="ocr_template" id="id_ocr_template">
+<input type="hidden" name="ocr_confidence" id="id_ocr_confidence">
+<input type="hidden" name="ocr_raw_text" id="id_ocr_raw_text">
+</div></div>
+
+{# OCR banner shown after image picked — sits above the form #}
+<div id="ocr-banner" class="alert d-none mt-3" role="alert"></div>
 {% endblock %}
 
 {% block extra_scripts %}
@@ -56,6 +65,117 @@ document.addEventListener('DOMContentLoaded', function () {
       filterWorkAreaDropdown('id_destination', pid, '');
     });
   }
+
+  // ─── OCR pre-fill on delivery_image upload ──────────────────────
+  const imgInput = document.getElementById('id_delivery_image');
+  if (imgInput) imgInput.addEventListener('change', handleOcrUpload);
 });
+
+const OCR_URL = "{% url 'materials:delivery_ocr_preview' %}";
+const OCR_LOW_CONF = 0.70;
+
+function getCsrf() {
+  return document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+}
+
+// Render a banner using textContent for all dynamic strings to avoid XSS
+// from API-returned supplier names or browser-provided error messages.
+function setBanner(text, cls, opts) {
+  const b = document.getElementById('ocr-banner');
+  if (!b) return;
+  b.className = `alert alert-${cls} mt-3`;
+  b.textContent = '';
+  if (opts && opts.icon) {
+    const i = document.createElement('i');
+    i.className = opts.icon + ' me-2';
+    b.appendChild(i);
+  }
+  b.appendChild(document.createTextNode(text));
+  b.classList.remove('d-none');
+}
+
+function setFormField(id, value) {
+  const el = document.getElementById(id);
+  if (!el) return false;
+  if (el.value && el.value.trim() !== '') return false;
+  el.value = value;
+  return true;
+}
+
+function highlightField(id, conf) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (conf < OCR_LOW_CONF) {
+    el.classList.add('border-warning', 'bg-warning-subtle');
+    el.title = `OCR ความมั่นใจต่ำ (${Math.round(conf * 100)}%) — ตรวจซ้ำ`;
+  } else {
+    el.classList.add('border-success');
+    el.title = `OCR pre-filled (${Math.round(conf * 100)}%)`;
+  }
+}
+
+async function handleOcrUpload(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) {
+    setBanner('รูปใหญ่เกิน 10 MB — บีบอัดก่อนอัปโหลด', 'warning');
+    return;
+  }
+
+  setBanner('กำลังอ่านตั๋ว...', 'info', {icon: 'fas fa-spinner fa-spin'});
+
+  const fd = new FormData();
+  fd.append('image', file);
+  const projectSel = document.getElementById('id_project');
+  if (projectSel && projectSel.value) fd.append('project', projectSel.value);
+
+  try {
+    const r = await fetch(OCR_URL, {
+      method: 'POST', body: fd,
+      headers: {'X-CSRFToken': getCsrf()},
+    });
+    const j = await r.json();
+    if (!j.ok) {
+      setBanner(`อ่านตั๋วไม่สำเร็จ: ${j.error || 'unknown error'}`, 'danger');
+      return;
+    }
+
+    const map = {
+      delivery_note_no: 'id_delivery_note_no',
+      truck_no: 'id_truck_no',
+      source: 'id_source',
+      delivery_date: 'id_delivery_date',
+      delivery_time: 'id_delivery_time',
+      quantity: 'id_quantity',
+      material: 'id_material',
+    };
+    let filledCount = 0;
+    for (const [k, v] of Object.entries(j.fields || {})) {
+      if (!v || k.startsWith('_')) continue;
+      const targetId = map[k];
+      if (!targetId) continue;
+      if (setFormField(targetId, v)) {
+        filledCount++;
+        const conf = (j.field_confidence || {})[k] ?? 1;
+        highlightField(targetId, conf);
+      }
+    }
+
+    document.getElementById('id_ocr_template').value = j.template || '';
+    document.getElementById('id_ocr_confidence').value = j.overall_confidence || '';
+    document.getElementById('id_ocr_raw_text').value = j.raw_text || '';
+
+    const supplier = j.supplier || j.template || '?';
+    const conf = Math.round((j.overall_confidence || 0) * 100);
+    const warn = (j.warnings || []).length;
+    const msg = `อ่านได้ ${filledCount} ฟิลด์ จากตั๋ว ${supplier}` +
+                ` (ความมั่นใจ ${conf}%${warn ? `, ${warn} warning` : ''})` +
+                ` — โปรดตรวจฟิลด์ที่ขอบเหลืองก่อนบันทึก`;
+    setBanner(msg, filledCount > 0 ? 'success' : 'warning',
+              {icon: 'fas fa-check-circle'});
+  } catch (err) {
+    setBanner(`เกิดข้อผิดพลาด: ${err.message || err}`, 'danger');
+  }
+}
 </script>
 {% endblock %}

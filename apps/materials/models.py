@@ -56,6 +56,10 @@ class MaterialDelivery(models.Model):
     unit_price = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, verbose_name='ราคาต่อหน่วย')
     remarks = models.CharField(max_length=300, blank=True, verbose_name='หมายเหตุ')
     delivery_image = models.ImageField(upload_to='deliveries/%Y/%m/', null=True, blank=True, verbose_name='รูปตั๋ว/ใบส่งของ')
+    ocr_template = models.CharField(max_length=50, blank=True, default='', verbose_name='OCR template')
+    ocr_confidence = models.FloatField(null=True, blank=True, verbose_name='OCR confidence')
+    ocr_raw_text = models.TextField(blank=True, default='', verbose_name='OCR raw text')
+    ocr_processed_at = models.DateTimeField(null=True, blank=True, verbose_name='OCR processed at')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

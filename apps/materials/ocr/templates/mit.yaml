@@ -1,0 +1,49 @@
+# Map Ta Phut Industrial Terminal (MIT) - port weight ticket
+# Yellow paper; table has "เข้า" / "ออก" rows
+key: mit
+supplier_name: "ท่าเรืออุตสาหกรรมมาบตาพุด (MIT)"
+priority: 10
+
+detect:
+  any_of:
+    - "ท่าเรืออุตสาหกรรมมาบตาพุด"
+    - "อุตสาหกรรมมาบตาพุด"
+    - "บัตรชั่งน้ำหนัก"
+    - "MIT"
+  min_matches: 1
+
+fields:
+  delivery_note_no:
+    anchor: "เลขที่"
+    direction: right
+    regex: '\d{4,12}'
+    fallback_anchor: "บัตรชั่งน้ำหนัก"
+
+  truck_no:
+    anchor: "ออก"
+    direction: right
+    extractor: truck_plate
+    fallback_anchor: "ทะเบียนรถ"
+
+  source:
+    anchor: "ผู้ขนส่ง"
+    direction: right_or_down
+    max_words: 3
+    fallback_anchor: "ผู้ส่ง"
+
+  material_name:
+    anchor: "สินค้า"
+    direction: right
+    max_words: 2
+
+  delivery_date:
+    doc_extractor: delivery_row_date
+
+  delivery_time:
+    doc_extractor: delivery_row_time
+
+  quantity_kg:
+    anchor: "น้ำหนักสุทธิ"
+    direction: right_or_down
+    extractor: weight_kg
+    fallback_anchor: "สุทธิ"
