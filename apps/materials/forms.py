@@ -50,6 +50,9 @@ class MaterialDeliveryForm(forms.ModelForm):
             'delivery_image': 'รูปตั๋ว / ใบส่งของ',
             'remarks': 'หมายเหตุ',
         }
+        help_texts = {
+            'delivery_image': 'อัปโหลดรูปตั๋วชั่งน้ำหนัก — ระบบจะอ่านอัตโนมัติ (OCR) แล้วเติมข้อมูลที่อ่านได้ลงในฟอร์ม (กรุณาตรวจค่าทุกฟิลด์ก่อนบันทึก)',
+        }
         widgets = {
             'delivery_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'delivery_time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),

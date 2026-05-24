@@ -3,7 +3,12 @@
 {% block title %}บันทึกการรับวัสดุ – Construction ERP{% endblock %}
 {% block content %}
 <div class="d-flex align-items-center mb-4">
-    <a href="{% url 'materials:delivery_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <a href="{% url 'materials:delivery_list' %}"
+       class="btn btn-outline-secondary me-3 d-inline-flex align-items-center justify-content-center"
+       style="min-width:44px;min-height:44px"
+       aria-label="กลับไปยังรายการรับวัสดุ">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+    </a>
     <div>
         <h4 class="mb-0">{% if form.instance.pk %}แก้ไข{% else %}บันทึก{% endif %}การรับวัสดุ</h4>
         <div class="text-muted small">กรอกข้อมูลการรับวัสดุเข้ากองหรือพื้นที่จัดเก็บ</div>
@@ -17,8 +22,15 @@
 <input type="hidden" name="ocr_raw_text" id="id_ocr_raw_text">
 </div></div>
 
-{# OCR banner shown after image picked — sits above the form #}
-<div id="ocr-banner" class="alert d-none mt-3" role="alert"></div>
+{#
+  OCR status region. Stays in DOM at all times (using HTML5 `hidden` to
+  avoid display while empty) so SR / AT can subscribe to live changes.
+  `aria-live="polite"` queues announcements after current speech — OCR is
+  status info, not an interrupt. `aria-atomic="true"` re-reads the whole
+  banner each update so partial updates aren't garbled.
+#}
+<div id="ocr-banner" class="alert mt-3"
+     aria-live="polite" aria-atomic="true" hidden></div>
 {% endblock %}
 
 {% block extra_scripts %}
@@ -80,6 +92,7 @@ function getCsrf() {
 
 // Render a banner using textContent for all dynamic strings to avoid XSS
 // from API-returned supplier names or browser-provided error messages.
+// Decorative icon gets aria-hidden so screen readers don't read the icon font as garbage.
 function setBanner(text, cls, opts) {
   const b = document.getElementById('ocr-banner');
   if (!b) return;
@@ -88,10 +101,23 @@ function setBanner(text, cls, opts) {
   if (opts && opts.icon) {
     const i = document.createElement('i');
     i.className = opts.icon + ' me-2';
+    i.setAttribute('aria-hidden', 'true');
     b.appendChild(i);
   }
   b.appendChild(document.createTextNode(text));
-  b.classList.remove('d-none');
+  // Reveal via `hidden` (not Bootstrap's d-none) so SR sees the change as a
+  // content update to a persistent live region, not as a new DOM node.
+  b.removeAttribute('hidden');
+}
+
+// Remove any prior OCR markers (icons in labels, helper spans) so a second
+// upload doesn't stack indicators.
+function clearOcrMarkers() {
+  document.querySelectorAll('.ocr-marker, .ocr-help').forEach(el => el.remove());
+  document.querySelectorAll('.border-warning, .border-success, .bg-warning-subtle').forEach(el => {
+    el.classList.remove('border-warning', 'border-success', 'bg-warning-subtle');
+    el.removeAttribute('aria-describedby');
+  });
 }
 
 function setFormField(id, value) {
@@ -102,16 +128,57 @@ function setFormField(id, value) {
   return true;
 }
 
+// Mark a field as OCR-filled, using BOTH color and an icon next to the
+// label (non-color cue per WCAG 1.4.1). Confidence info is exposed via
+// aria-describedby pointing to a visible helper, so keyboard / mobile /
+// screen-reader users all get the same info — not just hover users.
 function highlightField(id, conf) {
   const el = document.getElementById(id);
-  if (!el) return;
-  if (conf < OCR_LOW_CONF) {
+  if (!el) return null;          // return DOM element if low-conf, else null
+  const low = conf < OCR_LOW_CONF;
+  const pct = Math.round(conf * 100);
+
+  if (low) {
     el.classList.add('border-warning', 'bg-warning-subtle');
-    el.title = `OCR ความมั่นใจต่ำ (${Math.round(conf * 100)}%) — ตรวจซ้ำ`;
   } else {
     el.classList.add('border-success');
-    el.title = `OCR pre-filled (${Math.round(conf * 100)}%)`;
   }
+
+  // Icon in label (visual + assistive)
+  const label = document.querySelector(`label[for="${id}"]`);
+  if (label) {
+    const marker = document.createElement('span');
+    marker.className = 'ocr-marker me-1';
+    const icon = document.createElement('i');
+    icon.className = low
+      ? 'fas fa-exclamation-triangle text-warning'
+      : 'fas fa-magic-wand-sparkles text-success';
+    icon.setAttribute('aria-hidden', 'true');
+    marker.appendChild(icon);
+    const srOnly = document.createElement('span');
+    srOnly.className = 'visually-hidden';
+    srOnly.textContent = low
+      ? 'ฟิลด์นี้อ่านจากรูปด้วยความมั่นใจต่ำ — กรุณาตรวจ. '
+      : 'ฟิลด์นี้อ่านจากรูปสำเร็จ. ';
+    marker.appendChild(srOnly);
+    label.prepend(marker);
+  }
+
+  // Visible helper text below the field, also referenced by aria-describedby
+  const helperId = `${id}-ocr-help`;
+  const help = document.createElement('div');
+  help.id = helperId;
+  help.className = `ocr-help form-text small ${low ? 'text-warning-emphasis' : 'text-success-emphasis'}`;
+  help.textContent = low
+    ? `OCR ความมั่นใจ ${pct}% — โปรดตรวจ`
+    : `OCR เติมให้ (${pct}%)`;
+  // Insert right after the input (or its wrapper)
+  const wrapper = el.closest('.mb-3, .form-group, .form-floating') || el.parentElement;
+  if (wrapper) wrapper.appendChild(help);
+  const prev = el.getAttribute('aria-describedby') || '';
+  el.setAttribute('aria-describedby', prev ? `${prev} ${helperId}` : helperId);
+
+  return low ? el : null;
 }
 
 async function handleOcrUpload(e) {
@@ -149,7 +216,12 @@ async function handleOcrUpload(e) {
       quantity: 'id_quantity',
       material: 'id_material',
     };
+    // Drop any stale OCR markers from a prior upload before re-applying.
+    clearOcrMarkers();
+
     let filledCount = 0;
+    let lowConfCount = 0;
+    let firstLowConfEl = null;
     for (const [k, v] of Object.entries(j.fields || {})) {
       if (!v || k.startsWith('_')) continue;
       const targetId = map[k];
@@ -157,7 +229,11 @@ async function handleOcrUpload(e) {
       if (setFormField(targetId, v)) {
         filledCount++;
         const conf = (j.field_confidence || {})[k] ?? 1;
-        highlightField(targetId, conf);
+        const lowEl = highlightField(targetId, conf);
+        if (lowEl) {
+          lowConfCount++;
+          if (!firstLowConfEl) firstLowConfEl = lowEl;
+        }
       }
     }
 
@@ -168,11 +244,24 @@ async function handleOcrUpload(e) {
     const supplier = j.supplier || j.template || '?';
     const conf = Math.round((j.overall_confidence || 0) * 100);
     const warn = (j.warnings || []).length;
+    const reviewHint = lowConfCount > 0
+      ? ` — มี ${lowConfCount} ฟิลด์ที่ทำเครื่องหมายต้องตรวจ (ดูไอคอนเตือนข้างชื่อฟิลด์)`
+      : ' — ตรวจค่าทุกฟิลด์ก่อนบันทึก';
     const msg = `อ่านได้ ${filledCount} ฟิลด์ จากตั๋ว ${supplier}` +
                 ` (ความมั่นใจ ${conf}%${warn ? `, ${warn} warning` : ''})` +
-                ` — โปรดตรวจฟิลด์ที่ขอบเหลืองก่อนบันทึก`;
+                reviewHint;
     setBanner(msg, filledCount > 0 ? 'success' : 'warning',
               {icon: 'fas fa-check-circle'});
+
+    // Move focus to first low-confidence field so keyboard users land on
+    // what needs review. If everything is high-confidence, focus the
+    // material dropdown as a sensible next-step starting point.
+    if (firstLowConfEl) {
+      firstLowConfEl.focus({preventScroll: false});
+    } else if (filledCount > 0) {
+      const material = document.getElementById('id_material');
+      if (material) material.focus({preventScroll: false});
+    }
   } catch (err) {
     setBanner(`เกิดข้อผิดพลาด: ${err.message || err}`, 'danger');
   }
