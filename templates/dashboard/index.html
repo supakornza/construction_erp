@@ -28,6 +28,29 @@
 .exec-subtitle { color:#8aa5c0; font-size:.78rem; margin-top:2px; }
 .exec-meta { display:flex; align-items:center; gap:1.25rem; flex-wrap:wrap; }
 .exec-date { color:#c8d6e5; font-size:.85rem; display:flex; align-items:center; gap:.4rem; }
+.exec-project-filter { display:flex; align-items:flex-end; gap:.55rem; flex-wrap:wrap; }
+.exec-project-filter label {
+  display:block;
+  color:#8aa5c0;
+  font-size:.62rem;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:.18rem;
+}
+.exec-project-filter .form-select {
+  min-width:260px;
+  background:#0d1f35;
+  border:1px solid rgba(255,255,255,.16);
+  color:#c8d6e5;
+  font-size:.82rem;
+}
+.exec-project-filter .form-select:focus {
+  background:#0d1f35;
+  border-color:rgba(240,165,0,.65);
+  color:#fff;
+  box-shadow:0 0 0 2px rgba(240,165,0,.16);
+}
 .btn-exec-print {
   background:rgba(240,165,0,.12); border:1px solid rgba(240,165,0,.4); color:#f0a500;
   font-size:.78rem; font-weight:600; padding:.4rem .9rem; border-radius:6px;
@@ -650,7 +673,25 @@
   </div>
   <div class="exec-meta">
     <div class="exec-date"><i class="fas fa-calendar-alt" style="color:#f0a500"></i>{{ today|thai_be_date }}</div>
-    <div class="exec-date"><i class="fas fa-circle" style="color:#2ecc71;font-size:.5rem"></i>{{ active_projects_count }} Active Project{{ active_projects_count|pluralize }}</div>
+    <div class="exec-date"><i class="fas fa-circle" style="color:#2ecc71;font-size:.5rem"></i>{{ dashboard_scope_label }}{% if not selected_project %} · {{ active_projects_count }} project{{ active_projects_count|pluralize }}{% endif %}</div>
+    {% if projects %}
+    <form class="exec-project-filter no-print" method="get" action="{% url 'dashboard:index' %}">
+      <div>
+        <label for="executive-project-filter">Project</label>
+        <select id="executive-project-filter" name="project" class="form-select form-select-sm" onchange="this.form.submit()">
+          <option value="">All Active Projects</option>
+          {% for p in projects %}
+          <option value="{{ p.pk }}"{% if selected_project_id == p.pk|stringformat:"s" %} selected{% endif %}>{{ p.project_name }}{% if p.contract_no %} · {{ p.contract_no }}{% endif %}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% if selected_project %}
+      <a href="{% url 'dashboard:index' %}" class="btn-exec-print text-decoration-none d-inline-flex align-items-center">
+        <i class="fas fa-times me-1"></i>Clear
+      </a>
+      {% endif %}
+    </form>
+    {% endif %}
     <button class="btn-exec-print no-print" onclick="window.print()"><i class="fas fa-print me-1"></i>Print</button>
   </div>
 </div>
@@ -668,7 +709,7 @@
     <div class="exec-kpi-value">{{ overall_progress_pct }}%</div>
     <div class="exec-kpi-label">Overall BOQ Progress</div>
     <div class="exec-kpi-progress" style="--pct:{{ overall_progress_pct }}%"><span></span></div>
-    <div class="exec-kpi-note">Actual progress across active projects</div>
+    <div class="exec-kpi-note">Actual progress for {{ dashboard_scope_label }}</div>
   </div>
 
   <div class="exec-kpi-card" style="--accent:#9b59b6">
@@ -824,7 +865,7 @@
         <strong>{% if pc.latest_date %}{{ pc.latest_date|thai_be_date }}{% else %}No records{% endif %}</strong>
       </div>
       <div class="pc-exec-chip">
-        <span>Active projects</span>
+        <span>Dashboard scope</span>
         <strong>{{ pc.project_count|default:0 }} project{{ pc.project_count|default:0|pluralize }}</strong>
       </div>
       <div class="pc-exec-chip">
@@ -1159,7 +1200,7 @@
       <label class="form-label mb-1">Project Filter</label>
       <select id="project-selector" class="form-select form-select-sm">
         <option value="">All Projects</option>
-        {% for p in projects %}<option value="{{ p.pk }}">{{ p.project_name }}</option>{% endfor %}
+        {% for p in projects %}<option value="{{ p.pk }}"{% if selected_project_id == p.pk|stringformat:"s" %} selected{% endif %}>{{ p.project_name }}</option>{% endfor %}
       </select>
     </div>
     <div class="col-md-4 col-xl-3">
@@ -1269,7 +1310,7 @@
 <div class="exec-section"><i class="fas fa-shield-alt"></i>Safety &amp; Quality Scorecard</div>
 <div class="dark-card mb-4">
   <div class="dark-card-header">
-        <h6><i class="fas fa-hard-hat" style="color:#f0a500"></i>HSE &amp; Quality Performance (All Active Projects, Cumulative)</h6>
+        <h6><i class="fas fa-hard-hat" style="color:#f0a500"></i>HSE &amp; Quality Performance ({{ dashboard_scope_label }}, Cumulative)</h6>
   </div>
   <div class="dark-card-body">
     <div class="row g-2">

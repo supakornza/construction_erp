@@ -325,35 +325,60 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         # ── Projects ──────────────────────────────────────
         ctx['projects'] = Project.objects.all().order_by('project_name')
-        ctx['active_projects'] = list(Project.objects.filter(status='Active'))
-        ctx['active_projects_count'] = len(ctx['active_projects'])
+        selected_project_id = self.request.GET.get('project') or self.request.GET.get('project_id') or ''
+        selected_project = Project.objects.filter(pk=selected_project_id).first() if selected_project_id else None
+        dashboard_projects = (
+            [selected_project]
+            if selected_project
+            else list(Project.objects.filter(status='Active').order_by('project_name'))
+        )
+        ctx['selected_project'] = selected_project
+        ctx['selected_project_id'] = str(selected_project.pk) if selected_project else ''
+        ctx['active_projects'] = dashboard_projects
+        ctx['active_projects_count'] = len(dashboard_projects)
+        ctx['dashboard_scope_label'] = (
+            selected_project.project_name if selected_project else 'All Active Projects'
+        )
 
         # ── Today's site snapshot ─────────────────────────
         ctx['today_manpower'] = (DailyManpowerRecord.objects
-                                 .filter(report_date=today)
+                                 .filter(project__in=dashboard_projects, report_date=today)
                                  .aggregate(total=Sum('quantity'))['total'] or 0)
 
         ctx['today_equipment'] = (DailyEquipmentRecord.objects
-                                  .filter(report_date=today, status='Working').count())
+                                  .filter(project__in=dashboard_projects, report_date=today, status='Working').count())
 
-        ctx['pending_reports'] = DailyReport.objects.filter(status='Submitted').count()
-        ctx['open_safety_issues'] = SafetyInspection.objects.filter(status='Open').count()
+        ctx['pending_reports'] = DailyReport.objects.filter(
+            project__in=dashboard_projects,
+            status='Submitted',
+        ).count()
+        ctx['open_safety_issues'] = SafetyInspection.objects.filter(
+            project__in=dashboard_projects,
+            status='Open',
+        ).count()
 
         ctx['latest_reports'] = (DailyReport.objects
                                  .select_related('project', 'prepared_by')
+                                 .filter(project__in=dashboard_projects)
                                  .order_by('-report_date')[:8])
 
         # ── Material deliveries (last 7 days) ─────────────
         week_ago = today - timedelta(days=7)
         ctx['recent_deliveries'] = (MaterialDelivery.objects
                                     .select_related('project', 'material')
-                                    .filter(delivery_date__gte=week_ago)
+                                    .filter(project__in=dashboard_projects, delivery_date__gte=week_ago)
                                     .order_by('-delivery_date')[:10])
 
         stone_qs = MaterialDelivery.objects.filter(
-            delivery_date__gte=week_ago, material__category__name='Rock')
+            project__in=dashboard_projects,
+            delivery_date__gte=week_ago,
+            material__category__name='Rock',
+        )
         sand_qs = MaterialDelivery.objects.filter(
-            delivery_date__gte=week_ago, material__category__name='Aggregate')
+            project__in=dashboard_projects,
+            delivery_date__gte=week_ago,
+            material__category__name='Aggregate',
+        )
 
         ctx['stone_by_source'] = (stone_qs
                                   .values('source', 'material__name', 'material__unit')
@@ -371,7 +396,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         boq_progress = []
         donut_data = []
 
-        for project in ctx['projects']:
+        for project in dashboard_projects:
             total_contract, total_earned = _project_boq_stats(project)
             pct = (total_earned / total_contract * 100) if total_contract else 0.0
 
@@ -421,9 +446,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         ctx['default_scurve_project_id'] = boq_progress[0]['project'].pk if boq_progress else ''
 
         # ── Executive summary totals ──────────────────────
-        total_contract_value = float(
-            Project.objects.filter(status='Active').aggregate(t=Sum('contract_value'))['t'] or 0
-        )
+        total_contract_value = sum(float(project.contract_value or 0) for project in dashboard_projects)
         total_earned_value = sum(r['earned_value'] for r in boq_progress)
         overall_progress_pct = round(
             (total_earned_value / total_contract_value * 100) if total_contract_value else 0, 1
@@ -454,7 +477,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         ctx['owner_decisions'] = (ProjectActionPlan.objects
                                   .select_related('project')
                                   .filter(
-                                      project__in=ctx['active_projects'],
+                                      project__in=dashboard_projects,
                                       status__in=[
                                           ProjectActionPlan.STATUS_OPEN,
                                           ProjectActionPlan.STATUS_IN_PROGRESS,
