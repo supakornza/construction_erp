@@ -15,29 +15,8 @@ from .models import (
 )
 
 
-class BargeForm(forms.ModelForm):
-    class Meta:
-        model = Barge
-        fields = ['name', 'code', 'transport_mode', 'capacity_ton', 'equipment', 'is_active']
-        help_texts = {
-            'equipment': 'Link to an existing Equipment record (optional). Helps avoid double-entry.',
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        from apps.equipment.models import Equipment
-        self.fields['equipment'].queryset = Equipment.objects.select_related('category').order_by('name')
-        self.fields['equipment'].required = False
-        self.fields['equipment'].label_from_instance = lambda obj: f"{obj.name} ({obj.registration_no or obj.category})"
-        self.helper = FormHelper()
-        self.helper.layout = Layout(
-            Row(Column('name', css_class='col-md-6'), Column('code', css_class='col-md-6')),
-            Row(Column('transport_mode', css_class='col-md-4'),
-                Column('capacity_ton', css_class='col-md-4'),
-                Column('is_active', css_class='col-md-4')),
-            'equipment',
-            Submit('submit', 'Save', css_class='btn btn-primary'),
-        )
+# BargeForm removed with the Transport Units UI surface; Barge model
+# remains and is managed via Django admin.
 
 
 class RockDailyRecordForm(forms.ModelForm):
