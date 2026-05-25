@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-{% block title %}{% if form.instance.pk %}Edit{% else %}New{% endif %} Daily Report – Construction ERP{% endblock %}
-{% block page_title %}{% if form.instance.pk %}Edit Daily Report{% else %}Create Daily Report{% endif %}{% endblock %}
+{% block title %}{% if form.instance.pk %}แก้ไข{% else %}สร้าง{% endif %}รายงานประจำวัน – Construction ERP{% endblock %}
+{% block page_title %}{% if form.instance.pk %}แก้ไขรายงานประจำวัน{% else %}สร้างรายงานประจำวัน{% endif %}{% endblock %}
 
 {% block extra_head %}
 <style>
@@ -25,7 +25,7 @@
      aria-label="กลับไปยังรายการรายงานประจำวัน">
     <i class="fas fa-arrow-left" aria-hidden="true"></i>
   </a>
-  <h4 class="mb-0">{% if form.instance.pk %}Edit Daily Report{% else %}Create Daily Report{% endif %}</h4>
+  <h4 class="mb-0">{% if form.instance.pk %}แก้ไขรายงานประจำวัน{% else %}สร้างรายงานประจำวัน{% endif %}</h4>
 </div>
 
 <form method="post" enctype="multipart/form-data" id="daily-report-form">
@@ -33,7 +33,7 @@
 
   {# ── Report Details ── #}
   <div class="card mb-3 section-card">
-    <div class="card-header"><i class="fas fa-file-alt me-2"></i>Report Details</div>
+    <h2 class="card-header h6 mb-0"><i class="fas fa-file-alt me-2" aria-hidden="true"></i>รายละเอียดรายงาน</h2>
     <div class="card-body">
       {% crispy form %}
     </div>
@@ -42,24 +42,24 @@
   {# ── Work Activities ── #}
   <div class="card mb-3 section-card">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <span><i class="fas fa-hard-hat me-2"></i>Work Activities</span>
+      <h2 class="h6 mb-0"><i class="fas fa-hard-hat me-2" aria-hidden="true"></i>กิจกรรมงาน</h2>
       <button type="button" class="btn btn-sm btn-outline-success add-row-btn" data-formset="activity">
-        <i class="fas fa-plus me-1"></i>Add Row
+        <i class="fas fa-plus me-1" aria-hidden="true"></i>เพิ่มแถว
       </button>
     </div>
     <div class="card-body p-0">
       {{ activity_formset.management_form }}
       <div class="table-responsive">
-        <table class="table table-sm table-bordered mb-0">
+        <table class="table table-sm table-bordered mb-0" aria-label="ตารางรายการ">
           <thead class="table-light">
             <tr>
-              <th style="min-width:180px">Work Area</th>
-              <th style="min-width:200px">Description <span class="text-danger">*</span></th>
-              <th style="width:90px">Qty</th>
-              <th style="width:80px">Unit</th>
-              <th style="width:90px">% Complete</th>
-              <th style="min-width:140px">Remarks</th>
-              <th class="delete-col">Del</th>
+              <th scope="col" style="min-width:180px">พื้นที่ทำงาน</th>
+              <th scope="col" style="min-width:200px">รายละเอียด <span class="text-danger" aria-label="จำเป็น">*</span></th>
+              <th scope="col" style="width:90px">จำนวน</th>
+              <th scope="col" style="width:80px">หน่วย</th>
+              <th scope="col" style="width:90px">% เสร็จ</th>
+              <th scope="col" style="min-width:140px">หมายเหตุ</th>
+              <th scope="col" class="delete-col"><span class="visually-hidden">ลบแถว</span></th>
             </tr>
           </thead>
           <tbody id="activity-tbody">
@@ -72,7 +72,7 @@
               <td>{{ af.percent_complete }}</td>
               <td>{{ af.remarks }}</td>
               <td class="delete-col">
-                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn"  aria-label="Delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
+                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" aria-label="ลบแถวนี้"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
                 {{ af.DELETE }}
               </td>
             </tr>
@@ -86,21 +86,21 @@
   {# ── Lookahead ── #}
   <div class="card mb-3 section-card">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <span><i class="fas fa-calendar-alt me-2"></i>Lookahead (Next Steps)</span>
+      <h2 class="h6 mb-0"><i class="fas fa-calendar-alt me-2" aria-hidden="true"></i>แผนงานล่วงหน้า</h2>
       <button type="button" class="btn btn-sm btn-outline-success add-row-btn" data-formset="lookahead">
-        <i class="fas fa-plus me-1"></i>Add Row
+        <i class="fas fa-plus me-1" aria-hidden="true"></i>เพิ่มแถว
       </button>
     </div>
     <div class="card-body p-0">
       {{ lookahead_formset.management_form }}
       <div class="table-responsive">
-        <table class="table table-sm table-bordered mb-0">
+        <table class="table table-sm table-bordered mb-0" aria-label="ตารางรายการ">
           <thead class="table-light">
             <tr>
-              <th>Planned Activity <span class="text-danger">*</span></th>
-              <th style="width:160px">Planned Date</th>
-              <th style="width:200px">Responsible Person</th>
-              <th class="delete-col">Del</th>
+              <th scope="col">กิจกรรมที่วางแผน <span class="text-danger" aria-label="จำเป็น">*</span></th>
+              <th scope="col" style="width:160px">วันที่วางแผน</th>
+              <th scope="col" style="width:200px">ผู้รับผิดชอบ</th>
+              <th scope="col" class="delete-col"><span class="visually-hidden">ลบแถว</span></th>
             </tr>
           </thead>
           <tbody id="lookahead-tbody">
@@ -110,7 +110,7 @@
               <td>{{ lf.planned_date }}</td>
               <td>{{ lf.responsible_person }}</td>
               <td class="delete-col">
-                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn"  aria-label="Delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
+                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" aria-label="ลบแถวนี้"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
                 {{ lf.DELETE }}
               </td>
             </tr>
@@ -124,9 +124,9 @@
   {# ── Problems / Remarks ── #}
   <div class="card mb-3 section-card">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <span><i class="fas fa-exclamation-triangle me-2"></i>Problems / Remarks</span>
+      <h2 class="h6 mb-0"><i class="fas fa-exclamation-triangle me-2" aria-hidden="true"></i>ปัญหา / หมายเหตุ</h2>
       <button type="button" class="btn btn-sm btn-outline-success add-row-btn" data-formset="problem">
-        <i class="fas fa-plus me-1"></i>Add Problem
+        <i class="fas fa-plus me-1" aria-hidden="true"></i>เพิ่มปัญหา
       </button>
     </div>
     <div class="card-body">
@@ -136,9 +136,9 @@
         <div class="problem-card" data-formset="problem">
           {{ pf.id }}
           <div class="d-flex justify-content-between mb-2">
-            <strong class="text-muted small">Problem #{{ forloop.counter }}</strong>
+            <strong class="text-body-secondary small">ปัญหาที่ {{ forloop.counter }}</strong>
             <div class="form-check form-switch card-remove" title="Mark to delete">
-              <label class="form-check-label small text-danger">Delete {{ pf.DELETE }}</label>
+              <label class="form-check-label small text-danger">ลบ {{ pf.DELETE }}</label>
             </div>
           </div>
           <div class="row g-2">
@@ -172,9 +172,9 @@
   {# ── Photos ── #}
   <div class="card mb-3 section-card">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <span><i class="fas fa-camera me-2"></i>Photos</span>
+      <span><i class="fas fa-camera me-2" aria-hidden="true"></i>Photos</span>
       <button type="button" class="btn btn-sm btn-outline-success add-row-btn" data-formset="photo">
-        <i class="fas fa-plus me-1"></i>Add Photo
+        <i class="fas fa-plus me-1" aria-hidden="true"></i>Add Photo
       </button>
     </div>
     <div class="card-body">
@@ -184,7 +184,7 @@
         <div class="problem-card" data-formset="photo">
           {{ phf.id }}
           <div class="d-flex justify-content-between mb-2">
-            <strong class="text-muted small">Photo #{{ forloop.counter }}</strong>
+            <strong class="text-body-secondary small">Photo #{{ forloop.counter }}</strong>
             <div class="form-check card-remove" title="Mark to delete">
               <label class="form-check-label small text-danger">Delete {{ phf.DELETE }}</label>
             </div>
@@ -216,7 +216,7 @@
   {# ── Submit ── #}
   <div class="d-flex gap-2 mb-5">
     <button type="submit" class="btn btn-primary btn-lg px-5">
-      <i class="fas fa-save me-2"></i>Save Report
+      <i class="fas fa-save me-2" aria-hidden="true"></i>Save Report
     </button>
     <a href="{% url 'daily_reports:list' %}" class="btn btn-outline-secondary btn-lg">Cancel</a>
   </div>

@@ -1,47 +1,56 @@
 {% extends "base.html" %}
-{% block title %}Daily Reports – Construction ERP{% endblock %}
-{% block page_title %}Daily Reports{% endblock %}
+{% block title %}รายงานประจำวัน – Construction ERP{% endblock %}
+{% block page_title %}รายงานประจำวัน{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="mb-0"><i class="fas fa-clipboard-list me-2 text-primary"></i>Daily Reports</h4>
-    <a href="{% url 'daily_reports:create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>New Report</a>
+    <h4 class="mb-0"><i class="fas fa-clipboard-list me-2 text-primary" aria-hidden="true"></i>รายงานประจำวัน</h4>
+    <a href="{% url 'daily_reports:create' %}" class="btn btn-primary" style="min-height:44px">
+        <i class="fas fa-plus me-1" aria-hidden="true"></i>สร้างรายงานใหม่
+    </a>
 </div>
 
 <div class="card mb-3">
     <div class="card-body py-2">
         <form method="get" class="d-flex gap-2 flex-wrap align-items-end">
             <div>
-                <label class="form-label small mb-1">Project</label>
-                <select name="project" class="form-select form-select-sm">
-                    <option value="">All Projects</option>
+                <label for="filterProjectDR" class="form-label small mb-1">โครงการ</label>
+                <select id="filterProjectDR" name="project" class="form-select form-select-sm" style="min-height:38px">
+                    <option value="">ทุกโครงการ</option>
                     {% for p in projects %}<option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.contract_no }}</option>{% endfor %}
                 </select>
             </div>
             <div>
-                <label class="form-label small mb-1">Status</label>
-                <select name="status" class="form-select form-select-sm">
-                    <option value="">All Status</option>
+                <label for="filterStatusDR" class="form-label small mb-1">สถานะ</label>
+                <select id="filterStatusDR" name="status" class="form-select form-select-sm" style="min-height:38px">
+                    <option value="">ทุกสถานะ</option>
                     {% for val, lbl in status_choices %}<option value="{{ val }}" {% if request.GET.status == val %}selected{% endif %}>{{ lbl }}</option>{% endfor %}
                 </select>
             </div>
-            <button type="submit" class="btn btn-sm btn-outline-secondary">Filter</button>
+            <button type="submit" class="btn btn-outline-secondary" style="min-height:38px">กรอง</button>
         </form>
     </div>
 </div>
 
 <div class="card">
     <div class="table-responsive">
-        <table class="table table-hover mb-0">
+        <table class="table table-hover mb-0" aria-label="รายการรายงานประจำวัน — รวม {{ page_obj.paginator.count|default:reports|length }} รายการ">
             <thead class="table-light">
-                <tr><th>Date</th><th>Project</th><th>Weather</th><th>Prepared By</th><th>Status</th><th>Actions</th></tr>
+                <tr>
+                    <th scope="col">วันที่</th>
+                    <th scope="col">โครงการ</th>
+                    <th scope="col">อากาศ</th>
+                    <th scope="col">ผู้จัดทำ</th>
+                    <th scope="col">สถานะ</th>
+                    <th scope="col"><span class="visually-hidden">การกระทำ</span></th>
+                </tr>
             </thead>
             <tbody>
             {% for r in reports %}
             <tr>
                 <td><a href="{% url 'daily_reports:detail' r.pk %}">{{ r.report_date|thai_be_date }}</a></td>
                 <td>{{ r.project.contract_no }}</td>
-                <td><i class="fas fa-sun text-warning me-1"></i>{{ r.weather_morning }} / {{ r.weather_afternoon }}</td>
+                <td><i class="fas fa-sun text-warning me-1" aria-hidden="true"></i>{{ r.weather_morning }} / {{ r.weather_afternoon }}</td>
                 <td>{{ r.prepared_by.get_full_name|default:r.prepared_by.username|default:'-' }}</td>
                 <td><span class="badge badge-{{ r.status|lower }}">{{ r.status }}</span></td>
                 <td>
@@ -79,17 +88,27 @@
                 </td>
             </tr>
             {% empty %}
-            <tr><td colspan="6" class="text-center text-muted py-4">No reports found.</td></tr>
+            <tr><td colspan="6" class="text-center text-body-secondary py-4" role="status">ไม่พบรายงาน</td></tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
     {% if page_obj.has_other_pages %}
-    <div class="p-3"><ul class="pagination mb-0">
-        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev</a></li>{% endif %}
-        <li class="page-item disabled"><span class="page-link">{{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span></li>
-        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>{% endif %}
-    </ul></div>
+    <nav class="p-3" aria-label="หน้ารายงาน">
+        <ul class="pagination mb-0">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="หน้าก่อนหน้า">ก่อนหน้า</a></li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link" aria-disabled="true" aria-label="หน้าก่อนหน้า (หน้าแรกอยู่แล้ว)">ก่อนหน้า</span></li>
+            {% endif %}
+            <li class="page-item disabled"><span class="page-link" aria-current="page" aria-label="หน้า {{ page_obj.number }} จาก {{ page_obj.paginator.num_pages }}">{{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span></li>
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="หน้าถัดไป">ถัดไป</a></li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link" aria-disabled="true" aria-label="หน้าถัดไป (หน้าสุดท้ายอยู่แล้ว)">ถัดไป</span></li>
+            {% endif %}
+        </ul>
+    </nav>
     {% endif %}
 </div>
 {% endblock %}

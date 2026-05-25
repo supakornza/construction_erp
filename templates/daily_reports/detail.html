@@ -1,27 +1,27 @@
 {% extends "base.html" %}
-{% block title %}Daily Report {{ report.report_date|thai_be_date }} – Construction ERP{% endblock %}
-{% block page_title %}Daily Report – {{ report.report_date|thai_be_date }}{% endblock %}
+{% block title %}รายงานประจำวัน {{ report.report_date|thai_be_date }} – Construction ERP{% endblock %}
+{% block page_title %}รายงานประจำวัน – {{ report.report_date|thai_be_date }}{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-center mb-4 flex-wrap gap-2">
     <a href="{% url 'daily_reports:list' %}" class="btn btn-outline-secondary d-inline-flex align-items-center justify-content-center" style="min-width:44px;min-height:44px" aria-label="กลับไปยังรายการรายงานประจำวัน"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>
-    <h4 class="mb-0">Daily Report – {{ report.report_date|thai_be_date }}</h4>
+    <h4 class="mb-0">รายงานประจำวัน – {{ report.report_date|thai_be_date }}</h4>
     <span class="badge badge-{{ report.status|lower }} fs-6">{{ report.status }}</span>
     <div class="ms-auto d-flex gap-2 flex-wrap">
         {% if report.status == 'Draft' %}
-        <a href="{% url 'daily_reports:update' report.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit me-1"></i>Edit</a>
-        <form method="post" action="{% url 'daily_reports:submit' report.pk %}" class="d-inline">{% csrf_token %}<button class="btn btn-sm btn-primary">Submit for Approval</button></form>
+        <a href="{% url 'daily_reports:update' report.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit me-1" aria-hidden="true"></i>แก้ไข</a>
+        <form method="post" action="{% url 'daily_reports:submit' report.pk %}" class="d-inline">{% csrf_token %}<button class="btn btn-sm btn-primary" style="min-height:38px">ส่งเพื่ออนุมัติ</button></form>
         {% endif %}
         {% if report.status == 'Submitted' and user.is_approver %}
-        <form method="post" action="{% url 'daily_reports:approve' report.pk %}" class="d-inline">{% csrf_token %}<button class="btn btn-sm btn-success">Approve</button></form>
-        <a href="{% url 'daily_reports:reject' report.pk %}" class="btn btn-sm btn-danger">Reject</a>
+        <form method="post" action="{% url 'daily_reports:approve' report.pk %}" class="d-inline">{% csrf_token %}<button class="btn btn-sm btn-success" style="min-height:38px">อนุมัติ</button></form>
+        <a href="{% url 'daily_reports:reject' report.pk %}" class="btn btn-sm btn-danger" style="min-height:38px">ปฏิเสธ</a>
         {% endif %}
         {% if report.status == 'Rejected' %}
-        <a href="{% url 'daily_reports:update' report.pk %}" class="btn btn-sm btn-warning"><i class="fas fa-edit me-1"></i>Revise</a>
+        <a href="{% url 'daily_reports:update' report.pk %}" class="btn btn-sm btn-warning"><i class="fas fa-edit me-1" aria-hidden="true"></i>แก้ไขใหม่</a>
         {% endif %}
         <div class="btn-group">
             <a href="{% url 'daily_reports:export_pdf' report.pk %}" class="btn btn-sm btn-outline-danger">
-                <i class="fas fa-file-pdf me-1"></i>Daily PDF
+                <i class="fas fa-file-pdf me-1" aria-hidden="true"></i>Daily PDF
             </a>
             <button type="button" class="btn btn-sm btn-outline-danger dropdown-toggle dropdown-toggle-split"
                     data-bs-toggle="dropdown" aria-expanded="false"
@@ -31,14 +31,14 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="{% url 'daily_reports:photo_report_pdf' report.pk %}" target="_blank">
-                    <i class="fas fa-images me-2 text-danger"></i>Photo Report (PDF)
+                    <i class="fas fa-images me-2 text-danger" aria-hidden="true"></i>รายงานรูปภาพ (PDF)
                 </a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="{% url 'reports:pmc_daily_report_pdf' report.pk %}">
-                    <i class="fas fa-file-pdf me-2 text-danger"></i>PMC Report (PDF)
+                    <i class="fas fa-file-pdf me-2 text-danger" aria-hidden="true"></i>รายงาน PMC (PDF)
                 </a></li>
                 <li><a class="dropdown-item" href="{% url 'reports:pmc_daily_report_excel' report.pk %}">
-                    <i class="fas fa-file-excel me-2 text-success"></i>PMC Report (Excel)
+                    <i class="fas fa-file-excel me-2 text-success" aria-hidden="true"></i>รายงาน PMC (Excel)
                 </a></li>
             </ul>
         </div>
@@ -46,37 +46,37 @@
 </div>
 
 {% if report.rejection_reason %}
-<div class="alert alert-danger"><strong>Rejection Reason:</strong> {{ report.rejection_reason }}</div>
+<div class="alert alert-danger"><strong>เหตุผลการปฏิเสธ:</strong> {{ report.rejection_reason }}</div>
 {% endif %}
 
 <div class="row g-3 mb-4">
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header"><h6 class="mb-0">Report Header</h6></div>
+            <div class="card-header"><h2 class="h6 mb-0">รายละเอียดรายงาน</h2></div>
             <div class="card-body">
                 <dl class="row small mb-0">
-                    <dt class="col-5">Project</dt><dd class="col-7">{{ report.project.project_name }}</dd>
-                    <dt class="col-5">Contract No</dt><dd class="col-7">{{ report.project.contract_no }}</dd>
-                    <dt class="col-5">Date</dt><dd class="col-7">{{ report.report_date|thai_be_date }}</dd>
-                    <dt class="col-5">Weather AM</dt><dd class="col-7">{{ report.weather_morning }}</dd>
-                    <dt class="col-5">Weather PM</dt><dd class="col-7">{{ report.weather_afternoon }}</dd>
-                    <dt class="col-5">Prepared By</dt><dd class="col-7">{{ report.prepared_by.get_full_name|default:'-' }}</dd>
-                    <dt class="col-5">Checked By</dt><dd class="col-7">{{ report.checked_by.get_full_name|default:'-' }}</dd>
-                    <dt class="col-5">Approved By</dt><dd class="col-7">{{ report.approved_by.get_full_name|default:'-' }}</dd>
+                    <dt class="col-5">โครงการ</dt><dd class="col-7">{{ report.project.project_name }}</dd>
+                    <dt class="col-5">เลขที่สัญญา</dt><dd class="col-7">{{ report.project.contract_no }}</dd>
+                    <dt class="col-5">วันที่</dt><dd class="col-7">{{ report.report_date|thai_be_date }}</dd>
+                    <dt class="col-5">อากาศเช้า</dt><dd class="col-7">{{ report.weather_morning }}</dd>
+                    <dt class="col-5">อากาศบ่าย</dt><dd class="col-7">{{ report.weather_afternoon }}</dd>
+                    <dt class="col-5">ผู้จัดทำ</dt><dd class="col-7">{{ report.prepared_by.get_full_name|default:'-' }}</dd>
+                    <dt class="col-5">ผู้ตรวจ</dt><dd class="col-7">{{ report.checked_by.get_full_name|default:'-' }}</dd>
+                    <dt class="col-5">ผู้อนุมัติ</dt><dd class="col-7">{{ report.approved_by.get_full_name|default:'-' }}</dd>
                 </dl>
             </div>
         </div>
     </div>
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header"><h6 class="mb-0">Manpower</h6></div>
+            <div class="card-header"><h2 class="h6 mb-0">แรงงาน</h2></div>
             <div class="table-responsive">
-                <table class="table table-sm mb-0">
-                    <thead class="table-light"><tr><th>Category</th><th>Company</th><th>Qty</th></tr></thead>
+                <table class="table table-sm mb-0" aria-label="ตารางแรงงาน">
+                    <thead class="table-light"><tr><th scope="col">ประเภท</th><th scope="col">บริษัท</th><th scope="col">จำนวน</th></tr></thead>
                     <tbody>
-                    {% for m in manpower_records %}<tr><td>{{ m.category }}</td><td>{{ m.company }}</td><td>{{ m.quantity|intcomma }}</td></tr>{% empty %}<tr><td colspan="3" class="text-muted">None recorded</td></tr>{% endfor %}
+                    {% for m in manpower_records %}<tr><td>{{ m.category }}</td><td>{{ m.company }}</td><td>{{ m.quantity|intcomma }}</td></tr>{% empty %}<tr><td colspan="3" class="text-body-secondary" role="status">ไม่มีข้อมูล</td></tr>{% endfor %}
                     </tbody>
-                    <tfoot><tr class="fw-bold"><td colspan="2">Total</td><td>{{ manpower_total|intcomma }}</td></tr></tfoot>
+                    <tfoot><tr class="fw-bold"><td colspan="2">รวม</td><td>{{ manpower_total|intcomma }}</td></tr></tfoot>
                 </table>
             </div>
         </div>
@@ -86,12 +86,12 @@
 <div class="row g-3 mb-4">
     <div class="col-12">
         <div class="card">
-            <div class="card-header"><h6 class="mb-0">Work Activities</h6></div>
+            <div class="card-header"><h2 class="h6 mb-0">กิจกรรมงาน</h2></div>
             <div class="table-responsive">
-                <table class="table table-sm mb-0">
-                    <thead class="table-light"><tr><th>Work Area</th><th>Description</th><th>Qty</th><th>Unit</th><th>% Complete</th></tr></thead>
+                <table class="table table-sm mb-0" aria-label="ตารางกิจกรรมงาน">
+                    <thead class="table-light"><tr><th scope="col">พื้นที่ทำงาน</th><th scope="col">รายละเอียด</th><th scope="col">จำนวน</th><th scope="col">หน่วย</th><th scope="col">% เสร็จ</th></tr></thead>
                     <tbody>
-                    {% for a in report.activities.all %}<tr><td>{{ a.work_area|default:'-' }}</td><td>{{ a.description }}</td><td>{{ a.quantity|default:'-'|intcomma }}</td><td>{{ a.unit }}</td><td>{{ a.percent_complete|default:'-'|intcomma }}{% if a.percent_complete %}%{% endif %}</td></tr>{% empty %}<tr><td colspan="5" class="text-muted">No activities recorded</td></tr>{% endfor %}
+                    {% for a in report.activities.all %}<tr><td>{{ a.work_area|default:'-' }}</td><td>{{ a.description }}</td><td>{{ a.quantity|default:'-'|intcomma }}</td><td>{{ a.unit }}</td><td>{{ a.percent_complete|default:'-'|intcomma }}{% if a.percent_complete %}%{% endif %}</td></tr>{% empty %}<tr><td colspan="5" class="text-body-secondary" role="status">ยังไม่มีบันทึกกิจกรรม</td></tr>{% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -102,12 +102,12 @@
 <div class="row g-3 mb-4">
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header"><h6 class="mb-0">Lookahead</h6></div>
+            <div class="card-header"><h2 class="h6 mb-0">แผนงานล่วงหน้า</h2></div>
             <div class="table-responsive">
-                <table class="table table-sm mb-0">
-                    <thead class="table-light"><tr><th>Activity</th><th>Planned Date</th><th>Responsible</th></tr></thead>
+                <table class="table table-sm mb-0" aria-label="ตารางแผนงานล่วงหน้า">
+                    <thead class="table-light"><tr><th scope="col">กิจกรรม</th><th scope="col">วันที่วางแผน</th><th scope="col">ผู้รับผิดชอบ</th></tr></thead>
                     <tbody>
-                    {% for l in report.lookaheads.all %}<tr><td>{{ l.planned_activity }}</td><td>{{ l.planned_date|thai_be_date }}</td><td>{{ l.responsible_person }}</td></tr>{% empty %}<tr><td colspan="3" class="text-muted">None</td></tr>{% endfor %}
+                    {% for l in report.lookaheads.all %}<tr><td>{{ l.planned_activity }}</td><td>{{ l.planned_date|thai_be_date }}</td><td>{{ l.responsible_person }}</td></tr>{% empty %}<tr><td colspan="3" class="text-body-secondary" role="status">ไม่มีข้อมูล</td></tr>{% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -115,12 +115,12 @@
     </div>
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header"><h6 class="mb-0">Problems / Remarks</h6></div>
+            <div class="card-header"><h2 class="h6 mb-0">ปัญหา / หมายเหตุ</h2></div>
             <div class="table-responsive">
-                <table class="table table-sm mb-0">
-                    <thead class="table-light"><tr><th>Category</th><th>Description</th><th>Status</th></tr></thead>
+                <table class="table table-sm mb-0" aria-label="ตารางปัญหาและหมายเหตุ">
+                    <thead class="table-light"><tr><th scope="col">หมวด</th><th scope="col">รายละเอียด</th><th scope="col">สถานะ</th></tr></thead>
                     <tbody>
-                    {% for p in report.problems.all %}<tr><td>{{ p.category }}</td><td>{{ p.description }}</td><td><span class="badge bg-{{ p.status|lower|yesno:'success,warning' }}">{{ p.status }}</span></td></tr>{% empty %}<tr><td colspan="3" class="text-muted">None</td></tr>{% endfor %}
+                    {% for p in report.problems.all %}<tr><td>{{ p.category }}</td><td>{{ p.description }}</td><td><span class="badge bg-{{ p.status|lower|yesno:'success,warning' }}">{{ p.status }}</span></td></tr>{% empty %}<tr><td colspan="3" class="text-body-secondary" role="status">ไม่มีข้อมูล</td></tr>{% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -129,19 +129,19 @@
 </div>
 
 <div class="card mb-3">
-    <div class="card-header"><h6 class="mb-0"><i class="fas fa-truck me-2"></i>Material Deliveries</h6></div>
+    <div class="card-header"><h2 class="h6 mb-0"><i class="fas fa-truck me-2" aria-hidden="true"></i>รายการรับวัสดุ</h2></div>
     <div class="table-responsive">
-        <table class="table table-sm mb-0">
+        <table class="table table-sm mb-0" aria-label="ตารางการรับวัสดุของรายงานนี้">
             <thead class="table-light">
                 <tr>
-                    <th>Material</th>
-                    <th>Delivery Note No.</th>
-                    <th>Truck No.</th>
-                    <th>Source</th>
-                    <th class="text-end">Qty</th>
-                    <th>Unit</th>
-                    <th class="text-end">Unit Price</th>
-                    <th>Remarks</th>
+                    <th scope="col">วัสดุ</th>
+                    <th scope="col">เลขที่ใบส่งของ</th>
+                    <th scope="col">ทะเบียนรถ</th>
+                    <th scope="col">แหล่งวัสดุ</th>
+                    <th scope="col" class="text-end">ปริมาณ</th>
+                    <th scope="col">หน่วย</th>
+                    <th scope="col" class="text-end">ราคา/หน่วย</th>
+                    <th scope="col">หมายเหตุ</th>
                 </tr>
             </thead>
             <tbody>
@@ -157,15 +157,15 @@
                     <td>{{ d.remarks|default:'-' }}</td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="8" class="text-muted">No material deliveries recorded</td></tr>
+                <tr><td colspan="8" class="text-body-secondary" role="status">ยังไม่มีการรับวัสดุ</td></tr>
                 {% endfor %}
             </tbody>
             {% if material_deliveries %}
             <tfoot>
                 <tr class="fw-bold table-light">
-                    <td colspan="4">Total Deliveries</td>
+                    <td colspan="4">รวมรายการรับวัสดุ</td>
                     <td class="text-end">{{ material_deliveries|length }}</td>
-                    <td colspan="3">items</td>
+                    <td colspan="3">รายการ</td>
                 </tr>
             </tfoot>
             {% endif %}
@@ -176,19 +176,19 @@
 {# ── Photo Report Section ──────────────────────────────────────── #}
 <div class="card mb-3">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <h6 class="mb-0"><i class="fas fa-images me-2 text-primary"></i>
-            Photo Report
+        <h2 class="h6 mb-0"><i class="fas fa-images me-2 text-primary" aria-hidden="true"></i>
+            รายงานรูปภาพ
             {% if report.photos.count %}<span class="badge bg-primary ms-1">{{ report.photos.count }}</span>{% endif %}
-        </h6>
+        </h2>
         <div class="d-flex gap-2">
             {% if report.photos.count %}
             <a href="{% url 'daily_reports:photo_report_pdf' report.pk %}" target="_blank"
                class="btn btn-sm btn-danger">
-                <i class="fas fa-file-pdf me-1"></i>Export PDF (A4 · 6/หน้า)
+                <i class="fas fa-file-pdf me-1" aria-hidden="true"></i>ส่งออก PDF (A4 · 6 รูป/หน้า)
             </a>
             {% endif %}
             <button class="btn btn-sm btn-primary" data-bs-toggle="collapse" data-bs-target="#photoUploadPanel">
-                <i class="fas fa-camera-retro me-1"></i>เพิ่มรูปภาพ
+                <i class="fas fa-camera-retro me-1" aria-hidden="true"></i>เพิ่มรูปภาพ
             </button>
         </div>
     </div>
@@ -217,7 +217,7 @@
                     </div>
                     <div class="col-md-1">
                         <button type="submit" class="btn btn-success btn-sm w-100">
-                            <i class="fas fa-upload"></i>
+                            <i class="fas fa-upload" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
@@ -251,17 +251,17 @@
                     <div class="card-body p-2">
                         <p class="small fw-semibold mb-0 text-truncate" title="{{ photo.caption }}">{{ photo.caption }}</p>
                         {% if photo.location %}
-                        <p class="small text-muted mb-0 text-truncate"><i class="fas fa-map-marker-alt me-1"></i>{{ photo.location }}</p>
+                        <p class="small text-body-secondary mb-0 text-truncate"><i class="fas fa-map-marker-alt me-1" aria-hidden="true"></i>{{ photo.location }}</p>
                         {% endif %}
                         {% if photo.taken_at %}
-                        <p class="small text-muted mb-1"><i class="far fa-clock me-1"></i>{{ photo.taken_at|date:"d/m/Y H:i" }}</p>
+                        <p class="small text-body-secondary mb-1"><i class="far fa-clock me-1" aria-hidden="true"></i>{{ photo.taken_at|date:"d/m/Y H:i" }}</p>
                         {% endif %}
                         <form method="post"
                               action="{% url 'daily_reports:photo_delete' report.pk photo.pk %}"
                               onsubmit="return confirm('ลบรูปภาพนี้?')" class="d-grid mt-1">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-sm btn-outline-danger py-0">
-                                <i class="fas fa-trash-alt me-1"></i>ลบ
+                                <i class="fas fa-trash-alt me-1" aria-hidden="true"></i>ลบ
                             </button>
                         </form>
                     </div>
@@ -271,14 +271,14 @@
         </div>
         {% if report.photos.count > 6 %}
         <div class="alert alert-info mt-3 small mb-0 py-2">
-            <i class="fas fa-info-circle me-1"></i>
+            <i class="fas fa-info-circle me-1" aria-hidden="true"></i>
             รูปภาพทั้งหมด <strong>{{ report.photos.count }}</strong> รูป
             — PDF จะแบ่ง <strong>{% widthratio report.photos.count 1 1 %}</strong> รูป เป็น {{ report.photos.count|add:5 }} หน้า (6 รูป/หน้า)
         </div>
         {% endif %}
         {% else %}
-        <div class="text-center text-muted py-5">
-            <i class="fas fa-camera fa-3x mb-3 opacity-25 d-block"></i>
+        <div class="text-center text-body-secondary py-5" role="status">
+            <i class="fas fa-camera fa-3x mb-3 opacity-25 d-block" aria-hidden="true"></i>
             <p class="mb-1">ยังไม่มีรูปภาพ</p>
             <p class="small">คลิก <strong>เพิ่มรูปภาพ</strong> เพื่อเริ่มเพิ่มรูปภาพประกอบรายงาน</p>
         </div>

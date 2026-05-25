@@ -7,33 +7,33 @@
 <div class="col-lg-7">
 
 <div class="d-flex align-items-center gap-3 mb-4">
-    <h4 class="mb-0"><i class="fas fa-file-import me-2 text-primary"></i>Import Contractor Report</h4>
+    <h4 class="mb-0"><i class="fas fa-file-import me-2 text-primary" aria-hidden="true"></i>Import Contractor Report</h4>
 </div>
 
 <!-- Step indicator -->
 <div class="d-flex align-items-center mb-4 gap-2 small fw-semibold">
     <span class="badge bg-primary rounded-pill px-3 py-2">1 Upload</span>
-    <i class="fas fa-chevron-right text-muted"></i>
-    <span class="badge bg-light text-muted rounded-pill px-3 py-2 border">2 Edit / Review</span>
-    <i class="fas fa-chevron-right text-muted"></i>
-    <span class="badge bg-light text-muted rounded-pill px-3 py-2 border">3 Preview</span>
-    <i class="fas fa-chevron-right text-muted"></i>
-    <span class="badge bg-light text-muted rounded-pill px-3 py-2 border">4 Confirm</span>
+    <i class="fas fa-chevron-right text-body-secondary" aria-hidden="true"></i>
+    <span class="badge bg-light text-body-secondary rounded-pill px-3 py-2 border">2 Edit / Review</span>
+    <i class="fas fa-chevron-right text-body-secondary" aria-hidden="true"></i>
+    <span class="badge bg-light text-body-secondary rounded-pill px-3 py-2 border">3 Preview</span>
+    <i class="fas fa-chevron-right text-body-secondary" aria-hidden="true"></i>
+    <span class="badge bg-light text-body-secondary rounded-pill px-3 py-2 border">4 Confirm</span>
 </div>
 
 <!-- Template download hint -->
 <div class="alert alert-info d-flex gap-3 align-items-start mb-4">
-    <i class="fas fa-info-circle mt-1 flex-shrink-0"></i>
+    <i class="fas fa-info-circle mt-1 flex-shrink-0" aria-hidden="true"></i>
     <div>
         <strong>Use the official Excel template</strong> so the importer can read your data correctly.
         <a href="{% url 'daily_reports:import_template' %}" class="ms-2">
-            <i class="fas fa-download me-1"></i>Download Template (.xlsx)
+            <i class="fas fa-download me-1" aria-hidden="true"></i>Download Template (.xlsx)
         </a>
     </div>
 </div>
 
 <div class="card">
-    <div class="card-header fw-semibold"><i class="fas fa-upload me-2 text-primary"></i>Upload Excel File</div>
+    <div class="card-header fw-semibold"><i class="fas fa-upload me-2 text-primary" aria-hidden="true"></i>Upload Excel File</div>
     <div class="card-body">
         <form method="post" enctype="multipart/form-data" id="upload-form">
             {% csrf_token %}
@@ -58,18 +58,18 @@
             </div>
 
             <!-- Drop zone visual hint -->
-            <div id="drop-zone" class="border border-dashed rounded p-4 text-center text-muted mb-4" style="cursor:pointer; border-color: var(--border-color)!important;">
-                <i class="fas fa-cloud-upload-alt fa-2x mb-2 d-block"></i>
+            <div id="drop-zone" class="border border-dashed rounded p-4 text-center text-body-secondary mb-4" style="cursor:pointer; border-color: var(--border-color)!important;">
+                <i class="fas fa-cloud-upload-alt fa-2x mb-2 d-block" aria-hidden="true"></i>
                 <span>Drag &amp; drop your file here, or <strong>click to browse</strong></span>
                 <div id="drop-file-name" class="mt-2 small text-primary fw-semibold d-none"></div>
                 <div id="pdf-hint" class="mt-1 small text-warning d-none">
-                    <i class="fas fa-file-pdf me-1"></i>PDF detected — you will review the parsed data before saving.
+                    <i class="fas fa-file-pdf me-1" aria-hidden="true"></i>PDF detected — you will review the parsed data before saving.
                 </div>
             </div>
 
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary" id="submit-btn">
-                    <i class="fas fa-arrow-right me-1"></i>Parse &amp; Preview
+                    <i class="fas fa-arrow-right me-1" aria-hidden="true"></i>Parse &amp; Preview
                 </button>
                 <a href="{% url 'daily_reports:import_list' %}" class="btn btn-outline-secondary">Cancel</a>
             </div>
@@ -79,9 +79,9 @@
 
 <!-- Template sheet structure info -->
 <div class="card mt-4">
-    <div class="card-header fw-semibold small"><i class="fas fa-table me-2 text-muted"></i>Template Sheet Structure</div>
+    <div class="card-header fw-semibold small"><i class="fas fa-table me-2 text-body-secondary" aria-hidden="true"></i>Template Sheet Structure</div>
     <div class="card-body p-0">
-        <table class="table table-sm mb-0 small">
+        <table class="table table-sm mb-0 small" aria-label="ตารางข้อมูล">
             <thead class="table-light"><tr><th>Sheet</th><th>Contents</th></tr></thead>
             <tbody>
                 <tr><td><strong>Report Info</strong></td><td>Date, contractor name, weather, manpower count, prepared/checked by</td></tr>

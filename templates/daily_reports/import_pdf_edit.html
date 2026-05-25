@@ -6,26 +6,26 @@
 <div class="d-flex align-items-center gap-3 mb-3">
     <h4 class="mb-0">
         {% if data.source_format == 'pdf' %}
-            <i class="fas fa-file-pdf me-2 text-danger"></i>Review &amp; Edit PDF Data
+            <i class="fas fa-file-pdf me-2 text-danger" aria-hidden="true"></i>Review &amp; Edit PDF Data
         {% else %}
-            <i class="fas fa-file-excel me-2 text-success"></i>Review &amp; Edit Excel Data
+            <i class="fas fa-file-excel me-2 text-success" aria-hidden="true"></i>Review &amp; Edit Excel Data
         {% endif %}
     </h4>
 </div>
 
 <!-- Step indicator -->
 <div class="d-flex align-items-center mb-4 gap-2 small fw-semibold">
-    <span class="badge bg-success rounded-pill px-3 py-2"><i class="fas fa-check me-1"></i>1 Upload</span>
-    <i class="fas fa-chevron-right text-muted"></i>
+    <span class="badge bg-success rounded-pill px-3 py-2"><i class="fas fa-check me-1" aria-hidden="true"></i>1 Upload</span>
+    <i class="fas fa-chevron-right text-body-secondary" aria-hidden="true"></i>
     <span class="badge bg-primary rounded-pill px-3 py-2">2 Edit / Review</span>
-    <i class="fas fa-chevron-right text-muted"></i>
-    <span class="badge bg-light text-muted rounded-pill px-3 py-2 border">3 Preview</span>
-    <i class="fas fa-chevron-right text-muted"></i>
-    <span class="badge bg-light text-muted rounded-pill px-3 py-2 border">4 Confirm</span>
+    <i class="fas fa-chevron-right text-body-secondary" aria-hidden="true"></i>
+    <span class="badge bg-light text-body-secondary rounded-pill px-3 py-2 border">3 Preview</span>
+    <i class="fas fa-chevron-right text-body-secondary" aria-hidden="true"></i>
+    <span class="badge bg-light text-body-secondary rounded-pill px-3 py-2 border">4 Confirm</span>
 </div>
 
 <div class="alert {% if data.source_format == 'pdf' %}alert-warning{% else %}alert-info{% endif %} d-flex gap-2 mb-4">
-    <i class="fas fa-{% if data.source_format == 'pdf' %}exclamation-triangle{% else %}info-circle{% endif %} mt-1 flex-shrink-0"></i>
+    <i class="fas fa-{% if data.source_format == 'pdf' %}exclamation-triangle{% else %}info-circle{% endif %} mt-1 flex-shrink-0" aria-hidden="true"></i>
     <div>
         {% if data.source_format == 'pdf' %}
             <strong>PDF parsing is automatic but not perfect.</strong>
@@ -34,7 +34,7 @@
             <strong>Excel data loaded.</strong>
             Review the fields below and make any corrections if needed.
         {% endif %}
-        You can add or remove rows with the <i class="fas fa-plus-circle text-success"></i> / <i class="fas fa-times text-danger"></i> buttons.
+        You can add or remove rows with the <i class="fas fa-plus-circle text-success" aria-hidden="true"></i> / <i class="fas fa-times text-danger" aria-hidden="true"></i> buttons.
     </div>
 </div>
 
@@ -43,7 +43,7 @@
 
 <!-- ── Header ──────────────────────────────────────────────────────────────── -->
 <div class="card mb-3">
-    <div class="card-header fw-semibold"><i class="fas fa-info-circle me-2 text-primary"></i>Report Header</div>
+    <div class="card-header fw-semibold"><i class="fas fa-info-circle me-2 text-primary" aria-hidden="true"></i>Report Header</div>
     <div class="card-body">
         <div class="row g-3">
             <div class="col-sm-6 col-md-3">
@@ -101,15 +101,15 @@
 <!-- ── Equipment ────────────────────────────────────────────────────────────── -->
 <div class="card mb-3">
     <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
-        <span><i class="fas fa-truck me-2 text-warning"></i>Equipment
+        <span><i class="fas fa-truck me-2 text-warning" aria-hidden="true"></i>Equipment
             <span class="badge bg-secondary ms-1" id="eq-count">{{ data.equipment_items|length }}</span>
         </span>
         <button type="button" class="btn btn-sm btn-outline-success" onclick="addRow('eq-tbody','eq-row-tpl')">
-            <i class="fas fa-plus me-1"></i>Add Row
+            <i class="fas fa-plus me-1" aria-hidden="true"></i>Add Row
         </button>
     </div>
     <div class="table-responsive">
-        <table class="table table-sm mb-0">
+        <table class="table table-sm mb-0" aria-label="ตารางข้อมูล">
             <thead class="table-light"><tr><th style="width:46%">Equipment Name</th><th style="width:12%">Qty</th><th>Remarks</th><th style="width:3%"></th></tr></thead>
             <tbody id="eq-tbody">
             {% for eq in data.equipment_items %}
@@ -128,15 +128,15 @@
 <!-- ── Manpower ─────────────────────────────────────────────────────────────── -->
 <div class="card mb-3">
     <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
-        <span><i class="fas fa-users me-2 text-info"></i>Manpower
+        <span><i class="fas fa-users me-2 text-info" aria-hidden="true"></i>Manpower
             <span class="badge bg-secondary ms-1" id="mp-count">{{ data.manpower_items|length }}</span>
         </span>
         <button type="button" class="btn btn-sm btn-outline-success" onclick="addRow('mp-tbody','mp-row-tpl')">
-            <i class="fas fa-plus me-1"></i>Add Row
+            <i class="fas fa-plus me-1" aria-hidden="true"></i>Add Row
         </button>
     </div>
     <div class="table-responsive">
-        <table class="table table-sm mb-0">
+        <table class="table table-sm mb-0" aria-label="ตารางข้อมูล">
             <thead class="table-light"><tr><th>Role / Position</th><th style="width:12%">Qty</th><th>Company</th><th style="width:3%"></th></tr></thead>
             <tbody id="mp-tbody">
             {% for mp in data.manpower_items %}
@@ -155,11 +155,11 @@
 <!-- ── Work Activities ───────────────────────────────────────────────────────── -->
 <div class="card mb-3">
     <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
-        <span><i class="fas fa-hard-hat me-2 text-primary"></i>Work Activities
+        <span><i class="fas fa-hard-hat me-2 text-primary" aria-hidden="true"></i>Work Activities
             <span class="badge bg-secondary ms-1" id="act-count">{{ data.activities|length }}</span>
         </span>
         <button type="button" class="btn btn-sm btn-outline-success" onclick="addRow('act-tbody','act-row-tpl')">
-            <i class="fas fa-plus me-1"></i>Add Row
+            <i class="fas fa-plus me-1" aria-hidden="true"></i>Add Row
         </button>
     </div>
     <div class="table-responsive">
@@ -188,11 +188,11 @@
 <!-- ── Lookahead ─────────────────────────────────────────────────────────────── -->
 <div class="card mb-4">
     <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
-        <span><i class="fas fa-calendar-alt me-2 text-success"></i>Daily Lookahead
+        <span><i class="fas fa-calendar-alt me-2 text-success" aria-hidden="true"></i>Daily Lookahead
             <span class="badge bg-secondary ms-1" id="la-count">{{ data.lookaheads|length }}</span>
         </span>
         <button type="button" class="btn btn-sm btn-outline-success" onclick="addRow('la-tbody','la-row-tpl')">
-            <i class="fas fa-plus me-1"></i>Add Row
+            <i class="fas fa-plus me-1" aria-hidden="true"></i>Add Row
         </button>
     </div>
     <div class="table-responsive">
@@ -220,10 +220,10 @@
 <!-- Action buttons -->
 <div class="d-flex gap-2 mb-5">
     <button type="submit" class="btn btn-primary">
-        <i class="fas fa-arrow-right me-1"></i>Next: Preview &amp; Confirm
+        <i class="fas fa-arrow-right me-1" aria-hidden="true"></i>Next: Preview &amp; Confirm
     </button>
     <a href="{% url 'daily_reports:import_upload' %}" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-1"></i>Upload Different File
+        <i class="fas fa-arrow-left me-1" aria-hidden="true"></i>Upload Different File
     </a>
 </div>
 
