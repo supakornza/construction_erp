@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE }}">
+<html lang="{{ request.LANGUAGE_CODE|default:'th' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -25,19 +25,29 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
+{# Skip-to-content (WCAG 2.4.1 Bypass Blocks). Bootstrap's .visually-hidden-focusable
+   keeps the link invisible until it receives keyboard focus, at which point it
+   appears in the top-left so the user can press Enter to jump past the sidebar. #}
+<a href="#main-content" class="visually-hidden-focusable position-absolute top-0 start-0 m-2 p-2 bg-primary text-white rounded" style="z-index:2000">
+    ข้ามไปยังเนื้อหาหลัก
+</a>
 {% if user.is_authenticated %}
     {% include "includes/sidebar.html" %}
     <!-- Mobile backdrop (closes sidebar when tapped) -->
     <div id="sidebar-backdrop"></div>
-    <div id="main-content">
+    {# `<main>` is the landmark target for the skip-link; tabindex=-1 lets it
+       receive programmatic focus without becoming part of the tab order. #}
+    <main id="main-content" tabindex="-1">
         {% include "includes/navbar.html" %}
         <div class="page-content">
             {% include "includes/messages.html" %}
             {% block content %}{% endblock %}
         </div>
-    </div>
+    </main>
 {% else %}
-    {% block auth_content %}{% endblock %}
+    <main id="main-content" tabindex="-1">
+        {% block auth_content %}{% endblock %}
+    </main>
 {% endif %}
 
 <!-- Bootstrap 5 JS -->

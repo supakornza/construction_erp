@@ -1,14 +1,23 @@
 {% load i18n %}
-<nav id="topbar" class="navbar navbar-expand-lg navbar-light px-3 d-flex align-items-center gap-2">
+<nav id="topbar" class="navbar navbar-expand-lg navbar-light px-3 d-flex align-items-center gap-2"
+     aria-label="{% trans 'Top toolbar' %}">
     <!-- Hamburger (mobile only) -->
-    <button class="btn btn-sm btn-outline-secondary d-md-none flex-shrink-0" id="sidebar-toggler" aria-label="Toggle menu">
-        <i class="fas fa-bars"></i>
+    <button class="btn btn-outline-secondary d-md-none flex-shrink-0 d-inline-flex align-items-center justify-content-center"
+            id="sidebar-toggler"
+            style="min-width:44px;min-height:44px"
+            aria-label="{% trans 'Toggle menu' %}"
+            aria-controls="sidebar" aria-expanded="false">
+        <i class="fas fa-bars" aria-hidden="true"></i>
     </button>
 
     <!-- Back button -->
-    <button type="button" class="btn btn-sm btn-outline-secondary no-print flex-shrink-0" id="page-back-btn"
-            data-fallback-url="{% url 'dashboard:index' %}" title="{% trans 'Back' %}" aria-label="{% trans 'Go back' %}">
-        <i class="fas fa-arrow-left"></i>
+    <button type="button"
+            class="btn btn-outline-secondary no-print flex-shrink-0 d-inline-flex align-items-center"
+            id="page-back-btn"
+            style="min-height:44px"
+            data-fallback-url="{% url 'dashboard:index' %}"
+            aria-label="{% trans 'Go back' %}">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i>
         <span class="d-none d-sm-inline ms-1">{% trans "Back" %}</span>
     </button>
 
@@ -28,7 +37,8 @@
                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
                 <button type="submit"
                         class="lang-btn {% if request.LANGUAGE_CODE == 'th' %}lang-btn-active{% endif %}"
-                        title="ภาษาไทย">
+                        aria-pressed="{% if request.LANGUAGE_CODE == 'th' %}true{% else %}false{% endif %}"
+                        aria-label="เปลี่ยนภาษาเป็นไทย">
                     TH
                 </button>
             </form>
@@ -38,7 +48,8 @@
                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
                 <button type="submit"
                         class="lang-btn {% if request.LANGUAGE_CODE == 'en' %}lang-btn-active{% endif %}"
-                        title="English">
+                        aria-pressed="{% if request.LANGUAGE_CODE == 'en' %}true{% else %}false{% endif %}"
+                        aria-label="Switch language to English">
                     EN
                 </button>
             </form>
@@ -46,25 +57,28 @@
 
         <!-- Notification Bell -->
         <div class="dropdown no-print">
-            <button class="btn btn-sm btn-outline-secondary position-relative"
+            <button class="btn btn-outline-secondary position-relative d-inline-flex align-items-center justify-content-center"
                     type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                    title="Notifications">
-                <i class="fas fa-bell"></i>
+                    style="min-width:44px;min-height:44px"
+                    aria-label="การแจ้งเตือน, ยังไม่อ่าน {{ notif_unread_count|default:0 }} รายการ">
+                <i class="fas fa-bell" aria-hidden="true"></i>
                 {% if notif_unread_count > 0 %}
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                      style="font-size:.6rem;">
+                      style="font-size:.65rem;" aria-hidden="true">
                     {{ notif_unread_count }}
                 </span>
                 {% endif %}
             </button>
             <div class="dropdown-menu dropdown-menu-end shadow" style="width:320px;max-height:420px;overflow-y:auto;">
                 <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
-                    <span class="fw-semibold small">Notifications</span>
+                    <span class="fw-semibold small">{% trans "Notifications" %}</span>
                     {% if notif_unread_count > 0 %}
                     <form method="post" action="{% url 'notifications:mark_all_read' %}">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-xs btn-link text-muted p-0 small">
-                            Mark all read
+                        {# was btn-xs (~24px). btn-sm ~31px is comfortable here without
+                           breaking the cramped dropdown header layout. #}
+                        <button type="submit" class="btn btn-sm btn-link text-body-secondary p-0">
+                            {% trans "Mark all read" %}
                         </button>
                     </form>
                     {% endif %}
@@ -75,19 +89,23 @@
                      style="font-size:.82rem;">
                     <div class="d-flex gap-2 align-items-start">
                         <span class="text-{{ notif.color }} flex-shrink-0 mt-1" style="font-size:.9rem;">
-                            <i class="{{ notif.icon }}"></i>
+                            <i class="{{ notif.icon }}" aria-hidden="true"></i>
                         </span>
                         <div class="flex-grow-1 min-width-0">
                             <div class="fw-{% if not notif.is_read %}semibold{% else %}normal{% endif %} text-truncate">
                                 {{ notif.title }}
                             </div>
-                            <div class="text-muted" style="font-size:.74rem;">{{ notif.created_at|timesince }} ago</div>
+                            <div class="text-body-secondary" style="font-size:.74rem;">{{ notif.created_at|timesince }} {% trans "ago" %}</div>
                         </div>
                         {% if notif.url %}
                         <form method="post" action="{% url 'notifications:mark_read' notif.pk %}" class="flex-shrink-0">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-xs btn-link text-muted p-0">
-                                <i class="fas fa-arrow-right"></i>
+                            {# Arrow → opens the linked record. btn-sm at 31px is
+                               acceptable inside a dense dropdown row; aria-label
+                               gives SR the action context. #}
+                            <button type="submit" class="btn btn-sm btn-link text-body-secondary p-1"
+                                    aria-label="{% blocktrans with title=notif.title %}Open notification: {{ title }}{% endblocktrans %}">
+                                <i class="fas fa-arrow-right" aria-hidden="true"></i>
                             </button>
                         </form>
                         {% endif %}
@@ -95,20 +113,22 @@
                 </div>
                 {% endfor %}
                 {% else %}
-                <div class="px-3 py-4 text-center text-muted small">
-                    <i class="fas fa-bell-slash me-1"></i>No new notifications
+                <div class="px-3 py-4 text-center text-body-secondary small">
+                    <i class="fas fa-bell-slash me-1" aria-hidden="true"></i>{% trans "No new notifications" %}
                 </div>
                 {% endif %}
                 <div class="px-3 py-2 text-center border-top">
-                    <a href="{% url 'notifications:list' %}" class="small text-primary">View all notifications</a>
+                    <a href="{% url 'notifications:list' %}" class="small text-primary">{% trans "View all notifications" %}</a>
                 </div>
             </div>
         </div>
 
         <!-- User dropdown -->
         <div class="dropdown">
-            <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2"
-                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2"
+                    type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                    style="min-height:44px"
+                    aria-label="เมนูผู้ใช้ {{ user.get_full_name_or_username }} (บทบาท: {{ user.get_role_display }})">
                 <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white fw-bold flex-shrink-0"
                       style="width:26px;height:26px;font-size:.72rem;">
                     {{ user.get_full_name_or_username|first|upper }}
@@ -128,12 +148,12 @@
                 <li class="d-sm-none"><hr class="dropdown-divider"></li>
                 <li>
                     <a class="dropdown-item" href="{% url 'accounts:profile' %}">
-                        <i class="fas fa-id-card me-2 text-muted fa-fw"></i>{% trans "Profile" %}
+                        <i class="fas fa-id-card me-2 text-muted fa-fw" aria-hidden="true"></i>{% trans "Profile" %}
                     </a>
                 </li>
                 <li>
                     <a class="dropdown-item" href="{% url 'accounts:change_password' %}">
-                        <i class="fas fa-key me-2 text-muted fa-fw"></i>{% trans "Change Password" %}
+                        <i class="fas fa-key me-2 text-muted fa-fw" aria-hidden="true"></i>{% trans "Change Password" %}
                     </a>
                 </li>
                 <li><hr class="dropdown-divider"></li>
@@ -141,7 +161,7 @@
                     <form method="post" action="{% url 'accounts:logout' %}">
                         {% csrf_token %}
                         <button class="dropdown-item text-danger" type="submit">
-                            <i class="fas fa-sign-out-alt me-2 fa-fw"></i>{% trans "Logout" %}
+                            <i class="fas fa-sign-out-alt me-2 fa-fw" aria-hidden="true"></i>{% trans "Logout" %}
                         </button>
                     </form>
                 </li>
