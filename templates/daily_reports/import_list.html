@@ -88,17 +88,26 @@
                 </td>
                 <td class="small text-muted">{{ ci.uploaded_at|date:"d/m/y H:i" }}</td>
                 <td>
-                    <a href="{% url 'daily_reports:import_detail' ci.pk %}" class="btn btn-sm btn-outline-primary" title="View">
-                        <i class="fas fa-eye"></i>
+                    <a href="{% url 'daily_reports:import_detail' ci.pk %}"
+                       class="btn btn-sm btn-outline-primary d-inline-flex align-items-center justify-content-center"
+                       style="min-width:38px;min-height:38px"
+                       aria-label="ดู Contractor Import วันที่ {{ ci.report_date }} ของ {{ ci.contractor_name|default:'ผู้รับเหมา' }}">
+                        <i class="fas fa-eye" aria-hidden="true"></i>
                     </a>
                     {% if ci.daily_report %}
-                    <a href="{% url 'daily_reports:detail' ci.daily_report.pk %}" class="btn btn-sm btn-outline-success" title="View Daily Report">
-                        <i class="fas fa-clipboard-check"></i>
+                    <a href="{% url 'daily_reports:detail' ci.daily_report.pk %}"
+                       class="btn btn-sm btn-outline-success d-inline-flex align-items-center justify-content-center"
+                       style="min-width:38px;min-height:38px"
+                       aria-label="ดู Daily Report ที่เชื่อมโยงกับ Import นี้">
+                        <i class="fas fa-clipboard-check" aria-hidden="true"></i>
                     </a>
                     {% endif %}
                     {% if ci.status != 'Imported' %}
-                    <a href="{% url 'daily_reports:import_delete' ci.pk %}" class="btn btn-sm btn-outline-danger" title="Delete">
-                        <i class="fas fa-trash"></i>
+                    <a href="{% url 'daily_reports:import_delete' ci.pk %}"
+                       class="btn btn-sm btn-outline-danger d-inline-flex align-items-center justify-content-center"
+                       style="min-width:38px;min-height:38px"
+                       aria-label="ลบ Contractor Import วันที่ {{ ci.report_date }}">
+                        <i class="fas fa-trash" aria-hidden="true"></i>
                     </a>
                     {% endif %}
                 </td>

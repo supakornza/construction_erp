@@ -1,12 +1,33 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-{% block title %}Reject Report – Construction ERP{% endblock %}
+{% block title %}ปฏิเสธรายงานประจำวัน – Construction ERP{% endblock %}
+{% block page_title %}ปฏิเสธรายงานประจำวัน{% endblock %}
 {% block content %}
 <div class="d-flex align-items-center mb-4">
-    <a href="{% url 'daily_reports:detail' report.pk %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
-    <h4 class="mb-0">Reject Daily Report – {{ report.report_date|thai_be_date }}</h4>
+    <a href="{% url 'daily_reports:detail' report.pk %}"
+       class="btn btn-outline-secondary me-3 d-inline-flex align-items-center justify-content-center"
+       style="min-width:44px;min-height:44px"
+       aria-label="กลับไปยังหน้ารายละเอียดรายงาน">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+    </a>
+    <h4 class="mb-0">ปฏิเสธรายงานประจำวัน – {{ report.report_date|thai_be_date }}</h4>
 </div>
-<div class="card border-danger" style="max-width:500px;">
-    <div class="card-body">{% crispy form %}</div>
-</div>
+{# Reject is a form-bearing dialog (not a yes/no confirm), so role="dialog"
+   not "alertdialog" — alertdialog is reserved for prompts with no inputs
+   beyond OK/Cancel per ARIA spec. #}
+<section role="dialog"
+         aria-labelledby="rej-title"
+         aria-describedby="rej-desc"
+         class="card border-danger"
+         style="max-width:560px;">
+    <div class="card-body">
+        <h2 id="rej-title" class="h5 text-danger mb-2">
+            <i class="fas fa-times-circle me-2" aria-hidden="true"></i>ปฏิเสธรายงาน
+        </h2>
+        <p id="rej-desc" class="small text-body-secondary mb-3">
+            กรุณาระบุเหตุผลในการปฏิเสธ ระบบจะแจ้งผู้จัดทำให้แก้ไขและส่งใหม่
+        </p>
+        {% crispy form %}
+    </div>
+</section>
 {% endblock %}

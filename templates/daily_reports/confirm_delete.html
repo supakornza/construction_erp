@@ -1,19 +1,52 @@
 {% extends "base.html" %}
-{% block title %}Delete Daily Report – Construction ERP{% endblock %}
+{% block title %}ยืนยันการลบรายงานประจำวัน – Construction ERP{% endblock %}
+{% block page_title %}ยืนยันการลบรายงาน{% endblock %}
 {% block content %}
 <div class="d-flex align-items-center mb-4">
-    <a href="{% url 'daily_reports:detail' object.pk %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
-    <h4 class="mb-0">Delete Daily Report</h4>
+    <a href="{% url 'daily_reports:detail' object.pk %}"
+       class="btn btn-outline-secondary me-3 d-inline-flex align-items-center justify-content-center"
+       style="min-width:44px;min-height:44px"
+       aria-label="กลับไปยังหน้ารายละเอียดรายงาน">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+    </a>
+    <h4 class="mb-0">ยืนยันการลบรายงานประจำวัน</h4>
 </div>
-<div class="card border-danger" style="max-width:500px;">
+<section role="alertdialog"
+         aria-labelledby="dr-del-title"
+         aria-describedby="dr-del-desc"
+         class="card border-danger"
+         style="max-width:520px;">
     <div class="card-body">
-        <div class="alert alert-danger"><i class="fas fa-exclamation-triangle me-2"></i>Delete report for <strong>{{ object.report_date|thai_be_date }}</strong> ({{ object.project.contract_no }})?</div>
-        <form method="post">{% csrf_token %}
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-danger">Delete</button>
-                <a href="{% url 'daily_reports:detail' object.pk %}" class="btn btn-secondary">Cancel</a>
-            </div>
+        <h2 id="dr-del-title" class="h5 text-danger">
+            <i class="fas fa-exclamation-triangle me-2" aria-hidden="true"></i>ลบรายงานประจำวัน?
+        </h2>
+        <div id="dr-del-desc" class="mt-3">
+            <p class="mb-2">ยืนยันการลบรายงานประจำวันต่อไปนี้?</p>
+            <ul class="mb-3 small">
+                <li>วันที่: <strong>{{ object.report_date|thai_be_date }}</strong></li>
+                <li>โครงการ: <strong>{{ object.project.contract_no }} – {{ object.project.project_name }}</strong></li>
+                <li>สถานะ: <strong>{{ object.status }}</strong></li>
+            </ul>
+            <p class="small text-body-secondary">การลบนี้ไม่สามารถกู้คืนได้ ข้อมูลที่เชื่อมโยง (กิจกรรม/แรงงาน/รูปภาพ) จะถูกลบไปด้วย</p>
+        </div>
+        <form method="post" class="d-flex gap-2">{% csrf_token %}
+            <a href="{% url 'daily_reports:detail' object.pk %}"
+               id="drCancelBtn" autofocus
+               class="btn btn-secondary"
+               style="min-height:44px">
+                ยกเลิก
+            </a>
+            <button type="submit" class="btn btn-danger" style="min-height:44px"
+                    aria-label="ยืนยันลบรายงานประจำวันวันที่ {{ object.report_date|thai_be_date }} โครงการ {{ object.project.contract_no }}">
+                <i class="fas fa-trash me-1" aria-hidden="true"></i>ลบรายงาน
+            </button>
         </form>
     </div>
-</div>
+</section>
+<script>
+(function () {
+    const c = document.getElementById('drCancelBtn');
+    if (c) c.focus({preventScroll: false});
+})();
+</script>
 {% endblock %}

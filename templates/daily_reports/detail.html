@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="d-flex align-items-center mb-4 flex-wrap gap-2">
-    <a href="{% url 'daily_reports:list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left"></i></a>
+    <a href="{% url 'daily_reports:list' %}" class="btn btn-outline-secondary d-inline-flex align-items-center justify-content-center" style="min-width:44px;min-height:44px" aria-label="กลับไปยังรายการรายงานประจำวัน"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>
     <h4 class="mb-0">Daily Report – {{ report.report_date|thai_be_date }}</h4>
     <span class="badge badge-{{ report.status|lower }} fs-6">{{ report.status }}</span>
     <div class="ms-auto d-flex gap-2 flex-wrap">
@@ -23,7 +23,12 @@
             <a href="{% url 'daily_reports:export_pdf' report.pk %}" class="btn btn-sm btn-outline-danger">
                 <i class="fas fa-file-pdf me-1"></i>Daily PDF
             </a>
-            <button type="button" class="btn btn-sm btn-outline-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>
+            <button type="button" class="btn btn-sm btn-outline-danger dropdown-toggle dropdown-toggle-split"
+                    data-bs-toggle="dropdown" aria-expanded="false"
+                    aria-label="ตัวเลือกส่งออกเพิ่มเติม"
+                    style="min-width:44px;min-height:44px">
+                <span class="visually-hidden">ตัวเลือกส่งออกเพิ่มเติม</span>
+            </button>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="{% url 'daily_reports:photo_report_pdf' report.pk %}" target="_blank">
                     <i class="fas fa-images me-2 text-danger"></i>Photo Report (PDF)
@@ -282,15 +287,21 @@
 </div>
 
 {# ── Lightbox Modal ──────────────────────────────────────────────── #}
-<div class="modal fade" id="photoModal" tabindex="-1">
+{# role="dialog" + aria-modal + aria-labelledby is the proper ARIA pattern
+   for a Bootstrap modal that shows enlarged content. Bootstrap 5 handles
+   focus-trap when init via data-bs-toggle. The img.alt is updated by JS
+   when the modal opens so SR users hear the caption, not "" #}
+<div class="modal fade" id="photoModal" tabindex="-1"
+     role="dialog" aria-modal="true" aria-labelledby="modalCaption">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content bg-dark">
             <div class="modal-header border-0 pb-0">
                 <div>
-                    <h6 class="modal-title text-white mb-0" id="modalCaption"></h6>
+                    <h2 class="modal-title h6 text-white mb-0" id="modalCaption"></h2>
                     <small class="text-secondary" id="modalLocation"></small>
                 </div>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="ปิดหน้าต่างรูปภาพ"></button>
             </div>
             <div class="modal-body text-center p-2">
                 <img id="modalImage" src="" alt="" class="img-fluid rounded" style="max-height:80vh;">
@@ -305,9 +316,16 @@
 document.querySelectorAll('[data-bs-target="#photoModal"]').forEach(function(el) {
     el.addEventListener('click', function(e) {
         e.preventDefault();
-        document.getElementById('modalImage').src = el.getAttribute('data-photo-url');
-        document.getElementById('modalCaption').textContent = el.getAttribute('data-caption');
-        document.getElementById('modalLocation').textContent = el.getAttribute('data-location') || '';
+        const caption  = el.getAttribute('data-caption')  || '';
+        const location = el.getAttribute('data-location') || '';
+        const url      = el.getAttribute('data-photo-url');
+        const img      = document.getElementById('modalImage');
+        img.src = url;
+        // alt must reflect actual content so SR users hear the photo's caption
+        // when the modal becomes active, not the empty placeholder.
+        img.alt = caption || 'รูปภาพประกอบรายงานประจำวัน';
+        document.getElementById('modalCaption').textContent = caption;
+        document.getElementById('modalLocation').textContent = location;
     });
 });
 
@@ -321,6 +339,7 @@ if (fileInput && strip) {
             reader.onload = function(e) {
                 const img = document.createElement('img');
                 img.src = e.target.result;
+                img.alt = 'ตัวอย่างรูปที่กำลังจะอัปโหลด: ' + (fileInput.files[0].name || '');
                 img.style.height = '64px';
                 img.style.width = '64px';
                 img.style.objectFit = 'cover';

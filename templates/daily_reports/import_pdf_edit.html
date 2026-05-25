@@ -117,7 +117,7 @@
                 <td><input type="text" name="eq_name" class="form-control form-control-sm" value="{{ eq.equipment_name }}"></td>
                 <td><input type="number" name="eq_qty" class="form-control form-control-sm" value="{{ eq.quantity }}" min="1"></td>
                 <td><input type="text" name="eq_remarks" class="form-control form-control-sm" value="{{ eq.remarks }}"></td>
-                <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times"></i></button></td>
+                <td><button type="button" class="btn btn-sm btn-link text-danger p-0 d-inline-flex align-items-center justify-content-center" style="min-width:32px;min-height:32px" onclick="removeRow(this)" aria-label="ลบแถวนี้"><i class="fas fa-times" aria-hidden="true"></i></button></td>
             </tr>
             {% endfor %}
             </tbody>
@@ -144,7 +144,7 @@
                 <td><input type="text" name="mp_role" class="form-control form-control-sm" value="{{ mp.role }}"></td>
                 <td><input type="number" name="mp_qty" class="form-control form-control-sm" value="{{ mp.quantity }}" min="0"></td>
                 <td><input type="text" name="mp_company" class="form-control form-control-sm" value="{{ mp.company }}"></td>
-                <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times"></i></button></td>
+                <td><button type="button" class="btn btn-sm btn-link text-danger p-0 d-inline-flex align-items-center justify-content-center" style="min-width:32px;min-height:32px" onclick="removeRow(this)" aria-label="ลบแถวนี้"><i class="fas fa-times" aria-hidden="true"></i></button></td>
             </tr>
             {% endfor %}
             </tbody>
@@ -177,7 +177,7 @@
                 <td><input type="text" name="act_unit" class="form-control form-control-sm" value="{{ act.unit }}"></td>
                 <td><input type="text" name="act_problem" class="form-control form-control-sm" value="{{ act.problem }}"></td>
                 <td><input type="text" name="act_remarks" class="form-control form-control-sm" value="{{ act.remarks }}"></td>
-                <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times"></i></button></td>
+                <td><button type="button" class="btn btn-sm btn-link text-danger p-0 d-inline-flex align-items-center justify-content-center" style="min-width:32px;min-height:32px" onclick="removeRow(this)" aria-label="ลบแถวนี้"><i class="fas fa-times" aria-hidden="true"></i></button></td>
             </tr>
             {% endfor %}
             </tbody>
@@ -209,7 +209,7 @@
                 <td><input type="text" name="la_qty" class="form-control form-control-sm" value="{{ la.quantity|default:'' }}"></td>
                 <td><input type="text" name="la_unit" class="form-control form-control-sm" value="{{ la.unit }}"></td>
                 <td><input type="text" name="la_remarks" class="form-control form-control-sm" value="{{ la.remarks }}"></td>
-                <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times"></i></button></td>
+                <td><button type="button" class="btn btn-sm btn-link text-danger p-0 d-inline-flex align-items-center justify-content-center" style="min-width:32px;min-height:32px" onclick="removeRow(this)" aria-label="ลบแถวนี้"><i class="fas fa-times" aria-hidden="true"></i></button></td>
             </tr>
             {% endfor %}
             </tbody>
@@ -235,7 +235,7 @@
         <td><input type="text" name="eq_name" class="form-control form-control-sm" placeholder="Equipment name"></td>
         <td><input type="number" name="eq_qty" class="form-control form-control-sm" value="1" min="1"></td>
         <td><input type="text" name="eq_remarks" class="form-control form-control-sm"></td>
-        <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times"></i></button></td>
+        <td><button type="button" class="btn btn-sm btn-link text-danger p-0 d-inline-flex align-items-center justify-content-center" style="min-width:32px;min-height:32px" onclick="removeRow(this)" aria-label="ลบแถวนี้"><i class="fas fa-times" aria-hidden="true"></i></button></td>
     </tr>
 </template>
 
@@ -244,7 +244,7 @@
         <td><input type="text" name="mp_role" class="form-control form-control-sm" placeholder="Role / Position"></td>
         <td><input type="number" name="mp_qty" class="form-control form-control-sm" value="0" min="0"></td>
         <td><input type="text" name="mp_company" class="form-control form-control-sm"></td>
-        <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times"></i></button></td>
+        <td><button type="button" class="btn btn-sm btn-link text-danger p-0 d-inline-flex align-items-center justify-content-center" style="min-width:32px;min-height:32px" onclick="removeRow(this)" aria-label="ลบแถวนี้"><i class="fas fa-times" aria-hidden="true"></i></button></td>
     </tr>
 </template>
 
@@ -257,7 +257,7 @@
         <td><input type="text" name="act_unit" class="form-control form-control-sm"></td>
         <td><input type="text" name="act_problem" class="form-control form-control-sm"></td>
         <td><input type="text" name="act_remarks" class="form-control form-control-sm"></td>
-        <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times"></i></button></td>
+        <td><button type="button" class="btn btn-sm btn-link text-danger p-0 d-inline-flex align-items-center justify-content-center" style="min-width:32px;min-height:32px" onclick="removeRow(this)" aria-label="ลบแถวนี้"><i class="fas fa-times" aria-hidden="true"></i></button></td>
     </tr>
 </template>
 
@@ -269,7 +269,7 @@
         <td><input type="text" name="la_qty" class="form-control form-control-sm"></td>
         <td><input type="text" name="la_unit" class="form-control form-control-sm"></td>
         <td><input type="text" name="la_remarks" class="form-control form-control-sm"></td>
-        <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times"></i></button></td>
+        <td><button type="button" class="btn btn-sm btn-link text-danger p-0 d-inline-flex align-items-center justify-content-center" style="min-width:32px;min-height:32px" onclick="removeRow(this)" aria-label="ลบแถวนี้"><i class="fas fa-times" aria-hidden="true"></i></button></td>
     </tr>
 </template>
 

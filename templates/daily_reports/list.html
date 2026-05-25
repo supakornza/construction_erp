@@ -45,17 +45,37 @@
                 <td>{{ r.prepared_by.get_full_name|default:r.prepared_by.username|default:'-' }}</td>
                 <td><span class="badge badge-{{ r.status|lower }}">{{ r.status }}</span></td>
                 <td>
-                    <a href="{% url 'daily_reports:detail' r.pk %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
+                    <a href="{% url 'daily_reports:detail' r.pk %}"
+                       class="btn btn-sm btn-outline-primary d-inline-flex align-items-center justify-content-center"
+                       style="min-width:38px;min-height:38px"
+                       aria-label="ดูรายงานวันที่ {{ r.report_date|thai_be_date }}">
+                       <i class="fas fa-eye" aria-hidden="true"></i>
+                    </a>
                     {% if r.status in 'Draft,Rejected' %}
-                    <a href="{% url 'daily_reports:update' r.pk %}" class="btn btn-sm btn-outline-secondary" title="Edit"><i class="fas fa-edit"></i></a>
+                    <a href="{% url 'daily_reports:update' r.pk %}"
+                       class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center justify-content-center"
+                       style="min-width:38px;min-height:38px"
+                       aria-label="แก้ไขรายงานวันที่ {{ r.report_date|thai_be_date }}">
+                       <i class="fas fa-edit" aria-hidden="true"></i>
+                    </a>
                     {% if request.user.is_superuser or request.user.role == 'admin' %}
-                    <form method="post" action="{% url 'daily_reports:delete' r.pk %}" class="d-inline" onsubmit="return confirm('Delete daily report for {{ r.report_date|thai_be_date }}?')">
+                    <form method="post" action="{% url 'daily_reports:delete' r.pk %}" class="d-inline" onsubmit="return confirm('ลบรายงานวันที่ {{ r.report_date|thai_be_date }}?')">
                       {% csrf_token %}
-                      <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
+                      <button type="submit"
+                              class="btn btn-sm btn-outline-danger d-inline-flex align-items-center justify-content-center"
+                              style="min-width:38px;min-height:38px"
+                              aria-label="ลบรายงานวันที่ {{ r.report_date|thai_be_date }}">
+                              <i class="fas fa-trash" aria-hidden="true"></i>
+                      </button>
                     </form>
                     {% endif %}
                     {% endif %}
-                    <a href="{% url 'daily_reports:export_pdf' r.pk %}" class="btn btn-sm btn-outline-secondary" title="PDF"><i class="fas fa-file-pdf"></i></a>
+                    <a href="{% url 'daily_reports:export_pdf' r.pk %}"
+                       class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center justify-content-center"
+                       style="min-width:38px;min-height:38px"
+                       aria-label="ส่งออก PDF รายงานวันที่ {{ r.report_date|thai_be_date }}">
+                       <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                    </a>
                 </td>
             </tr>
             {% empty %}
