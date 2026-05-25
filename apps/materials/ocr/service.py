@@ -12,16 +12,18 @@ from PIL import Image
 
 from . import preprocess
 
-# Windows: Tesseract binary lives in Program Files by default
+# Common Tesseract binary locations on supported deployments.
 DEFAULT_TESSERACT_CMD = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+DEFAULT_LINUX_TESSERACT_CMD = '/usr/bin/tesseract'
 PROJECT_TESSDATA = Path(__file__).resolve().parents[3] / 'tessdata'
 
 
 def _configure():
     candidates = [
         os.environ.get('TESSERACT_CMD'),
-        DEFAULT_TESSERACT_CMD,
         shutil.which('tesseract'),
+        DEFAULT_LINUX_TESSERACT_CMD,
+        DEFAULT_TESSERACT_CMD,
     ]
     for cmd in candidates:
         if cmd and os.path.exists(cmd):
