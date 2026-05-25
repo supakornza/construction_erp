@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'apps.subcontractors',
     'apps.drawings',
     'apps.notifications',
+    'apps.ai_agent',
 ]
 
 MIDDLEWARE = [
