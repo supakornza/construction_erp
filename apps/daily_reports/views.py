@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.base import ContentFile
 from django.db import transaction
 from django.db.models import Max
-from django.http import HttpResponse
+from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, FormView, View
@@ -211,6 +211,22 @@ class PhotoReportPDFView(DailyReportViewMixin, View):
         filename = f"PhotoReport_{report.project.contract_no}_{report.report_date}.pdf"
         response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
         response['Content-Disposition'] = f'inline; filename="{filename}"'
+        return response
+
+
+class PhotoPreviewView(DailyReportViewMixin, View):
+    def get(self, request, pk, photo_pk):
+        photo = get_object_or_404(DailyPhoto, pk=photo_pk, report_id=pk)
+        if not photo.photo:
+            raise Http404('Photo not found')
+
+        try:
+            jpeg_buf = image_to_jpeg_bytes(photo.photo.path)
+        except Exception:
+            return FileResponse(photo.photo.open('rb'), content_type='application/octet-stream')
+
+        response = HttpResponse(jpeg_buf.getvalue(), content_type='image/jpeg')
+        response['Cache-Control'] = 'private, max-age=86400'
         return response
 
 

@@ -236,12 +236,12 @@
                     <span class="position-absolute top-0 start-0 badge bg-dark m-1 opacity-75" style="font-size:.7rem;z-index:2;">
                         {{ forloop.counter }}
                     </span>
-                    <a href="{{ photo.photo.url }}" data-bs-toggle="modal" data-bs-target="#photoModal"
-                       data-photo-url="{{ photo.photo.url }}"
+                    <a href="{% url 'daily_reports:photo_preview' report.pk photo.pk %}" data-bs-toggle="modal" data-bs-target="#photoModal"
+                       data-photo-url="{% url 'daily_reports:photo_preview' report.pk photo.pk %}"
                        data-caption="{{ photo.caption }}"
                        data-location="{{ photo.location }}"
                        class="d-block overflow-hidden" style="height:180px;">
-                        <img src="{{ photo.photo.url }}"
+                        <img src="{% url 'daily_reports:photo_preview' report.pk photo.pk %}"
                              alt="{{ photo.caption }}"
                              class="w-100 h-100"
                              style="object-fit:cover;transition:transform .2s;"

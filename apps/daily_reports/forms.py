@@ -1,7 +1,14 @@
+import os
+
 from django import forms
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import UploadedFile
 from django.forms import inlineformset_factory
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Fieldset
+
+from apps.utils import image_to_jpeg_bytes
+
 from .models import DailyReport, DailyWorkActivity, DailyLookahead, DailyProblemRemark, DailyPhoto
 
 
@@ -62,9 +69,31 @@ DailyProblemFormSet = inlineformset_factory(
     extra=1, can_delete=True
 )
 
+
+class DailyPhotoForm(forms.ModelForm):
+    class Meta:
+        model = DailyPhoto
+        fields = ['caption', 'photo', 'location', 'taken_at']
+        widgets = {
+            'taken_at': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type': 'datetime-local'}),
+        }
+
+    def clean_photo(self):
+        photo = self.cleaned_data.get('photo')
+        if not photo or not isinstance(photo, UploadedFile):
+            return photo
+
+        try:
+            jpeg_buf = image_to_jpeg_bytes(photo)
+        except Exception as exc:
+            raise forms.ValidationError('ไม่สามารถอ่านไฟล์รูปได้ กรุณาใช้ไฟล์ JPG, PNG, HEIC หรือ HEIF') from exc
+
+        base_name = os.path.splitext(getattr(photo, 'name', 'daily-photo'))[0]
+        return ContentFile(jpeg_buf.read(), name=f'{base_name}.jpg')
+
+
 DailyPhotoFormSet = inlineformset_factory(
     DailyReport, DailyPhoto,
-    fields=['caption', 'photo', 'location', 'taken_at'],
-    widgets={'taken_at': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type': 'datetime-local'})},
+    form=DailyPhotoForm,
     extra=1, can_delete=True
 )
