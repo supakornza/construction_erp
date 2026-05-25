@@ -13,6 +13,18 @@ from .models import (
     ImportLog,
 )
 from .services import recalculate_rock_accumulatives, recalculate_sand_accumulatives
+from apps.equipment.models import Equipment, EquipmentCategory
+
+
+_BARGE_TO_EQUIPMENT = {
+    'Bang Sapan 2': 'Bang Sapan 2',
+    'MTP10': 'MTP 10',
+    'MTP8': 'MTP 8',
+    'Yuttachai': 'J.Yuttachai 1',
+    'Wheel Loader': 'Wheel Loader',
+    'Dump Truck': 'Dump Truck (10-wheel)',
+    'Onshore Truck': 'Onshore Truck',
+}
 
 
 def _to_decimal(val, default=Decimal('0')):
@@ -41,6 +53,33 @@ def _to_date(val):
         return datetime.strptime(str(val), '%Y-%m-%d').date()
     except Exception:
         return None
+
+
+def _get_or_create_transport_equipment(name):
+    category, _ = EquipmentCategory.objects.get_or_create(
+        name='Transport Unit',
+        defaults={'description': 'Transport units used by project controls imports'},
+    )
+    equipment, _ = Equipment.objects.get_or_create(
+        name=name,
+        defaults={'category': category, 'status': 'Active'},
+    )
+    return equipment
+
+
+def _transport_equipment_by_barge_code():
+    barge_map = {}
+    for barge in Barge.objects.select_related('equipment').all():
+        equipment = barge.equipment
+        if equipment is None:
+            equipment_name = _BARGE_TO_EQUIPMENT.get(barge.name, barge.name)
+            equipment = Equipment.objects.filter(name=equipment_name).first()
+            if equipment is None:
+                equipment = _get_or_create_transport_equipment(equipment_name)
+            barge.equipment = equipment
+            barge.save(update_fields=['equipment'])
+        barge_map[barge.code] = equipment
+    return barge_map
 
 
 def run_import(project, import_type, excel_file, user, duplicate_action='update'):
@@ -88,8 +127,7 @@ def _import_rock(project, file_content, duplicate_action):
     ws = wb['Rock'] if 'Rock' in wb.sheetnames else wb.active
     # Data starts at row 7 (index 6 in 0-based), columns: A=day, B=date, C=tct_daily, D=tct_accum, E=trips, F=trucks
     # G=barge1, H=barge2, I=barge3, J=barge4, K=placed_daily, L=placed_accum, M=station, N=core_outside_daily, O=core_outside_accum, P=core_inside_accum, Q=remarks
-    barges = list(Barge.objects.all())
-    barge_map = {b.code: b for b in barges}
+    barge_map = _transport_equipment_by_barge_code()
     b_codes = ['B1', 'B2', 'B3', 'B4']  # Yuttachai, Bang Sapan 2, MTP10, MTP8
 
     success = failed = 0
@@ -165,8 +203,7 @@ def _import_sand(project, file_content, duplicate_action):
     import io
     wb = openpyxl.load_workbook(io.BytesIO(file_content), data_only=True)
     ws = wb['Sand'] if 'Sand' in wb.sheetnames else wb.active
-    barges = list(Barge.objects.all())
-    barge_map = {b.code: b for b in barges}
+    barge_map = _transport_equipment_by_barge_code()
     b_codes = ['B1', 'B2', 'B3', 'B4']
 
     success = failed = 0

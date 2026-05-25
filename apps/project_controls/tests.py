@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 
 from apps.projects.models import Project
+from apps.equipment.models import Equipment, EquipmentCategory
 from apps.project_controls.forms import (
     RecoveryPlanDailyItemFormSet,
     RevetmentDailyRecordForm,
@@ -38,6 +39,17 @@ from apps.project_controls.utils import english_day_abbreviation
 User = get_user_model()
 
 
+_BARGE_TO_EQUIPMENT = {
+    'Bang Sapan 2': 'Bang Sapan 2',
+    'MTP10': 'MTP 10',
+    'MTP8': 'MTP 8',
+    'Yuttachai': 'J.Yuttachai 1',
+    'Wheel Loader': 'Wheel Loader',
+    'Dump Truck': 'Dump Truck (10-wheel)',
+    'Onshore Truck': 'Onshore Truck',
+}
+
+
 def make_user():
     return User.objects.create_user(username='project-controls-user', password='pw', role='admin')
 
@@ -54,6 +66,25 @@ def make_project(user):
         status='Active',
         created_by=user,
     )
+
+
+def make_equipment(name):
+    category, _ = EquipmentCategory.objects.get_or_create(name='Transport Unit')
+    equipment, _ = Equipment.objects.get_or_create(
+        name=name,
+        defaults={'category': category, 'status': 'Active'},
+    )
+    return equipment
+
+
+def transport_equipment_for_barge(barge_name):
+    barge = Barge.objects.get(name=barge_name)
+    if barge.equipment_id:
+        return barge.equipment
+    equipment = make_equipment(_BARGE_TO_EQUIPMENT.get(barge.name, barge.name))
+    barge.equipment = equipment
+    barge.save(update_fields=['equipment'])
+    return equipment
 
 
 class ProjectControlsUtilsTests(TestCase):
@@ -141,8 +172,8 @@ class SandDailyRecordEditTests(TestCase):
             remaining_mtp3=Decimal('5900.00'),
             created_by=self.user,
         )
-        self.barge_a = Barge.objects.get(name='Bang Sapan 2')
-        self.barge_b = Barge.objects.get(name='MTP8')
+        self.barge_a = transport_equipment_for_barge('Bang Sapan 2')
+        self.barge_b = transport_equipment_for_barge('MTP8')
         self.placement_a = SandBargePlacement.objects.create(
             record=self.record,
             barge=self.barge_a,
@@ -257,7 +288,7 @@ class ProjectControlsWorkflowTests(TestCase):
         self.client.force_login(self.user)
 
     def test_rock_create_derives_day_name_and_saves_barge_placement(self):
-        barge = Barge.objects.get(name='Bang Sapan 2')
+        barge = transport_equipment_for_barge('Bang Sapan 2')
 
         response = self.client.post('/project-controls/rock/new/', {
             'project': self.project.pk,
@@ -293,7 +324,7 @@ class ProjectControlsWorkflowTests(TestCase):
         self.assertEqual(record.barge_placements.count(), 1)
 
     def test_rock_update_derives_day_name_and_updates_barge_placement(self):
-        barge = Barge.objects.get(name='Bang Sapan 2')
+        barge = transport_equipment_for_barge('Bang Sapan 2')
         record = RockDailyRecord.objects.create(
             project=self.project,
             record_date=date(2026, 5, 11),
@@ -342,7 +373,7 @@ class ProjectControlsWorkflowTests(TestCase):
         self.assertEqual(placement.quantity_ton, Decimal('90.00'))
 
     def test_rock_transport_onshore_updates_outside_daily(self):
-        barge = Barge.objects.get(name='Onshore Truck')
+        barge = transport_equipment_for_barge('Onshore Truck')
 
         response = self.client.post('/project-controls/rock/new/', {
             'project': self.project.pk,
@@ -377,8 +408,8 @@ class ProjectControlsWorkflowTests(TestCase):
         self.assertEqual(record.core_outside_daily, Decimal('70.00'))
 
     def test_sand_transport_types_update_offshore_and_onshore_daily(self):
-        offshore = Barge.objects.get(name='Bang Sapan 2')
-        onshore = Barge.objects.get(name='Onshore Truck')
+        offshore = transport_equipment_for_barge('Bang Sapan 2')
+        onshore = transport_equipment_for_barge('Onshore Truck')
 
         response = self.client.post('/project-controls/sand/new/', {
             'project': self.project.pk,
@@ -617,7 +648,7 @@ class ProjectControlsDashboardTests(TestCase):
             record_date=date(2026, 5, 1),
             tct_daily_ton=Decimal('1000.00'),
         )
-        barge = Barge.objects.create(name='Barge A', code='BA')
+        barge = make_equipment('Barge A')
         RockBargePlacement.objects.create(
             record=record,
             barge=barge,
@@ -722,7 +753,7 @@ class ProjectControlsDashboardTests(TestCase):
             record_date=date(2026, 5, 1),
             tct_daily_ton=Decimal('1000.00'),
         )
-        barge = Barge.objects.create(name='Sand Barge A', code='SBA')
+        barge = make_equipment('Sand Barge A')
         SandBargePlacement.objects.create(
             record=record,
             barge=barge,
@@ -847,8 +878,8 @@ class RockChartDataViewTests(TestCase):
             project=self.project, record_date=date(2026, 5, 1),
             tct_daily_ton=Decimal('1000'), placed_daily_ton=Decimal('900'),
         )
-        barge_a = Barge.objects.create(name='Barge Alpha', code='BA')
-        barge_b = Barge.objects.create(name='Barge Beta', code='BB')
+        barge_a = make_equipment('Barge Alpha')
+        barge_b = make_equipment('Barge Beta')
         RockBargePlacement.objects.create(record=record, barge=barge_a, quantity_ton=Decimal('600'))
         RockBargePlacement.objects.create(record=record, barge=barge_b, quantity_ton=Decimal('300'))
         recalculate_rock_accumulatives(self.project)
