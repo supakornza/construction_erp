@@ -4,9 +4,9 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="mb-0"><i class="fas fa-ship me-2 text-primary"></i>Transport Units</h4>
+    <h4 class="mb-0"><i class="fas fa-ship me-2 text-primary" aria-hidden="true"></i>Transport Units</h4>
     <a href="{% url 'project_controls:barge_create' %}" class="btn btn-primary">
-        <i class="fas fa-plus me-1"></i>Add Transport Unit
+        <i class="fas fa-plus me-1" aria-hidden="true"></i>Add Transport Unit
     </a>
 </div>
 
@@ -22,7 +22,7 @@
                         <th>Capacity (Ton)</th>
                         <th>Linked Equipment</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <th><span class="visually-hidden">การกระทำ</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,7 +39,7 @@
                     <td>
                         {% if b.equipment %}
                         <span class="badge bg-secondary">
-                            <i class="fas fa-link me-1"></i>{{ b.equipment.name }}
+                            <i class="fas fa-link me-1" aria-hidden="true"></i>{{ b.equipment.name }}
                             {% if b.equipment.registration_no %}({{ b.equipment.registration_no }}){% endif %}
                         </span>
                         {% else %}
@@ -55,14 +55,14 @@
                     </td>
                     <td>
                         <a href="{% url 'project_controls:barge_update' b.pk %}" class="btn btn-sm btn-outline-primary" title="Edit">
-                            <i class="fas fa-edit"></i>
+                            <i class="fas fa-edit" aria-hidden="true"></i>
                         </a>
                         {% if request.user.is_superuser or request.user.role == 'admin' %}
                         <form method="post" action="{% url 'project_controls:barge_delete' b.pk %}" class="d-inline"
                               onsubmit="return confirm('Delete transport unit {{ b.name }}?')">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
-                                <i class="fas fa-trash"></i>
+                                <i class="fas fa-trash" aria-hidden="true"></i>
                             </button>
                         </form>
                         {% endif %}
@@ -71,7 +71,7 @@
                 {% empty %}
                 <tr>
                     <td colspan="7" class="text-center text-muted py-5">
-                        <i class="fas fa-ship fa-2x mb-2 d-block opacity-25"></i>
+                        <i class="fas fa-ship fa-2x mb-2 d-block opacity-25" aria-hidden="true"></i>
                         No transport units yet.
                         <a href="{% url 'project_controls:barge_create' %}">Add the first one.</a>
                     </td>
@@ -84,7 +84,7 @@
 </div>
 
 <div class="alert alert-info mt-3 small">
-    <i class="fas fa-info-circle me-1"></i>
+    <i class="fas fa-info-circle me-1" aria-hidden="true"></i>
     Transport Units are used in Rock and Sand daily records. Link a Transport Unit to an <strong>Equipment</strong> record to avoid double-entry.
 </div>
 {% endblock %}

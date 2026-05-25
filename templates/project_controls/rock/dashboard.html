@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load humanize %}
-{% block title %}Rock Progress Dashboard - Construction ERP{% endblock %}
-{% block page_title %}Rock Progress Dashboard{% endblock %}
+{% block title %}Dashboard ความคืบหน้างานหิน – Construction ERP{% endblock %}
+{% block page_title %}Dashboard ความคืบหน้างานหิน{% endblock %}
 
 {% block extra_head %}
 <style>
@@ -135,7 +135,7 @@
   <div class="rdb-header">
     <div class="rdb-header-top">
       <div class="rdb-header-title">
-        <h2><i class="fas fa-layer-group me-2" style="opacity:.75" aria-hidden="true"></i>Rock Progress Dashboard</h2>
+        <h2><i class="fas fa-layer-group me-2" style="opacity:.75" aria-hidden="true"></i>Dashboard ความคืบหน้างานหิน</h2>
         <div class="sub">
           {% if selected_project %}
             {{ selected_project.contract_no }} &nbsp;·&nbsp; {{ selected_project.project_name }}
@@ -147,7 +147,7 @@
       </div>
       {% if data.placement_completion_percent is not None %}
       <div class="rdb-header-badge">
-        <div class="blabel">Completion</div>
+        <div class="blabel">% เสร็จ</div>
         <div class="bvalue">{{ data.placement_completion_percent|floatformat:1 }}%</div>
       </div>
       {% endif %}
@@ -173,55 +173,55 @@
       <section class="rdb-kpis">
         <div class="rdb-kpi blue">
           <div class="ki"><i class="fas fa-truck-ramp-box" aria-hidden="true"></i></div>
-          <div class="kl">Total Delivered</div>
+          <div class="kl">รับเข้ารวม</div>
           <div class="kv">{{ data.total_delivered|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">tons to site</div>
         </div>
         <div class="rdb-kpi green">
           <div class="ki"><i class="fas fa-layer-group" aria-hidden="true"></i></div>
-          <div class="kl">Total Placed</div>
+          <div class="kl">วางหินรวม</div>
           <div class="kv">{{ data.total_placed|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">tons placed</div>
         </div>
         <div class="rdb-kpi orange">
           <div class="ki"><i class="fas fa-warehouse" aria-hidden="true"></i></div>
-          <div class="kl">Stock Balance</div>
+          <div class="kl">คงเหลือในสต็อก</div>
           <div class="kv">{{ data.available_stock_balance|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">delivered − placed</div>
         </div>
         <div class="rdb-kpi purple">
           <div class="ki"><i class="fas fa-chart-pie" aria-hidden="true"></i></div>
-          <div class="kl">Placement Completion</div>
+          <div class="kl">% วางหินเทียบเป้า</div>
           <div class="kv">{% if data.placement_completion_percent is not None %}{{ data.placement_completion_percent|floatformat:1 }}%{% else %}N/A{% endif %}</div>
           <div class="ks">vs BOQ target</div>
         </div>
         <div class="rdb-kpi warn">
           <div class="ki"><i class="fas fa-hourglass-half" aria-hidden="true"></i></div>
-          <div class="kl">Remaining to BOQ</div>
+          <div class="kl">เหลือต้องวางตาม BOQ</div>
           <div class="kv">{% if data.remaining_quantity_to_boq is not None %}{{ data.remaining_quantity_to_boq|floatformat:0|intcomma }} tons{% else %}N/A{% endif %}</div>
           <div class="ks">tons remaining</div>
         </div>
         <div class="rdb-kpi teal">
           <div class="ki"><i class="fas fa-gauge-high" aria-hidden="true"></i></div>
-          <div class="kl">Avg Daily Placement</div>
+          <div class="kl">ค่าเฉลี่ยวาง/วัน</div>
           <div class="kv">{% if data.average_daily_placement is not None %}{{ data.average_daily_placement|floatformat:0|intcomma }} tons/day{% else %}N/A{% endif %}</div>
           <div class="ks">production days only</div>
         </div>
         <div class="rdb-kpi cyan">
           <div class="ki"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
-          <div class="kl">Forecast Completion</div>
+          <div class="kl">วันที่คาดเสร็จ</div>
           <div class="kv" style="font-size:1.2rem">{% if data.forecast_completion_date %}{{ data.forecast_completion_date|thai_be_date }}{% else %}N/A{% endif %}</div>
           <div class="ks">based on avg placement</div>
         </div>
         <div class="rdb-kpi blue">
           <div class="ki"><i class="fas fa-truck" aria-hidden="true"></i></div>
-          <div class="kl">Latest Delivered</div>
+          <div class="kl">รับเข้าวันล่าสุด</div>
           <div class="kv">{{ data.latest_daily_delivered|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">{% if data.latest_date %}{{ data.latest_date|thai_be_date }}{% else %}No data{% endif %}</div>
         </div>
         <div class="rdb-kpi green">
           <div class="ki"><i class="fas fa-circle-down" aria-hidden="true"></i></div>
-          <div class="kl">Latest Placed</div>
+          <div class="kl">วางวันล่าสุด</div>
           <div class="kv">{{ data.latest_daily_placed|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">{% if data.latest_date %}{{ data.latest_date|thai_be_date }}{% else %}No data{% endif %}</div>
         </div>
@@ -231,7 +231,7 @@
       {% if data.core_outside_accum %}
       <div class="rdb-alert">
         <i class="fas fa-triangle-exclamation mt-1 flex-shrink-0" aria-hidden="true"></i>
-        <div><strong>Core Rock Placed Outside Plot:</strong> {{ data.core_outside_accum|floatformat:0|intcomma }} tons accumulated. Please review placement records.</div>
+        <div><strong>วางหิน Core นอกพื้นที่:</strong> สะสม {{ data.core_outside_accum|floatformat:0|intcomma }} ตัน — กรุณาตรวจสอบบันทึกการวาง</div>
       </div>
       {% endif %}
 
@@ -250,14 +250,14 @@
             <div class="row g-3">
               <div class="col-md-3">
                 <div class="p-3 rounded" style="background:#fffbeb;border:1px solid #fde68a">
-                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Total Delivered (Materials)</div>
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">รับเข้ารวม (วัสดุ)</div>
                   <div style="font-size:1.6rem;font-weight:900;color:#92400e">{{ mat_del_summary.total_qty|floatformat:2|intcomma }}</div>
                   <div class="text-body-secondary" style="font-size:.72rem">{{ mat_del_summary.count }} records</div>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="p-3 rounded" style="background:#ecfdf5;border:1px solid #a7f3d0">
-                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Stock Balance (Project Controls)</div>
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">คงเหลือในสต็อก (Project Controls)</div>
                   <div style="font-size:1.6rem;font-weight:900;color:#065f46">{{ data.available_stock_balance|default:0|floatformat:0|intcomma }}</div>
                   <div class="text-body-secondary" style="font-size:.72rem">tons (delivered − placed)</div>
                 </div>
@@ -338,9 +338,9 @@
               <table class="rdb-tbl" aria-label="เที่ยวขนส่งและปริมาณหิน">
                 <thead>
                   <tr>
-                    <th>Transport Unit</th>
+                    <th scope="col">หน่วยขนส่ง</th>
                     <th class="text-end">Total (tons)</th>
-                    <th class="text-end">Trips</th>
+                    <th scope="col" class="text-end">เที่ยว</th>
                     <th class="text-end">Avg / Trip</th>
                     <th class="text-end">Latest Date</th>
                   </tr>
@@ -381,12 +381,12 @@
             <table class="rdb-tbl" aria-label="ความคืบหน้าการวางหินตาม Station">
               <thead>
                 <tr>
-                  <th>Station Range</th>
-                  <th>Material</th>
+                  <th scope="col">ช่วง Station</th>
+                  <th scope="col">วัสดุ</th>
                   <th class="text-end">Delivered (t)</th>
                   <th class="text-end">Placed (t)</th>
-                  <th>Completion</th>
-                  <th>Status</th>
+                  <th scope="col">ความคืบหน้า</th>
+                  <th scope="col">สถานะ</th>
                 </tr>
               </thead>
               <tbody>
@@ -418,8 +418,8 @@
       {% else %}
       <div class="rdb-empty" role="status">
         <i class="fas fa-database fa-2x mb-3" style="color:#cbd5e1" aria-hidden="true"></i>
-        <div class="fw-bold mb-1">No rock progress data</div>
-        <div class="small">Select a project or add daily records to see the dashboard.</div>
+        <div class="fw-bold mb-1">ยังไม่มีข้อมูลความคืบหน้าหิน</div>
+        <div class="small">เลือกโครงการ หรือเพิ่มบันทึกประจำวันเพื่อแสดง Dashboard</div>
       </div>
       {% endif %}
     </main>
@@ -431,7 +431,7 @@
         <div>
           <label class="rdb-fl" for="rockFilterProject">โครงการ</label>
           <select id="rockFilterProject" name="project" class="form-select form-select-sm">
-            <option value="">First Active Project</option>
+            <option value="">เลือกโครงการแรกที่ใช้งานอยู่</option>
             {% for p in projects %}
             <option value="{{ p.pk }}" {% if selected_project and selected_project.pk == p.pk %}selected{% endif %}>{{ p.contract_no }}</option>
             {% endfor %}
@@ -440,10 +440,10 @@
         <div>
           <label class="rdb-fl" for="rockFilterRange">ช่วงวันที่</label>
           <select id="rockFilterRange" name="range" class="form-select form-select-sm">
-            <option value="">All Dates</option>
-            <option value="7"  {% if request.GET.range == '7'  %}selected{% endif %}>Last 7 Days</option>
-            <option value="14" {% if request.GET.range == '14' %}selected{% endif %}>Last 14 Days</option>
-            <option value="30" {% if request.GET.range == '30' %}selected{% endif %}>Last 30 Days</option>
+            <option value="">ทุกช่วงเวลา</option>
+            <option value="7"  {% if request.GET.range == '7'  %}selected{% endif %}>7 วันล่าสุด</option>
+            <option value="14" {% if request.GET.range == '14' %}selected{% endif %}>14 วันล่าสุด</option>
+            <option value="30" {% if request.GET.range == '30' %}selected{% endif %}>30 วันล่าสุด</option>
           </select>
         </div>
         <div>
@@ -457,7 +457,7 @@
         <div>
           <label class="rdb-fl" for="rockFilterBarge">หน่วยขนส่ง</label>
           <select id="rockFilterBarge" name="barge" class="form-select form-select-sm">
-            <option value="">All Transport Units</option>
+            <option value="">ทุกหน่วยขนส่ง</option>
             {% for barge in barges %}
             <option value="{{ barge.pk }}" {% if request.GET.barge == barge.pk|stringformat:"s" %}selected{% endif %}>{{ barge.name }}</option>
             {% endfor %}
@@ -466,7 +466,7 @@
         <div>
           <label class="rdb-fl" for="rockFilterMaterialType">ประเภทวัสดุ</label>
           <select id="rockFilterMaterialType" name="material_type" class="form-select form-select-sm">
-            <option value="">All Material Types</option>
+            <option value="">ทุกชนิดวัสดุ</option>
             {% for value, label in material_type_choices %}
             <option value="{{ value }}" {% if request.GET.material_type == value %}selected{% endif %}>{{ label }}</option>
             {% endfor %}
@@ -492,10 +492,10 @@
       <div class="rdb-sc">
         <div class="rdb-st"><span><i class="fas fa-bolt" aria-hidden="true"></i> Quick Actions</span></div>
         <div class="rdb-actions">
-          <a href="{% url 'project_controls:rock_list' %}" class="rdb-btn rdb-btn-out"><i class="fas fa-table-list" aria-hidden="true"></i>Records</a>
-          <a href="{% url 'project_controls:rock_create' %}" class="rdb-btn rdb-btn-teal"><i class="fas fa-plus" aria-hidden="true"></i>New Record</a>
+          <a href="{% url 'project_controls:rock_list' %}" class="rdb-btn rdb-btn-out"><i class="fas fa-table-list" aria-hidden="true"></i>รายการบันทึก</a>
+          <a href="{% url 'project_controls:rock_create' %}" class="rdb-btn rdb-btn-teal"><i class="fas fa-plus" aria-hidden="true"></i>บันทึกใหม่</a>
           {% if selected_project %}
-          <a href="{% url 'project_controls:rock_export_excel' selected_project.pk %}" class="rdb-btn rdb-btn-out"><i class="fas fa-file-excel" aria-hidden="true"></i>Export Excel</a>
+          <a href="{% url 'project_controls:rock_export_excel' selected_project.pk %}" class="rdb-btn rdb-btn-out"><i class="fas fa-file-excel" aria-hidden="true"></i>ส่งออก Excel</a>
           {% endif %}
         </div>
       </div>

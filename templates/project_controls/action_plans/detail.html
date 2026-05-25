@@ -6,15 +6,15 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
   <div>
-    <h4 class="mb-1"><i class="fas fa-clipboard-check me-2 text-primary"></i>{{ plan.action_id }}</h4>
+    <h4 class="mb-1"><i class="fas fa-clipboard-check me-2 text-primary" aria-hidden="true"></i>{{ plan.action_id }}</h4>
     <div class="text-muted">{{ plan.project.contract_no }} · {{ plan.project.project_name }}</div>
   </div>
   <div class="d-flex gap-2">
     <a href="{% url 'project_controls:project_action_plan_list' %}?project={{ plan.project_id }}" class="btn btn-outline-secondary">
-      <i class="fas fa-list me-1"></i> Register
+      <i class="fas fa-list me-1" aria-hidden="true"></i> Register
     </a>
     <a href="{% url 'project_controls:project_action_plan_update' plan.pk %}" class="btn btn-primary">
-      <i class="fas fa-edit me-1"></i> Edit
+      <i class="fas fa-edit me-1" aria-hidden="true"></i> Edit
     </a>
   </div>
 </div>

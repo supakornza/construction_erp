@@ -4,13 +4,13 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-  <h5 class="mb-0"><i class="fas fa-calculator me-2 text-info"></i>Sand Allocation Calculator</h5>
+  <h5 class="mb-0"><i class="fas fa-calculator me-2 text-info" aria-hidden="true"></i>Sand Allocation Calculator</h5>
   <div class="d-flex gap-2">
     <a href="{% url 'project_controls:sand_list' %}" class="btn btn-sm btn-outline-secondary">
-      <i class="fas fa-arrow-left me-1"></i>Sand Records
+      <i class="fas fa-arrow-left me-1" aria-hidden="true"></i>Sand Records
     </a>
     <a href="{% url 'project_controls:sand_allocation_create' %}" class="btn btn-sm btn-primary">
-      <i class="fas fa-plus me-1"></i>New Allocation
+      <i class="fas fa-plus me-1" aria-hidden="true"></i>New Allocation
     </a>
   </div>
 </div>
@@ -64,12 +64,12 @@
           <td class="text-end">{{ alloc.calculated_mtp3_trips }}</td>
           <td>
             <a href="{% url 'project_controls:sand_allocation_detail' alloc.pk %}" class="btn btn-xs btn-outline-info">
-              <i class="fas fa-eye"></i>
+              <i class="fas fa-eye" aria-hidden="true"></i>
             </a>
           </td>
         </tr>
         {% empty %}
-        <tr><td colspan="11" class="text-center text-muted py-4">No allocations found.</td></tr>
+        <tr><td colspan="11" class="text-center text-muted py-4" role="status">No allocations found.</td></tr>
         {% endfor %}
       </tbody>
     </table>

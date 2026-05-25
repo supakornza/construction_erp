@@ -4,19 +4,19 @@
 
 {% block content %}
 <div class="d-flex align-items-center mb-4 flex-wrap gap-2">
-  <a href="{% url 'project_controls:logistics_list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left"></i></a>
+  <a href="{% url 'project_controls:logistics_list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>
   <h5 class="mb-0">{{ scenario.scenario_name }}</h5>
   <span class="badge bg-secondary ms-1">{{ scenario.material_type }}</span>
   <div class="ms-auto d-flex gap-2">
-    <a href="{% url 'project_controls:logistics_update' scenario.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit me-1"></i>Edit</a>
-    <a href="{% url 'project_controls:logistics_compare' %}?s={{ scenario.pk }}" class="btn btn-sm btn-outline-info"><i class="fas fa-balance-scale me-1"></i>Compare</a>
+    <a href="{% url 'project_controls:logistics_update' scenario.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit me-1" aria-hidden="true"></i>Edit</a>
+    <a href="{% url 'project_controls:logistics_compare' %}?s={{ scenario.pk }}" class="btn btn-sm btn-outline-info"><i class="fas fa-balance-scale me-1" aria-hidden="true"></i>Compare</a>
   </div>
 </div>
 
 <div class="row g-3 mb-4">
   <div class="col-md-6">
     <div class="card h-100">
-      <div class="card-header fw-semibold"><i class="fas fa-sliders-h me-2"></i>Input Parameters</div>
+      <div class="card-header fw-semibold"><i class="fas fa-sliders-h me-2" aria-hidden="true"></i>Input Parameters</div>
       <div class="card-body">
         <dl class="row mb-0">
           <dt class="col-6">Project</dt><dd class="col-6">{{ scenario.project.project_name }}</dd>
@@ -34,7 +34,7 @@
   </div>
   <div class="col-md-6">
     <div class="card h-100 bg-success text-white">
-      <div class="card-header fw-semibold border-0"><i class="fas fa-calculator me-2"></i>Calculated Results</div>
+      <div class="card-header fw-semibold border-0"><i class="fas fa-calculator me-2" aria-hidden="true"></i>Calculated Results</div>
       <div class="card-body">
         <div class="row g-3 text-center">
           <div class="col-6">

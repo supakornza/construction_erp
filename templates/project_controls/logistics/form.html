@@ -14,7 +14,7 @@
 {% block content %}
 <div class="d-flex align-items-center mb-4">
   <a href="{% url 'project_controls:logistics_list' %}" class="btn btn-sm btn-outline-secondary me-3">
-    <i class="fas fa-arrow-left"></i>
+    <i class="fas fa-arrow-left" aria-hidden="true"></i>
   </a>
   <h5 class="mb-0">
     {% if form.instance.pk %}Edit Scenario – {{ form.instance.scenario_name }}
@@ -29,7 +29,7 @@
     <div class="col-lg-8">
 
       <div class="card mb-3">
-        <div class="card-header fw-semibold"><i class="fas fa-tag me-2"></i>Scenario Info</div>
+        <div class="card-header fw-semibold"><i class="fas fa-tag me-2" aria-hidden="true"></i>Scenario Info</div>
         <div class="card-body">
           <div class="row g-3">
             <div class="col-md-8">
@@ -51,7 +51,7 @@
       </div>
 
       <div class="card mb-3">
-        <div class="card-header fw-semibold text-info"><i class="fas fa-road me-2"></i>Route</div>
+        <div class="card-header fw-semibold text-info"><i class="fas fa-road me-2" aria-hidden="true"></i>Route</div>
         <div class="card-body">
           <div class="row g-3">
             <div class="col-md-6">
@@ -67,7 +67,7 @@
       </div>
 
       <div class="card mb-3">
-        <div class="card-header fw-semibold text-secondary"><i class="fas fa-clock me-2"></i>Time Parameters</div>
+        <div class="card-header fw-semibold text-secondary"><i class="fas fa-clock me-2" aria-hidden="true"></i>Time Parameters</div>
         <div class="card-body">
           <div class="row g-3">
             <div class="col-md-4">
@@ -84,7 +84,7 @@
             </div>
           </div>
           <hr class="my-3">
-          <p class="small text-muted mb-2"><i class="fas fa-ban me-1"></i>Restricted Hours (optional)</p>
+          <p class="small text-muted mb-2"><i class="fas fa-ban me-1" aria-hidden="true"></i>Restricted Hours (optional)</p>
           <div class="row g-3">
             <div class="col-md-3">
               <label class="form-label small">Start 1</label>
@@ -107,7 +107,7 @@
       </div>
 
       <div class="card mb-3">
-        <div class="card-header fw-semibold text-success"><i class="fas fa-truck-loading me-2"></i>Fleet</div>
+        <div class="card-header fw-semibold text-success"><i class="fas fa-truck-loading me-2" aria-hidden="true"></i>Fleet</div>
         <div class="card-body">
           <div class="row g-3">
             <div class="col-md-6">
@@ -135,7 +135,7 @@
     <div class="col-lg-4">
       <div class="card bg-success text-white sticky-top result-card" style="top:80px">
         <div class="card-header fw-semibold border-0 pb-0">
-          <i class="fas fa-calculator me-2"></i>Live Results
+          <i class="fas fa-calculator me-2" aria-hidden="true"></i>Live Results
         </div>
         <div class="card-body pt-2">
           <div class="text-center mb-3">
@@ -164,7 +164,7 @@
 
   <div class="d-flex gap-2 mb-5 mt-2">
     <button type="submit" class="btn btn-primary btn-lg px-5">
-      <i class="fas fa-save me-2"></i>Save Scenario
+      <i class="fas fa-save me-2" aria-hidden="true"></i>Save Scenario
     </button>
     <a href="{% url 'project_controls:logistics_list' %}" class="btn btn-outline-secondary btn-lg">Cancel</a>
   </div>

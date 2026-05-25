@@ -4,8 +4,8 @@
 
 {% block content %}
 <div class="d-flex align-items-center mb-4">
-  <a href="{% url 'project_controls:revetment_setup' %}{% if form.instance.project_id %}?project={{ form.instance.project_id }}{% endif %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
-  <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2 text-success"></i>{% if form.instance.pk %}Edit Station{% else %}New Station{% endif %}</h5>
+  <a href="{% url 'project_controls:revetment_setup' %}{% if form.instance.project_id %}?project={{ form.instance.project_id }}{% endif %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>
+  <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2 text-success" aria-hidden="true"></i>{% if form.instance.pk %}Edit Station{% else %}New Station{% endif %}</h5>
 </div>
 
 <form method="post" class="card">
@@ -23,7 +23,7 @@
     </div>
   </div>
   <div class="card-footer">
-    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Save</button>
+    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1" aria-hidden="true"></i>Save</button>
   </div>
 </form>
 {% endblock %}

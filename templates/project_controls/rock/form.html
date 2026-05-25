@@ -15,7 +15,7 @@
   {% csrf_token %}
 
   <div class="card mb-3">
-    <div class="card-header"><i class="fas fa-mountain me-2"></i>Rock at TCT Port & Placement</div>
+    <div class="card-header"><i class="fas fa-mountain me-2" aria-hidden="true"></i>Rock at TCT Port & Placement</div>
     <div class="card-body">
       {% crispy form %}
     </div>
@@ -23,9 +23,9 @@
 
   <div class="card mb-3">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <span><i class="fas fa-truck-moving me-2"></i>Transport Placements</span>
+      <span><i class="fas fa-truck-moving me-2" aria-hidden="true"></i>Transport Placements</span>
       <button type="button" class="btn btn-sm btn-outline-success" id="add-barge-btn">
-        <i class="fas fa-plus me-1"></i>Add Transport
+        <i class="fas fa-plus me-1" aria-hidden="true"></i>Add Transport
       </button>
     </div>
     <div class="card-body p-0">
@@ -53,7 +53,7 @@
               <td>{{ bf.station }}</td>
               <td>{{ bf.remarks }}</td>
               <td class="text-center">
-                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
                 {{ bf.DELETE }}
               </td>
             </tr>
@@ -73,14 +73,14 @@
       <td>{{ barge_formset.empty_form.station }}</td>
       <td>{{ barge_formset.empty_form.remarks }}</td>
       <td class="text-center">
-        <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+        <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
         {{ barge_formset.empty_form.DELETE }}
       </td>
     </tr>
   </template>
 
   <div class="card mb-3">
-    <div class="card-header"><i class="fas fa-calculator me-2"></i>Rock Entry Helper</div>
+    <div class="card-header"><i class="fas fa-calculator me-2" aria-hidden="true"></i>Rock Entry Helper</div>
     <div class="card-body">
       <div class="row g-3 small">
         <div class="col-md-3"><span class="text-muted d-block">Transport total</span><strong id="rock-helper-transport">0.00 T</strong></div>

@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-  <h4 class="mb-0"><i class="fas fa-chart-bar me-2 text-primary"></i>Project Controls</h4>
+  <h4 class="mb-0"><i class="fas fa-chart-bar me-2 text-primary" aria-hidden="true"></i>Project Controls</h4>
   <div class="d-flex gap-2 flex-wrap">
     <select class="form-select form-select-sm" onchange="location.href='?project='+this.value" style="width:auto">
       {% for p in projects %}
@@ -19,12 +19,12 @@
 <div class="card pc-panel mb-4">
   <div class="card-body">
     <div class="pc-section-title">
-      <i class="fas fa-compass text-primary"></i>
+      <i class="fas fa-compass text-primary" aria-hidden="true"></i>
       <h6 class="mb-0 fw-semibold">Project Controls Menu</h6>
     </div>
     <div class="pc-menu-grid">
       <a href="{% url 'project_controls:rock_list' %}?project={{ selected_project.pk }}" class="pc-menu-card">
-        <span class="pc-menu-icon bg-secondary bg-opacity-10 text-secondary"><i class="fas fa-mountain"></i></span>
+        <span class="pc-menu-icon bg-secondary bg-opacity-10 text-secondary"><i class="fas fa-mountain" aria-hidden="true"></i></span>
         <span>
           <strong>Rock Summary</strong>
           <span class="d-block text-muted small mt-1">Daily delivery, placement, and stock balance</span>
@@ -35,7 +35,7 @@
         </span>
       </a>
       <a href="{% url 'project_controls:sand_list' %}?project={{ selected_project.pk }}" class="pc-menu-card">
-        <span class="pc-menu-icon bg-info bg-opacity-10 text-info"><i class="fas fa-water"></i></span>
+        <span class="pc-menu-icon bg-info bg-opacity-10 text-info"><i class="fas fa-water" aria-hidden="true"></i></span>
         <span>
           <strong>Sand Summary</strong>
           <span class="d-block text-muted small mt-1">Transport source, placement, and remaining stock</span>
@@ -46,7 +46,7 @@
         </span>
       </a>
       <a href="{% url 'project_controls:revetment_dashboard' %}?project={{ selected_project.pk }}" class="pc-menu-card">
-        <span class="pc-menu-icon bg-success bg-opacity-10 text-success"><i class="fas fa-layer-group"></i></span>
+        <span class="pc-menu-icon bg-success bg-opacity-10 text-success"><i class="fas fa-layer-group" aria-hidden="true"></i></span>
         <span>
           <strong>Revetment Progress</strong>
           <span class="d-block text-muted small mt-1">Daily quantity entries, station matrix, and activity progress</span>
@@ -57,7 +57,7 @@
         </span>
       </a>
       <a href="{% url 'project_controls:recovery_plan_list' %}?project={{ selected_project.pk }}" class="pc-menu-card">
-        <span class="pc-menu-icon bg-warning bg-opacity-10 text-warning"><i class="fas fa-calendar-check"></i></span>
+        <span class="pc-menu-icon bg-warning bg-opacity-10 text-warning"><i class="fas fa-calendar-check" aria-hidden="true"></i></span>
         <span>
           <strong>Recovery Plans</strong>
           <span class="d-block text-muted small mt-1">14-day plans and daily updates</span>
@@ -68,7 +68,7 @@
         </span>
       </a>
       <a href="{% url 'project_controls:rap_list' %}?project={{ selected_project.pk }}" class="pc-menu-card">
-        <span class="pc-menu-icon bg-danger bg-opacity-10 text-danger"><i class="fas fa-tasks"></i></span>
+        <span class="pc-menu-icon bg-danger bg-opacity-10 text-danger"><i class="fas fa-tasks" aria-hidden="true"></i></span>
         <span>
           <strong>Recovery Action Plans</strong>
           <span class="d-block text-muted small mt-1">Recovery action tracking and approvals</span>
@@ -79,7 +79,7 @@
         </span>
       </a>
       <a href="{% url 'project_controls:project_action_plan_list' %}?project={{ selected_project.pk }}" class="pc-menu-card">
-        <span class="pc-menu-icon bg-primary bg-opacity-10 text-primary"><i class="fas fa-clipboard-check"></i></span>
+        <span class="pc-menu-icon bg-primary bg-opacity-10 text-primary"><i class="fas fa-clipboard-check" aria-hidden="true"></i></span>
         <span>
           <strong>Project Action Plans</strong>
           <span class="d-block text-muted small mt-1">Issue, risk, decision, and coordination tracking</span>
@@ -90,7 +90,7 @@
         </span>
       </a>
       <a href="{% url 'project_controls:logistics_list' %}?project={{ selected_project.pk }}" class="pc-menu-card">
-        <span class="pc-menu-icon bg-success bg-opacity-10 text-success"><i class="fas fa-truck"></i></span>
+        <span class="pc-menu-icon bg-success bg-opacity-10 text-success"><i class="fas fa-truck" aria-hidden="true"></i></span>
         <span>
           <strong>Logistics</strong>
           <span class="d-block text-muted small mt-1">Truck cycle, tonnage, and scenarios</span>
@@ -101,7 +101,7 @@
         </span>
       </a>
       <a href="{% url 'project_controls:import' %}?project={{ selected_project.pk }}" class="pc-menu-card">
-        <span class="pc-menu-icon bg-primary bg-opacity-10 text-primary"><i class="fas fa-file-import"></i></span>
+        <span class="pc-menu-icon bg-primary bg-opacity-10 text-primary"><i class="fas fa-file-import" aria-hidden="true"></i></span>
         <span>
           <strong>Import Data</strong>
           <span class="d-block text-muted small mt-1">Load Rock, Sand, Revetment, and recovery records from Excel</span>
@@ -119,11 +119,11 @@
   <section class="pc-ops-card pc-ops-rock">
     <div class="pc-ops-head">
       <div>
-        <div class="pc-eyebrow"><i class="fas fa-mountain"></i> Rock Progress</div>
+        <div class="pc-eyebrow"><i class="fas fa-mountain" aria-hidden="true"></i> Rock Progress</div>
         <h5>Delivery, placement, and stock health</h5>
       </div>
       <a href="{% url 'project_controls:rock_dashboard' %}?project={{ selected_project.pk }}" class="btn btn-sm btn-outline-secondary">
-        <i class="fas fa-arrow-up-right-from-square me-1"></i>Open Rock
+        <i class="fas fa-arrow-up-right-from-square me-1" aria-hidden="true"></i>Open Rock
       </a>
     </div>
     <div class="pc-ops-body">
@@ -136,14 +136,14 @@
           </div>
         </div>
         <div class="pc-ops-spark">
-          <span><i class="fas fa-circle text-primary"></i>Placed</span>
-          <span><i class="fas fa-circle text-warning"></i>Stock</span>
+          <span><i class="fas fa-circle text-primary" aria-hidden="true"></i>Placed</span>
+          <span><i class="fas fa-circle text-warning" aria-hidden="true"></i>Stock</span>
         </div>
       </div>
       <div class="pc-ops-side">
         <div class="pc-health-row">
           <span class="pc-health-pill {% if rock_data.stock_balance < 0 %}danger{% else %}warning{% endif %}">
-            <i class="fas {% if rock_data.stock_balance < 0 %}fa-triangle-exclamation{% else %}fa-warehouse{% endif %}"></i>
+            <i class="fas {% if rock_data.stock_balance < 0 %}fa-triangle-exclamation{% else %}fa-warehouse{% endif %}" aria-hidden="true"></i>
             {% if rock_data.stock_balance < 0 %}Stock deficit{% else %}Stock available{% endif %}
           </span>
           <span class="pc-update-note">{% if rock_data.latest_date %}{{ rock_data.latest_date|thai_be_date }}{% else %}No record{% endif %}</span>
@@ -179,11 +179,11 @@
   <section class="pc-ops-card pc-ops-sand">
     <div class="pc-ops-head">
       <div>
-        <div class="pc-eyebrow"><i class="fas fa-water"></i> Sand Progress</div>
+        <div class="pc-eyebrow"><i class="fas fa-water" aria-hidden="true"></i> Sand Progress</div>
         <h5>Source flow, placement, and remaining stock</h5>
       </div>
       <a href="{% url 'project_controls:sand_dashboard' %}?project={{ selected_project.pk }}" class="btn btn-sm btn-outline-info">
-        <i class="fas fa-arrow-up-right-from-square me-1"></i>Open Sand
+        <i class="fas fa-arrow-up-right-from-square me-1" aria-hidden="true"></i>Open Sand
       </a>
     </div>
     <div class="pc-ops-body">
@@ -196,15 +196,15 @@
           </div>
         </div>
         <div class="pc-ops-spark">
-          <span><i class="fas fa-circle text-success"></i>Offshore</span>
-          <span><i class="fas fa-circle text-warning"></i>Onshore</span>
-          <span><i class="fas fa-circle text-danger"></i>Stock</span>
+          <span><i class="fas fa-circle text-success" aria-hidden="true"></i>Offshore</span>
+          <span><i class="fas fa-circle text-warning" aria-hidden="true"></i>Onshore</span>
+          <span><i class="fas fa-circle text-danger" aria-hidden="true"></i>Stock</span>
         </div>
       </div>
       <div class="pc-ops-side">
         <div class="pc-health-row">
           <span class="pc-health-pill {% if sand_data.placement_delivery_percent > 100 %}danger{% else %}info{% endif %}">
-            <i class="fas {% if sand_data.placement_delivery_percent > 100 %}fa-triangle-exclamation{% else %}fa-scale-balanced{% endif %}"></i>
+            <i class="fas {% if sand_data.placement_delivery_percent > 100 %}fa-triangle-exclamation{% else %}fa-scale-balanced{% endif %}" aria-hidden="true"></i>
             {% if sand_data.placement_delivery_percent > 100 %}Placement exceeds delivery{% else %}Remaining stock{% endif %}
           </span>
           <span class="pc-update-note">{% if sand_data.latest_date %}{{ sand_data.latest_date|thai_be_date }}{% else %}No record{% endif %}</span>
@@ -244,42 +244,42 @@
 </div>
 
 <div class="pc-section-title pc-section-title-spaced">
-  <i class="fas fa-gauge-high text-primary"></i>
+  <i class="fas fa-gauge-high text-primary" aria-hidden="true"></i>
   <h6 class="mb-0 fw-semibold">Rock KPIs</h6>
 </div>
 <div class="pc-metric-grid mb-4">
   <div class="pc-metric-card secondary">
-    <div class="pc-metric-icon"><i class="fas fa-truck-ramp-box"></i></div>
+    <div class="pc-metric-icon"><i class="fas fa-truck-ramp-box" aria-hidden="true"></i></div>
     <div class="pc-metric-label">Delivered to TCT</div>
     <div class="pc-metric-value">{{ rock_data.total_delivered|default:0|floatformat:0|intcomma }}</div>
     <div class="pc-metric-sub">Ton accumulated</div>
   </div>
   <div class="pc-metric-card success">
-    <div class="pc-metric-icon"><i class="fas fa-layer-group"></i></div>
+    <div class="pc-metric-icon"><i class="fas fa-layer-group" aria-hidden="true"></i></div>
     <div class="pc-metric-label">Rock Placed</div>
     <div class="pc-metric-value">{{ rock_data.total_placed|default:0|floatformat:0|intcomma }}</div>
     <div class="pc-metric-sub">Ton accumulated</div>
   </div>
   <div class="pc-metric-card {% if rock_data.stock_balance < 0 %}danger{% else %}warning{% endif %}">
-    <div class="pc-metric-icon"><i class="fas fa-warehouse"></i></div>
+    <div class="pc-metric-icon"><i class="fas fa-warehouse" aria-hidden="true"></i></div>
     <div class="pc-metric-label">Stock Balance</div>
     <div class="pc-metric-value">{{ rock_data.stock_balance|default:0|floatformat:0|intcomma }}</div>
     <div class="pc-metric-sub">{% if rock_data.stock_percent is not None %}{{ rock_data.stock_percent|floatformat:1 }}% of delivered{% else %}Ton{% endif %}</div>
   </div>
   <div class="pc-metric-card info">
-    <div class="pc-metric-icon"><i class="fas fa-chart-pie"></i></div>
+    <div class="pc-metric-icon"><i class="fas fa-chart-pie" aria-hidden="true"></i></div>
     <div class="pc-metric-label">Completion</div>
     <div class="pc-metric-value">{{ rock_data.display_completion_percent|default:0|floatformat:1 }}%</div>
     <div class="pc-metric-sub">{{ rock_data.display_target_note|default:"Assumed baseline" }}</div>
   </div>
   <div class="pc-metric-card primary">
-    <div class="pc-metric-icon"><i class="fas fa-gauge-high"></i></div>
+    <div class="pc-metric-icon"><i class="fas fa-gauge-high" aria-hidden="true"></i></div>
     <div class="pc-metric-label">Avg Placement</div>
     <div class="pc-metric-value">{{ rock_data.display_average_daily|default:0|floatformat:0|intcomma }}</div>
     <div class="pc-metric-sub">Ton/day</div>
   </div>
   <div class="pc-metric-card muted">
-    <div class="pc-metric-icon"><i class="fas fa-calendar-check"></i></div>
+    <div class="pc-metric-icon"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
     <div class="pc-metric-label">Forecast Finish</div>
     <div class="pc-metric-value compact">{% if rock_data.display_forecast_completion_date %}{{ rock_data.display_forecast_completion_date|thai_be_date }}{% else %}-{% endif %}</div>
     <div class="pc-metric-sub">{{ rock_data.record_count|default:0 }} recorded days</div>
@@ -287,61 +287,61 @@
 </div>
 
 <div class="pc-section-title pc-section-title-spaced">
-  <i class="fas fa-water text-info"></i>
+  <i class="fas fa-water text-info" aria-hidden="true"></i>
   <h6 class="mb-0 fw-semibold">Sand KPIs</h6>
 </div>
 <div class="pc-metric-grid pc-metric-grid-sand mb-4">
   <div class="pc-metric-card info">
-    <div class="pc-metric-icon"><i class="fas fa-anchor"></i></div>
+    <div class="pc-metric-icon"><i class="fas fa-anchor" aria-hidden="true"></i></div>
     <div class="pc-metric-label">TCT Pier Stock</div>
     <div class="pc-metric-value">{{ sand_data.total_tct|default:0|floatformat:0|intcomma }}</div>
     <div class="pc-metric-sub">Ton accumulated</div>
   </div>
   <div class="pc-metric-card primary">
-    <div class="pc-metric-icon"><i class="fas fa-warehouse"></i></div>
+    <div class="pc-metric-icon"><i class="fas fa-warehouse" aria-hidden="true"></i></div>
     <div class="pc-metric-label">MTP3 Stockpile</div>
     <div class="pc-metric-value">{{ sand_data.total_mtp3|default:0|floatformat:0|intcomma }}</div>
     <div class="pc-metric-sub">Ton accumulated</div>
   </div>
   <div class="pc-metric-card success">
-    <div class="pc-metric-icon"><i class="fas fa-map-location-dot"></i></div>
+    <div class="pc-metric-icon"><i class="fas fa-map-location-dot" aria-hidden="true"></i></div>
     <div class="pc-metric-label">Chalothon Source</div>
     <div class="pc-metric-value">{{ sand_data.total_chalothon|default:0|floatformat:0|intcomma }}</div>
     <div class="pc-metric-sub">Ton supplied</div>
   </div>
   <div class="pc-metric-card warning">
-    <div class="pc-metric-icon"><i class="fas fa-route"></i></div>
+    <div class="pc-metric-icon"><i class="fas fa-route" aria-hidden="true"></i></div>
     <div class="pc-metric-label">Khlong Bang Phai</div>
     <div class="pc-metric-value">{{ sand_data.total_khlong_bang_phai|default:0|floatformat:0|intcomma }}</div>
     <div class="pc-metric-sub">Ton supplied</div>
   </div>
   <div class="pc-metric-card danger">
-    <div class="pc-metric-icon"><i class="fas fa-scale-balanced"></i></div>
+    <div class="pc-metric-icon"><i class="fas fa-scale-balanced" aria-hidden="true"></i></div>
     <div class="pc-metric-label">Remaining TCT</div>
     <div class="pc-metric-value">{{ sand_data.remaining_tct|default:0|floatformat:0|intcomma }}</div>
     <div class="pc-metric-sub">Ton remaining</div>
   </div>
   <div class="pc-metric-card secondary">
-    <div class="pc-metric-icon"><i class="fas fa-boxes-stacked"></i></div>
+    <div class="pc-metric-icon"><i class="fas fa-boxes-stacked" aria-hidden="true"></i></div>
     <div class="pc-metric-label">Remaining MTP3</div>
     <div class="pc-metric-value">{{ sand_data.remaining_mtp3|default:0|floatformat:0|intcomma }}</div>
     <div class="pc-metric-sub">Ton remaining</div>
   </div>
   <div class="pc-metric-card success">
-    <div class="pc-metric-icon"><i class="fas fa-gauge-high"></i></div>
+    <div class="pc-metric-icon"><i class="fas fa-gauge-high" aria-hidden="true"></i></div>
     <div class="pc-metric-label">Avg Placement</div>
     <div class="pc-metric-value">{{ sand_data.display_average_daily|default:0|floatformat:0|intcomma }}</div>
     <div class="pc-metric-sub">Ton/day</div>
   </div>
   <div class="pc-metric-card muted">
-    <div class="pc-metric-icon"><i class="fas fa-calendar-check"></i></div>
+    <div class="pc-metric-icon"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
     <div class="pc-metric-label">Forecast Finish</div>
     <div class="pc-metric-value compact">{% if sand_data.display_forecast_completion_date %}{{ sand_data.display_forecast_completion_date|thai_be_date }}{% else %}-{% endif %}</div>
     <div class="pc-metric-sub">{{ sand_data.display_completion_percent|default:0|floatformat:1 }}% complete</div>
   </div>
 </div>
 
-<h6 class="text-muted fw-semibold mb-2"><i class="fas fa-tasks me-2"></i>Recovery Action Plan</h6>
+<h6 class="text-muted fw-semibold mb-2"><i class="fas fa-tasks me-2" aria-hidden="true"></i>Recovery Action Plan</h6>
 <div class="row g-3 mb-4">
   <div class="col-6 col-xl-3">
     <div class="card pc-kpi-card border-start border-4 border-primary">

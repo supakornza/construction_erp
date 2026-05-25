@@ -10,7 +10,7 @@
 <form method="post">
   {% csrf_token %}
   <div class="card mb-3">
-    <div class="card-header"><i class="fas fa-calendar-check me-2"></i>Plan Header</div>
+    <div class="card-header"><i class="fas fa-calendar-check me-2" aria-hidden="true"></i>Plan Header</div>
     <div class="card-body">
       {{ form.non_field_errors }}
       <div class="row g-3">
@@ -29,8 +29,8 @@
 
   <div class="card mb-3">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <span><i class="fas fa-table me-2"></i>Daily Plan Items (14 Days)</span>
-      <button type="button" class="btn btn-sm btn-outline-success" id="add-item-btn"><i class="fas fa-plus me-1"></i>Add Day</button>
+      <span><i class="fas fa-table me-2" aria-hidden="true"></i>Daily Plan Items (14 Days)</span>
+      <button type="button" class="btn btn-sm btn-outline-success" id="add-item-btn"><i class="fas fa-plus me-1" aria-hidden="true"></i>Add Day</button>
     </div>
     <div class="card-body p-0">
       {{ item_formset.management_form }}
@@ -54,7 +54,7 @@
               <td>{{ pf.planned_quantity }}{{ pf.planned_quantity.errors }}</td>
               <td>{{ pf.actual_quantity }}{{ pf.actual_quantity.errors }}</td>
               <td class="text-center">
-                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
                 {{ pf.DELETE }}
               </td>
             </tr>
@@ -72,7 +72,7 @@
       <td>{{ item_formset.empty_form.planned_quantity }}</td>
       <td>{{ item_formset.empty_form.actual_quantity }}</td>
       <td class="text-center">
-        <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+        <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
         {{ item_formset.empty_form.DELETE }}
       </td>
     </tr>

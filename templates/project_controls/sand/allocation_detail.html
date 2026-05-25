@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="d-flex align-items-center mb-4 flex-wrap gap-2">
-  <a href="{% url 'project_controls:sand_allocation_list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left"></i></a>
+  <a href="{% url 'project_controls:sand_allocation_list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>
   <h5 class="mb-0">Sand Allocation - {{ alloc.project.project_name }} ({{ alloc.effective_date|thai_be_date }})</h5>
   <div class="ms-auto">
     {% if alloc.is_active %}<span class="badge bg-success me-2">Active</span>{% endif %}
@@ -14,7 +14,7 @@
 <div class="row g-3 mb-4">
   <div class="col-md-6">
     <div class="card h-100">
-      <div class="card-header fw-semibold"><i class="fas fa-sliders-h me-2"></i>Parameters</div>
+      <div class="card-header fw-semibold"><i class="fas fa-sliders-h me-2" aria-hidden="true"></i>Parameters</div>
       <div class="card-body">
         <dl class="row mb-0">
           <dt class="col-6">Project</dt><dd class="col-6">{{ alloc.project.project_name }}</dd>
@@ -30,7 +30,7 @@
   </div>
   <div class="col-md-6">
     <div class="card h-100 border-info">
-      <div class="card-header fw-semibold bg-info text-white"><i class="fas fa-calculator me-2"></i>Calculated Results</div>
+      <div class="card-header fw-semibold bg-info text-white"><i class="fas fa-calculator me-2" aria-hidden="true"></i>Calculated Results</div>
       <div class="card-body">
         <div class="row g-3 text-center">
           <div class="col-6">

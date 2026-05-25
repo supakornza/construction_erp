@@ -11,7 +11,7 @@
   {% csrf_token %}
 
   <div class="card mb-3">
-    <div class="card-header"><i class="fas fa-water me-2"></i>Sand Transport & Placement Details</div>
+    <div class="card-header"><i class="fas fa-water me-2" aria-hidden="true"></i>Sand Transport & Placement Details</div>
     <div class="card-body">
       {{ form.non_field_errors }}
       <div class="row g-3">
@@ -20,21 +20,21 @@
         <div class="col-md-4">{{ form.day_name.label_tag }}{{ form.day_name }}{{ form.day_name.errors }}</div>
       </div>
       <hr>
-      <h6 class="text-info"><i class="fas fa-anchor me-2"></i>Destination: TCT Pier</h6>
+      <h6 class="text-info"><i class="fas fa-anchor me-2" aria-hidden="true"></i>Destination: TCT Pier</h6>
       <div class="row g-2">
         <div class="col-md-3">{{ form.tct_daily_ton.label_tag }}{{ form.tct_daily_ton }}{{ form.tct_daily_ton.errors }}</div>
         <div class="col-md-3">{{ form.tct_trips.label_tag }}{{ form.tct_trips }}{{ form.tct_trips.errors }}</div>
         <div class="col-md-3">{{ form.tct_trucks.label_tag }}{{ form.tct_trucks }}{{ form.tct_trucks.errors }}</div>
       </div>
       <hr>
-      <h6 class="text-primary"><i class="fas fa-warehouse me-2"></i>Destination: Stockpile Sand MTP3</h6>
+      <h6 class="text-primary"><i class="fas fa-warehouse me-2" aria-hidden="true"></i>Destination: Stockpile Sand MTP3</h6>
       <div class="row g-2">
         <div class="col-md-3">{{ form.mtp3_daily_ton.label_tag }}{{ form.mtp3_daily_ton }}{{ form.mtp3_daily_ton.errors }}</div>
         <div class="col-md-3">{{ form.mtp3_trips.label_tag }}{{ form.mtp3_trips }}{{ form.mtp3_trips.errors }}</div>
         <div class="col-md-3">{{ form.mtp3_trucks.label_tag }}{{ form.mtp3_trucks }}{{ form.mtp3_trucks.errors }}</div>
       </div>
       <hr>
-      <h6 class="text-success"><i class="fas fa-mound me-2"></i>Sand Sources</h6>
+      <h6 class="text-success"><i class="fas fa-mound me-2" aria-hidden="true"></i>Sand Sources</h6>
       <div class="row g-2">
         <div class="col-md-4">{{ form.chalothon_daily_ton.label_tag }}{{ form.chalothon_daily_ton }}{{ form.chalothon_daily_ton.errors }}</div>
         <div class="col-md-4">{{ form.chalothon_trips.label_tag }}{{ form.chalothon_trips }}{{ form.chalothon_trips.errors }}</div>
@@ -44,13 +44,13 @@
         <div class="col-md-4">{{ form.khlong_bang_phai_trucks.label_tag }}{{ form.khlong_bang_phai_trucks }}{{ form.khlong_bang_phai_trucks.errors }}</div>
       </div>
       <hr>
-      <h6><i class="fas fa-water me-2"></i>Offshore Placement</h6>
+      <h6><i class="fas fa-water me-2" aria-hidden="true"></i>Offshore Placement</h6>
       <div class="row g-2">
         <div class="col-md-4">
           {{ form.offshore_daily_ton.label_tag }}
           <div class="input-group">
             {{ form.offshore_daily_ton }}
-            <span class="input-group-text text-muted" title="Auto-calculated from Transport Placements below"><i class="fas fa-calculator"></i></span>
+            <span class="input-group-text text-muted" title="Auto-calculated from Transport Placements below"><i class="fas fa-calculator" aria-hidden="true"></i></span>
           </div>
           {{ form.offshore_daily_ton.errors }}
           <small class="text-muted">Auto-calculated from Transport Placements.</small>
@@ -58,20 +58,20 @@
         <div class="col-md-8">{{ form.offshore_station.label_tag }}{{ form.offshore_station }}{{ form.offshore_station.errors }}</div>
       </div>
       <hr>
-      <h6><i class="fas fa-road me-2"></i>Onshore Placement</h6>
+      <h6><i class="fas fa-road me-2" aria-hidden="true"></i>Onshore Placement</h6>
       <div class="row g-2">
         <div class="col-md-3">{{ form.onshore_daily_ton.label_tag }}{{ form.onshore_daily_ton }}{{ form.onshore_daily_ton.errors }}</div>
         <div class="col-md-3">{{ form.onshore_trips.label_tag }}{{ form.onshore_trips }}{{ form.onshore_trips.errors }}</div>
         <div class="col-md-3">{{ form.onshore_trucks.label_tag }}{{ form.onshore_trucks }}{{ form.onshore_trucks.errors }}</div>
       </div>
       <hr>
-      <h6><i class="fas fa-border-all me-2"></i>Plot Tank Quantities</h6>
+      <h6><i class="fas fa-border-all me-2" aria-hidden="true"></i>Plot Tank Quantities</h6>
       <div class="row g-2">
         <div class="col-md-3">{{ form.inside_plot_daily.label_tag }}{{ form.inside_plot_daily }}{{ form.inside_plot_daily.errors }}</div>
         <div class="col-md-3">{{ form.outside_plot_daily.label_tag }}{{ form.outside_plot_daily }}{{ form.outside_plot_daily.errors }}</div>
       </div>
       <hr>
-      <h6 class="text-warning"><i class="fas fa-cubes me-2"></i>Remaining Stock</h6>
+      <h6 class="text-warning"><i class="fas fa-cubes me-2" aria-hidden="true"></i>Remaining Stock</h6>
       <div class="row g-2">
         <div class="col-md-3">{{ form.remaining_tct.label_tag }}{{ form.remaining_tct }}{{ form.remaining_tct.errors }}</div>
         <div class="col-md-3">{{ form.remaining_mtp3.label_tag }}{{ form.remaining_mtp3 }}{{ form.remaining_mtp3.errors }}</div>
@@ -85,8 +85,8 @@
 
   <div class="card mb-3">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <span><i class="fas fa-truck-moving me-2"></i>Transport Placements</span>
-      <button type="button" class="btn btn-sm btn-outline-success" id="add-barge-btn"><i class="fas fa-plus me-1"></i>Add Transport</button>
+      <span><i class="fas fa-truck-moving me-2" aria-hidden="true"></i>Transport Placements</span>
+      <button type="button" class="btn btn-sm btn-outline-success" id="add-barge-btn"><i class="fas fa-plus me-1" aria-hidden="true"></i>Add Transport</button>
     </div>
     <div class="card-body p-0">
       {{ barge_formset.management_form }}
@@ -116,7 +116,7 @@
               <td>{{ bf.placement_type }}</td>
               <td>{{ bf.station }}</td>
               <td class="text-center">
-                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
                 {{ bf.DELETE }}
               </td>
             </tr>
@@ -137,14 +137,14 @@
       <td>{{ barge_formset.empty_form.placement_type }}</td>
       <td>{{ barge_formset.empty_form.station }}</td>
       <td class="text-center">
-        <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+        <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
         {{ barge_formset.empty_form.DELETE }}
       </td>
     </tr>
   </template>
 
   <div class="card mb-3">
-    <div class="card-header"><i class="fas fa-calculator me-2"></i>Sand Entry Helper</div>
+    <div class="card-header"><i class="fas fa-calculator me-2" aria-hidden="true"></i>Sand Entry Helper</div>
     <div class="card-body">
       <div class="row g-3 small">
         <div class="col-md-3"><span class="text-muted d-block">Delivered today</span><strong id="sand-helper-delivered">0.00 T</strong></div>

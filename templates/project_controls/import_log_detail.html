@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="d-flex align-items-center mb-4">
-  <a href="{% url 'project_controls:import_log_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+  <a href="{% url 'project_controls:import_log_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>
   <h5 class="mb-0">Import Log #{{ log.pk }}</h5>
   <div class="ms-3">
     {% if log.status == 'success' %}<span class="badge bg-success fs-6">Success</span>
@@ -53,7 +53,7 @@
 
 {% if log.error_message %}
 <div class="card mb-3 border-danger">
-  <div class="card-header fw-semibold text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Error Details</div>
+  <div class="card-header fw-semibold text-danger"><i class="fas fa-exclamation-triangle me-2" aria-hidden="true"></i>Error Details</div>
   <div class="card-body">
     <pre class="mb-0 small">{{ log.error_message }}</pre>
   </div>

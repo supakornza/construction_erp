@@ -959,7 +959,9 @@ tr.formset-row-deleted td {
   line-height: 1;
 }
 .pc-chart-center small {
-  color: #94a3b8;
+  /* was #94a3b8 = 2.96:1 (FAIL AA for small bold text on white).
+     #64748b = 5.21:1 (PASS) */
+  color: #64748b;
   font-size: .62rem;
   font-weight: 700;
   margin-top: .25rem;
@@ -1173,7 +1175,8 @@ tr.formset-row-deleted td {
   line-height: 1.25;
 }
 .pc-metric-sub {
-  color: #94a3b8;
+  /* was #94a3b8 = 2.96:1 (FAIL AA). #64748b = 5.21:1 (PASS) */
+  color: #64748b;
   font-size: .72rem;
   font-weight: 700;
   margin-top: .22rem;

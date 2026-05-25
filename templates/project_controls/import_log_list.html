@@ -4,8 +4,8 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h5 class="mb-0"><i class="fas fa-history me-2"></i>Import History</h5>
-  <a href="{% url 'project_controls:import' %}" class="btn btn-sm btn-primary"><i class="fas fa-file-import me-1"></i>New Import</a>
+  <h5 class="mb-0"><i class="fas fa-history me-2" aria-hidden="true"></i>Import History</h5>
+  <a href="{% url 'project_controls:import' %}" class="btn btn-sm btn-primary"><i class="fas fa-file-import me-1" aria-hidden="true"></i>New Import</a>
 </div>
 
 <div class="card">
@@ -40,11 +40,11 @@
           <td class="text-end {% if log.failed_rows > 0 %}text-danger fw-bold{% endif %}">{{ log.failed_rows|intcomma }}</td>
           <td>{{ log.imported_by|default:"-" }}</td>
           <td class="text-end">
-            <a href="{% url 'project_controls:import_log_detail' log.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-eye"></i></a>
+            <a href="{% url 'project_controls:import_log_detail' log.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-eye" aria-hidden="true"></i></a>
           </td>
         </tr>
         {% empty %}
-        <tr><td colspan="9" class="text-center text-muted py-4">No import logs found.</td></tr>
+        <tr><td colspan="9" class="text-center text-muted py-4" role="status">No import logs found.</td></tr>
         {% endfor %}
       </tbody>
     </table>

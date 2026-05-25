@@ -4,20 +4,20 @@
 
 {% block content %}
 <div class="pc-page-header">
-  <h5 class="pc-page-title"><i class="fas fa-mountain me-2 text-secondary"></i>Rock Daily Records</h5>
+  <h5 class="pc-page-title"><i class="fas fa-mountain me-2 text-secondary" aria-hidden="true"></i>Rock Daily Records</h5>
   <div class="d-flex gap-2 flex-wrap">
     <a href="{% url 'project_controls:dashboard' %}{% if request.GET.project %}?project={{ request.GET.project }}{% endif %}" class="btn btn-sm btn-outline-primary">
-      <i class="fas fa-arrow-left me-1"></i>Rock &amp; Sand Control
+      <i class="fas fa-arrow-left me-1" aria-hidden="true"></i>Rock &amp; Sand Control
     </a>
     <a href="{% url 'project_controls:rock_dashboard' %}" class="btn btn-sm btn-outline-secondary">
-      <i class="fas fa-chart-bar me-1"></i>Dashboard
+      <i class="fas fa-chart-bar me-1" aria-hidden="true"></i>Dashboard
     </a>
     <a href="{% url 'project_controls:rock_create' %}" class="btn btn-sm btn-primary">
-      <i class="fas fa-plus me-1"></i>New Record
+      <i class="fas fa-plus me-1" aria-hidden="true"></i>New Record
     </a>
     {% if request.GET.project %}
     <a href="{% url 'project_controls:rock_export_excel' request.GET.project %}" class="btn btn-sm btn-outline-success">
-      <i class="fas fa-file-excel me-1"></i>Export Excel
+      <i class="fas fa-file-excel me-1" aria-hidden="true"></i>Export Excel
     </a>
     {% endif %}
   </div>
@@ -67,7 +67,7 @@
           <th class="text-end">Available Stock</th>
           <th>Station</th>
           <th>Remarks</th>
-          <th class="text-end">Actions</th>
+          <th><span class="visually-hidden">การกระทำ</span></th>
         </tr>
       </thead>
       <tbody>
@@ -88,11 +88,11 @@
           <td class="small">{{ rec.station_of_core|truncatechars:30 }}</td>
           <td class="small text-muted">{{ rec.remarks|truncatechars:30 }}</td>
           <td class="pc-table-actions">
-            <a href="{% url 'project_controls:rock_update' rec.pk %}" class="btn btn-xs btn-outline-secondary" title="Edit"><i class="fas fa-edit"></i></a>
+            <a href="{% url 'project_controls:rock_update' rec.pk %}" class="btn btn-xs btn-outline-secondary" title="Edit"><i class="fas fa-edit" aria-hidden="true"></i></a>
             {% if request.user.is_superuser or request.user.role == 'admin' %}
             <form method="post" action="{% url 'project_controls:rock_delete' rec.pk %}" class="d-inline" onsubmit="return confirm('Delete rock record for {{ rec.record_date|thai_be_date }}?')">
               {% csrf_token %}
-              <button type="submit" class="btn btn-xs btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
+              <button type="submit" class="btn btn-xs btn-outline-danger" title="Delete"><i class="fas fa-trash" aria-hidden="true"></i></button>
             </form>
             {% endif %}
           </td>

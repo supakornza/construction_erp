@@ -4,14 +4,14 @@
 
 {% block content %}
 <div class="d-flex align-items-center mb-4">
-  <a href="{% url 'project_controls:dashboard' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
-  <h5 class="mb-0"><i class="fas fa-file-import me-2"></i>Import Excel Data</h5>
+  <a href="{% url 'project_controls:dashboard' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>
+  <h5 class="mb-0"><i class="fas fa-file-import me-2" aria-hidden="true"></i>Import Excel Data</h5>
 </div>
 
 <div class="row g-3 mb-4">
   <div class="col-md-6 col-xl-3">
     <div class="card border-secondary h-100">
-      <div class="card-header bg-secondary text-white"><i class="fas fa-mountain me-2"></i>Rock Summary</div>
+      <div class="card-header bg-secondary text-white"><i class="fas fa-mountain me-2" aria-hidden="true"></i>Rock Summary</div>
       <div class="card-body">
         <p class="small text-muted">Import Rock daily records from the summary Excel file.</p>
         {% include "project_controls/import_form_card.html" with import_type="rock_summary" button_label="Import Rock" button_class="btn-secondary" %}
@@ -21,7 +21,7 @@
 
   <div class="col-md-6 col-xl-3">
     <div class="card border-info h-100">
-      <div class="card-header bg-info text-white"><i class="fas fa-water me-2"></i>Sand Summary</div>
+      <div class="card-header bg-info text-white"><i class="fas fa-water me-2" aria-hidden="true"></i>Sand Summary</div>
       <div class="card-body">
         <p class="small text-muted">Import Sand daily records from the summary Excel file.</p>
         {% include "project_controls/import_form_card.html" with import_type="sand_summary" button_label="Import Sand" button_class="btn-info text-white" %}
@@ -31,7 +31,7 @@
 
   <div class="col-md-6 col-xl-3">
     <div class="card border-success h-100">
-      <div class="card-header bg-success text-white"><i class="fas fa-layer-group me-2"></i>Revetment Progress</div>
+      <div class="card-header bg-success text-white"><i class="fas fa-layer-group me-2" aria-hidden="true"></i>Revetment Progress</div>
       <div class="card-body">
         <p class="small text-muted">Import Revetment stations, activities, and existing status cells from the workbook.</p>
         {% include "project_controls/import_form_card.html" with import_type="revetment_progress" button_label="Import Revetment" button_class="btn-success" %}
@@ -41,7 +41,7 @@
 
   <div class="col-md-6 col-xl-3">
     <div class="card border-warning h-100">
-      <div class="card-header bg-warning"><i class="fas fa-tasks me-2"></i>Recovery Action Plan</div>
+      <div class="card-header bg-warning"><i class="fas fa-tasks me-2" aria-hidden="true"></i>Recovery Action Plan</div>
       <div class="card-body">
         <p class="small text-muted">Import Recovery Action Plan items from Excel.</p>
         {% include "project_controls/import_form_card.html" with import_type="recovery_action_plan" button_label="Import RAP" button_class="btn-warning" %}
@@ -51,7 +51,7 @@
 </div>
 
 <div class="d-flex justify-content-between align-items-center mb-2">
-  <h6 class="mb-0"><i class="fas fa-history me-2"></i>Recent Imports</h6>
+  <h6 class="mb-0"><i class="fas fa-history me-2" aria-hidden="true"></i>Recent Imports</h6>
   <a href="{% url 'project_controls:import_log_list' %}" class="btn btn-sm btn-outline-secondary">View All Logs</a>
 </div>
 <div class="card">
@@ -77,7 +77,7 @@
           <td class="text-truncate" style="max-width:260px">{{ log.error_message|default:"-" }}</td>
         </tr>
         {% empty %}
-        <tr><td colspan="8" class="text-center text-muted py-3">No imports yet.</td></tr>
+        <tr><td colspan="8" class="text-center text-muted py-3" role="status">No imports yet.</td></tr>
         {% endfor %}
       </tbody>
     </table>
