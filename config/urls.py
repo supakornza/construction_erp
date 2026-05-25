@@ -30,6 +30,7 @@ urlpatterns = [
     path('subcontractors/', include('apps.subcontractors.urls', namespace='subcontractors')),
     path('drawings/', include('apps.drawings.urls', namespace='drawings')),
     path('notifications/', include('apps.notifications.urls', namespace='notifications')),
+    path('ai-agent/', include('apps.ai_agent.urls', namespace='ai_agent')),
 ]
 
 if settings.DEBUG:
