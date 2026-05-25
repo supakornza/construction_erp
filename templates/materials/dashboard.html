@@ -87,9 +87,9 @@
 </div>
 
 <div class="row g-3 mb-4">
-  {# Explicit breakpoint ladder for #10 reflow: 1 col on phone, 2 on small tablet,
+  {% comment %} Explicit breakpoint ladder for #10 reflow: 1 col on phone, 2 on small tablet,
      3 on tablet, 5 on lg+ desktop. Default `.col` (equal-fluid) crammed 5 cards
-     onto every viewport which broke at <320 px. #}
+     onto every viewport which broke at <320 px. {% endcomment %}
   <div class="col-12 col-sm-6 col-md-4 col-lg">
     <div class="card material-kpi border-primary">
       <div class="card-body">

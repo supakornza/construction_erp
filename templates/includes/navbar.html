@@ -75,8 +75,8 @@
                     {% if notif_unread_count > 0 %}
                     <form method="post" action="{% url 'notifications:mark_all_read' %}">
                         {% csrf_token %}
-                        {# was btn-xs (~24px). btn-sm ~31px is comfortable here without
-                           breaking the cramped dropdown header layout. #}
+                        {% comment %} was btn-xs (~24px). btn-sm ~31px is comfortable here without
+                           breaking the cramped dropdown header layout. {% endcomment %}
                         <button type="submit" class="btn btn-sm btn-link text-body-secondary p-0">
                             {% trans "Mark all read" %}
                         </button>
@@ -100,9 +100,9 @@
                         {% if notif.url %}
                         <form method="post" action="{% url 'notifications:mark_read' notif.pk %}" class="flex-shrink-0">
                             {% csrf_token %}
-                            {# Arrow → opens the linked record. btn-sm at 31px is
+                            {% comment %} Arrow → opens the linked record. btn-sm at 31px is
                                acceptable inside a dense dropdown row; aria-label
-                               gives SR the action context. #}
+                               gives SR the action context. {% endcomment %}
                             <button type="submit" class="btn btn-sm btn-link text-body-secondary p-1"
                                     aria-label="{% blocktrans with title=notif.title %}Open notification: {{ title }}{% endblocktrans %}">
                                 <i class="fas fa-arrow-right" aria-hidden="true"></i>

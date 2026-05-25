@@ -231,14 +231,12 @@
 
 <!-- Pagination -->
 {% if is_paginated %}
-{#
-  Pagination a11y (group 3):
+{% comment %} Pagination a11y (group 3):
    - nav has Thai aria-label (was English "pagination")
    - prev/next links carry aria-label so SR doesn't read raw chevron glyph
    - chevron glyphs marked aria-hidden (decorative)
    - disabled state uses aria-disabled="true" so SR + ATs know it's unclickable
-   - active page uses aria-current="page" (recommended pattern for paginators)
-#}
+   - active page uses aria-current="page" (recommended pattern for paginators) {% endcomment %}
 <nav class="mt-3 d-flex justify-content-center" aria-label="หน้า">
   <ul class="pagination pagination-sm">
     {% if page_obj.has_previous %}

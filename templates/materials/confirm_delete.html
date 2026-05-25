@@ -2,13 +2,11 @@
 {% block title %}ยืนยันการลบรายการรับวัสดุ – Construction ERP{% endblock %}
 {% block page_title %}ยืนยันการลบ{% endblock %}
 {% block content %}
-{#
-  Confirmation prompt as an inline ARIA alertdialog (not a modal — full-page
+{% comment %} Confirmation prompt as an inline ARIA alertdialog (not a modal — full-page
   confirm). `role="alertdialog"` tells SR users this is a decision they need
   to make; `aria-labelledby`/`aria-describedby` give the heading + body as
   the dialog's accessible name + description. Cancel autofocuses to make
-  the safe option the default for keyboard users.
-#}
+  the safe option the default for keyboard users. {% endcomment %}
 <section role="alertdialog"
          aria-labelledby="del-title"
          aria-describedby="del-desc"
@@ -30,9 +28,9 @@
             <p class="small text-body-secondary">การลบนี้ไม่สามารถกู้คืนได้</p>
         </div>
         <form method="post" class="d-flex gap-2">{% csrf_token %}
-            {# Cancel first → keyboard Tab lands on the safer option first.
+            {% comment %} Cancel first → keyboard Tab lands on the safer option first.
                Delete carries a contextual aria-label so SR confirms what's
-               being deleted, not just "Delete". #}
+               being deleted, not just "Delete". {% endcomment %}
             <a href="{% url 'materials:delivery_list' %}"
                class="btn btn-secondary"
                id="cancelBtn" autofocus

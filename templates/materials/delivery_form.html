@@ -22,13 +22,11 @@
 <input type="hidden" name="ocr_raw_text" id="id_ocr_raw_text">
 </div></div>
 
-{#
-  OCR status region. Stays in DOM at all times (using HTML5 `hidden` to
+{% comment %} OCR status region. Stays in DOM at all times (using HTML5 `hidden` to
   avoid display while empty) so SR / AT can subscribe to live changes.
   `aria-live="polite"` queues announcements after current speech — OCR is
   status info, not an interrupt. `aria-atomic="true"` re-reads the whole
-  banner each update so partial updates aren't garbled.
-#}
+  banner each update so partial updates aren't garbled. {% endcomment %}
 <div id="ocr-banner" class="alert mt-3"
      aria-live="polite" aria-atomic="true" hidden></div>
 {% endblock %}
