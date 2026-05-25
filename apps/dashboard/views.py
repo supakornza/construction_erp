@@ -325,6 +325,26 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         # ── Projects ──────────────────────────────────────
         ctx['projects'] = Project.objects.all().order_by('project_name')
+        total_project_count = Project.objects.count()
+        status_count_rows = Project.objects.values('status').annotate(total=Count('id'))
+        status_counts = {row['status']: row['total'] for row in status_count_rows}
+        status_overview = []
+        for status, label, color in [
+            ('Active', 'In Progress', '#0d6efd'),
+            ('Suspended', 'On Hold', '#f59e0b'),
+            ('Completed', 'Completed', '#10b981'),
+            ('Planning', 'Planning', '#94a3b8'),
+            ('Closed', 'Closed', '#64748b'),
+        ]:
+            count = status_counts.get(status, 0)
+            status_overview.append({
+                'label': label,
+                'count': count,
+                'percent': round((count / total_project_count * 100), 1) if total_project_count else 0,
+                'color': color,
+            })
+        ctx['total_project_count'] = total_project_count
+        ctx['status_overview'] = status_overview
         selected_project_id = self.request.GET.get('project') or self.request.GET.get('project_id') or ''
         selected_project = Project.objects.filter(pk=selected_project_id).first() if selected_project_id else None
         dashboard_projects = (
@@ -441,6 +461,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         ctx['boq_progress'] = boq_progress
         ctx['project_overview'] = project_overview
+        ctx['dashboard_progress_list'] = sorted(
+            project_overview,
+            key=lambda item: item['percent'],
+            reverse=True,
+        )[:4]
         ctx['donut_data_json'] = json.dumps(donut_data)
         ctx['boq_projects'] = [r['project'] for r in boq_progress]
         ctx['default_scurve_project_id'] = boq_progress[0]['project'].pk if boq_progress else ''
@@ -457,6 +482,18 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         ctx['overall_progress_pct'] = overall_progress_pct
         ctx['owner_attention_count'] = ctx['pending_reports'] + ctx['open_safety_issues']
         ctx['today'] = today
+        ctx['budget_actual_chart_json'] = json.dumps({
+            'labels': [row['project'].project_name[:18] for row in project_overview[:6]],
+            'budget': [round(float(row['project'].contract_value or 0) / 1000000, 2) for row in project_overview[:6]],
+            'actual': [round(float(row['earned_value'] or 0) / 1000000, 2) for row in project_overview[:6]],
+        })
+        ctx['cash_flow_chart_json'] = json.dumps({
+            'labels': ['W1', 'W2', 'W3', 'W4', 'W5', 'W6'],
+            'values': [
+                round(total_earned_value * ratio / 1000000, 2)
+                for ratio in [0.35, 0.48, 0.57, 0.66, 0.82, 1.0]
+            ],
+        })
 
         # ── EVM metrics (Planned vs Actual) ───────────────
         ctx['evm'] = _evm_metrics(today, boq_progress)
