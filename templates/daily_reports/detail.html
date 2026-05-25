@@ -287,10 +287,12 @@
 </div>
 
 {# ── Lightbox Modal ──────────────────────────────────────────────── #}
-{# role="dialog" + aria-modal + aria-labelledby is the proper ARIA pattern
-   for a Bootstrap modal that shows enlarged content. Bootstrap 5 handles
-   focus-trap when init via data-bs-toggle. The img.alt is updated by JS
-   when the modal opens so SR users hear the caption, not "" #}
+{% comment %}
+role="dialog" + aria-modal + aria-labelledby is the proper ARIA pattern
+for a Bootstrap modal that shows enlarged content. Bootstrap 5 handles
+focus-trap when init via data-bs-toggle. The img.alt is updated by JS
+when the modal opens so SR users hear the caption, not "".
+{% endcomment %}
 <div class="modal fade" id="photoModal" tabindex="-1"
      role="dialog" aria-modal="true" aria-labelledby="modalCaption">
     <div class="modal-dialog modal-xl modal-dialog-centered">

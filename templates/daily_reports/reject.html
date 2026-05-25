@@ -12,9 +12,11 @@
     </a>
     <h4 class="mb-0">ปฏิเสธรายงานประจำวัน – {{ report.report_date|thai_be_date }}</h4>
 </div>
-{# Reject is a form-bearing dialog (not a yes/no confirm), so role="dialog"
-   not "alertdialog" — alertdialog is reserved for prompts with no inputs
-   beyond OK/Cancel per ARIA spec. #}
+{% comment %}
+Reject is a form-bearing dialog (not a yes/no confirm), so role="dialog"
+not "alertdialog" - alertdialog is reserved for prompts with no inputs
+beyond OK/Cancel per ARIA spec.
+{% endcomment %}
 <section role="dialog"
          aria-labelledby="rej-title"
          aria-describedby="rej-desc"
