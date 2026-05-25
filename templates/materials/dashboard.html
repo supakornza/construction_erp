@@ -130,10 +130,11 @@
     <div class="card material-kpi border-danger h-100">
       <div class="card-body">
         <div class="text-body-secondary small d-flex align-items-center gap-1">
-          <i class="fas fa-truck text-danger" aria-hidden="true"></i> รถเข้า Stockpile วันนี้
+          <i class="fas fa-truck text-danger" aria-hidden="true"></i>
+          {% if truck_is_single_day %}รถเข้า Stockpile {{ truck_date_to }}{% else %}รถเข้า Stockpile (ตามช่วงที่เลือก){% endif %}
         </div>
         <div class="fs-2 fw-bold text-danger">{{ truck_rows_today|length }}</div>
-        <div class="text-body-secondary small">คัน · {{ today }}</div>
+        <div class="text-body-secondary small">คัน · {% if truck_is_single_day %}{{ truck_date_to }}{% else %}{{ truck_date_from }} – {{ truck_date_to }}{% endif %}</div>
         {% if truck_rows_today %}
         <div class="mt-2 d-flex flex-wrap gap-1">
           {% for t in truck_rows_today %}
@@ -300,7 +301,7 @@
   <div class="col-lg-4">
     <div class="card h-100">
       <div class="card-header bg-white d-flex justify-content-between align-items-center">
-        <h2 class="h6 mb-0 fw-semibold" id="trucksHdr"><i class="fas fa-truck text-danger me-2" aria-hidden="true"></i>รถเข้า Stockpile วันนี้</h2>
+        <h2 class="h6 mb-0 fw-semibold" id="trucksHdr"><i class="fas fa-truck text-danger me-2" aria-hidden="true"></i>{% if truck_is_single_day %}รถเข้า Stockpile {{ truck_date_to }}{% else %}รถเข้า Stockpile {{ truck_date_from }} – {{ truck_date_to }}{% endif %}</h2>
         <span class="badge bg-danger">{{ truck_rows_today|length }} คัน</span>
       </div>
       <div class="card-body p-2" style="overflow-y:auto;max-height:340px">
@@ -332,7 +333,7 @@
         {% else %}
           <div class="text-center text-muted py-5" style="font-size:.85rem">
             <i class="fas fa-truck-loading mb-2 d-block" style="font-size:1.5rem;opacity:.3" aria-hidden="true"></i>
-            ยังไม่มีรถเข้า Stockpile วันนี้
+            {% if truck_is_single_day %}ยังไม่มีรถเข้า Stockpile วันที่ {{ truck_date_to }}{% else %}ยังไม่มีรถเข้า Stockpile ในช่วง {{ truck_date_from }} – {{ truck_date_to }}{% endif %}
           </div>
         {% endif %}
       </div>

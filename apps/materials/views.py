@@ -81,20 +81,27 @@ class MaterialDeliveryDashboardView(MaterialsViewMixin, TemplateView):
             .annotate(quantity=Coalesce(Sum('quantity'), 0, output_field=DecimalField()), count=Count('id'))
             .order_by('-quantity')[:8]
         )
+        # Truck KPI honours the filter date range so the dashboard reflects
+        # what the user selected, not just `today`. When the user leaves the
+        # filter at its default (last 30 days) the tile shows the whole range
+        # and labels itself accordingly.
         today = timezone.localdate()
+        truck_date_from = filters.get('date_from') or today.isoformat()
+        truck_date_to   = filters.get('date_to')   or today.isoformat()
+        truck_is_single_day = truck_date_from == truck_date_to
         truck_rows_today = list(
             MaterialDelivery.objects
-            .filter(delivery_date=today)
+            .filter(delivery_date__range=(truck_date_from, truck_date_to))
             .exclude(truck_no='')
             .values('truck_no')
             .annotate(trips=Count('id'), quantity=Coalesce(Sum('quantity'), 0, output_field=DecimalField()))
             .order_by('-trips')
         )
 
-        # รถเข้า Stockpile วันนี้ แยกตามโครงการ + แหล่งที่มา
+        # รถเข้า Stockpile (date filtered) แยกตามโครงการ + แหล่งที่มา
         truck_source_today = list(
             MaterialDelivery.objects
-            .filter(delivery_date=today)
+            .filter(delivery_date__range=(truck_date_from, truck_date_to))
             .annotate(source_label=Coalesce(F('source_area__name'), F('source')))
             .values('project__id', 'project__contract_no', 'project__project_name', 'source_label')
             .annotate(
@@ -171,6 +178,9 @@ class MaterialDeliveryDashboardView(MaterialsViewMixin, TemplateView):
             'truck_rows_today': truck_rows_today,
             'trucks_today_by_project': trucks_today_by_project,
             'today': today,
+            'truck_date_from': truck_date_from,
+            'truck_date_to': truck_date_to,
+            'truck_is_single_day': truck_is_single_day,
             'rock_stock': rock_stock,
             'sand_stock': sand_stock,
         })
