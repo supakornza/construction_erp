@@ -53,7 +53,7 @@
   .rdb-kpi .ki { align-items: center; background: var(--cb, #eff6ff); border-radius: 8px; color: var(--c, #2563eb); display: flex; font-size: .88rem; height: 32px; justify-content: center; margin-bottom: 8px; width: 32px; }
   .rdb-kpi .kl { color: #64748b; font-size: .72rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
   .rdb-kpi .kv { color: #0f172a; font-size: 1.7rem; font-weight: 900; line-height: 1.1; margin: 4px 0 2px; overflow-wrap: anywhere; }
-  .rdb-kpi .ks { color: #94a3b8; font-size: .71rem; }
+  .rdb-kpi .ks { color: #64748b; font-size: .71rem; }
   .rdb-kpi.blue   { --c:#2563eb; --cb:#eff6ff; }
   .rdb-kpi.green  { --c:#059669; --cb:#ecfdf5; }
   .rdb-kpi.orange { --c:#d97706; --cb:#fffbeb; }
@@ -66,7 +66,7 @@
   .rdb-panel { background: #fff; border: 1px solid #e8edf4; border-radius: 8px; box-shadow: 0 2px 8px rgba(15,23,42,.06); height: 100%; padding: 16px 16px 12px; }
   .rdb-pt { align-items: center; border-bottom: 1px solid #f1f5f9; display: flex; gap: 9px; margin-bottom: 14px; padding-bottom: 11px; }
   .rdb-pt .ico { align-items: center; background: #e0f4f9; border-radius: 6px; color: #0f7f9f; display: flex; flex-shrink: 0; font-size: .8rem; height: 28px; justify-content: center; width: 28px; }
-  .rdb-pt h6 { color: #1e293b; font-size: .82rem; font-weight: 900; letter-spacing: .04em; margin: 0; text-transform: uppercase; }
+  .rdb-pt h2 { color: #1e293b; font-size: .82rem; font-weight: 900; letter-spacing: .04em; margin: 0; text-transform: uppercase; }
   .rdb-chart { height: 300px; }
   .rdb-wide-chart { height: 320px; }
 
@@ -96,7 +96,7 @@
   .rdb-alert { align-items: flex-start; background: #fff7ed; border: 1px solid #fed7aa; border-left: 4px solid #f97316; border-radius: 6px; color: #9a3412; display: flex; gap: 10px; padding: 12px 14px; }
 
   /* ── Empty ───────────────────────────────────────────────────── */
-  .rdb-empty { background: #fff; border: 2px dashed #cbd5e1; border-radius: 8px; color: #94a3b8; padding: 52px 24px; text-align: center; }
+  .rdb-empty { background: #fff; border: 2px dashed #cbd5e1; border-radius: 8px; color: #64748b; padding: 52px 24px; text-align: center; }
 
   /* ── Sidebar ─────────────────────────────────────────────────── */
   .rdb-sc { background: #fff; border: 1px solid #e8edf4; border-radius: 8px; box-shadow: 0 2px 6px rgba(15,23,42,.05); margin-bottom: 12px; padding: 14px; }
@@ -135,7 +135,7 @@
   <div class="rdb-header">
     <div class="rdb-header-top">
       <div class="rdb-header-title">
-        <h2><i class="fas fa-layer-group me-2" style="opacity:.75"></i>Rock Progress Dashboard</h2>
+        <h2><i class="fas fa-layer-group me-2" style="opacity:.75" aria-hidden="true"></i>Rock Progress Dashboard</h2>
         <div class="sub">
           {% if selected_project %}
             {{ selected_project.contract_no }} &nbsp;·&nbsp; {{ selected_project.project_name }}
@@ -172,55 +172,55 @@
       <!-- ─── KPI Cards ─────────────────────────────────────────── -->
       <section class="rdb-kpis">
         <div class="rdb-kpi blue">
-          <div class="ki"><i class="fas fa-truck-ramp-box"></i></div>
+          <div class="ki"><i class="fas fa-truck-ramp-box" aria-hidden="true"></i></div>
           <div class="kl">Total Delivered</div>
           <div class="kv">{{ data.total_delivered|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">tons to site</div>
         </div>
         <div class="rdb-kpi green">
-          <div class="ki"><i class="fas fa-layer-group"></i></div>
+          <div class="ki"><i class="fas fa-layer-group" aria-hidden="true"></i></div>
           <div class="kl">Total Placed</div>
           <div class="kv">{{ data.total_placed|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">tons placed</div>
         </div>
         <div class="rdb-kpi orange">
-          <div class="ki"><i class="fas fa-warehouse"></i></div>
+          <div class="ki"><i class="fas fa-warehouse" aria-hidden="true"></i></div>
           <div class="kl">Stock Balance</div>
           <div class="kv">{{ data.available_stock_balance|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">delivered − placed</div>
         </div>
         <div class="rdb-kpi purple">
-          <div class="ki"><i class="fas fa-chart-pie"></i></div>
+          <div class="ki"><i class="fas fa-chart-pie" aria-hidden="true"></i></div>
           <div class="kl">Placement Completion</div>
           <div class="kv">{% if data.placement_completion_percent is not None %}{{ data.placement_completion_percent|floatformat:1 }}%{% else %}N/A{% endif %}</div>
           <div class="ks">vs BOQ target</div>
         </div>
         <div class="rdb-kpi warn">
-          <div class="ki"><i class="fas fa-hourglass-half"></i></div>
+          <div class="ki"><i class="fas fa-hourglass-half" aria-hidden="true"></i></div>
           <div class="kl">Remaining to BOQ</div>
           <div class="kv">{% if data.remaining_quantity_to_boq is not None %}{{ data.remaining_quantity_to_boq|floatformat:0|intcomma }} tons{% else %}N/A{% endif %}</div>
           <div class="ks">tons remaining</div>
         </div>
         <div class="rdb-kpi teal">
-          <div class="ki"><i class="fas fa-gauge-high"></i></div>
+          <div class="ki"><i class="fas fa-gauge-high" aria-hidden="true"></i></div>
           <div class="kl">Avg Daily Placement</div>
           <div class="kv">{% if data.average_daily_placement is not None %}{{ data.average_daily_placement|floatformat:0|intcomma }} tons/day{% else %}N/A{% endif %}</div>
           <div class="ks">production days only</div>
         </div>
         <div class="rdb-kpi cyan">
-          <div class="ki"><i class="fas fa-calendar-check"></i></div>
+          <div class="ki"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
           <div class="kl">Forecast Completion</div>
           <div class="kv" style="font-size:1.2rem">{% if data.forecast_completion_date %}{{ data.forecast_completion_date|thai_be_date }}{% else %}N/A{% endif %}</div>
           <div class="ks">based on avg placement</div>
         </div>
         <div class="rdb-kpi blue">
-          <div class="ki"><i class="fas fa-truck"></i></div>
+          <div class="ki"><i class="fas fa-truck" aria-hidden="true"></i></div>
           <div class="kl">Latest Delivered</div>
           <div class="kv">{{ data.latest_daily_delivered|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">{% if data.latest_date %}{{ data.latest_date|thai_be_date }}{% else %}No data{% endif %}</div>
         </div>
         <div class="rdb-kpi green">
-          <div class="ki"><i class="fas fa-circle-down"></i></div>
+          <div class="ki"><i class="fas fa-circle-down" aria-hidden="true"></i></div>
           <div class="kl">Latest Placed</div>
           <div class="kv">{{ data.latest_daily_placed|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">{% if data.latest_date %}{{ data.latest_date|thai_be_date }}{% else %}No data{% endif %}</div>
@@ -230,7 +230,7 @@
       <!-- ─── Alert ─────────────────────────────────────────────── -->
       {% if data.core_outside_accum %}
       <div class="rdb-alert">
-        <i class="fas fa-triangle-exclamation mt-1 flex-shrink-0"></i>
+        <i class="fas fa-triangle-exclamation mt-1 flex-shrink-0" aria-hidden="true"></i>
         <div><strong>Core Rock Placed Outside Plot:</strong> {{ data.core_outside_accum|floatformat:0|intcomma }} tons accumulated. Please review placement records.</div>
       </div>
       {% endif %}
@@ -241,37 +241,37 @@
         <div class="col-12">
           <div class="rdb-panel">
             <div class="rdb-pt">
-              <div class="ico" style="background:#fef3c7;color:#d97706"><i class="fas fa-truck-ramp-box"></i></div>
-              <h6>Material Deliveries → Rock Stock</h6>
-              <a href="{% url 'materials:dashboard' %}?project={{ selected_project.pk }}" class="ms-auto btn btn-sm btn-outline-secondary" style="font-size:.72rem">
-                <i class="fas fa-external-link-alt me-1"></i>Material Dashboard
+              <div class="ico" style="background:#fef3c7;color:#d97706"><i class="fas fa-truck-ramp-box" aria-hidden="true"></i></div>
+              <h2>ข้อมูลรับวัสดุ → สต็อกหิน</h2>
+              <a href="{% url 'materials:dashboard' %}?project={{ selected_project.pk }}" class="ms-auto btn btn-outline-secondary" style="font-size:.82rem">
+                <i class="fas fa-external-link-alt me-1" aria-hidden="true"></i>Material Dashboard
               </a>
             </div>
             <div class="row g-3">
               <div class="col-md-3">
                 <div class="p-3 rounded" style="background:#fffbeb;border:1px solid #fde68a">
-                  <div class="text-muted" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Total Delivered (Materials)</div>
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Total Delivered (Materials)</div>
                   <div style="font-size:1.6rem;font-weight:900;color:#92400e">{{ mat_del_summary.total_qty|floatformat:2|intcomma }}</div>
-                  <div class="text-muted" style="font-size:.72rem">{{ mat_del_summary.count }} records</div>
+                  <div class="text-body-secondary" style="font-size:.72rem">{{ mat_del_summary.count }} records</div>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="p-3 rounded" style="background:#ecfdf5;border:1px solid #a7f3d0">
-                  <div class="text-muted" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Stock Balance (Project Controls)</div>
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Stock Balance (Project Controls)</div>
                   <div style="font-size:1.6rem;font-weight:900;color:#065f46">{{ data.available_stock_balance|default:0|floatformat:0|intcomma }}</div>
-                  <div class="text-muted" style="font-size:.72rem">tons (delivered − placed)</div>
+                  <div class="text-body-secondary" style="font-size:.72rem">tons (delivered − placed)</div>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="p-3 rounded" style="background:#eff6ff;border:1px solid #bfdbfe">
-                  <div class="text-muted" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">รถเข้าวันนี้</div>
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">รถเข้าวันนี้</div>
                   <div style="font-size:1.6rem;font-weight:900;color:#1d4ed8">{{ mat_del_summary.today_trucks }}</div>
-                  <div class="text-muted" style="font-size:.72rem">คัน · {{ mat_del_summary.today_qty|floatformat:2|intcomma }} units วันนี้</div>
+                  <div class="text-body-secondary" style="font-size:.72rem">คัน · {{ mat_del_summary.today_qty|floatformat:2|intcomma }} units วันนี้</div>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="p-3 rounded" style="background:#f8fafc;border:1px solid #e2e8f0">
-                  <div class="text-muted" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">By Material</div>
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">By Material</div>
                   {% for m in mat_del_summary.by_material %}
                   <div class="d-flex justify-content-between" style="font-size:.78rem;padding:2px 0;border-bottom:1px solid #f1f5f9">
                     <span>{{ m.material__name }}</span>
@@ -292,14 +292,16 @@
       <section class="row g-3">
         <div class="col-xl-7">
           <div class="rdb-panel">
-            <div class="rdb-pt"><div class="ico"><i class="fas fa-chart-line"></i></div><h6>Daily Delivered vs Placed</h6></div>
-            <div class="rdb-chart"><canvas id="rockDailyChart"></canvas></div>
+            <div class="rdb-pt"><div class="ico"><i class="fas fa-chart-line" aria-hidden="true"></i></div><h2>ปริมาณรับเข้าเทียบกับวางหินรายวัน</h2></div>
+            <div class="rdb-chart"><canvas id="rockDailyChart" role="img" aria-label="กราฟปริมาณหินรับเข้า วางหิน และเป้าหมายรายวัน" aria-describedby="rockDailyChartTable"></canvas></div>
+            <div id="rockDailyChartTable" class="visually-hidden"></div>
           </div>
         </div>
         <div class="col-xl-5">
           <div class="rdb-panel">
-            <div class="rdb-pt"><div class="ico"><i class="fas fa-truck-moving"></i></div><h6>Placement by Transport Unit</h6></div>
-            <div class="rdb-chart"><canvas id="rockBargeChart"></canvas></div>
+            <div class="rdb-pt"><div class="ico"><i class="fas fa-truck-moving" aria-hidden="true"></i></div><h2>ปริมาณวางหินตามหน่วยขนส่ง</h2></div>
+            <div class="rdb-chart"><canvas id="rockBargeChart" role="img" aria-label="กราฟปริมาณวางหินแยกตามหน่วยขนส่ง" aria-describedby="rockBargeChartTable"></canvas></div>
+            <div id="rockBargeChartTable" class="visually-hidden"></div>
           </div>
         </div>
       </section>
@@ -308,7 +310,7 @@
       <section class="row g-3">
         <div class="col-xl-4">
           <div class="rdb-panel">
-            <div class="rdb-pt"><div class="ico"><i class="fas fa-scale-balanced"></i></div><h6>Stock Balance Summary</h6></div>
+            <div class="rdb-pt"><div class="ico"><i class="fas fa-scale-balanced" aria-hidden="true"></i></div><h2>สรุปยอดสต็อกหิน</h2></div>
             <div class="rdb-bar-row">
               <div class="rdb-bar-lbl"><span>Total Delivered</span><span style="color:#2563eb">{{ data.total_delivered|floatformat:0|intcomma }} t</span></div>
               <div class="rdb-bar-track"><div class="rdb-bar-fill" style="width:100%;background:#2563eb"></div></div>
@@ -322,7 +324,7 @@
               <div class="rdb-bar-track"><div class="rdb-bar-fill" style="width:{% if data.available_stock_balance > 0 and data.total_delivered %}{% widthratio data.available_stock_balance data.total_delivered 100 %}{% else %}0{% endif %}%;background:#d97706"></div></div>
             </div>
             <div class="mt-3 p-3 rounded" style="background:#f0f9fb;border:1px solid #b6dce8">
-              <div class="text-muted" style="font-size:.75rem;margin-bottom:2px">Stock % of Delivered</div>
+              <div class="text-body-secondary" style="font-size:.75rem;margin-bottom:2px">Stock % of Delivered</div>
               <div class="fw-black" style="font-size:1.65rem;color:#0f7f9f;font-weight:900">
                 {% if data.stock_percent is not None %}{{ data.stock_percent|floatformat:1 }}%{% else %}N/A{% endif %}
               </div>
@@ -331,9 +333,9 @@
         </div>
         <div class="col-xl-8">
           <div class="rdb-panel">
-            <div class="rdb-pt"><div class="ico"><i class="fas fa-truck-moving"></i></div><h6>Transport Trips &amp; Quantity</h6></div>
+            <div class="rdb-pt"><div class="ico"><i class="fas fa-truck-moving" aria-hidden="true"></i></div><h2>เที่ยวขนส่งและปริมาณ</h2></div>
             <div class="table-responsive">
-              <table class="rdb-tbl">
+              <table class="rdb-tbl" aria-label="เที่ยวขนส่งและปริมาณหิน">
                 <thead>
                   <tr>
                     <th>Transport Unit</th>
@@ -348,12 +350,12 @@
                   <tr>
                     <td class="fw-bold">{{ b.barge__name }}</td>
                     <td class="text-end fw-bold" style="color:#2563eb">{{ b.total_qty|floatformat:0|intcomma }} tons</td>
-                    <td class="text-end">{% if b.total_trips %}{{ b.total_trips }} trips{% else %}<span class="text-muted">—</span>{% endif %}</td>
-                    <td class="text-end">{% if b.average_tons_per_trip %}{{ b.average_tons_per_trip|floatformat:1|intcomma }} tons/trip{% else %}<span class="text-muted">—</span>{% endif %}</td>
-                    <td class="text-end text-muted">{% if b.latest_trip_date %}{{ b.latest_trip_date|thai_be_date }}{% else %}—{% endif %}</td>
+                    <td class="text-end">{% if b.total_trips %}{{ b.total_trips }} trips{% else %}<span class="text-body-secondary">—</span>{% endif %}</td>
+                    <td class="text-end">{% if b.average_tons_per_trip %}{{ b.average_tons_per_trip|floatformat:1|intcomma }} tons/trip{% else %}<span class="text-body-secondary">—</span>{% endif %}</td>
+                    <td class="text-end text-body-secondary">{% if b.latest_trip_date %}{{ b.latest_trip_date|thai_be_date }}{% else %}—{% endif %}</td>
                   </tr>
                   {% empty %}
-                  <tr><td colspan="5" class="text-center text-muted py-4">No transport data for the selected filters.</td></tr>
+                  <tr><td colspan="5" class="text-center text-body-secondary py-4" role="status">ไม่มีข้อมูลขนส่งตามตัวกรองที่เลือก</td></tr>
                   {% endfor %}
                 </tbody>
               </table>
@@ -365,17 +367,18 @@
       <!-- ─── Accumulative Chart ────────────────────────────────── -->
       <section>
         <div class="rdb-panel">
-          <div class="rdb-pt"><div class="ico"><i class="fas fa-chart-area"></i></div><h6>Accumulative Delivered vs Placed</h6></div>
-          <div class="rdb-wide-chart"><canvas id="rockAccumChart"></canvas></div>
+          <div class="rdb-pt"><div class="ico"><i class="fas fa-chart-area" aria-hidden="true"></i></div><h2>ปริมาณสะสมรับเข้าเทียบกับวางหิน</h2></div>
+          <div class="rdb-wide-chart"><canvas id="rockAccumChart" role="img" aria-label="กราฟปริมาณหินสะสม รับเข้า วางหิน แผนสะสม และเป้าหมาย BOQ" aria-describedby="rockAccumChartTable"></canvas></div>
+          <div id="rockAccumChartTable" class="visually-hidden"></div>
         </div>
       </section>
 
       <!-- ─── Station Table ─────────────────────────────────────── -->
       <section>
         <div class="rdb-panel">
-          <div class="rdb-pt"><div class="ico"><i class="fas fa-map-pin"></i></div><h6>Placement Progress by Station</h6></div>
+          <div class="rdb-pt"><div class="ico"><i class="fas fa-map-pin" aria-hidden="true"></i></div><h2>ความคืบหน้าการวางหินตาม Station</h2></div>
           <div class="table-responsive">
-            <table class="rdb-tbl">
+            <table class="rdb-tbl" aria-label="ความคืบหน้าการวางหินตาม Station">
               <thead>
                 <tr>
                   <th>Station Range</th>
@@ -395,7 +398,7 @@
                   <td class="text-end fw-bold">{{ row.placed_quantity_ton|floatformat:0|intcomma }} tons</td>
                   <td>
                     <div style="font-size:.78rem;font-weight:700;color:#334155;margin-bottom:3px">{{ row.completion_percent|floatformat:1 }}%</div>
-                    <div class="minibar"><div class="minibar-fill" style="width:{% if row.completion_percent > 100 %}100{% else %}{{ row.completion_percent|floatformat:0 }}{% endif %}%;background:{% if row.completion_percent >= 100 %}#059669{% elif row.completion_percent >= 50 %}#0891b2{% else %}#f59e0b{% endif %}"></div></div>
+                    <div class="minibar"><div class="minibar-fill" style="width:{% if row.completion_percent > 100 %}100{% else %}{{ row.completion_percent|floatformat:0 }}{% endif %}%;background:{% if row.completion_percent >= 100 %}#059669{% elif row.completion_percent >= 50 %}#0891b2{% else %}#b45309{% endif %}"></div></div>
                   </td>
                   <td>
                     <span class="spill {% if row.status == 'Completed' %}sp-done{% elif row.status == 'In Progress' %}sp-prog{% else %}sp-wait{% endif %}">
@@ -404,7 +407,7 @@
                   </td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="6" class="text-center text-muted py-4">No station progress records yet. Add station ranges in admin when ready.</td></tr>
+                <tr><td colspan="6" class="text-center text-body-secondary py-4" role="status">ยังไม่มีข้อมูลความคืบหน้าตาม Station กรุณาเพิ่มช่วง Station ใน admin เมื่อพร้อม</td></tr>
                 {% endfor %}
               </tbody>
             </table>
@@ -413,8 +416,8 @@
       </section>
 
       {% else %}
-      <div class="rdb-empty">
-        <i class="fas fa-database fa-2x mb-3" style="color:#cbd5e1"></i>
+      <div class="rdb-empty" role="status">
+        <i class="fas fa-database fa-2x mb-3" style="color:#cbd5e1" aria-hidden="true"></i>
         <div class="fw-bold mb-1">No rock progress data</div>
         <div class="small">Select a project or add daily records to see the dashboard.</div>
       </div>
@@ -424,10 +427,10 @@
     <!-- ─── Sidebar ────────────────────────────────────────────── -->
     <aside>
       <form method="get" class="rdb-sc rdb-fg">
-        <div class="rdb-st"><span><i class="fas fa-filter"></i> Filters</span></div>
+        <div class="rdb-st"><span><i class="fas fa-filter" aria-hidden="true"></i> Filters</span></div>
         <div>
-          <label class="rdb-fl">Project</label>
-          <select name="project" class="form-select form-select-sm">
+          <label class="rdb-fl" for="rockFilterProject">โครงการ</label>
+          <select id="rockFilterProject" name="project" class="form-select form-select-sm">
             <option value="">First Active Project</option>
             {% for p in projects %}
             <option value="{{ p.pk }}" {% if selected_project and selected_project.pk == p.pk %}selected{% endif %}>{{ p.contract_no }}</option>
@@ -435,8 +438,8 @@
           </select>
         </div>
         <div>
-          <label class="rdb-fl">Date Range</label>
-          <select name="range" class="form-select form-select-sm">
+          <label class="rdb-fl" for="rockFilterRange">ช่วงวันที่</label>
+          <select id="rockFilterRange" name="range" class="form-select form-select-sm">
             <option value="">All Dates</option>
             <option value="7"  {% if request.GET.range == '7'  %}selected{% endif %}>Last 7 Days</option>
             <option value="14" {% if request.GET.range == '14' %}selected{% endif %}>Last 14 Days</option>
@@ -444,16 +447,16 @@
           </select>
         </div>
         <div>
-          <label class="rdb-fl">From</label>
-          <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="form-control form-control-sm">
+          <label class="rdb-fl" for="rockFilterDateFrom">จากวันที่</label>
+          <input id="rockFilterDateFrom" type="date" name="date_from" value="{{ request.GET.date_from }}" class="form-control form-control-sm">
         </div>
         <div>
-          <label class="rdb-fl">To</label>
-          <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control form-control-sm">
+          <label class="rdb-fl" for="rockFilterDateTo">ถึงวันที่</label>
+          <input id="rockFilterDateTo" type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control form-control-sm">
         </div>
         <div>
-          <label class="rdb-fl">Transport Unit</label>
-          <select name="barge" class="form-select form-select-sm">
+          <label class="rdb-fl" for="rockFilterBarge">หน่วยขนส่ง</label>
+          <select id="rockFilterBarge" name="barge" class="form-select form-select-sm">
             <option value="">All Transport Units</option>
             {% for barge in barges %}
             <option value="{{ barge.pk }}" {% if request.GET.barge == barge.pk|stringformat:"s" %}selected{% endif %}>{{ barge.name }}</option>
@@ -461,8 +464,8 @@
           </select>
         </div>
         <div>
-          <label class="rdb-fl">Material Type</label>
-          <select name="material_type" class="form-select form-select-sm">
+          <label class="rdb-fl" for="rockFilterMaterialType">ประเภทวัสดุ</label>
+          <select id="rockFilterMaterialType" name="material_type" class="form-select form-select-sm">
             <option value="">All Material Types</option>
             {% for value, label in material_type_choices %}
             <option value="{{ value }}" {% if request.GET.material_type == value %}selected{% endif %}>{{ label }}</option>
@@ -470,41 +473,41 @@
           </select>
         </div>
         <div>
-          <label class="rdb-fl">Station Range</label>
-          <input type="text" name="station_range" value="{{ request.GET.station_range }}" class="form-control form-control-sm" placeholder="e.g. 0+000 – 0+100">
+          <label class="rdb-fl" for="rockFilterStationRange">ช่วง Station</label>
+          <input id="rockFilterStationRange" type="text" name="station_range" value="{{ request.GET.station_range }}" class="form-control form-control-sm" placeholder="เช่น 0+000 – 0+100">
         </div>
         <div>
-          <label class="rdb-fl">Source / Quarry</label>
-          <input type="text" name="source_quarry" value="{{ request.GET.source_quarry }}" class="form-control form-control-sm" placeholder="Quarry name">
+          <label class="rdb-fl" for="rockFilterSource">แหล่งวัสดุ / Quarry</label>
+          <input id="rockFilterSource" type="text" name="source_quarry" value="{{ request.GET.source_quarry }}" class="form-control form-control-sm" placeholder="ชื่อแหล่งวัสดุ">
         </div>
         <div>
-          <label class="rdb-fl">Destination / Area</label>
-          <input type="text" name="destination_area" value="{{ request.GET.destination_area }}" class="form-control form-control-sm" placeholder="Placement area">
+          <label class="rdb-fl" for="rockFilterDestination">ปลายทาง / พื้นที่วาง</label>
+          <input id="rockFilterDestination" type="text" name="destination_area" value="{{ request.GET.destination_area }}" class="form-control form-control-sm" placeholder="พื้นที่วางหิน">
         </div>
         <button class="rdb-btn rdb-btn-teal w-100 mt-1 justify-content-center" type="submit">
-          <i class="fas fa-filter"></i> Apply Filters
+          <i class="fas fa-filter" aria-hidden="true"></i> Apply Filters
         </button>
       </form>
 
       <div class="rdb-sc">
-        <div class="rdb-st"><span><i class="fas fa-bolt"></i> Quick Actions</span></div>
+        <div class="rdb-st"><span><i class="fas fa-bolt" aria-hidden="true"></i> Quick Actions</span></div>
         <div class="rdb-actions">
-          <a href="{% url 'project_controls:rock_list' %}" class="rdb-btn rdb-btn-out"><i class="fas fa-table-list"></i>Records</a>
-          <a href="{% url 'project_controls:rock_create' %}" class="rdb-btn rdb-btn-teal"><i class="fas fa-plus"></i>New Record</a>
+          <a href="{% url 'project_controls:rock_list' %}" class="rdb-btn rdb-btn-out"><i class="fas fa-table-list" aria-hidden="true"></i>Records</a>
+          <a href="{% url 'project_controls:rock_create' %}" class="rdb-btn rdb-btn-teal"><i class="fas fa-plus" aria-hidden="true"></i>New Record</a>
           {% if selected_project %}
-          <a href="{% url 'project_controls:rock_export_excel' selected_project.pk %}" class="rdb-btn rdb-btn-out"><i class="fas fa-file-excel"></i>Export Excel</a>
+          <a href="{% url 'project_controls:rock_export_excel' selected_project.pk %}" class="rdb-btn rdb-btn-out"><i class="fas fa-file-excel" aria-hidden="true"></i>Export Excel</a>
           {% endif %}
         </div>
       </div>
 
       <div class="rdb-sc">
-        <div class="rdb-st"><span><i class="fas fa-bullseye"></i> Target Setup</span></div>
+        <div class="rdb-st"><span><i class="fas fa-bullseye" aria-hidden="true"></i> Target Setup</span></div>
         {% if not data.settings %}
-        <div class="small text-muted">Target quantity and daily target are configured in Django Admin under Rock Dashboard Settings.</div>
-        <div class="mt-2 small fw-semibold" style="color:#d97706"><i class="fas fa-circle-exclamation me-1"></i>No target configured.</div>
+        <div class="small text-body-secondary">Target quantity and daily target are configured in Django Admin under Rock Dashboard Settings.</div>
+        <div class="mt-2 small fw-semibold" style="color:#d97706"><i class="fas fa-circle-exclamation me-1" aria-hidden="true"></i>No target configured.</div>
         {% else %}
         <div class="p-3 rounded" style="background:#f0f9fb;border:1px solid #b6dce8;text-align:center">
-          <div class="text-muted small">BOQ Target</div>
+          <div class="text-body-secondary small">BOQ Target</div>
           <div class="fw-bold mt-1" style="font-size:1.4rem;color:#0f7f9f">{{ data.settings.target_quantity_ton|floatformat:0|intcomma }} tons</div>
         </div>
         {% endif %}
@@ -543,7 +546,24 @@ const bargePlugin = {
 
 function makeChart(id, cfg) {
   const el = document.getElementById(id);
-  if (el) new Chart(el, cfg);
+  if (!el) return;
+  const tableId = el.getAttribute('aria-describedby');
+  if (tableId) renderChartTable(tableId, cfg);
+  if (window.Chart) new Chart(el, cfg);
+}
+
+function renderChartTable(id, cfg) {
+  const target = document.getElementById(id);
+  const labels = cfg.data?.labels || [];
+  const datasets = cfg.data?.datasets || [];
+  if (!target || !labels.length || !datasets.length) return;
+  const esc = v => String(v ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  target.innerHTML = `
+    <table>
+      <caption>${esc(document.getElementById(id.replace('Table', ''))?.getAttribute('aria-label') || 'ข้อมูลกราฟ')}</caption>
+      <thead><tr><th>รายการ</th>${datasets.map(ds => `<th>${esc(ds.label || 'ค่า')}</th>`).join('')}</tr></thead>
+      <tbody>${labels.map((label, i) => `<tr><th>${esc(label)}</th>${datasets.map(ds => `<td>${esc(ds.data?.[i] ?? '')}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table>`;
 }
 
 makeChart('rockDailyChart', {
@@ -551,19 +571,19 @@ makeChart('rockDailyChart', {
   data: {
     labels: chartData.labels || [],
     datasets: [
-      { label: 'Delivered',    data: chartData.daily_delivered || [], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.08)',  borderWidth: 2, tension: .3, fill: true, pointRadius: 3, pointHoverRadius: 6 },
-      { label: 'Placed',       data: chartData.daily_placed    || [], borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.08)',   borderWidth: 2, tension: .3, fill: true, pointRadius: 3, pointHoverRadius: 6 },
-      { label: 'Daily Target', data: chartData.daily_target    || [], borderColor: '#f59e0b', borderDash: [7,4], borderWidth: 1.5, pointRadius: 0, tension: 0, fill: false }
+      { label: 'รับเข้า',    data: chartData.daily_delivered || [], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.08)',  borderWidth: 2, tension: .3, fill: true, pointRadius: 3, pointHoverRadius: 6 },
+      { label: 'วางแล้ว',       data: chartData.daily_placed    || [], borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.08)',   borderWidth: 2, tension: .3, fill: true, pointRadius: 3, pointHoverRadius: 6 },
+      { label: 'เป้าหมายรายวัน', data: chartData.daily_target    || [], borderColor: '#f59e0b', borderDash: [7,4], borderWidth: 1.5, pointRadius: 0, tension: 0, fill: false }
     ]
   },
   options: {
     maintainAspectRatio: false,
     plugins: {
       legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16, font: { size: 11 } } },
-      tooltip: { callbacks: { label: c => `${c.dataset.label}: ${fmt(c.raw)} tons` } }
+      tooltip: { callbacks: { label: c => `${c.dataset.label}: ${fmt(c.raw)} ตัน` } }
     },
     scales: {
-      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'Tons', font: { size: 11 } } },
+      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'ตัน', font: { size: 11 } } },
       x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } }
     }
   }
@@ -586,10 +606,10 @@ makeChart('rockBargeChart', {
     layout: { padding: { right: 72 } },
     plugins: {
       legend: { display: false },
-      tooltip: { callbacks: { label: c => `${fmt(c.raw)} tons` } }
+      tooltip: { callbacks: { label: c => `${fmt(c.raw)} ตัน` } }
     },
     scales: {
-      x: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'Tons', font: { size: 11 } } },
+      x: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'ตัน', font: { size: 11 } } },
       y: { grid: { display: false }, ticks: { autoSkip: false } }
     }
   }
@@ -600,10 +620,10 @@ makeChart('rockAccumChart', {
   data: {
     labels: chartData.labels || [],
     datasets: [
-      { label: 'Accum Delivered',    data: chartData.accum_delivered || [], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.06)',  borderWidth: 2.5, tension: .25, fill: true },
-      { label: 'Accum Placed',       data: chartData.accum_placed    || [], borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.06)',   borderWidth: 2.5, tension: .25, fill: true },
-      { label: 'Planned Cumulative', data: chartData.planned_accum   || [], borderColor: '#f59e0b', borderDash: [7,4], borderWidth: 1.5, pointRadius: 0, tension: .2, fill: false },
-      { label: 'BOQ / Target',       data: chartData.target_line     || [], borderColor: '#7c3aed', borderDash: [3,4], borderWidth: 1.5, pointRadius: 0, tension: 0,   fill: false }
+      { label: 'รับเข้าสะสม',    data: chartData.accum_delivered || [], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.06)',  borderWidth: 2.5, tension: .25, fill: true },
+      { label: 'วางสะสม',       data: chartData.accum_placed    || [], borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.06)',   borderWidth: 2.5, tension: .25, fill: true },
+      { label: 'แผนสะสม', data: chartData.planned_accum   || [], borderColor: '#f59e0b', borderDash: [7,4], borderWidth: 1.5, pointRadius: 0, tension: .2, fill: false },
+      { label: 'BOQ / เป้าหมาย',       data: chartData.target_line     || [], borderColor: '#7c3aed', borderDash: [3,4], borderWidth: 1.5, pointRadius: 0, tension: 0,   fill: false }
     ]
   },
   options: {
@@ -615,14 +635,14 @@ makeChart('rockAccumChart', {
           title: items => chartData.full_dates?.[items[0].dataIndex] || items[0].label,
           afterBody: items => {
             const v = chartData.variance?.[items[0].dataIndex];
-            return v == null ? 'Variance: N/A' : `Variance: ${fmt(v)} tons`;
+            return v == null ? 'ส่วนต่าง: N/A' : `ส่วนต่าง: ${fmt(v)} ตัน`;
           },
-          label: c => `${c.dataset.label}: ${c.raw == null ? 'N/A' : fmt(c.raw) + ' tons'}`
+          label: c => `${c.dataset.label}: ${c.raw == null ? 'N/A' : fmt(c.raw) + ' ตัน'}`
         }
       }
     },
     scales: {
-      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'Cumulative (tons)', font: { size: 11 } } },
+      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'สะสม (ตัน)', font: { size: 11 } } },
       x: { grid: { display: false }, ticks: { maxTicksLimit: 10 } }
     }
   }

@@ -53,7 +53,7 @@
   .sdb-kpi .ki { align-items: center; background: var(--cb, #eff6ff); border-radius: 8px; color: var(--c, #2563eb); display: flex; font-size: .88rem; height: 32px; justify-content: center; margin-bottom: 8px; width: 32px; }
   .sdb-kpi .kl { color: #64748b; font-size: .72rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
   .sdb-kpi .kv { color: #0f172a; font-size: 1.7rem; font-weight: 900; line-height: 1.1; margin: 4px 0 2px; overflow-wrap: anywhere; }
-  .sdb-kpi .ks { color: #94a3b8; font-size: .71rem; }
+  .sdb-kpi .ks { color: #64748b; font-size: .71rem; }
   .sdb-kpi.blue   { --c:#2563eb; --cb:#eff6ff; }
   .sdb-kpi.green  { --c:#059669; --cb:#ecfdf5; }
   .sdb-kpi.orange { --c:#d97706; --cb:#fffbeb; }
@@ -66,7 +66,7 @@
   .sdb-panel { background: #fff; border: 1px solid #e8edf4; border-radius: 8px; box-shadow: 0 2px 8px rgba(15,23,42,.06); height: 100%; padding: 16px 16px 12px; }
   .sdb-pt { align-items: center; border-bottom: 1px solid #f1f5f9; display: flex; gap: 9px; margin-bottom: 14px; padding-bottom: 11px; }
   .sdb-pt .ico { align-items: center; background: #e0f4f9; border-radius: 6px; color: #0f7f9f; display: flex; flex-shrink: 0; font-size: .8rem; height: 28px; justify-content: center; width: 28px; }
-  .sdb-pt h6 { color: #1e293b; font-size: .82rem; font-weight: 900; letter-spacing: .04em; margin: 0; text-transform: uppercase; }
+  .sdb-pt h2 { color: #1e293b; font-size: .82rem; font-weight: 900; letter-spacing: .04em; margin: 0; text-transform: uppercase; }
   .sdb-chart { height: 300px; }
   .sdb-wide-chart { height: 320px; }
 
@@ -96,7 +96,7 @@
   .dest-box { border-radius: 8px; padding: 10px 12px; }
 
   /* ── Empty ───────────────────────────────────────────────────── */
-  .sdb-empty { background: #fff; border: 2px dashed #cbd5e1; border-radius: 8px; color: #94a3b8; padding: 52px 24px; text-align: center; }
+  .sdb-empty { background: #fff; border: 2px dashed #cbd5e1; border-radius: 8px; color: #64748b; padding: 52px 24px; text-align: center; }
 
   /* ── Sidebar ─────────────────────────────────────────────────── */
   .sdb-sc { background: #fff; border: 1px solid #e8edf4; border-radius: 8px; box-shadow: 0 2px 6px rgba(15,23,42,.05); margin-bottom: 12px; padding: 14px; }
@@ -135,7 +135,7 @@
   <div class="sdb-header">
     <div class="sdb-header-top">
       <div class="sdb-header-title">
-        <h2><i class="fas fa-water me-2" style="opacity:.75"></i>Sand Progress Dashboard</h2>
+        <h2><i class="fas fa-water me-2" style="opacity:.75" aria-hidden="true"></i>Sand Progress Dashboard</h2>
         <div class="sub">
           {% if selected_project %}
             {{ selected_project.contract_no }} &nbsp;·&nbsp; {{ selected_project.project_name }}
@@ -172,61 +172,61 @@
       <!-- ─── KPI Cards ─────────────────────────────────────────── -->
       <section class="sdb-kpis">
         <div class="sdb-kpi blue">
-          <div class="ki"><i class="fas fa-truck-ramp-box"></i></div>
+          <div class="ki"><i class="fas fa-truck-ramp-box" aria-hidden="true"></i></div>
           <div class="kl">Total Delivered</div>
           <div class="kv">{{ data.total_delivered|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">TCT Pier + MTP3</div>
         </div>
         <div class="sdb-kpi green">
-          <div class="ki"><i class="fas fa-layer-group"></i></div>
+          <div class="ki"><i class="fas fa-layer-group" aria-hidden="true"></i></div>
           <div class="kl">Total Placed</div>
           <div class="kv">{{ data.total_placed|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">offshore + onshore</div>
         </div>
         <div class="sdb-kpi cyan">
-          <div class="ki"><i class="fas fa-warehouse"></i></div>
+          <div class="ki"><i class="fas fa-warehouse" aria-hidden="true"></i></div>
           <div class="kl">Stock Balance</div>
           <div class="kv">{{ data.current_stock_balance|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">TCT Pier + MTP3 stockpile{% if data.stock_percent is not None %} · {{ data.stock_percent }}%{% endif %}</div>
         </div>
         <div class="sdb-kpi purple">
-          <div class="ki"><i class="fas fa-chart-pie"></i></div>
+          <div class="ki"><i class="fas fa-chart-pie" aria-hidden="true"></i></div>
           <div class="kl">Completion</div>
           <div class="kv">{% if data.completion_percent is not None %}{{ data.completion_percent }}%{% else %}N/A{% endif %}</div>
           <div class="ks">vs BOQ target</div>
         </div>
         <div class="sdb-kpi warn">
-          <div class="ki"><i class="fas fa-hourglass-half"></i></div>
+          <div class="ki"><i class="fas fa-hourglass-half" aria-hidden="true"></i></div>
           <div class="kl">Remaining Qty</div>
           <div class="kv">{% if data.remaining_quantity is not None %}{{ data.remaining_quantity|floatformat:0|intcomma }} tons{% else %}N/A{% endif %}</div>
           <div class="ks">{% if data.remaining_percent is not None %}{{ data.remaining_percent }}% remaining{% else %}target not set{% endif %}</div>
         </div>
         <div class="sdb-kpi orange">
-          <div class="ki"><i class="fas fa-gauge-high"></i></div>
+          <div class="ki"><i class="fas fa-gauge-high" aria-hidden="true"></i></div>
           <div class="kl">Avg Daily Delivery</div>
           <div class="kv">{% if data.average_daily_delivery is not None %}{{ data.average_daily_delivery|floatformat:0|intcomma }} tons/day{% else %}N/A{% endif %}</div>
           <div class="ks">active delivery days</div>
         </div>
         <div class="sdb-kpi green">
-          <div class="ki"><i class="fas fa-arrow-trend-up"></i></div>
+          <div class="ki"><i class="fas fa-arrow-trend-up" aria-hidden="true"></i></div>
           <div class="kl">Avg Daily Placement</div>
           <div class="kv">{% if data.average_daily_placement is not None %}{{ data.average_daily_placement|floatformat:0|intcomma }} tons/day{% else %}N/A{% endif %}</div>
           <div class="ks">active placement days</div>
         </div>
         <div class="sdb-kpi teal">
-          <div class="ki"><i class="fas fa-calendar-check"></i></div>
+          <div class="ki"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
           <div class="kl">Forecast Completion</div>
           <div class="kv" style="font-size:1.1rem">{% if data.forecast_completion_date %}{{ data.forecast_completion_date|thai_be_date }}{% else %}N/A{% endif %}</div>
           <div class="ks">remaining ÷ avg placement</div>
         </div>
         <div class="sdb-kpi blue">
-          <div class="ki"><i class="fas fa-truck"></i></div>
+          <div class="ki"><i class="fas fa-truck" aria-hidden="true"></i></div>
           <div class="kl">Latest Delivered</div>
           <div class="kv">{{ data.latest_daily_delivered|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">{% if data.latest_date %}{{ data.latest_date|thai_be_date }}{% else %}No data{% endif %}</div>
         </div>
         <div class="sdb-kpi green">
-          <div class="ki"><i class="fas fa-circle-down"></i></div>
+          <div class="ki"><i class="fas fa-circle-down" aria-hidden="true"></i></div>
           <div class="kl">Latest Placed</div>
           <div class="kv">{{ data.latest_daily_placed|default:0|floatformat:0|intcomma }} tons</div>
           <div class="ks">{% if data.latest_date %}{{ data.latest_date|thai_be_date }}{% else %}No data{% endif %}</div>
@@ -239,44 +239,44 @@
         <div class="col-12">
           <div class="sdb-panel">
             <div class="sdb-pt">
-              <div class="ico" style="background:#fef3c7;color:#d97706"><i class="fas fa-truck-ramp-box"></i></div>
-              <h6>Material Deliveries → Sand Stock</h6>
-              <a href="{% url 'materials:dashboard' %}?project={{ selected_project.pk }}" class="ms-auto btn btn-sm btn-outline-secondary" style="font-size:.72rem">
-                <i class="fas fa-external-link-alt me-1"></i>Material Dashboard
+              <div class="ico" style="background:#fef3c7;color:#d97706"><i class="fas fa-truck-ramp-box" aria-hidden="true"></i></div>
+              <h2>ข้อมูลรับวัสดุ → สต็อกทราย</h2>
+              <a href="{% url 'materials:dashboard' %}?project={{ selected_project.pk }}" class="ms-auto btn btn-outline-secondary" style="font-size:.82rem">
+                <i class="fas fa-external-link-alt me-1" aria-hidden="true"></i>Material Dashboard
               </a>
             </div>
             <div class="row g-3">
               <div class="col-md-3">
                 <div class="p-3 rounded" style="background:#fffbeb;border:1px solid #fde68a">
-                  <div class="text-muted" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Total Delivered (Materials)</div>
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Total Delivered (Materials)</div>
                   <div style="font-size:1.6rem;font-weight:900;color:#92400e">{{ mat_del_summary.total_qty|floatformat:2|intcomma }}</div>
-                  <div class="text-muted" style="font-size:.72rem">{{ mat_del_summary.count }} records</div>
+                  <div class="text-body-secondary" style="font-size:.72rem">{{ mat_del_summary.count }} records</div>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="p-3 rounded" style="background:#ecfeff;border:1px solid #a5f3fc">
-                  <div class="text-muted" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Stock Balance (Project Controls)</div>
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Stock Balance (Project Controls)</div>
                   <div style="font-size:1.6rem;font-weight:900;color:#0e7490">{{ data.current_stock_balance|default:0|floatformat:0|intcomma }}</div>
-                  <div class="text-muted" style="font-size:.72rem">tons · TCT Pier + MTP3</div>
+                  <div class="text-body-secondary" style="font-size:.72rem">tons · TCT Pier + MTP3</div>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="p-3 rounded" style="background:#eff6ff;border:1px solid #bfdbfe">
-                  <div class="text-muted" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">รถเข้าวันนี้</div>
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">รถเข้าวันนี้</div>
                   <div style="font-size:1.6rem;font-weight:900;color:#1d4ed8">{{ mat_del_summary.today_trucks }}</div>
-                  <div class="text-muted" style="font-size:.72rem">คัน · {{ mat_del_summary.today_qty|floatformat:2|intcomma }} units วันนี้</div>
+                  <div class="text-body-secondary" style="font-size:.72rem">คัน · {{ mat_del_summary.today_qty|floatformat:2|intcomma }} units วันนี้</div>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="p-3 rounded" style="background:#f8fafc;border:1px solid #e2e8f0">
-                  <div class="text-muted" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">By Source</div>
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">By Source</div>
                   {% for s in mat_del_summary.by_source %}
                   <div class="d-flex justify-content-between" style="font-size:.78rem;padding:2px 0;border-bottom:1px solid #f1f5f9">
                     <span>{{ s.source }}</span>
                     <span class="fw-bold">{{ s.qty|floatformat:1|intcomma }}</span>
                   </div>
                   {% empty %}
-                  <div class="text-muted" style="font-size:.75rem">ไม่มีข้อมูล source</div>
+                  <div class="text-body-secondary" style="font-size:.75rem">ไม่มีข้อมูล source</div>
                   {% endfor %}
                 </div>
               </div>
@@ -292,15 +292,16 @@
       <section class="row g-3">
         <div class="col-xl-5">
           <div class="sdb-panel">
-            <div class="sdb-pt"><div class="ico"><i class="fas fa-chart-bar"></i></div><h6>Daily Sand to Stock Destinations</h6></div>
-            <div class="sdb-chart"><canvas id="sandDailyChart"></canvas></div>
+            <div class="sdb-pt"><div class="ico"><i class="fas fa-chart-bar" aria-hidden="true"></i></div><h2>ปริมาณทรายเข้าสต็อกรายวันตามปลายทาง</h2></div>
+            <div class="sdb-chart"><canvas id="sandDailyChart" role="img" aria-label="กราฟปริมาณทรายเข้าสต็อกรายวัน แยก TCT Pier และ MTP3 พร้อมเป้าหมายรายวัน" aria-describedby="sandDailyChartTable"></canvas></div>
+            <div id="sandDailyChartTable" class="visually-hidden"></div>
           </div>
         </div>
         <div class="col-xl-3">
           <div class="sdb-panel">
-            <div class="sdb-pt"><div class="ico"><i class="fas fa-map-location-dot"></i></div><h6>Source Contribution</h6></div>
+            <div class="sdb-pt"><div class="ico"><i class="fas fa-map-location-dot" aria-hidden="true"></i></div><h2>สัดส่วนตามแหล่งวัสดุ</h2></div>
             <div class="table-responsive">
-              <table class="sdb-tbl">
+              <table class="sdb-tbl" aria-label="สัดส่วนปริมาณทรายตามแหล่งวัสดุ">
                 <thead><tr><th>Source</th><th class="text-end">Tons</th><th class="text-end">%</th></tr></thead>
                 <tbody>
                   {% for source in data.source_rows %}
@@ -311,10 +312,10 @@
                       <div class="src-bar"><span style="width:{{ source.percent|default:0 }}%"></span></div>
                     </td>
                     <td class="text-end fw-bold" style="color:#0f7f9f">{{ source.total_qty|floatformat:0|intcomma }} tons</td>
-                    <td class="text-end text-muted">{% if source.percent is not None %}{{ source.percent }}{% else %}0{% endif %}%</td>
+                    <td class="text-end text-body-secondary">{% if source.percent is not None %}{{ source.percent }}{% else %}0{% endif %}%</td>
                   </tr>
                   {% empty %}
-                  <tr><td colspan="3" class="text-center text-muted py-4">No source data</td></tr>
+                  <tr><td colspan="3" class="text-center text-body-secondary py-4" role="status">ไม่มีข้อมูลแหล่งวัสดุ</td></tr>
                   {% endfor %}
                 </tbody>
               </table>
@@ -323,9 +324,9 @@
         </div>
         <div class="col-xl-4">
           <div class="sdb-panel">
-            <div class="sdb-pt"><div class="ico"><i class="fas fa-truck-moving"></i></div><h6>Transport Placement Totals</h6></div>
+            <div class="sdb-pt"><div class="ico"><i class="fas fa-truck-moving" aria-hidden="true"></i></div><h2>ยอดวางทรายตามหน่วยขนส่ง</h2></div>
             <div class="table-responsive">
-              <table class="sdb-tbl">
+              <table class="sdb-tbl" aria-label="ยอดวางทรายตามหน่วยขนส่ง">
                 <thead>
                   <tr><th>Transport Unit</th><th class="text-end">Tons</th><th class="text-end">Trips</th><th class="text-end">Avg/Trip</th><th>Latest</th></tr>
                 </thead>
@@ -337,15 +338,15 @@
                       <div class="smuted">{{ b.source }} → {{ b.destination }}</div>
                     </td>
                     <td class="text-end fw-bold" style="color:#2563eb">{{ b.total_qty|floatformat:0|intcomma }} tons</td>
-                    <td class="text-end">{% if b.total_trips is not None %}{{ b.total_trips|intcomma }} trips{% else %}<span class="text-muted">—</span>{% endif %}</td>
-                    <td class="text-end">{% if b.average_tons_per_trip is not None %}{{ b.average_tons_per_trip|floatformat:0|intcomma }} tons/trip{% else %}<span class="text-muted">—</span>{% endif %}</td>
+                    <td class="text-end">{% if b.total_trips is not None %}{{ b.total_trips|intcomma }} trips{% else %}<span class="text-body-secondary">—</span>{% endif %}</td>
+                    <td class="text-end">{% if b.average_tons_per_trip is not None %}{{ b.average_tons_per_trip|floatformat:0|intcomma }} tons/trip{% else %}<span class="text-body-secondary">—</span>{% endif %}</td>
                     <td>
                       <div>{% if b.latest_trip_date %}{{ b.latest_trip_date|thai_be_date }}{% else %}—{% endif %}</div>
                       <div class="smuted">{{ b.status }}</div>
                     </td>
                   </tr>
                   {% empty %}
-                  <tr><td colspan="5" class="text-center text-muted py-4">No transport data</td></tr>
+                  <tr><td colspan="5" class="text-center text-body-secondary py-4" role="status">ไม่มีข้อมูลขนส่ง</td></tr>
                   {% endfor %}
                 </tbody>
               </table>
@@ -358,14 +359,16 @@
       <section class="row g-3">
         <div class="col-xl-4">
           <div class="sdb-panel">
-            <div class="sdb-pt"><div class="ico"><i class="fas fa-scale-balanced"></i></div><h6>Remaining by Destination</h6></div>
-            <div class="sdb-chart"><canvas id="sandRemainingChart"></canvas></div>
+            <div class="sdb-pt"><div class="ico"><i class="fas fa-scale-balanced" aria-hidden="true"></i></div><h2>ปริมาณคงเหลือตามปลายทาง</h2></div>
+            <div class="sdb-chart"><canvas id="sandRemainingChart" role="img" aria-label="กราฟปริมาณทรายคงเหลือแยกตามปลายทาง" aria-describedby="sandRemainingChartTable"></canvas></div>
+            <div id="sandRemainingChartTable" class="visually-hidden"></div>
           </div>
         </div>
         <div class="col-xl-8">
           <div class="sdb-panel">
-            <div class="sdb-pt"><div class="ico"><i class="fas fa-chart-area"></i></div><h6>Accumulative Delivery &amp; Placement</h6></div>
-            <div class="sdb-wide-chart"><canvas id="sandAccumChart"></canvas></div>
+            <div class="sdb-pt"><div class="ico"><i class="fas fa-chart-area" aria-hidden="true"></i></div><h2>ปริมาณสะสมรับเข้าและวางทราย</h2></div>
+            <div class="sdb-wide-chart"><canvas id="sandAccumChart" role="img" aria-label="กราฟปริมาณทรายสะสม รับเข้า วาง แผนสะสม และเป้าหมาย BOQ" aria-describedby="sandAccumChartTable"></canvas></div>
+            <div id="sandAccumChartTable" class="visually-hidden"></div>
           </div>
         </div>
       </section>
@@ -374,15 +377,16 @@
       <section class="row g-3">
         <div class="col-xl-7">
           <div class="sdb-panel">
-            <div class="sdb-pt"><div class="ico"><i class="fas fa-chart-column"></i></div><h6>{{ data.placement_chart_title }}</h6></div>
-            <div class="sdb-wide-chart"><canvas id="sandPlacementChart"></canvas></div>
+            <div class="sdb-pt"><div class="ico"><i class="fas fa-chart-column" aria-hidden="true"></i></div><h2>{{ data.placement_chart_title }}</h2></div>
+            <div class="sdb-wide-chart"><canvas id="sandPlacementChart" role="img" aria-label="กราฟปริมาณวางทราย offshore และ onshore" aria-describedby="sandPlacementChartTable"></canvas></div>
+            <div id="sandPlacementChartTable" class="visually-hidden"></div>
           </div>
         </div>
         <div class="col-xl-5">
           <div class="sdb-panel">
-            <div class="sdb-pt"><div class="ico"><i class="fas fa-map-pin"></i></div><h6>Placement Progress by Area / Zone</h6></div>
+            <div class="sdb-pt"><div class="ico"><i class="fas fa-map-pin" aria-hidden="true"></i></div><h2>ความคืบหน้าการวางทรายตามพื้นที่ / โซน</h2></div>
             <div class="table-responsive">
-              <table class="sdb-tbl">
+              <table class="sdb-tbl" aria-label="ความคืบหน้าการวางทรายตามพื้นที่และโซน">
                 <thead>
                   <tr><th>Area / Zone</th><th class="text-end">Planned</th><th class="text-end">Placed</th><th class="text-end">Remain</th><th>Progress</th><th>Status</th></tr>
                 </thead>
@@ -393,12 +397,12 @@
                       <div class="fw-bold">{{ area.area_zone }}</div>
                       <div class="smuted">{{ area.placement_type }}</div>
                     </td>
-                    <td class="text-end">{% if area.planned_quantity_ton is not None %}{{ area.planned_quantity_ton|floatformat:0|intcomma }} tons{% else %}<span class="text-muted">—</span>{% endif %}</td>
+                    <td class="text-end">{% if area.planned_quantity_ton is not None %}{{ area.planned_quantity_ton|floatformat:0|intcomma }} tons{% else %}<span class="text-body-secondary">—</span>{% endif %}</td>
                     <td class="text-end fw-bold">{{ area.placed_quantity_ton|floatformat:0|intcomma }} tons</td>
-                    <td class="text-end">{% if area.remaining_quantity_ton is not None %}{{ area.remaining_quantity_ton|floatformat:0|intcomma }} tons{% else %}<span class="text-muted">—</span>{% endif %}</td>
+                    <td class="text-end">{% if area.remaining_quantity_ton is not None %}{{ area.remaining_quantity_ton|floatformat:0|intcomma }} tons{% else %}<span class="text-body-secondary">—</span>{% endif %}</td>
                     <td>
                       <div style="font-size:.78rem;font-weight:700;color:#334155;margin-bottom:3px">{{ area.completion_percent }}%</div>
-                      <div class="minibar"><div class="minibar-fill" style="width:{% if area.completion_percent > 100 %}100{% else %}{{ area.completion_percent|floatformat:0 }}{% endif %}%;background:{% if area.completion_percent >= 100 %}#059669{% elif area.completion_percent >= 50 %}#0891b2{% else %}#f59e0b{% endif %}"></div></div>
+                      <div class="minibar"><div class="minibar-fill" style="width:{% if area.completion_percent > 100 %}100{% else %}{{ area.completion_percent|floatformat:0 }}{% endif %}%;background:{% if area.completion_percent >= 100 %}#059669{% elif area.completion_percent >= 50 %}#0891b2{% else %}#b45309{% endif %}"></div></div>
                     </td>
                     <td>
                       <span class="spill {% if area.status == 'Completed' %}sp-done{% elif area.status == 'In Progress' %}sp-prog{% elif area.status == 'Delayed' %}sp-delay{% else %}sp-wait{% endif %}">
@@ -407,7 +411,7 @@
                     </td>
                   </tr>
                   {% empty %}
-                  <tr><td colspan="6" class="text-center text-muted py-4">No area or zone progress configured.</td></tr>
+                  <tr><td colspan="6" class="text-center text-body-secondary py-4" role="status">ยังไม่มีการตั้งค่าความคืบหน้าตามพื้นที่หรือโซน</td></tr>
                   {% endfor %}
                 </tbody>
               </table>
@@ -417,8 +421,8 @@
       </section>
 
       {% else %}
-      <div class="sdb-empty">
-        <i class="fas fa-database fa-2x mb-3" style="color:#cbd5e1"></i>
+      <div class="sdb-empty" role="status">
+        <i class="fas fa-database fa-2x mb-3" style="color:#cbd5e1" aria-hidden="true"></i>
         <div class="fw-bold mb-1">No sand progress data</div>
         <div class="small">Select a project or add daily records to see the dashboard.</div>
       </div>
@@ -428,10 +432,10 @@
     <!-- ─── Sidebar ────────────────────────────────────────────── -->
     <aside>
       <form method="get" class="sdb-sc sdb-fg">
-        <div class="sdb-st"><span><i class="fas fa-filter"></i> Filters</span></div>
+        <div class="sdb-st"><span><i class="fas fa-filter" aria-hidden="true"></i> Filters</span></div>
         <div>
-          <label class="sdb-fl">Project</label>
-          <select name="project" class="form-select form-select-sm">
+          <label class="sdb-fl" for="sandFilterProject">โครงการ</label>
+          <select id="sandFilterProject" name="project" class="form-select form-select-sm">
             <option value="">First Active Project</option>
             {% for p in projects %}
             <option value="{{ p.pk }}" {% if selected_project and selected_project.pk == p.pk %}selected{% endif %}>{{ p.contract_no }}</option>
@@ -439,8 +443,8 @@
           </select>
         </div>
         <div>
-          <label class="sdb-fl">Chart Range</label>
-          <select name="range_days" class="form-select form-select-sm">
+          <label class="sdb-fl" for="sandFilterRangeDays">ช่วงกราฟ</label>
+          <select id="sandFilterRangeDays" name="range_days" class="form-select form-select-sm">
             <option value="7"   {% if filters.range_days == 7    %}selected{% endif %}>Last 7 Days</option>
             <option value="14"  {% if filters.range_days == 14   %}selected{% endif %}>Last 14 Days</option>
             <option value="30"  {% if filters.range_days == 30   %}selected{% endif %}>Last 30 Days</option>
@@ -448,32 +452,32 @@
           </select>
         </div>
         <div>
-          <label class="sdb-fl">From</label>
-          <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="form-control form-control-sm">
+          <label class="sdb-fl" for="sandFilterDateFrom">จากวันที่</label>
+          <input id="sandFilterDateFrom" type="date" name="date_from" value="{{ request.GET.date_from }}" class="form-control form-control-sm">
         </div>
         <div>
-          <label class="sdb-fl">To</label>
-          <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control form-control-sm">
+          <label class="sdb-fl" for="sandFilterDateTo">ถึงวันที่</label>
+          <input id="sandFilterDateTo" type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control form-control-sm">
         </div>
         <div>
-          <label class="sdb-fl">Source</label>
-          <select name="source" class="form-select form-select-sm">
+          <label class="sdb-fl" for="sandFilterSource">แหล่งวัสดุ</label>
+          <select id="sandFilterSource" name="source" class="form-select form-select-sm">
             <option value="">All Sources</option>
             <option value="chalothon"       {% if filters.source == 'chalothon'       %}selected{% endif %}>Chalothon Sand Pit</option>
             <option value="khlong_bang_phai"{% if filters.source == 'khlong_bang_phai'%}selected{% endif %}>Khlong Bang Phai / Oswald</option>
           </select>
         </div>
         <div>
-          <label class="sdb-fl">Destination</label>
-          <select name="destination" class="form-select form-select-sm">
+          <label class="sdb-fl" for="sandFilterDestination">ปลายทาง</label>
+          <select id="sandFilterDestination" name="destination" class="form-select form-select-sm">
             <option value="">All Destinations</option>
             <option value="tct"  {% if filters.destination == 'tct'  %}selected{% endif %}>TCT Pier</option>
             <option value="mtp3" {% if filters.destination == 'mtp3' %}selected{% endif %}>Stockpile Sand MTP3</option>
           </select>
         </div>
         <div>
-          <label class="sdb-fl">Transport Unit</label>
-          <select name="barge" class="form-select form-select-sm">
+          <label class="sdb-fl" for="sandFilterBarge">หน่วยขนส่ง</label>
+          <select id="sandFilterBarge" name="barge" class="form-select form-select-sm">
             <option value="">All Transport Units</option>
             {% for barge in barges %}
             <option value="{{ barge.pk }}" {% if filters.barge_id == barge.pk|stringformat:"s" %}selected{% endif %}>{{ barge.name }}</option>
@@ -481,42 +485,42 @@
           </select>
         </div>
         <div>
-          <label class="sdb-fl">Placement Type</label>
-          <select name="placement_type" class="form-select form-select-sm">
+          <label class="sdb-fl" for="sandFilterPlacementType">ประเภทการวาง</label>
+          <select id="sandFilterPlacementType" name="placement_type" class="form-select form-select-sm">
             <option value="">All</option>
             <option value="Offshore" {% if filters.placement_type == 'Offshore' %}selected{% endif %}>Offshore</option>
             <option value="Onshore"  {% if filters.placement_type == 'Onshore'  %}selected{% endif %}>Onshore</option>
           </select>
         </div>
         <div>
-          <label class="sdb-fl">Area / Zone</label>
-          <input type="text" name="area_zone" value="{{ request.GET.area_zone }}" class="form-control form-control-sm" placeholder="Station or zone">
+          <label class="sdb-fl" for="sandFilterAreaZone">พื้นที่ / โซน</label>
+          <input id="sandFilterAreaZone" type="text" name="area_zone" value="{{ request.GET.area_zone }}" class="form-control form-control-sm" placeholder="Station หรือโซน">
         </div>
         <div>
-          <label class="sdb-fl">Placement Chart</label>
-          <select name="placement_view" class="form-select form-select-sm">
+          <label class="sdb-fl" for="sandFilterPlacementView">มุมมองกราฟวางทราย</label>
+          <select id="sandFilterPlacementView" name="placement_view" class="form-select form-select-sm">
             <option value="daily"      {% if filters.placement_view == 'daily'      %}selected{% endif %}>Daily</option>
             <option value="cumulative" {% if filters.placement_view == 'cumulative' %}selected{% endif %}>Cumulative</option>
           </select>
         </div>
         <button class="sdb-btn sdb-btn-teal w-100 mt-1 justify-content-center" type="submit">
-          <i class="fas fa-filter"></i> Apply Filters
+          <i class="fas fa-filter" aria-hidden="true"></i> Apply Filters
         </button>
       </form>
 
       <div class="sdb-sc">
-        <div class="sdb-st"><span><i class="fas fa-bolt"></i> Quick Actions</span></div>
+        <div class="sdb-st"><span><i class="fas fa-bolt" aria-hidden="true"></i> Quick Actions</span></div>
         <div class="sdb-actions">
-          <a href="{% url 'project_controls:sand_list' %}{% if selected_project %}?project={{ selected_project.pk }}{% endif %}" class="sdb-btn sdb-btn-out"><i class="fas fa-table-list"></i>Records</a>
-          <a href="{% url 'project_controls:sand_create' %}" class="sdb-btn sdb-btn-teal"><i class="fas fa-plus"></i>New Record</a>
+          <a href="{% url 'project_controls:sand_list' %}{% if selected_project %}?project={{ selected_project.pk }}{% endif %}" class="sdb-btn sdb-btn-out"><i class="fas fa-table-list" aria-hidden="true"></i>Records</a>
+          <a href="{% url 'project_controls:sand_create' %}" class="sdb-btn sdb-btn-teal"><i class="fas fa-plus" aria-hidden="true"></i>New Record</a>
           {% if selected_project %}
-          <a href="{% url 'project_controls:sand_export_excel' selected_project.pk %}" class="sdb-btn sdb-btn-out"><i class="fas fa-file-excel"></i>Export Excel</a>
+          <a href="{% url 'project_controls:sand_export_excel' selected_project.pk %}" class="sdb-btn sdb-btn-out"><i class="fas fa-file-excel" aria-hidden="true"></i>Export Excel</a>
           {% endif %}
         </div>
       </div>
 
       <div class="sdb-sc">
-        <div class="sdb-st"><span><i class="fas fa-scale-balanced"></i> Destination Balance</span></div>
+        <div class="sdb-st"><span><i class="fas fa-scale-balanced" aria-hidden="true"></i> Destination Balance</span></div>
         <div class="d-grid gap-2">
           <div class="dest-box" style="background:#eff6ff;border:1px solid #bfdbfe">
             <div class="smuted">TCT Pier</div>
@@ -532,7 +536,7 @@
       </div>
 
       <div class="sdb-sc">
-        <div class="sdb-st"><span><i class="fas fa-calendar-days"></i> Latest Record</span></div>
+        <div class="sdb-st"><span><i class="fas fa-calendar-days" aria-hidden="true"></i> Latest Record</span></div>
         <div class="p-3 rounded text-center" style="background:#f0f9fb;border:1px solid #b6dce8">
           <div class="smuted">Last data entry</div>
           <div class="fw-bold mt-1" style="color:#0f7f9f;font-size:1rem">{% if data.latest_date %}{{ data.latest_date|thai_be_date }}{% else %}No data{% endif %}</div>
@@ -551,7 +555,24 @@ const fmt = v => Number(v || 0).toLocaleString();
 
 function makeChart(id, cfg) {
   const el = document.getElementById(id);
-  if (el && window.Chart) new Chart(el, cfg);
+  if (!el) return;
+  const tableId = el.getAttribute('aria-describedby');
+  if (tableId) renderChartTable(tableId, cfg);
+  if (window.Chart) new Chart(el, cfg);
+}
+
+function renderChartTable(id, cfg) {
+  const target = document.getElementById(id);
+  const labels = cfg.data?.labels || [];
+  const datasets = cfg.data?.datasets || [];
+  if (!target || !labels.length || !datasets.length) return;
+  const esc = v => String(v ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  target.innerHTML = `
+    <table>
+      <caption>${esc(document.getElementById(id.replace('Table', ''))?.getAttribute('aria-label') || 'ข้อมูลกราฟ')}</caption>
+      <thead><tr><th>รายการ</th>${datasets.map(ds => `<th>${esc(ds.label || 'ค่า')}</th>`).join('')}</tr></thead>
+      <tbody>${labels.map((label, i) => `<tr><th>${esc(label)}</th>${datasets.map(ds => `<td>${esc(ds.data?.[i] ?? '')}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table>`;
 }
 
 makeChart('sandDailyChart', {
@@ -561,18 +582,18 @@ makeChart('sandDailyChart', {
     datasets: [
       { label: 'TCT Pier',              data: chartData.tct_daily  || [], backgroundColor: '#2563eb', borderRadius: 3, stack: 'delivery' },
       { label: 'Stockpile Sand MTP3',   data: chartData.mtp3_daily || [], backgroundColor: '#0891b2', borderRadius: 3, stack: 'delivery' },
-      { label: 'Daily Target Delivery', data: chartData.daily_target_delivery || [], type: 'line', borderColor: '#f59e0b', borderWidth: 2, pointRadius: 0, tension: .25, stack: undefined }
+      { label: 'เป้าหมายรับเข้ารายวัน', data: chartData.daily_target_delivery || [], type: 'line', borderColor: '#f59e0b', borderWidth: 2, pointRadius: 0, tension: .25, stack: undefined }
     ]
   },
   options: {
     maintainAspectRatio: false,
     plugins: {
       legend: { position: 'bottom', labels: { usePointStyle: true, padding: 14, font: { size: 11 } } },
-      tooltip: { callbacks: { label: c => `${c.dataset.label}: ${fmt(c.raw)} tons` } }
+      tooltip: { callbacks: { label: c => `${c.dataset.label}: ${fmt(c.raw)} ตัน` } }
     },
     scales: {
       x: { stacked: true, grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } },
-      y: { stacked: true, beginAtZero: true, grid, title: { display: true, text: 'Tons', font: { size: 11 } }, ticks: { callback: fmt } }
+      y: { stacked: true, beginAtZero: true, grid, title: { display: true, text: 'ตัน', font: { size: 11 } }, ticks: { callback: fmt } }
     }
   }
 });
@@ -582,7 +603,7 @@ makeChart('sandRemainingChart', {
   data: {
     labels: ['TCT Pier', 'Stockpile MTP3'],
     datasets: [{
-      label: 'Remaining',
+      label: 'คงเหลือ',
       data: [{{ data.remaining_tct|default:0 }}, {{ data.remaining_mtp3|default:0 }}],
       backgroundColor: ['#2563eb', '#059669'],
       borderRadius: 6
@@ -592,10 +613,10 @@ makeChart('sandRemainingChart', {
     maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
-      tooltip: { callbacks: { label: c => `${fmt(c.raw)} tons` } }
+      tooltip: { callbacks: { label: c => `${fmt(c.raw)} ตัน` } }
     },
     scales: {
-      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'Tons', font: { size: 11 } } },
+      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'ตัน', font: { size: 11 } } },
       x: { grid: { display: false } }
     }
   }
@@ -606,21 +627,21 @@ makeChart('sandAccumChart', {
   data: {
     labels: chartData.labels || [],
     datasets: [
-      { label: 'Actual Cumulative Delivery',   data: chartData.actual_cumulative_delivery   || [], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.07)',   borderWidth: 2.5, tension: .25, fill: true },
-      { label: 'Actual Cumulative Placement',  data: chartData.actual_cumulative_placement  || [], borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.07)',    borderWidth: 2.5, tension: .25, fill: true },
-      { label: 'Planned Cumulative Delivery',  data: chartData.planned_cumulative_delivery  || [], borderColor: '#f59e0b', borderDash: [7,4], borderWidth: 1.5, pointRadius: 0, tension: .25, fill: false },
-      { label: 'Planned Cumulative Placement', data: chartData.planned_cumulative_placement || [], borderColor: '#7c3aed', borderDash: [7,4], borderWidth: 1.5, pointRadius: 0, tension: .25, fill: false },
-      { label: 'BOQ / Target',                 data: chartData.target_line                  || [], borderColor: '#334155', borderDash: [3,4], borderWidth: 1.5, pointRadius: 0, fill: false }
+      { label: 'รับเข้าสะสมจริง',   data: chartData.actual_cumulative_delivery   || [], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.07)',   borderWidth: 2.5, tension: .25, fill: true },
+      { label: 'วางสะสมจริง',  data: chartData.actual_cumulative_placement  || [], borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.07)',    borderWidth: 2.5, tension: .25, fill: true },
+      { label: 'แผนรับเข้าสะสม',  data: chartData.planned_cumulative_delivery  || [], borderColor: '#f59e0b', borderDash: [7,4], borderWidth: 1.5, pointRadius: 0, tension: .25, fill: false },
+      { label: 'แผนวางสะสม', data: chartData.planned_cumulative_placement || [], borderColor: '#7c3aed', borderDash: [7,4], borderWidth: 1.5, pointRadius: 0, tension: .25, fill: false },
+      { label: 'BOQ / เป้าหมาย',                 data: chartData.target_line                  || [], borderColor: '#334155', borderDash: [3,4], borderWidth: 1.5, pointRadius: 0, fill: false }
     ]
   },
   options: {
     maintainAspectRatio: false,
     plugins: {
       legend: { position: 'bottom', labels: { usePointStyle: true, padding: 14, font: { size: 11 } } },
-      tooltip: { callbacks: { label: c => `${c.dataset.label}: ${fmt(c.raw)} tons` } }
+      tooltip: { callbacks: { label: c => `${c.dataset.label}: ${fmt(c.raw)} ตัน` } }
     },
     scales: {
-      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'Cumulative (tons)', font: { size: 11 } } },
+      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'สะสม (ตัน)', font: { size: 11 } } },
       x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } }
     }
   }
@@ -639,10 +660,10 @@ makeChart('sandPlacementChart', {
     maintainAspectRatio: false,
     plugins: {
       legend: { position: 'bottom', labels: { usePointStyle: true, padding: 14, font: { size: 11 } } },
-      tooltip: { callbacks: { label: c => `${c.dataset.label}: ${fmt(c.raw)} tons` } }
+      tooltip: { callbacks: { label: c => `${c.dataset.label}: ${fmt(c.raw)} ตัน` } }
     },
     scales: {
-      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'Tons', font: { size: 11 } } },
+      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'ตัน', font: { size: 11 } } },
       x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } }
     }
   }
