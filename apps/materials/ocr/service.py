@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -17,9 +18,15 @@ PROJECT_TESSDATA = Path(__file__).resolve().parents[3] / 'tessdata'
 
 
 def _configure():
-    cmd = os.environ.get('TESSERACT_CMD', DEFAULT_TESSERACT_CMD)
-    if os.path.exists(cmd):
-        pytesseract.pytesseract.tesseract_cmd = cmd
+    candidates = [
+        os.environ.get('TESSERACT_CMD'),
+        DEFAULT_TESSERACT_CMD,
+        shutil.which('tesseract'),
+    ]
+    for cmd in candidates:
+        if cmd and os.path.exists(cmd):
+            pytesseract.pytesseract.tesseract_cmd = cmd
+            break
     # tha.traineddata lives in project-local tessdata (winget install lacks Thai)
     if PROJECT_TESSDATA.exists():
         os.environ['TESSDATA_PREFIX'] = str(PROJECT_TESSDATA)
@@ -72,9 +79,17 @@ def run_ocr(path: str | Path, *, lang: str = 'tha+eng', psm: int = 6,
     img = preprocess.prepare(path, threshold=threshold)
     t0 = time.time()
     config = f'--psm {psm}'
-    data = pytesseract.image_to_data(
-        img, lang=lang, config=config, output_type=pytesseract.Output.DICT,
-    )
+    try:
+        data = pytesseract.image_to_data(
+            img, lang=lang, config=config, output_type=pytesseract.Output.DICT,
+        )
+    except pytesseract.pytesseract.TesseractNotFoundError as exc:
+        configured_cmd = pytesseract.pytesseract.tesseract_cmd
+        raise RuntimeError(
+            'Tesseract executable was not found. Install Tesseract OCR or set '
+            f'TESSERACT_CMD to its full path. Tried: {configured_cmd!r}. '
+            f'Default Windows path: {DEFAULT_TESSERACT_CMD!r}.'
+        ) from exc
     duration_ms = int((time.time() - t0) * 1000)
 
     words: list[Word] = []
