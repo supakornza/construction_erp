@@ -3,18 +3,33 @@ import tempfile
 from pathlib import Path
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, DecimalField, ExpressionWrapper, F, Q, Sum
 from django.db.models.functions import Coalesce
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_POST
+from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from apps.accounts.mixins import MaterialsViewMixin, MaterialsWriteMixin, MaterialsDeleteMixin
 from apps.projects.models import Project
 from .models import Material, MaterialDelivery, MaterialUsage, get_stock_balance
 from .forms import MaterialForm, MaterialDeliveryForm, MaterialUsageForm
+
+
+DELIVERY_SORT_MAP = {
+    'date': 'delivery_date', '-date': '-delivery_date',
+    'time': 'delivery_time', '-time': '-delivery_time',
+    'created': 'created_at', '-created': '-created_at',
+    'project': 'project__contract_no', '-project': '-project__contract_no',
+    'material': 'material__name', '-material': '-material__name',
+    'source': 'source_area__name', '-source': '-source_area__name',
+    'truck': 'truck_no', '-truck': '-truck_no',
+    'dn': 'delivery_note_no', '-dn': '-delivery_note_no',
+    'qty': 'quantity', '-qty': '-quantity',
+    'price': 'unit_price', '-price': '-unit_price',
+}
+DELIVERY_DEFAULT_SORT = '-created'
 
 
 def _delivery_filters(request):
@@ -44,6 +59,29 @@ def _filtered_deliveries(filters):
     if filters['date_to']:
         qs = qs.filter(delivery_date__lte=filters['date_to'])
     return qs
+
+
+def _delivery_list_queryset(request):
+    qs = MaterialDelivery.objects.select_related('project', 'material', 'source_area')
+    p = request.GET
+    if p.get('project'):
+        qs = qs.filter(project_id=p['project'])
+    if p.get('material'):
+        qs = qs.filter(material_id=p['material'])
+    if p.get('date_from'):
+        qs = qs.filter(delivery_date__gte=p['date_from'])
+    if p.get('date_to'):
+        qs = qs.filter(delivery_date__lte=p['date_to'])
+    if p.get('source', '').strip():
+        q = p['source'].strip()
+        qs = qs.filter(Q(source__icontains=q) | Q(source_area__name__icontains=q))
+    if p.get('truck_no', '').strip():
+        qs = qs.filter(truck_no__icontains=p['truck_no'].strip())
+    if p.get('dn', '').strip():
+        qs = qs.filter(delivery_note_no__icontains=p['dn'].strip())
+    sort_key = p.get('sort', '') or DELIVERY_DEFAULT_SORT
+    order = DELIVERY_SORT_MAP.get(sort_key, DELIVERY_SORT_MAP[DELIVERY_DEFAULT_SORT])
+    return qs.order_by(order, '-id')
 
 
 class MaterialDeliveryDashboardView(MaterialsViewMixin, TemplateView):
@@ -217,41 +255,11 @@ class MaterialDeliveryListView(MaterialsViewMixin, ListView):
     context_object_name = 'deliveries'
     paginate_by = 50
 
-    _SORT_MAP = {
-        'date': 'delivery_date', '-date': '-delivery_date',
-        'time': 'delivery_time', '-time': '-delivery_time',
-        'created': 'created_at', '-created': '-created_at',
-        'project': 'project__contract_no', '-project': '-project__contract_no',
-        'material': 'material__name', '-material': '-material__name',
-        'source': 'source_area__name', '-source': '-source_area__name',
-        'truck': 'truck_no', '-truck': '-truck_no',
-        'dn': 'delivery_note_no', '-dn': '-delivery_note_no',
-        'qty': 'quantity', '-qty': '-quantity',
-        'price': 'unit_price', '-price': '-unit_price',
-    }
-    DEFAULT_SORT = '-created'
+    _SORT_MAP = DELIVERY_SORT_MAP
+    DEFAULT_SORT = DELIVERY_DEFAULT_SORT
 
     def get_queryset(self):
-        qs = super().get_queryset().select_related('project', 'material', 'source_area')
-        p = self.request.GET
-        if p.get('project'):
-            qs = qs.filter(project_id=p['project'])
-        if p.get('material'):
-            qs = qs.filter(material_id=p['material'])
-        if p.get('date_from'):
-            qs = qs.filter(delivery_date__gte=p['date_from'])
-        if p.get('date_to'):
-            qs = qs.filter(delivery_date__lte=p['date_to'])
-        if p.get('source', '').strip():
-            q = p['source'].strip()
-            qs = qs.filter(Q(source__icontains=q) | Q(source_area__name__icontains=q))
-        if p.get('truck_no', '').strip():
-            qs = qs.filter(truck_no__icontains=p['truck_no'].strip())
-        if p.get('dn', '').strip():
-            qs = qs.filter(delivery_note_no__icontains=p['dn'].strip())
-        sort_key = p.get('sort', '') or self.DEFAULT_SORT
-        order = self._SORT_MAP.get(sort_key, self._SORT_MAP[self.DEFAULT_SORT])
-        return qs.order_by(order, '-id')
+        return _delivery_list_queryset(self.request)
 
     def get_context_data(self, **kwargs):
         from apps.projects.models import Project
@@ -272,6 +280,29 @@ class MaterialDeliveryListView(MaterialsViewMixin, ListView):
         )
         ctx['duplicate_dns_keys'] = {f"{d['project_id']}|{d['delivery_note_no']}" for d in dup_pairs}
         return ctx
+
+
+class MaterialDeliveryExportExcelView(MaterialsViewMixin, View):
+    def get(self, request, *args, **kwargs):
+        from .exports import export_material_deliveries_excel
+
+        buffer = export_material_deliveries_excel(_delivery_list_queryset(request))
+        response = HttpResponse(
+            buffer.getvalue(),
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        )
+        response['Content-Disposition'] = 'attachment; filename="material_deliveries.xlsx"'
+        return response
+
+
+class MaterialDeliveryExportPDFView(MaterialsViewMixin, View):
+    def get(self, request, *args, **kwargs):
+        from .exports import export_material_deliveries_pdf
+
+        buffer = export_material_deliveries_pdf(_delivery_list_queryset(request))
+        response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="material_deliveries_a4.pdf"'
+        return response
 
 
 def _attach_ocr_metadata(form_instance, request):
