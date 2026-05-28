@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Recovery Plan - Construction ERP{% endblock %}
+{% block page_title %}Recovery Plan{% endblock %}
+
+{% block content %}
+{% url 'project_controls:recovery_plan_list' as recovery_plan_list_url %}
+{% include "project_controls/includes/page_header.html" with back_url=recovery_plan_list_url icon_class="fas fa-calendar-check text-warning" title=form.instance.pk|yesno:"Edit Recovery Plan,New 14-Day Recovery Plan" %}
+
+<form method="post">
+  {% csrf_token %}
+  <div class="card mb-3">
+    <div class="card-header"><i class="fas fa-calendar-check me-2" aria-hidden="true"></i>Plan Header</div>
+    <div class="card-body">
+      {{ form.non_field_errors }}
+      <div class="row g-3">
+        <div class="col-md-4">{{ form.project.label_tag }}{{ form.project }}{{ form.project.errors }}</div>
+        <div class="col-md-4">{{ form.plan_name.label_tag }}{{ form.plan_name }}{{ form.plan_name.errors }}</div>
+        <div class="col-md-2">{{ form.material_type.label_tag }}{{ form.material_type }}{{ form.material_type.errors }}</div>
+        <div class="col-md-2">{{ form.status.label_tag }}{{ form.status }}{{ form.status.errors }}</div>
+        <div class="col-md-3">{{ form.start_date.label_tag }}{{ form.start_date }}{{ form.start_date.errors }}</div>
+        <div class="col-md-3">{{ form.end_date.label_tag }}{{ form.end_date }}{{ form.end_date.errors }}</div>
+        <div class="col-md-3">{{ form.prepared_by.label_tag }}{{ form.prepared_by }}{{ form.prepared_by.errors }}</div>
+        <div class="col-md-3">{{ form.approved_by.label_tag }}{{ form.approved_by }}{{ form.approved_by.errors }}</div>
+        <div class="col-12">{{ form.description.label_tag }}{{ form.description }}{{ form.description.errors }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span><i class="fas fa-table me-2" aria-hidden="true"></i>Daily Plan Items (14 Days)</span>
+      <button type="button" class="btn btn-sm btn-outline-success" id="add-item-btn"><i class="fas fa-plus me-1" aria-hidden="true"></i>Add Day</button>
+    </div>
+    <div class="card-body p-0">
+      {{ item_formset.management_form }}
+      {{ item_formset.non_form_errors }}
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered mb-0 pc-form-table">
+          <thead class="table-light">
+            <tr>
+              <th style="width:150px">Date</th>
+              <th style="width:120px">Day</th>
+              <th style="width:140px">Plan (T)</th>
+              <th style="width:140px">Actual (T)</th>
+              <th>Del</th>
+            </tr>
+          </thead>
+          <tbody id="plan-item-tbody">
+            {% for pf in item_formset %}
+            <tr class="formset-row {% if pf.errors %}table-danger{% endif %}">
+              <td>{{ pf.plan_date }}{{ pf.id }}{{ pf.plan_date.errors }}</td>
+              <td>{{ pf.day_name }}{{ pf.day_name.errors }}</td>
+              <td>{{ pf.planned_quantity }}{{ pf.planned_quantity.errors }}</td>
+              <td>{{ pf.actual_quantity }}{{ pf.actual_quantity.errors }}</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
+                {{ pf.DELETE }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <template id="plan-item-empty-row">
+    <tr class="formset-row">
+      <td>{{ item_formset.empty_form.plan_date }}{{ item_formset.empty_form.id }}</td>
+      <td>{{ item_formset.empty_form.day_name }}</td>
+      <td>{{ item_formset.empty_form.planned_quantity }}</td>
+      <td>{{ item_formset.empty_form.actual_quantity }}</td>
+      <td class="text-center">
+        <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
+        {{ item_formset.empty_form.DELETE }}
+      </td>
+    </tr>
+  </template>
+
+  {% include "project_controls/includes/form_actions.html" with submit_label="Save Plan" cancel_url=recovery_plan_list_url %}
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+{% include "project_controls/includes/day_name_sync.html" %}
+<script src="{% static 'js/project_controls/formsets.js' %}"></script>
+<script>
+function bindRecoveryDayNames(root=document) {
+  ProjectControlsDayName.bindRows(root, '#plan-item-tbody tr.formset-row', '-plan_date', '-day_name');
+}
+
+ProjectControlsFormsets.applyBootstrapClasses(document);
+bindRecoveryDayNames();
+ProjectControlsFormsets.bindAddButton({
+  buttonId: 'add-item-btn',
+  tbodyId: 'plan-item-tbody',
+  templateId: 'plan-item-empty-row',
+  prefix: 'daily_items',
+  afterAdd: () => bindRecoveryDayNames(),
+});
+</script>
+{% endblock %}

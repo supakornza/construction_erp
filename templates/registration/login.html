@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ – Construction ERP</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1565C0;
+            --primary-hover: #1255a8;
+            --bg: #f0f2f5;
+            --surface: #ffffff;
+            --border: #d0d5dd;
+            --text-primary: #1a2234;
+            --text-secondary: #6b7280;
+            --input-bg: #f9fafb;
+            --radius: 10px;
+        }
+        * { box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        main {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        /* Logo block */
+        .auth-logo-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1.75rem;
+        }
+        .auth-logo-icon {
+            width: 68px;
+            height: 68px;
+            background: var(--primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.9rem;
+            color: #fff;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 14px rgba(21,101,192,.3);
+        }
+        .auth-app-name {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -.5px;
+            margin: 0 0 .15rem;
+        }
+        .auth-app-sub {
+            font-size: .85rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Card */
+        .auth-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 2rem 2rem 1.75rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 2px 12px rgba(0,0,0,.07);
+        }
+
+        /* Form fields */
+        .field-label {
+            font-size: .82rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: .4rem;
+            display: block;
+        }
+        .field-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--input-bg);
+            transition: border-color .15s;
+            overflow: hidden;
+        }
+        .field-wrap:focus-within {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(21,101,192,.1);
+        }
+        .field-icon {
+            width: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;   /* was #9ca3af; bump for icon contrast */
+            flex-shrink: 0;
+            font-size: .9rem;
+        }
+        .field-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: .65rem .5rem .65rem 0;
+            font-size: .93rem;
+            color: var(--text-primary);
+            outline: none;
+            min-width: 0;
+            min-height: 44px;     /* WCAG 2.5.5 */
+        }
+        .field-input::placeholder { color: #b0b8c4; }
+        .field-btn {
+            border: none;
+            background: transparent;
+            padding: 0 .5rem;
+            color: #6b7280;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-width: 44px;       /* WCAG 2.5.5 */
+            font-size: .9rem;
+        }
+        .field-btn:hover { color: var(--primary); }
+        .field-btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: -2px;
+        }
+
+        /* Remember / forgot row */
+        .auth-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: .9rem 0 1.2rem;
+            flex-wrap: wrap;
+            gap: .5rem;
+        }
+        .remember-wrap {
+            display: flex;
+            align-items: center;
+            gap: .45rem;
+            font-size: .82rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .remember-wrap input[type="checkbox"] {
+            width: 18px;       /* was 15px; ensures min tap area */
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+        .forgot-link {
+            font-size: .82rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: .25rem 0;   /* a bit of vertical hit area */
+        }
+        .forgot-link:hover,
+        .forgot-link:focus { text-decoration: underline; }
+
+        /* Submit button */
+        .btn-signin {
+            width: 100%;
+            min-height: 44px;
+            padding: .72rem;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            font-size: .95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            transition: background .15s, transform .1s;
+        }
+        .btn-signin:hover { background: var(--primary-hover); }
+        .btn-signin:active { transform: scale(.99); }
+        .btn-signin:focus-visible {
+            outline: 3px solid rgba(21,101,192,.4);
+            outline-offset: 2px;
+        }
+
+        /* Error alert */
+        .auth-alert {
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            border-radius: var(--radius);
+            padding: .65rem .9rem;
+            font-size: .83rem;
+            color: #b91c1c;
+            margin-bottom: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+        .auth-alert-info {
+            background: #eff6ff;
+            border-color: #93c5fd;
+            color: #1d4ed8;
+        }
+
+        /* Footer */
+        .auth-footer {
+            margin-top: 1.4rem;
+            text-align: center;
+            font-size: .73rem;
+            color: #6b7280;   /* was #9ca3af = 2.95:1 fail; #6b7280 = 4.66:1 pass */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .3rem;
+        }
+        .auth-secure {
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+            font-weight: 600;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            font-size: .68rem;
+        }
+    </style>
+</head>
+<body>
+
+<main>
+    <header class="auth-logo-wrap">
+        <div class="auth-logo-icon" aria-hidden="true">
+            <i class="fas fa-hard-hat" aria-hidden="true"></i>
+        </div>
+        <h1 class="auth-app-name">Construction ERP</h1>
+        <div class="auth-app-sub">ระบบบริหารโครงการก่อสร้าง</div>
+    </header>
+
+    <div class="auth-card">
+        {% if form.errors %}
+        <div class="auth-alert" role="alert">
+            <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+            <span>ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่</span>
+        </div>
+        {% endif %}
+        {% if request.GET.next %}
+        <div class="auth-alert auth-alert-info" role="status">
+            <i class="fas fa-info-circle" aria-hidden="true"></i>
+            <span>กรุณาเข้าสู่ระบบก่อนดำเนินการต่อ</span>
+        </div>
+        {% endif %}
+
+        <form method="post" autocomplete="on">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+
+            <!-- Username -->
+            <div class="mb-3">
+                <label class="field-label" for="id_username">ชื่อผู้ใช้</label>
+                <div class="field-wrap">
+                    <span class="field-icon" aria-hidden="true"><i class="fas fa-user"></i></span>
+                    <input type="text" name="username" id="id_username" class="field-input"
+                           placeholder="กรอกชื่อผู้ใช้" autofocus autocomplete="username" required>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label class="field-label" for="id_password">รหัสผ่าน</label>
+                <div class="field-wrap">
+                    <span class="field-icon" aria-hidden="true"><i class="fas fa-lock"></i></span>
+                    <input type="password" name="password" id="id_password" class="field-input"
+                           placeholder="กรอกรหัสผ่าน" autocomplete="current-password" required>
+                    <button type="button" class="field-btn" id="toggle-pw"
+                            aria-label="แสดงรหัสผ่าน"
+                            aria-pressed="false"
+                            aria-controls="id_password">
+                        <i class="fas fa-eye" id="toggle-icon" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Remember me + Forgot -->
+            <div class="auth-row">
+                <label class="remember-wrap">
+                    <input type="checkbox" name="remember_me" id="remember_me">
+                    จดจำฉัน (14 วัน)
+                </label>
+                <a href="{% url 'accounts:password_reset' %}" class="forgot-link">ลืมรหัสผ่าน?</a>
+            </div>
+
+            <button type="submit" class="btn-signin">
+                <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                เข้าสู่ระบบ
+            </button>
+        </form>
+    </div>
+
+    <footer class="auth-footer">
+        <div class="auth-secure">
+            <i class="fas fa-shield-alt" style="color:#16a34a" aria-hidden="true"></i>
+            ระบบงานภาคสนามที่ปลอดภัย
+        </div>
+        <div>Construction ERP &copy; {% now "Y" %}</div>
+    </footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const pwInput = document.getElementById('id_password');
+const toggleBtn = document.getElementById('toggle-pw');
+const toggleIcon = document.getElementById('toggle-icon');
+toggleBtn.addEventListener('click', () => {
+    const show = pwInput.type === 'password';
+    pwInput.type = show ? 'text' : 'password';
+    toggleIcon.classList.toggle('fa-eye', !show);
+    toggleIcon.classList.toggle('fa-eye-slash', show);
+    // Keep ARIA state in sync so SR users get the right answer
+    toggleBtn.setAttribute('aria-pressed', String(show));
+    toggleBtn.setAttribute('aria-label', show ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน');
+});
+</script>
+</body>
+</html>

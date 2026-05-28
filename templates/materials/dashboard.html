@@ -1,0 +1,435 @@
+{% extends "base.html" %}
+{% block title %}Material Deliveries Dashboard - Construction ERP{% endblock %}
+{% block page_title %}Material Deliveries Dashboard{% endblock %}
+
+{% block extra_head %}
+<style>
+  .material-kpi {
+    border: 1px solid #d9e1ea;
+    border-left-width: 4px;
+    border-radius: 8px;
+    height: 100%;
+  }
+  .material-chart {
+    height: 280px;
+    position: relative;
+  }
+  .mini-table td,
+  .mini-table th {
+    font-size: 0.85rem;
+    vertical-align: middle;
+  }
+  /* Stock-tile label: replaces `text-muted` (#6c757d, 4.4:1 on light tint
+     = AA fail for normal text). #495057 hits >= 6.2:1 on the lightest tint
+     used here (#fffbeb). Bold + uppercase preserved via .stock-tile-label */
+  .stock-tile-label {
+    color: #495057;
+    font-size: .68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  /* Touch-target floor (WCAG 2.5.5). Bootstrap form-control-sm defaults
+     to ~31px; bump filter controls to a comfortable 44px minimum without
+     visually enlarging text. */
+  .filter-control { min-height: 44px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <div>
+    <h4 class="mb-1"><i class="fas fa-truck-loading me-2 text-primary" aria-hidden="true"></i>Dashboard การรับวัสดุ</h4>
+    <div class="text-body-secondary small">ปริมาณ มูลค่า แหล่งวัสดุ และกิจกรรมการรับวัสดุล่าสุด</div>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'materials:delivery_list' %}" class="btn btn-outline-secondary"><i class="fas fa-list me-1" aria-hidden="true"></i> รายการรับวัสดุ</a>
+    <a href="{% url 'materials:delivery_create' %}" class="btn btn-primary"><i class="fas fa-plus me-1" aria-hidden="true"></i> บันทึกการรับวัสดุ</a>
+  </div>
+</div>
+
+<div class="card mb-3">
+  <div class="card-body">
+    <form method="get" class="row g-2 align-items-end">
+      <div class="col-md-3">
+        <label for="filterProject" class="form-label small">โครงการ</label>
+        <select id="filterProject" name="project" class="form-select filter-control">
+          <option value="">ทุกโครงการ</option>
+          {% for p in projects %}
+          <option value="{{ p.pk }}" {% if filters.project_id == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.contract_no }} - {{ p.project_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label for="filterMaterial" class="form-label small">วัสดุ</label>
+        <select id="filterMaterial" name="material" class="form-select filter-control">
+          <option value="">ทุกวัสดุ</option>
+          {% for m in materials %}
+          <option value="{{ m.pk }}" {% if filters.material_id == m.pk|stringformat:"s" %}selected{% endif %}>{{ m.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label for="filterDateFrom" class="form-label small">ตั้งแต่</label>
+        {# `max` keeps date_from <= date_to as user types (#13). Synced by JS below. #}
+        <input id="filterDateFrom" type="date" name="date_from" value="{{ filters.date_from }}"
+               max="{{ filters.date_to }}" class="form-control filter-control">
+      </div>
+      <div class="col-md-2">
+        <label for="filterDateTo" class="form-label small">ถึง</label>
+        <input id="filterDateTo" type="date" name="date_to" value="{{ filters.date_to }}"
+               min="{{ filters.date_from }}" class="form-control filter-control">
+      </div>
+      <div class="col-md-2 d-grid">
+        <button class="btn btn-outline-primary filter-control" type="submit"><i class="fas fa-filter me-1" aria-hidden="true"></i> กรอง</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  {% comment %} Explicit breakpoint ladder for #10 reflow: 1 col on phone, 2 on small tablet,
+     3 on tablet, 5 on lg+ desktop. Default `.col` (equal-fluid) crammed 5 cards
+     onto every viewport which broke at <320 px. {% endcomment %}
+  <div class="col-12 col-sm-6 col-md-4 col-lg">
+    <div class="card material-kpi border-primary">
+      <div class="card-body">
+        <div class="text-body-secondary small">ปริมาณรับสะสม</div>
+        <div class="fs-3 fw-bold">{{ total_quantity|floatformat:3|intcomma }}</div>
+        <div class="text-body-secondary small">หน่วยตามวัสดุ</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6 col-md-4 col-lg">
+    <div class="card material-kpi border-success">
+      <div class="card-body">
+        <div class="text-body-secondary small">มูลค่ารวม</div>
+        <div class="fs-3 fw-bold">฿{{ total_amount|floatformat:2|intcomma }}</div>
+        <div class="text-body-secondary small">จากราคา/หน่วยที่กรอก</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6 col-md-4 col-lg">
+    <div class="card material-kpi border-info">
+      <div class="card-body">
+        <div class="text-body-secondary small">จำนวนใบรับ</div>
+        <div class="fs-3 fw-bold">{{ delivery_count|intcomma }}</div>
+        <div class="text-body-secondary small">รายการ</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6 col-md-4 col-lg">
+    <div class="card material-kpi border-warning">
+      <div class="card-body">
+        <div class="text-body-secondary small">รับล่าสุด</div>
+        <div class="fs-5 fw-bold">{% if latest_delivery %}{{ latest_delivery.delivery_date|thai_be_date }}{% else %}-{% endif %}</div>
+        <div class="text-body-secondary small">{% if latest_delivery %}{{ latest_delivery.material.name }}{% else %}ไม่มีข้อมูล{% endif %}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6 col-md-4 col-lg">
+    <div class="card material-kpi border-danger h-100">
+      <div class="card-body">
+        <div class="text-body-secondary small d-flex align-items-center gap-1">
+          <i class="fas fa-truck text-danger" aria-hidden="true"></i>
+          {% if truck_is_single_day %}รถเข้า Stockpile {{ truck_date_to }}{% else %}รถเข้า Stockpile (ตามช่วงที่เลือก){% endif %}
+        </div>
+        <div class="fs-2 fw-bold text-danger">{{ truck_rows_today|length }}</div>
+        <div class="text-body-secondary small">คัน · {% if truck_is_single_day %}{{ truck_date_to }}{% else %}{{ truck_date_from }} – {{ truck_date_to }}{% endif %}</div>
+        {% if truck_rows_today %}
+        <div class="mt-2 d-flex flex-wrap gap-1">
+          {% for t in truck_rows_today %}
+          <span class="badge bg-light text-dark border" style="font-size:.7rem">{{ t.truck_no }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-lg-8">
+    <div class="card h-100">
+      <h2 class="card-header bg-white fw-semibold h6 mb-0"><i class="fas fa-chart-line me-2 text-primary" aria-hidden="true"></i>Daily Delivery Quantity</h2>
+      <div class="card-body">
+        <div class="material-chart">
+          <canvas id="deliveryTrendChart"
+                  role="img"
+                  aria-label="แผนภูมิแท่งปริมาณการรับวัสดุรายวัน — ดูตารางข้อมูลใต้แผนภูมิหากใช้ screen reader"
+                  aria-describedby="deliveryTrendTable"></canvas>
+        </div>
+        {# Data-table fallback for SR users; visually hidden, fully in AT tree #}
+        <table id="deliveryTrendTable" class="visually-hidden">
+          <caption>ปริมาณการรับวัสดุรายวันใน {{ daily_labels|length }} วันล่าสุด</caption>
+          <thead><tr><th scope="col">วันที่</th><th scope="col">ปริมาณ</th></tr></thead>
+          <tbody id="deliveryTrendTableBody"><!-- populated by chart JS --></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <h2 class="card-header bg-white fw-semibold h6 mb-0" id="topMatHdr"><i class="fas fa-boxes me-2 text-success" aria-hidden="true"></i>Top Materials</h2>
+      <div class="table-responsive">
+        <table class="table table-sm mini-table mb-0" aria-labelledby="topMatHdr">
+          <thead class="table-light"><tr><th>Material</th><th class="text-end">Qty</th><th class="text-end">Records</th></tr></thead>
+          <tbody>
+            {% for row in material_rows %}
+            <tr>
+              <td>{{ row.material__name }}</td>
+              <td class="text-end fw-semibold">{{ row.quantity|floatformat:3|intcomma }} {{ row.material__unit }}</td>
+              <td class="text-end">{{ row.count|intcomma }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-center text-muted py-4">No material data.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if rock_stock or sand_stock %}
+<div class="row g-3 mb-4">
+  {% if rock_stock %}
+  <div class="col-md-6">
+    <div class="card h-100 border-0 shadow-sm">
+      <h2 class="card-header fw-semibold h6 mb-0" style="background:linear-gradient(135deg,#155e75,#0f766e);color:#fff">
+        <i class="fas fa-layer-group me-2" aria-hidden="true"></i>Rock KPIs — ข้อมูลกองหิน
+        <small class="ms-2 opacity-75 fw-normal">{{ rock_stock.date|thai_be_date }}</small>
+      </h2>
+      <div class="card-body p-3">
+        <div class="row g-2 mb-3">
+          <div class="col-4 text-center p-2 rounded" style="background:#eff6ff">
+            <div class="stock-tile-label">ส่งมาสะสม</div>
+            <div class="fw-bold fs-5 text-primary">{{ rock_stock.delivered|floatformat:0 }}</div>
+            <div class="text-muted" style="font-size:.7rem">tons</div>
+          </div>
+          <div class="col-4 text-center p-2 rounded" style="background:#ecfdf5">
+            <div class="stock-tile-label">ใช้งานสะสม</div>
+            <div class="fw-bold fs-5 text-success">{{ rock_stock.placed|floatformat:0 }}</div>
+            <div class="text-muted" style="font-size:.7rem">tons</div>
+          </div>
+          <div class="col-4 text-center p-2 rounded {% if rock_stock.balance >= 0 %}bg-warning bg-opacity-10{% else %}bg-danger bg-opacity-10{% endif %}">
+            <div class="stock-tile-label">คงเหลือ (Stock)</div>
+            <div class="fw-bold fs-5 {% if rock_stock.balance >= 0 %}text-warning-emphasis{% else %}text-danger-emphasis{% endif %}">
+              <i class="fas {% if rock_stock.balance >= 0 %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %} me-1" aria-hidden="true"></i>{{ rock_stock.balance|floatformat:0 }}
+              <span class="visually-hidden">{% if rock_stock.balance >= 0 %}คงเหลือเพียงพอ{% else %}คงเหลือติดลบ ต้องเติม{% endif %}</span>
+            </div>
+            <div class="text-muted" style="font-size:.7rem">tons</div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between" style="font-size:.8rem;border-top:1px solid #f1f5f9;padding-top:.5rem">
+          <span><i class="fas fa-truck text-muted me-1" aria-hidden="true"></i>วันล่าสุด: <strong>{{ rock_stock.daily_delivered|floatformat:0 }}</strong> T ส่ง / <strong>{{ rock_stock.daily_placed|floatformat:0 }}</strong> T ใช้</span>
+          <span class="text-muted"><i class="fas fa-car me-1" aria-hidden="true"></i>{{ rock_stock.trucks }} คัน / {{ rock_stock.trips }} รอบ</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% if sand_stock %}
+  <div class="col-md-6">
+    <div class="card h-100 border-0 shadow-sm">
+      <h2 class="card-header fw-semibold h6 mb-0" style="background:linear-gradient(135deg,#0e7490,#0f766e);color:#fff">
+        <i class="fas fa-water me-2" aria-hidden="true"></i>Sand KPIs — ข้อมูลกองทราย
+        <small class="ms-2 opacity-75 fw-normal">{{ sand_stock.date|thai_be_date }}</small>
+      </h2>
+      <div class="card-body p-3">
+        <div class="row g-2 mb-3">
+          <div class="col-4 text-center p-2 rounded" style="background:#eff6ff">
+            <div class="stock-tile-label">ส่งมาสะสม</div>
+            <div class="fw-bold fs-5 text-primary">{{ sand_stock.delivered|floatformat:0 }}</div>
+            <div class="text-muted" style="font-size:.7rem">tons</div>
+          </div>
+          <div class="col-4 text-center p-2 rounded" style="background:#ecfdf5">
+            <div class="stock-tile-label">วางแล้วสะสม</div>
+            <div class="fw-bold fs-5 text-success">{{ sand_stock.placed|floatformat:0 }}</div>
+            <div class="text-muted" style="font-size:.7rem">tons</div>
+          </div>
+          <div class="col-4 text-center p-2 rounded" style="background:#fffbeb">
+            <div class="stock-tile-label">วันนี้รับเข้า</div>
+            <div class="fw-bold fs-5 text-warning-emphasis">
+              <i class="fas fa-calendar-day me-1" aria-hidden="true"></i>{{ sand_stock.daily_delivered|floatformat:0 }}
+              <span class="visually-hidden">ทรายที่รับเข้าเฉพาะวันนี้</span>
+            </div>
+            <div class="text-muted" style="font-size:.7rem">tons</div>
+          </div>
+        </div>
+        <div class="row g-2 mb-2">
+          <div class="col-6">
+            <div class="p-2 rounded text-center" style="background:#f0f9ff;border:1px solid #bae6fd">
+              <div style="font-size:.68rem;font-weight:700;color:#0369a1">TCT Pier Stock</div>
+              <div class="fw-bold text-info-emphasis">{{ sand_stock.tct_stock|floatformat:0 }} T</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="p-2 rounded text-center" style="background:#f0fdf4;border:1px solid #bbf7d0">
+              <div style="font-size:.68rem;font-weight:700;color:#15803d">MTP3 Stockpile</div>
+              <div class="fw-bold text-success">{{ sand_stock.mtp3_stock|floatformat:0 }} T</div>
+            </div>
+          </div>
+        </div>
+        <div class="text-muted" style="font-size:.8rem;border-top:1px solid #f1f5f9;padding-top:.5rem">
+          <i class="fas fa-car me-1" aria-hidden="true"></i>TCT: <strong>{{ sand_stock.tct_trucks }}</strong> คัน / <strong>{{ sand_stock.tct_trips }}</strong> รอบ
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <h2 class="card-header bg-white fw-semibold h6 mb-0" id="srcHdr">แหล่งวัสดุ</h2>
+      <div class="table-responsive">
+        <table class="table table-sm mini-table mb-0" aria-labelledby="srcHdr">
+          <thead class="table-light"><tr><th>แหล่ง</th><th class="text-end">ปริมาณ</th><th class="text-end">รายการ</th></tr></thead>
+          <tbody>
+            {% for row in source_rows %}
+            <tr><td>{{ row.name|default:"-" }}</td><td class="text-end">{{ row.quantity|floatformat:3|intcomma }}</td><td class="text-end">{{ row.count|intcomma }}</td></tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-center text-muted py-4">ไม่มีข้อมูล</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h2 class="h6 mb-0 fw-semibold" id="trucksHdr"><i class="fas fa-truck text-danger me-2" aria-hidden="true"></i>{% if truck_is_single_day %}รถเข้า Stockpile {{ truck_date_to }}{% else %}รถเข้า Stockpile {{ truck_date_from }} – {{ truck_date_to }}{% endif %}</h2>
+        <span class="badge bg-danger">{{ truck_rows_today|length }} คัน</span>
+      </div>
+      <div class="card-body p-2" style="overflow-y:auto;max-height:340px">
+        {% if trucks_today_by_project %}
+          {% for proj in trucks_today_by_project %}
+          <div class="mb-2 p-2 rounded" style="background:#fff5f5;border-left:3px solid #dc3545">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="fw-semibold" style="font-size:.85rem">{{ proj.contract_no }}</div>
+              <span class="badge bg-danger" style="font-size:.7rem">{{ proj.total_trips }} เที่ยว</span>
+            </div>
+            <div class="text-muted mb-1" style="font-size:.72rem">{{ proj.project_name|truncatechars:36 }}</div>
+            {% if proj.by_source %}
+            <table class="table table-sm mini-table mb-0" style="font-size:.75rem">
+              <thead><tr><th class="py-0 text-muted fw-normal">แหล่งที่มา</th><th class="text-end py-0 text-muted fw-normal">เที่ยว</th><th class="text-end py-0 text-muted fw-normal">คัน</th><th class="text-end py-0 text-muted fw-normal">ปริมาณ</th></tr></thead>
+              <tbody>
+                {% for s in proj.by_source %}
+                <tr>
+                  <td class="py-0">{{ s.source }}</td>
+                  <td class="text-end py-0">{{ s.trips }}</td>
+                  <td class="text-end py-0">{{ s.truck_count }}</td>
+                  <td class="text-end py-0 fw-semibold">{{ s.quantity|floatformat:1 }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% endif %}
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="text-center text-muted py-5" style="font-size:.85rem">
+            <i class="fas fa-truck-loading mb-2 d-block" style="font-size:1.5rem;opacity:.3" aria-hidden="true"></i>
+            {% if truck_is_single_day %}ยังไม่มีรถเข้า Stockpile วันที่ {{ truck_date_to }}{% else %}ยังไม่มีรถเข้า Stockpile ในช่วง {{ truck_date_from }} – {{ truck_date_to }}{% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <h2 class="card-header bg-white fw-semibold h6 mb-0" id="recentHdr">การรับวัสดุล่าสุด</h2>
+      <div class="table-responsive">
+        <table class="table table-sm mini-table mb-0" aria-labelledby="recentHdr">
+          <thead class="table-light"><tr><th>วันที่/เวลา</th><th>วัสดุ</th><th class="text-end">ปริมาณ</th></tr></thead>
+          <tbody>
+            {% for d in recent_deliveries %}
+            <tr>
+              <td>
+                <div>{{ d.delivery_date|thai_be_date }}</div>
+                {% if d.delivery_time %}<div class="text-muted" style="font-size:.75rem"><i class="fas fa-clock me-1" aria-hidden="true"></i>{{ d.delivery_time|time:"H:i" }}</div>{% endif %}
+              </td>
+              <td>{{ d.material.name }}</td>
+              <td class="text-end">{{ d.quantity|floatformat:3|intcomma }} {{ d.material.unit }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-center text-muted py-4">ไม่มีข้อมูล</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// #13 — keep the filter date range valid as the user types. `max` on
+// date_from is bound to date_to (and vice-versa) so the native picker
+// greys out invalid dates and the browser rejects them on submit.
+(function syncDateRange() {
+  const from = document.getElementById('filterDateFrom');
+  const to   = document.getElementById('filterDateTo');
+  if (!from || !to) return;
+  from.addEventListener('change', () => { to.min = from.value || ''; });
+  to.addEventListener('change',   () => { from.max = to.value || ''; });
+})();
+
+const deliveryLabels = {{ daily_labels|safe }};
+const deliveryQuantities = {{ daily_quantities|safe }};
+
+// Populate the SR-only data table that mirrors the chart, so screen reader
+// users get the same information visual users get from the bars.
+(function fillChartDataTable() {
+  const tbody = document.getElementById('deliveryTrendTableBody');
+  if (!tbody) return;
+  for (let i = 0; i < deliveryLabels.length; i++) {
+    const tr = document.createElement('tr');
+    const td1 = document.createElement('td');
+    td1.textContent = deliveryLabels[i];
+    const td2 = document.createElement('td');
+    td2.textContent = Number(deliveryQuantities[i] || 0).toLocaleString();
+    tr.appendChild(td1); tr.appendChild(td2);
+    tbody.appendChild(tr);
+  }
+})();
+
+const deliveryCanvas = document.getElementById('deliveryTrendChart');
+if (deliveryCanvas && typeof Chart !== 'undefined') {
+  new Chart(deliveryCanvas, {
+    type: 'bar',
+    data: {
+      labels: deliveryLabels,
+      datasets: [{
+        label: 'Delivered Quantity',
+        data: deliveryQuantities,
+        backgroundColor: '#0d6efd',
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${Number(context.parsed.y || 0).toLocaleString()} units`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { maxRotation: 0, autoSkip: true } },
+        y: { beginAtZero: true }
+      }
+    }
+  });
+}
+</script>
+{% endblock %}

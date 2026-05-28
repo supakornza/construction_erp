@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Reject Leave{% endblock %}
+{% block page_title %}Reject Leave Request{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white"><h6 class="mb-0">Reject Leave — {{ leave.employee.full_name }}</h6></div>
+            <div class="card-body">
+                <p class="small text-muted mb-3">{{ leave.get_leave_type_display }}: {{ leave.start_date }} – {{ leave.end_date }} ({{ leave.days }} days)</p>
+                <form method="post">
+                    {% csrf_token %}
+                    {% crispy form %}
+                    <div class="d-flex gap-2 mt-2">
+                        <button type="submit" class="btn btn-danger">Confirm Rejection</button>
+                        <a href="{% url 'hr:leave_detail' leave.pk %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

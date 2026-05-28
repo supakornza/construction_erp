@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}Drawing Register – Drawings{% endblock %}
+{% block page_title %}Drawing Register{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0"><i class="fas fa-file-alt me-2 text-primary"></i>Drawing Register</h5>
+    <a href="{% url 'drawings:drawing_create' %}" class="btn btn-sm btn-primary">
+        <i class="fas fa-plus me-1"></i>New Drawing
+    </a>
+</div>
+
+<!-- Filters -->
+<form method="get" class="card mb-3">
+    <div class="card-body py-2">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <input type="text" name="q" value="{{ request.GET.q }}"
+                    class="form-control form-control-sm" placeholder="Drawing No / Title…">
+            </div>
+            <div class="col-md-2">
+                <select name="project" class="form-select form-select-sm">
+                    <option value="">All Projects</option>
+                    {% for p in projects %}
+                    <option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="discipline" class="form-select form-select-sm">
+                    <option value="">All Disciplines</option>
+                    {% for val, label in discipline_choices %}
+                    <option value="{{ val }}" {% if request.GET.discipline == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">All Status</option>
+                    {% for val, label in status_choices %}
+                    <option value="{{ val }}" {% if request.GET.status == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-1">
+                <div class="form-check mt-1">
+                    <input class="form-check-input" type="checkbox" name="current_only" value="0"
+                        id="allRevCheck" {% if request.GET.current_only == '0' %}checked{% endif %}>
+                    <label class="form-check-label small" for="allRevCheck">All Rev.</label>
+                </div>
+            </div>
+            <div class="col-md-2 d-flex gap-1">
+                <button type="submit" class="btn btn-sm btn-primary w-100">Filter</button>
+                <a href="{% url 'drawings:drawing_list' %}" class="btn btn-sm btn-outline-secondary">Reset</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-sm table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Drawing No</th>
+                        <th>Title</th>
+                        <th>Discipline</th>
+                        <th>Rev</th>
+                        <th>Status</th>
+                        <th>Issue Date</th>
+                        <th>Prepared By</th>
+                        <th>Project</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for dwg in drawings %}
+                <tr {% if not dwg.is_current %}class="text-muted"{% endif %}>
+                    <td class="small fw-semibold">
+                        <a href="{% url 'drawings:drawing_detail' dwg.pk %}"
+                           class="text-decoration-none {% if not dwg.is_current %}text-muted{% endif %}">
+                            {{ dwg.drawing_no }}
+                        </a>
+                    </td>
+                    <td class="small">{{ dwg.title|truncatechars:45 }}</td>
+                    <td><span class="badge bg-light text-dark border small">{{ dwg.discipline }}</span></td>
+                    <td class="small fw-bold">{{ dwg.revision }}</td>
+                    <td><span class="badge bg-{{ dwg.status_color }}">{{ dwg.get_status_display }}</span></td>
+                    <td class="small">{{ dwg.issue_date|default:"—" }}</td>
+                    <td class="small text-muted">{{ dwg.prepared_by|default:"—"|truncatechars:20 }}</td>
+                    <td class="small">{{ dwg.project.name|truncatechars:20 }}</td>
+                    <td class="text-end">
+                        <div class="btn-group btn-group-sm">
+                            <a href="{% url 'drawings:drawing_detail' dwg.pk %}"
+                               class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                            {% if dwg.is_current %}
+                            <a href="{% url 'drawings:drawing_revise' dwg.pk %}"
+                               class="btn btn-outline-success" title="New Revision">
+                                <i class="fas fa-code-branch"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="9" class="text-center text-muted py-4">No drawings found.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="mt-3">
+    <ul class="pagination pagination-sm justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+        {% endif %}
+        <li class="page-item disabled"><a class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</a></li>
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

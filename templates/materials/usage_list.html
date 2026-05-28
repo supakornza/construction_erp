@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}การใช้วัสดุ – Construction ERP{% endblock %}
+{% block page_title %}การใช้วัสดุ{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">การใช้วัสดุ</h4>
+    <a href="{% url 'materials:usage_create' %}" class="btn btn-primary"
+       style="min-height:44px">
+        <i class="fas fa-plus me-1" aria-hidden="true"></i>บันทึกการใช้วัสดุ
+    </a>
+</div>
+<div class="card"><div class="table-responsive">
+    <table class="table table-hover mb-0"
+           aria-label="รายการการใช้วัสดุ — รวม {{ usages|length }} รายการ">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">วันที่</th>
+                <th scope="col">โครงการ</th>
+                <th scope="col">วัสดุ</th>
+                <th scope="col">พื้นที่ทำงาน</th>
+                <th scope="col">ปริมาณ</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for u in usages %}
+        <tr>
+            <td>{{ u.usage_date|thai_be_date }}</td>
+            <td>{{ u.project.contract_no }}</td>
+            <td>{{ u.material.name }}</td>
+            <td>{{ u.work_area|default:'-' }}</td>
+            <td>{{ u.quantity|floatformat:3|intcomma }} {{ u.material.unit }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-center text-body-secondary py-4" role="status">ไม่มีข้อมูลการใช้วัสดุ</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div></div>
+{% endblock %}

@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}{{ contract.contract_no }} – Subcontractors{% endblock %}
+{% block page_title %}Contract Detail{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h5 class="mb-0 fw-bold">{{ contract.contract_no }}</h5>
+        <small class="text-muted">{{ contract.subcontractor.name }} · {{ contract.project.name }}</small>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        {% if contract.status == 'Draft' %}
+        <form method="post" action="{% url 'subcontractors:contract_status' contract.pk %}">
+            {% csrf_token %}<input type="hidden" name="action" value="activate">
+            <button type="submit" class="btn btn-sm btn-success">Activate</button>
+        </form>
+        {% elif contract.status == 'Active' %}
+        <a href="{% url 'subcontractors:claim_create' contract.pk %}" class="btn btn-sm btn-warning">
+            <i class="fas fa-file-invoice-dollar me-1"></i>New Claim
+        </a>
+        <form method="post" action="{% url 'subcontractors:contract_status' contract.pk %}">
+            {% csrf_token %}<input type="hidden" name="action" value="suspend">
+            <button type="submit" class="btn btn-sm btn-outline-warning">Suspend</button>
+        </form>
+        <form method="post" action="{% url 'subcontractors:contract_status' contract.pk %}"
+              onsubmit="return confirm('Mark this contract as completed?')">
+            {% csrf_token %}<input type="hidden" name="action" value="complete">
+            <button type="submit" class="btn btn-sm btn-outline-primary">Complete</button>
+        </form>
+        {% elif contract.status == 'Suspended' %}
+        <form method="post" action="{% url 'subcontractors:contract_status' contract.pk %}">
+            {% csrf_token %}<input type="hidden" name="action" value="reactivate">
+            <button type="submit" class="btn btn-sm btn-success">Reactivate</button>
+        </form>
+        {% endif %}
+        {% if contract.status != 'Terminated' and contract.status != 'Completed' %}
+        <a href="{% url 'subcontractors:contract_update' contract.pk %}"
+           class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit me-1"></i>Edit</a>
+        <form method="post" action="{% url 'subcontractors:contract_status' contract.pk %}"
+              onsubmit="return confirm('Terminate this contract? This cannot be undone.')">
+            {% csrf_token %}<input type="hidden" name="action" value="terminate">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Terminate</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row g-3">
+    <!-- Main Info -->
+    <div class="col-lg-8">
+        <!-- Contract Info -->
+        <div class="card mb-3">
+            <div class="card-header"><h6 class="mb-0">Contract Info</h6></div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <div class="small text-muted">Title</div>
+                        <div class="fw-semibold">{{ contract.title }}</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="small text-muted">Contract Type</div>
+                        <span class="badge bg-secondary">{{ contract.get_contract_type_display }}</span>
+                    </div>
+                    {% if contract.scope_of_work %}
+                    <div class="col-12">
+                        <div class="small text-muted">Scope of Work</div>
+                        <div class="small">{{ contract.scope_of_work|linebreaksbr }}</div>
+                    </div>
+                    {% endif %}
+                    <div class="col-sm-4">
+                        <div class="small text-muted">Start Date</div>
+                        <div>{{ contract.start_date|default:"—" }}</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="small text-muted">End Date</div>
+                        <div>{{ contract.end_date|default:"—" }}</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="small text-muted">Signed Date</div>
+                        <div>{{ contract.signed_date|default:"—" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Work Items -->
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0"><i class="fas fa-list me-1"></i>Work Items</h6>
+                {% if work_items_total > 0 %}
+                <span class="fw-semibold small">Total: {{ work_items_total|floatformat:0|intcomma }} ฿</span>
+                {% endif %}
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead class="table-light">
+                        <tr><th>#</th><th>Description</th><th>Unit</th><th class="text-end">Contract Qty</th><th class="text-end">Unit Rate</th><th class="text-end">Amount (฿)</th><th class="text-end">Completed</th><th class="text-end">%</th></tr>
+                    </thead>
+                    <tbody>
+                    {% for item in contract.work_items.all %}
+                    <tr>
+                        <td class="small text-muted">{{ forloop.counter }}</td>
+                        <td class="small">{{ item.description }}</td>
+                        <td class="small">{{ item.unit }}</td>
+                        <td class="small text-end">{{ item.contract_qty|floatformat:3 }}</td>
+                        <td class="small text-end">{{ item.unit_rate|floatformat:2|intcomma }}</td>
+                        <td class="small text-end fw-semibold">{{ item.amount|floatformat:0|intcomma }}</td>
+                        <td class="small text-end">{{ item.completed_qty|floatformat:3 }}</td>
+                        <td class="small text-end">
+                            <span class="badge bg-{% if item.progress_pct >= 100 %}success{% elif item.progress_pct >= 50 %}warning{% else %}secondary{% endif %}">
+                                {{ item.progress_pct }}%
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="8" class="text-center text-muted py-3">No work items defined.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Payment Claims -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0"><i class="fas fa-file-invoice-dollar me-1 text-warning"></i>Payment Claims</h6>
+                {% if contract.status == 'Active' %}
+                <a href="{% url 'subcontractors:claim_create' contract.pk %}"
+                   class="btn btn-xs btn-warning">New Claim</a>
+                {% endif %}
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead class="table-light">
+                        <tr><th>Claim No</th><th>Date</th><th>Claimed (฿)</th><th>Certified (฿)</th><th>Net Payable (฿)</th><th>Status</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                    {% for claim in claims %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'subcontractors:claim_detail' claim.pk %}"
+                               class="fw-semibold text-decoration-none small">{{ claim.claim_no }}</a>
+                        </td>
+                        <td class="small">{{ claim.claim_date }}</td>
+                        <td class="small">{{ claim.claimed_amount|floatformat:0|intcomma }}</td>
+                        <td class="small">{{ claim.certified_amount|floatformat:0|intcomma }}</td>
+                        <td class="small fw-semibold">{{ claim.net_payable|floatformat:0|intcomma }}</td>
+                        <td><span class="badge bg-{{ claim.status_color }}">{{ claim.get_status_display }}</span></td>
+                        <td>
+                            <a href="{% url 'subcontractors:claim_detail' claim.pk %}"
+                               class="btn btn-xs btn-outline-primary"><i class="fas fa-eye"></i></a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7" class="text-center text-muted py-3">No payment claims yet.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="col-lg-4">
+        <div class="card mb-3">
+            <div class="card-header"><h6 class="mb-0">Financial Summary</h6></div>
+            <div class="card-body">
+                <dl class="row mb-0 small">
+                    <dt class="col-7 text-muted">Contract Value</dt>
+                    <dd class="col-5 fw-bold">{{ contract.contract_value|floatformat:0|intcomma }} ฿</dd>
+                    <dt class="col-7 text-muted">Retention %</dt>
+                    <dd class="col-5">{{ contract.retention_pct }}%</dd>
+                    <dt class="col-7 text-muted">Total Claimed</dt>
+                    <dd class="col-5">{{ contract.total_claimed|floatformat:0|intcomma }} ฿</dd>
+                    <dt class="col-7 text-muted">Total Certified</dt>
+                    <dd class="col-5 text-warning fw-semibold">{{ contract.total_certified|floatformat:0|intcomma }} ฿</dd>
+                    <dt class="col-7 text-muted">Total Paid</dt>
+                    <dd class="col-5 text-success fw-semibold">{{ contract.total_paid|floatformat:0|intcomma }} ฿</dd>
+                    <dt class="col-7 text-muted">Balance</dt>
+                    <dd class="col-5 fw-semibold">{{ contract.balance|floatformat:0|intcomma }} ฿</dd>
+                </dl>
+                <div class="mt-2">
+                    <div class="small text-muted mb-1">Payment Progress</div>
+                    <div class="progress" style="height:10px">
+                        <div class="progress-bar bg-success" style="width:{{ contract.progress_pct }}%"></div>
+                    </div>
+                    <div class="small text-center text-muted mt-1">{{ contract.progress_pct }}% certified</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><h6 class="mb-0">Audit</h6></div>
+            <div class="card-body">
+                <dl class="row mb-0 small">
+                    <dt class="col-5 text-muted">Created By</dt>
+                    <dd class="col-7">{{ contract.created_by|default:"—" }}</dd>
+                    <dt class="col-5 text-muted">Created</dt>
+                    <dd class="col-7">{{ contract.created_at|date:"d M Y" }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a href="{% url 'subcontractors:contract_list' %}" class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Back to Contracts
+    </a>
+    <a href="{% url 'subcontractors:contractor_detail' contract.subcontractor.pk %}"
+       class="btn btn-sm btn-outline-primary ms-1">
+        <i class="fas fa-hard-hat me-1"></i>{{ contract.subcontractor.name }}
+    </a>
+</div>
+{% endblock %}

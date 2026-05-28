@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}New Revision – {{ original.drawing_no }}{% endblock %}
+{% block page_title %}Issue New Revision{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="alert alert-info mb-3">
+            <strong>{{ original.drawing_no }}</strong> – {{ original.title }}<br>
+            <small class="text-muted">
+                Current: Rev.<strong>{{ original.revision }}</strong>
+                · <span class="badge bg-{{ original.status_color }}">{{ original.get_status_display }}</span>
+                · {{ original.discipline }}
+            </small><br>
+            <small class="text-warning">
+                <i class="fas fa-exclamation-triangle me-1"></i>
+                The current revision will be marked as <strong>Superseded</strong> automatically.
+            </small>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-code-branch me-2 text-success"></i>New Revision Details</h6>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% crispy form %}
+                </form>
+            </div>
+        </div>
+        <div class="mt-2">
+            <a href="{% url 'drawings:drawing_detail' original.pk %}"
+               class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

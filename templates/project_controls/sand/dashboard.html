@@ -1,0 +1,672 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}Dashboard ความคืบหน้างานทราย – Construction ERP{% endblock %}
+{% block page_title %}Dashboard ความคืบหน้างานทราย{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── Layout ──────────────────────────────────────────────────── */
+  .sdb { display: grid; grid-template-columns: minmax(0,1fr); gap: 16px; }
+  .sdb-layout { display: grid; grid-template-columns: minmax(0,1fr) 268px; gap: 16px; align-items: start; min-width: 0; }
+
+  /* ── Header ──────────────────────────────────────────────────── */
+  .sdb-header {
+    background: linear-gradient(135deg, #155e75 0%, #0f766e 58%, #334155 100%);
+    border-radius: 8px;
+    color: #fff;
+    padding: 22px 28px 18px;
+    box-shadow: 0 10px 24px rgba(15,23,42,.18);
+    position: relative;
+    overflow: hidden;
+  }
+  .sdb-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='52' height='52' viewBox='0 0 52 52' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='26' cy='26' r='4'/%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .sdb-header-top { align-items: flex-start; display: flex; gap: 16px; justify-content: space-between; position: relative; }
+  .sdb-header-title h2 { font-size: 1.85rem; font-weight: 900; letter-spacing: -.5px; margin: 0; text-shadow: 0 2px 6px rgba(0,0,0,.22); }
+  .sdb-header-title .sub { font-size: .86rem; margin-top: 5px; opacity: .82; }
+  .sdb-header-badge { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); border-radius: 8px; flex-shrink: 0; padding: 8px 16px; text-align: right; }
+  .sdb-header-badge .blabel { font-size: .68rem; letter-spacing: .05em; opacity: .75; text-transform: uppercase; }
+  .sdb-header-badge .bvalue { font-size: 1.7rem; font-weight: 900; line-height: 1.15; }
+  .sdb-prog-wrap { margin-top: 14px; position: relative; }
+  .sdb-prog-track { background: rgba(255,255,255,.18); border-radius: 999px; height: 10px; overflow: hidden; }
+  .sdb-prog-fill { background: linear-gradient(90deg, #34d399, #10b981); border-radius: 999px; height: 100%; transition: width .7s ease; }
+  .sdb-prog-labels { display: flex; font-size: .73rem; justify-content: space-between; margin-top: 5px; opacity: .78; }
+
+  /* ── KPI grid ────────────────────────────────────────────────── */
+  .sdb-kpis { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
+  .sdb-kpi {
+    background: #fff;
+    border: 1px solid #e8edf4;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(15,23,42,.05);
+    padding: 15px 13px 13px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .sdb-kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--c, #2563eb); border-radius: 8px 8px 0 0; }
+  .sdb-kpi:hover { box-shadow: 0 8px 18px rgba(15,23,42,.10); transform: translateY(-1px); }
+  .sdb-kpi .ki { align-items: center; background: var(--cb, #eff6ff); border-radius: 8px; color: var(--c, #2563eb); display: flex; font-size: .88rem; height: 32px; justify-content: center; margin-bottom: 8px; width: 32px; }
+  .sdb-kpi .kl { color: #64748b; font-size: .72rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
+  .sdb-kpi .kv { color: #0f172a; font-size: 1.7rem; font-weight: 900; line-height: 1.1; margin: 4px 0 2px; overflow-wrap: anywhere; }
+  .sdb-kpi .ks { color: #64748b; font-size: .71rem; }
+  .sdb-kpi.blue   { --c:#2563eb; --cb:#eff6ff; }
+  .sdb-kpi.green  { --c:#059669; --cb:#ecfdf5; }
+  .sdb-kpi.orange { --c:#d97706; --cb:#fffbeb; }
+  .sdb-kpi.purple { --c:#7c3aed; --cb:#f5f3ff; }
+  .sdb-kpi.cyan   { --c:#0891b2; --cb:#ecfeff; }
+  .sdb-kpi.teal   { --c:#0f7f9f; --cb:#e0f4f9; }
+  .sdb-kpi.warn   { --c:#dc2626; --cb:#fef2f2; }
+
+  /* ── Panels ──────────────────────────────────────────────────── */
+  .sdb-panel { background: #fff; border: 1px solid #e8edf4; border-radius: 8px; box-shadow: 0 2px 8px rgba(15,23,42,.06); height: 100%; padding: 16px 16px 12px; }
+  .sdb-pt { align-items: center; border-bottom: 1px solid #f1f5f9; display: flex; gap: 9px; margin-bottom: 14px; padding-bottom: 11px; }
+  .sdb-pt .ico { align-items: center; background: #e0f4f9; border-radius: 6px; color: #0f7f9f; display: flex; flex-shrink: 0; font-size: .8rem; height: 28px; justify-content: center; width: 28px; }
+  .sdb-pt h2 { color: #1e293b; font-size: .82rem; font-weight: 900; letter-spacing: .04em; margin: 0; text-transform: uppercase; }
+  .sdb-chart { height: 300px; }
+  .sdb-wide-chart { height: 320px; }
+
+  /* ── Source bar ──────────────────────────────────────────────── */
+  .src-bar { background: #e0f4f9; border-radius: 999px; height: 6px; margin-top: 4px; overflow: hidden; }
+  .src-bar span { background: #0f7f9f; border-radius: 999px; display: block; height: 100%; }
+
+  /* ── Tables ──────────────────────────────────────────────────── */
+  .sdb-tbl { font-size: .82rem; width: 100%; }
+  .sdb-tbl thead th { background: #f8fafc; border-bottom: 2px solid #e8edf4; color: #475569; font-size: .69rem; font-weight: 800; letter-spacing: .06em; padding: 8px 10px; text-transform: uppercase; white-space: nowrap; }
+  .sdb-tbl tbody td { border-bottom: 1px solid #f1f5f9; color: #1e293b; padding: 9px 10px; vertical-align: middle; }
+  .sdb-tbl tbody tr:last-child td { border-bottom: none; }
+  .sdb-tbl tbody tr:hover td { background: #f8fafc; }
+  .minibar { background: #e8edf4; border-radius: 999px; height: 5px; margin-top: 4px; overflow: hidden; width: 90px; }
+  .minibar-fill { border-radius: 999px; height: 100%; }
+  .smuted { color: #64748b; font-size: .72rem; }
+
+  /* ── Status pills ────────────────────────────────────────────── */
+  .spill { align-items: center; border-radius: 999px; display: inline-flex; font-size: .7rem; font-weight: 800; gap: 4px; letter-spacing: .02em; padding: .2rem .65rem; }
+  .spill::before { background: currentColor; border-radius: 50%; content: ''; flex-shrink: 0; height: 5px; width: 5px; }
+  .sp-done { background: #dcfce7; color: #166534; }
+  .sp-prog { background: #dbeafe; color: #1d4ed8; }
+  .sp-delay{ background: #fef3c7; color: #92400e; }
+  .sp-wait { background: #f1f5f9; color: #475569; }
+
+  /* ── Dest balance boxes ──────────────────────────────────────── */
+  .dest-box { border-radius: 8px; padding: 10px 12px; }
+
+  /* ── Empty ───────────────────────────────────────────────────── */
+  .sdb-empty { background: #fff; border: 2px dashed #cbd5e1; border-radius: 8px; color: #64748b; padding: 52px 24px; text-align: center; }
+
+  /* ── Sidebar ─────────────────────────────────────────────────── */
+  .sdb-sc { background: #fff; border: 1px solid #e8edf4; border-radius: 8px; box-shadow: 0 2px 6px rgba(15,23,42,.05); margin-bottom: 12px; padding: 14px; }
+  .sdb-st { align-items: center; border-bottom: 1px solid #f1f5f9; color: #334155; display: flex; font-size: .76rem; font-weight: 900; gap: 6px; justify-content: space-between; letter-spacing: .05em; margin-bottom: 12px; padding-bottom: 8px; text-transform: uppercase; }
+  .sdb-st i { color: #0f7f9f; }
+  .sdb-fl { color: #64748b; display: block; font-size: .7rem; font-weight: 700; letter-spacing: .04em; margin-bottom: 3px; text-transform: uppercase; }
+  .sdb-fg { display: grid; gap: 9px; }
+  .sdb-actions { display: grid; gap: 7px; }
+  .sdb-btn { align-items: center; border-radius: 6px; display: flex; font-size: .82rem; font-weight: 700; gap: 8px; padding: 8px 12px; text-decoration: none; transition: opacity .15s; }
+  .sdb-btn:hover { opacity: .85; }
+  .sdb-btn-teal { background: #0f7f9f; color: #fff; }
+  .sdb-btn-out  { background: #f0f9fb; border: 1px solid #b6dce8; color: #0a5f78; }
+
+  /* ── Responsive ──────────────────────────────────────────────── */
+  @media (max-width: 1240px) {
+    .sdb-layout { grid-template-columns: minmax(0,1fr); }
+    .sdb-kpis   { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  }
+  @media (max-width: 640px) {
+    .sdb-header-title h2 { font-size: 1.3rem; }
+    .sdb-header-badge    { display: none; }
+    .sdb-kpis            { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .sdb-kpi .kv         { font-size: 1.4rem; }
+  }
+  @media (max-width: 520px) {
+    .sdb-header { padding: 18px; }
+    .sdb-kpis  { grid-template-columns: minmax(0,1fr); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="sdb">
+
+  <!-- ─── Header ────────────────────────────────────────────────── -->
+  <div class="sdb-header">
+    <div class="sdb-header-top">
+      <div class="sdb-header-title">
+        <h2><i class="fas fa-water me-2" style="opacity:.75" aria-hidden="true"></i>Dashboard ความคืบหน้างานทราย</h2>
+        <div class="sub">
+          {% if selected_project %}
+            {{ selected_project.contract_no }} &nbsp;·&nbsp; {{ selected_project.project_name }}
+          {% else %}
+            No active project selected
+          {% endif %}
+          &nbsp;·&nbsp; As of {% now "d M Y" %}
+        </div>
+      </div>
+      {% if data.completion_percent is not None %}
+      <div class="sdb-header-badge">
+        <div class="blabel">% เสร็จ</div>
+        <div class="bvalue">{{ data.completion_percent|floatformat:1 }}%</div>
+      </div>
+      {% endif %}
+    </div>
+    {% if data.completion_percent is not None %}
+    <div class="sdb-prog-wrap">
+      <div class="sdb-prog-track">
+        <div class="sdb-prog-fill" style="width:{% if data.completion_percent > 100 %}100{% else %}{{ data.completion_percent|floatformat:0 }}{% endif %}%"></div>
+      </div>
+      <div class="sdb-prog-labels">
+        <span>0%</span>
+        <span>{{ data.total_placed|default:0|floatformat:0|intcomma }} of {{ data.total_delivered|default:0|floatformat:0|intcomma }} tons placed</span>
+        <span>100%</span>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="sdb-layout">
+    <main class="sdb">
+
+      <!-- ─── KPI Cards ─────────────────────────────────────────── -->
+      <section class="sdb-kpis">
+        <div class="sdb-kpi blue">
+          <div class="ki"><i class="fas fa-truck-ramp-box" aria-hidden="true"></i></div>
+          <div class="kl">รับเข้ารวม</div>
+          <div class="kv">{{ data.total_delivered|default:0|floatformat:0|intcomma }} tons</div>
+          <div class="ks">TCT Pier + MTP3</div>
+        </div>
+        <div class="sdb-kpi green">
+          <div class="ki"><i class="fas fa-layer-group" aria-hidden="true"></i></div>
+          <div class="kl">วางหินรวม</div>
+          <div class="kv">{{ data.total_placed|default:0|floatformat:0|intcomma }} tons</div>
+          <div class="ks">offshore + onshore</div>
+        </div>
+        <div class="sdb-kpi cyan">
+          <div class="ki"><i class="fas fa-warehouse" aria-hidden="true"></i></div>
+          <div class="kl">คงเหลือในสต็อก</div>
+          <div class="kv">{{ data.current_stock_balance|default:0|floatformat:0|intcomma }} tons</div>
+          <div class="ks">TCT Pier + MTP3 stockpile{% if data.stock_percent is not None %} · {{ data.stock_percent }}%{% endif %}</div>
+        </div>
+        <div class="sdb-kpi purple">
+          <div class="ki"><i class="fas fa-chart-pie" aria-hidden="true"></i></div>
+          <div class="kl">% เสร็จ</div>
+          <div class="kv">{% if data.completion_percent is not None %}{{ data.completion_percent }}%{% else %}N/A{% endif %}</div>
+          <div class="ks">vs BOQ target</div>
+        </div>
+        <div class="sdb-kpi warn">
+          <div class="ki"><i class="fas fa-hourglass-half" aria-hidden="true"></i></div>
+          <div class="kl">ปริมาณคงเหลือ</div>
+          <div class="kv">{% if data.remaining_quantity is not None %}{{ data.remaining_quantity|floatformat:0|intcomma }} tons{% else %}N/A{% endif %}</div>
+          <div class="ks">{% if data.remaining_percent is not None %}{{ data.remaining_percent }}% remaining{% else %}target not set{% endif %}</div>
+        </div>
+        <div class="sdb-kpi orange">
+          <div class="ki"><i class="fas fa-gauge-high" aria-hidden="true"></i></div>
+          <div class="kl">ค่าเฉลี่ยรับเข้า/วัน</div>
+          <div class="kv">{% if data.average_daily_delivery is not None %}{{ data.average_daily_delivery|floatformat:0|intcomma }} tons/day{% else %}N/A{% endif %}</div>
+          <div class="ks">active delivery days</div>
+        </div>
+        <div class="sdb-kpi green">
+          <div class="ki"><i class="fas fa-arrow-trend-up" aria-hidden="true"></i></div>
+          <div class="kl">ค่าเฉลี่ยวาง/วัน</div>
+          <div class="kv">{% if data.average_daily_placement is not None %}{{ data.average_daily_placement|floatformat:0|intcomma }} tons/day{% else %}N/A{% endif %}</div>
+          <div class="ks">active placement days</div>
+        </div>
+        <div class="sdb-kpi teal">
+          <div class="ki"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
+          <div class="kl">วันที่คาดเสร็จ</div>
+          <div class="kv" style="font-size:1.1rem">{% if data.forecast_completion_date %}{{ data.forecast_completion_date|thai_be_date }}{% else %}N/A{% endif %}</div>
+          <div class="ks">remaining ÷ avg placement</div>
+        </div>
+        <div class="sdb-kpi blue">
+          <div class="ki"><i class="fas fa-truck" aria-hidden="true"></i></div>
+          <div class="kl">รับเข้าวันล่าสุด</div>
+          <div class="kv">{{ data.latest_daily_delivered|default:0|floatformat:0|intcomma }} tons</div>
+          <div class="ks">{% if data.latest_date %}{{ data.latest_date|thai_be_date }}{% else %}No data{% endif %}</div>
+        </div>
+        <div class="sdb-kpi green">
+          <div class="ki"><i class="fas fa-circle-down" aria-hidden="true"></i></div>
+          <div class="kl">วางวันล่าสุด</div>
+          <div class="kv">{{ data.latest_daily_placed|default:0|floatformat:0|intcomma }} tons</div>
+          <div class="ks">{% if data.latest_date %}{{ data.latest_date|thai_be_date }}{% else %}No data{% endif %}</div>
+        </div>
+      </section>
+
+      {% if mat_del_summary and mat_del_summary.count > 0 %}
+      <!-- ─── Material Deliveries linked panel ─────────────────── -->
+      <section class="row g-3">
+        <div class="col-12">
+          <div class="sdb-panel">
+            <div class="sdb-pt">
+              <div class="ico" style="background:#fef3c7;color:#d97706"><i class="fas fa-truck-ramp-box" aria-hidden="true"></i></div>
+              <h2>ข้อมูลรับวัสดุ → สต็อกทราย</h2>
+              <a href="{% url 'materials:dashboard' %}?project={{ selected_project.pk }}" class="ms-auto btn btn-outline-secondary" style="font-size:.82rem">
+                <i class="fas fa-external-link-alt me-1" aria-hidden="true"></i>Material Dashboard
+              </a>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-3">
+                <div class="p-3 rounded" style="background:#fffbeb;border:1px solid #fde68a">
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">รับเข้ารวม (วัสดุ)</div>
+                  <div style="font-size:1.6rem;font-weight:900;color:#92400e">{{ mat_del_summary.total_qty|floatformat:2|intcomma }}</div>
+                  <div class="text-body-secondary" style="font-size:.72rem">{{ mat_del_summary.count }} records</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="p-3 rounded" style="background:#ecfeff;border:1px solid #a5f3fc">
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">คงเหลือในสต็อก (Project Controls)</div>
+                  <div style="font-size:1.6rem;font-weight:900;color:#0e7490">{{ data.current_stock_balance|default:0|floatformat:0|intcomma }}</div>
+                  <div class="text-body-secondary" style="font-size:.72rem">tons · TCT Pier + MTP3</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="p-3 rounded" style="background:#eff6ff;border:1px solid #bfdbfe">
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">รถเข้าวันนี้</div>
+                  <div style="font-size:1.6rem;font-weight:900;color:#1d4ed8">{{ mat_del_summary.today_trucks }}</div>
+                  <div class="text-body-secondary" style="font-size:.72rem">คัน · {{ mat_del_summary.today_qty|floatformat:2|intcomma }} units วันนี้</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="p-3 rounded" style="background:#f8fafc;border:1px solid #e2e8f0">
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">แยกตามแหล่งวัสดุ</div>
+                  {% for s in mat_del_summary.by_source %}
+                  <div class="d-flex justify-content-between" style="font-size:.78rem;padding:2px 0;border-bottom:1px solid #f1f5f9">
+                    <span>{{ s.source }}</span>
+                    <span class="fw-bold">{{ s.qty|floatformat:1|intcomma }}</span>
+                  </div>
+                  {% empty %}
+                  <div class="text-body-secondary" style="font-size:.75rem">ไม่มีข้อมูล source</div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if data.has_data %}
+
+      <!-- ─── Charts row 1 ──────────────────────────────────────── -->
+      <section class="row g-3">
+        <div class="col-xl-5">
+          <div class="sdb-panel">
+            <div class="sdb-pt"><div class="ico"><i class="fas fa-chart-bar" aria-hidden="true"></i></div><h2>ปริมาณทรายเข้าสต็อกรายวันตามปลายทาง</h2></div>
+            <div class="sdb-chart"><canvas id="sandDailyChart" role="img" aria-label="กราฟปริมาณทรายเข้าสต็อกรายวัน แยก TCT Pier และ MTP3 พร้อมเป้าหมายรายวัน" aria-describedby="sandDailyChartTable"></canvas></div>
+            <div id="sandDailyChartTable" class="visually-hidden"></div>
+          </div>
+        </div>
+        <div class="col-xl-3">
+          <div class="sdb-panel">
+            <div class="sdb-pt"><div class="ico"><i class="fas fa-map-location-dot" aria-hidden="true"></i></div><h2>สัดส่วนตามแหล่งวัสดุ</h2></div>
+            <div class="table-responsive">
+              <table class="sdb-tbl" aria-label="สัดส่วนปริมาณทรายตามแหล่งวัสดุ">
+                <thead><tr><th scope="col">แหล่งวัสดุ</th><th scope="col" class="text-end">ตัน</th><th scope="col" class="text-end">%</th></tr></thead>
+                <tbody>
+                  {% for source in data.source_rows %}
+                  <tr>
+                    <td>
+                      <div class="fw-bold">{{ source.name }}</div>
+                      <div class="smuted">{% if source.latest_date %}{{ source.latest_date|thai_be_date }}{% else %}{{ source.status }}{% endif %}</div>
+                      <div class="src-bar"><span style="width:{{ source.percent|default:0 }}%"></span></div>
+                    </td>
+                    <td class="text-end fw-bold" style="color:#0f7f9f">{{ source.total_qty|floatformat:0|intcomma }} tons</td>
+                    <td class="text-end text-body-secondary">{% if source.percent is not None %}{{ source.percent }}{% else %}0{% endif %}%</td>
+                  </tr>
+                  {% empty %}
+                  <tr><td colspan="3" class="text-center text-body-secondary py-4" role="status">ไม่มีข้อมูลแหล่งวัสดุ</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-4">
+          <div class="sdb-panel">
+            <div class="sdb-pt"><div class="ico"><i class="fas fa-truck-moving" aria-hidden="true"></i></div><h2>ยอดวางทรายตามหน่วยขนส่ง</h2></div>
+            <div class="table-responsive">
+              <table class="sdb-tbl" aria-label="ยอดวางทรายตามหน่วยขนส่ง">
+                <thead>
+                  <tr><th scope="col">หน่วยขนส่ง</th><th scope="col" class="text-end">ตัน</th><th scope="col" class="text-end">เที่ยว</th><th scope="col" class="text-end">เฉลี่ย/เที่ยว</th><th scope="col">ล่าสุด</th></tr>
+                </thead>
+                <tbody>
+                  {% for b in data.barge_totals %}
+                  <tr>
+                    <td>
+                      <div class="fw-bold">{{ b.barge__name }}</div>
+                      <div class="smuted">{{ b.source }} → {{ b.destination }}</div>
+                    </td>
+                    <td class="text-end fw-bold" style="color:#2563eb">{{ b.total_qty|floatformat:0|intcomma }} tons</td>
+                    <td class="text-end">{% if b.total_trips is not None %}{{ b.total_trips|intcomma }} trips{% else %}<span class="text-body-secondary">—</span>{% endif %}</td>
+                    <td class="text-end">{% if b.average_tons_per_trip is not None %}{{ b.average_tons_per_trip|floatformat:0|intcomma }} tons/trip{% else %}<span class="text-body-secondary">—</span>{% endif %}</td>
+                    <td>
+                      <div>{% if b.latest_trip_date %}{{ b.latest_trip_date|thai_be_date }}{% else %}—{% endif %}</div>
+                      <div class="smuted">{{ b.status }}</div>
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr><td colspan="5" class="text-center text-body-secondary py-4" role="status">ไม่มีข้อมูลขนส่ง</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Remaining + Accumulative ─────────────────────────── -->
+      <section class="row g-3">
+        <div class="col-xl-4">
+          <div class="sdb-panel">
+            <div class="sdb-pt"><div class="ico"><i class="fas fa-scale-balanced" aria-hidden="true"></i></div><h2>ปริมาณคงเหลือตามปลายทาง</h2></div>
+            <div class="sdb-chart"><canvas id="sandRemainingChart" role="img" aria-label="กราฟปริมาณทรายคงเหลือแยกตามปลายทาง" aria-describedby="sandRemainingChartTable"></canvas></div>
+            <div id="sandRemainingChartTable" class="visually-hidden"></div>
+          </div>
+        </div>
+        <div class="col-xl-8">
+          <div class="sdb-panel">
+            <div class="sdb-pt"><div class="ico"><i class="fas fa-chart-area" aria-hidden="true"></i></div><h2>ปริมาณสะสมรับเข้าและวางทราย</h2></div>
+            <div class="sdb-wide-chart"><canvas id="sandAccumChart" role="img" aria-label="กราฟปริมาณทรายสะสม รับเข้า วาง แผนสะสม และเป้าหมาย BOQ" aria-describedby="sandAccumChartTable"></canvas></div>
+            <div id="sandAccumChartTable" class="visually-hidden"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Placement Chart + Area Table ─────────────────────── -->
+      <section class="row g-3">
+        <div class="col-xl-7">
+          <div class="sdb-panel">
+            <div class="sdb-pt"><div class="ico"><i class="fas fa-chart-column" aria-hidden="true"></i></div><h2>{{ data.placement_chart_title }}</h2></div>
+            <div class="sdb-wide-chart"><canvas id="sandPlacementChart" role="img" aria-label="กราฟปริมาณวางทราย offshore และ onshore" aria-describedby="sandPlacementChartTable"></canvas></div>
+            <div id="sandPlacementChartTable" class="visually-hidden"></div>
+          </div>
+        </div>
+        <div class="col-xl-5">
+          <div class="sdb-panel">
+            <div class="sdb-pt"><div class="ico"><i class="fas fa-map-pin" aria-hidden="true"></i></div><h2>ความคืบหน้าการวางทรายตามพื้นที่ / โซน</h2></div>
+            <div class="table-responsive">
+              <table class="sdb-tbl" aria-label="ความคืบหน้าการวางทรายตามพื้นที่และโซน">
+                <thead>
+                  <tr><th scope="col">พื้นที่ / โซน</th><th scope="col" class="text-end">แผน</th><th scope="col" class="text-end">วางแล้ว</th><th scope="col" class="text-end">เหลือ</th><th scope="col">ความคืบหน้า</th><th scope="col">สถานะ</th></tr>
+                </thead>
+                <tbody>
+                  {% for area in data.area_rows %}
+                  <tr>
+                    <td>
+                      <div class="fw-bold">{{ area.area_zone }}</div>
+                      <div class="smuted">{{ area.placement_type }}</div>
+                    </td>
+                    <td class="text-end">{% if area.planned_quantity_ton is not None %}{{ area.planned_quantity_ton|floatformat:0|intcomma }} tons{% else %}<span class="text-body-secondary">—</span>{% endif %}</td>
+                    <td class="text-end fw-bold">{{ area.placed_quantity_ton|floatformat:0|intcomma }} tons</td>
+                    <td class="text-end">{% if area.remaining_quantity_ton is not None %}{{ area.remaining_quantity_ton|floatformat:0|intcomma }} tons{% else %}<span class="text-body-secondary">—</span>{% endif %}</td>
+                    <td>
+                      <div style="font-size:.78rem;font-weight:700;color:#334155;margin-bottom:3px">{{ area.completion_percent }}%</div>
+                      <div class="minibar"><div class="minibar-fill" style="width:{% if area.completion_percent > 100 %}100{% else %}{{ area.completion_percent|floatformat:0 }}{% endif %}%;background:{% if area.completion_percent >= 100 %}#059669{% elif area.completion_percent >= 50 %}#0891b2{% else %}#b45309{% endif %}"></div></div>
+                    </td>
+                    <td>
+                      <span class="spill {% if area.status == 'Completed' %}sp-done{% elif area.status == 'In Progress' %}sp-prog{% elif area.status == 'Delayed' %}sp-delay{% else %}sp-wait{% endif %}">
+                        {{ area.status }}
+                      </span>
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr><td colspan="6" class="text-center text-body-secondary py-4" role="status">ยังไม่มีการตั้งค่าความคืบหน้าตามพื้นที่หรือโซน</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {% else %}
+      <div class="sdb-empty" role="status">
+        <i class="fas fa-database fa-2x mb-3" style="color:#cbd5e1" aria-hidden="true"></i>
+        <div class="fw-bold mb-1">ยังไม่มีข้อมูลความคืบหน้าทราย</div>
+        <div class="small">เลือกโครงการ หรือเพิ่มบันทึกประจำวันเพื่อแสดง Dashboard</div>
+      </div>
+      {% endif %}
+    </main>
+
+    <!-- ─── Sidebar ────────────────────────────────────────────── -->
+    <aside>
+      <form method="get" class="sdb-sc sdb-fg">
+        <div class="sdb-st"><span><i class="fas fa-filter" aria-hidden="true"></i> Filters</span></div>
+        <div>
+          <label class="sdb-fl" for="sandFilterProject">โครงการ</label>
+          <select id="sandFilterProject" name="project" class="form-select form-select-sm">
+            <option value="">เลือกโครงการแรกที่ใช้งานอยู่</option>
+            {% for p in projects %}
+            <option value="{{ p.pk }}" {% if selected_project and selected_project.pk == p.pk %}selected{% endif %}>{{ p.contract_no }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="sdb-fl" for="sandFilterRangeDays">ช่วงกราฟ</label>
+          <select id="sandFilterRangeDays" name="range_days" class="form-select form-select-sm">
+            <option value="7"   {% if filters.range_days == 7    %}selected{% endif %}>7 วันล่าสุด</option>
+            <option value="14"  {% if filters.range_days == 14   %}selected{% endif %}>14 วันล่าสุด</option>
+            <option value="30"  {% if filters.range_days == 30   %}selected{% endif %}>30 วันล่าสุด</option>
+            <option value="all" {% if filters.range_days is None %}selected{% endif %}>All</option>
+          </select>
+        </div>
+        <div>
+          <label class="sdb-fl" for="sandFilterDateFrom">จากวันที่</label>
+          <input id="sandFilterDateFrom" type="date" name="date_from" value="{{ request.GET.date_from }}" class="form-control form-control-sm">
+        </div>
+        <div>
+          <label class="sdb-fl" for="sandFilterDateTo">ถึงวันที่</label>
+          <input id="sandFilterDateTo" type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control form-control-sm">
+        </div>
+        <div>
+          <label class="sdb-fl" for="sandFilterSource">แหล่งวัสดุ</label>
+          <select id="sandFilterSource" name="source" class="form-select form-select-sm">
+            <option value="">ทุกแหล่งวัสดุ</option>
+            <option value="chalothon"       {% if filters.source == 'chalothon'       %}selected{% endif %}>บ่อทราย Chalothon</option>
+            <option value="khlong_bang_phai"{% if filters.source == 'khlong_bang_phai'%}selected{% endif %}>คลองบางไผ่ / Oswald</option>
+          </select>
+        </div>
+        <div>
+          <label class="sdb-fl" for="sandFilterDestination">ปลายทาง</label>
+          <select id="sandFilterDestination" name="destination" class="form-select form-select-sm">
+            <option value="">ทุกปลายทาง</option>
+            <option value="tct"  {% if filters.destination == 'tct'  %}selected{% endif %}>ท่าเรือ TCT</option>
+            <option value="mtp3" {% if filters.destination == 'mtp3' %}selected{% endif %}>กองทราย MTP3</option>
+          </select>
+        </div>
+        <div>
+          <label class="sdb-fl" for="sandFilterBarge">หน่วยขนส่ง</label>
+          <select id="sandFilterBarge" name="barge" class="form-select form-select-sm">
+            <option value="">ทุกหน่วยขนส่ง</option>
+            {% for barge in barges %}
+            <option value="{{ barge.pk }}" {% if filters.barge_id == barge.pk|stringformat:"s" %}selected{% endif %}>{{ barge.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="sdb-fl" for="sandFilterPlacementType">ประเภทการวาง</label>
+          <select id="sandFilterPlacementType" name="placement_type" class="form-select form-select-sm">
+            <option value="">All</option>
+            <option value="Offshore" {% if filters.placement_type == 'Offshore' %}selected{% endif %}>นอกชายฝั่ง (Offshore)</option>
+            <option value="Onshore"  {% if filters.placement_type == 'Onshore'  %}selected{% endif %}>ในฝั่ง (Onshore)</option>
+          </select>
+        </div>
+        <div>
+          <label class="sdb-fl" for="sandFilterAreaZone">พื้นที่ / โซน</label>
+          <input id="sandFilterAreaZone" type="text" name="area_zone" value="{{ request.GET.area_zone }}" class="form-control form-control-sm" placeholder="Station หรือโซน">
+        </div>
+        <div>
+          <label class="sdb-fl" for="sandFilterPlacementView">มุมมองกราฟวางทราย</label>
+          <select id="sandFilterPlacementView" name="placement_view" class="form-select form-select-sm">
+            <option value="daily"      {% if filters.placement_view == 'daily'      %}selected{% endif %}>รายวัน</option>
+            <option value="cumulative" {% if filters.placement_view == 'cumulative' %}selected{% endif %}>สะสม</option>
+          </select>
+        </div>
+        <button class="sdb-btn sdb-btn-teal w-100 mt-1 justify-content-center" type="submit">
+          <i class="fas fa-filter" aria-hidden="true"></i> Apply Filters
+        </button>
+      </form>
+
+      <div class="sdb-sc">
+        <div class="sdb-st"><span><i class="fas fa-bolt" aria-hidden="true"></i> Quick Actions</span></div>
+        <div class="sdb-actions">
+          <a href="{% url 'project_controls:sand_list' %}{% if selected_project %}?project={{ selected_project.pk }}{% endif %}" class="sdb-btn sdb-btn-out"><i class="fas fa-table-list" aria-hidden="true"></i>รายการบันทึก</a>
+          <a href="{% url 'project_controls:sand_create' %}" class="sdb-btn sdb-btn-teal"><i class="fas fa-plus" aria-hidden="true"></i>บันทึกใหม่</a>
+          {% if selected_project %}
+          <a href="{% url 'project_controls:sand_export_excel' selected_project.pk %}" class="sdb-btn sdb-btn-out"><i class="fas fa-file-excel" aria-hidden="true"></i>ส่งออก Excel</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="sdb-sc">
+        <div class="sdb-st"><span><i class="fas fa-scale-balanced" aria-hidden="true"></i> Destination Balance</span></div>
+        <div class="d-grid gap-2">
+          <div class="dest-box" style="background:#eff6ff;border:1px solid #bfdbfe">
+            <div class="smuted">TCT Pier</div>
+            <div class="fw-bold mt-1" style="font-size:1.25rem;color:#2563eb">{{ data.remaining_tct|default:0|floatformat:0|intcomma }} tons</div>
+            <div class="smuted">tons remaining</div>
+          </div>
+          <div class="dest-box" style="background:#ecfdf5;border:1px solid #a7f3d0">
+            <div class="smuted">Stockpile MTP3</div>
+            <div class="fw-bold mt-1" style="font-size:1.25rem;color:#059669">{{ data.remaining_mtp3|default:0|floatformat:0|intcomma }} tons</div>
+            <div class="smuted">tons remaining</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sdb-sc">
+        <div class="sdb-st"><span><i class="fas fa-calendar-days" aria-hidden="true"></i> Latest Record</span></div>
+        <div class="p-3 rounded text-center" style="background:#f0f9fb;border:1px solid #b6dce8">
+          <div class="smuted">Last data entry</div>
+          <div class="fw-bold mt-1" style="color:#0f7f9f;font-size:1rem">{% if data.latest_date %}{{ data.latest_date|thai_be_date }}{% else %}No data{% endif %}</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const chartData = {{ data.chart_data|safe }};
+const grid = { color: '#f1f5f9' };
+const fmt = v => Number(v || 0).toLocaleString();
+
+function makeChart(id, cfg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const tableId = el.getAttribute('aria-describedby');
+  if (tableId) renderChartTable(tableId, cfg);
+  if (window.Chart) new Chart(el, cfg);
+}
+
+function renderChartTable(id, cfg) {
+  const target = document.getElementById(id);
+  const labels = cfg.data?.labels || [];
+  const datasets = cfg.data?.datasets || [];
+  if (!target || !labels.length || !datasets.length) return;
+  const esc = v => String(v ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  target.innerHTML = `
+    <table>
+      <caption>${esc(document.getElementById(id.replace('Table', ''))?.getAttribute('aria-label') || 'ข้อมูลกราฟ')}</caption>
+      <thead><tr><th>รายการ</th>${datasets.map(ds => `<th>${esc(ds.label || 'ค่า')}</th>`).join('')}</tr></thead>
+      <tbody>${labels.map((label, i) => `<tr><th>${esc(label)}</th>${datasets.map(ds => `<td>${esc(ds.data?.[i] ?? '')}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table>`;
+}
+
+makeChart('sandDailyChart', {
+  type: 'bar',
+  data: {
+    labels: chartData.labels || [],
+    datasets: [
+      { label: 'TCT Pier',              data: chartData.tct_daily  || [], backgroundColor: '#2563eb', borderRadius: 3, stack: 'delivery' },
+      { label: 'Stockpile Sand MTP3',   data: chartData.mtp3_daily || [], backgroundColor: '#0891b2', borderRadius: 3, stack: 'delivery' },
+      { label: 'เป้าหมายรับเข้ารายวัน', data: chartData.daily_target_delivery || [], type: 'line', borderColor: '#f59e0b', borderWidth: 2, pointRadius: 0, tension: .25, stack: undefined }
+    ]
+  },
+  options: {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { usePointStyle: true, padding: 14, font: { size: 11 } } },
+      tooltip: { callbacks: { label: c => `${c.dataset.label}: ${fmt(c.raw)} ตัน` } }
+    },
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } },
+      y: { stacked: true, beginAtZero: true, grid, title: { display: true, text: 'ตัน', font: { size: 11 } }, ticks: { callback: fmt } }
+    }
+  }
+});
+
+makeChart('sandRemainingChart', {
+  type: 'bar',
+  data: {
+    labels: ['TCT Pier', 'Stockpile MTP3'],
+    datasets: [{
+      label: 'คงเหลือ',
+      data: [{{ data.remaining_tct|default:0 }}, {{ data.remaining_mtp3|default:0 }}],
+      backgroundColor: ['#2563eb', '#059669'],
+      borderRadius: 6
+    }]
+  },
+  options: {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: c => `${fmt(c.raw)} ตัน` } }
+    },
+    scales: {
+      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'ตัน', font: { size: 11 } } },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+makeChart('sandAccumChart', {
+  type: 'line',
+  data: {
+    labels: chartData.labels || [],
+    datasets: [
+      { label: 'รับเข้าสะสมจริง',   data: chartData.actual_cumulative_delivery   || [], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.07)',   borderWidth: 2.5, tension: .25, fill: true },
+      { label: 'วางสะสมจริง',  data: chartData.actual_cumulative_placement  || [], borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.07)',    borderWidth: 2.5, tension: .25, fill: true },
+      { label: 'แผนรับเข้าสะสม',  data: chartData.planned_cumulative_delivery  || [], borderColor: '#f59e0b', borderDash: [7,4], borderWidth: 1.5, pointRadius: 0, tension: .25, fill: false },
+      { label: 'แผนวางสะสม', data: chartData.planned_cumulative_placement || [], borderColor: '#7c3aed', borderDash: [7,4], borderWidth: 1.5, pointRadius: 0, tension: .25, fill: false },
+      { label: 'BOQ / เป้าหมาย',                 data: chartData.target_line                  || [], borderColor: '#334155', borderDash: [3,4], borderWidth: 1.5, pointRadius: 0, fill: false }
+    ]
+  },
+  options: {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { usePointStyle: true, padding: 14, font: { size: 11 } } },
+      tooltip: { callbacks: { label: c => `${c.dataset.label}: ${fmt(c.raw)} ตัน` } }
+    },
+    scales: {
+      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'สะสม (ตัน)', font: { size: 11 } } },
+      x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } }
+    }
+  }
+});
+
+makeChart('sandPlacementChart', {
+  type: 'bar',
+  data: {
+    labels: chartData.labels || [],
+    datasets: [
+      { label: 'Offshore', data: chartData.offshore_placement || [], backgroundColor: '#2563eb', borderRadius: 3 },
+      { label: 'Onshore',  data: chartData.onshore_placement  || [], backgroundColor: '#059669', borderRadius: 3 }
+    ]
+  },
+  options: {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { usePointStyle: true, padding: 14, font: { size: 11 } } },
+      tooltip: { callbacks: { label: c => `${c.dataset.label}: ${fmt(c.raw)} ตัน` } }
+    },
+    scales: {
+      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'ตัน', font: { size: 11 } } },
+      x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } }
+    }
+  }
+});
+</script>
+{% endblock %}

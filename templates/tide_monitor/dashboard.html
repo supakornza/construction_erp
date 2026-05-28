@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+{% block title %}Tide Monitor – Water Level{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-3">
+
+  {# ── Header ──────────────────────────────────────────────────────────────── #}
+  <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+    <div>
+      <h4 class="mb-0 fw-bold">
+        <i class="fas fa-water text-primary me-2"></i>Tide Monitor
+      </h4>
+      <small class="text-muted">Valeport Tide Master · ThingSpeak Channel 2656729</small>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <div class="btn-group btn-group-sm" id="period-btns" role="group">
+        <button type="button" class="btn btn-outline-primary" data-period="1h">1h</button>
+        <button type="button" class="btn btn-primary active" data-period="24h">24h</button>
+        <button type="button" class="btn btn-outline-primary" data-period="7d">7d</button>
+      </div>
+      <span id="refresh-badge" class="badge bg-secondary">
+        <i class="fas fa-sync-alt me-1"></i><span id="countdown">60</span>s
+      </span>
+      <button class="btn btn-sm btn-outline-secondary" id="refresh-now-btn" title="Refresh now">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+    </div>
+  </div>
+
+  {# ── Alert if offline ────────────────────────────────────────────────────── #}
+  <div id="error-alert" class="alert alert-warning d-none py-2 mb-3" role="alert">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    <span id="error-msg">Could not reach ThingSpeak. Retrying…</span>
+  </div>
+
+  {# ── KPI cards ───────────────────────────────────────────────────────────── #}
+  <div class="row g-3 mb-3">
+
+    {# Current level #}
+    <div class="col-6 col-lg-3">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-body text-center py-4">
+          <div class="text-muted small mb-1">ระดับน้ำปัจจุบัน</div>
+          <div id="kpi-current" class="display-5 fw-bold text-primary">—</div>
+          <div class="text-muted small"><span class="unit-label">m</span></div>
+          <div id="kpi-current-time" class="text-muted" style="font-size:.72rem;">—</div>
+        </div>
+      </div>
+    </div>
+
+    {# Max level #}
+    <div class="col-6 col-lg-3">
+      <div class="card h-100 border-0 shadow-sm border-top border-4 border-danger">
+        <div class="card-body text-center py-4">
+          <div class="text-muted small mb-1">ระดับน้ำสูงสุด</div>
+          <div id="kpi-max" class="display-5 fw-bold text-danger">—</div>
+          <div class="text-muted small">m</div>
+          <div id="kpi-max-time" class="text-muted" style="font-size:.72rem;">—</div>
+        </div>
+      </div>
+    </div>
+
+    {# Min level #}
+    <div class="col-6 col-lg-3">
+      <div class="card h-100 border-0 shadow-sm border-top border-4 border-success">
+        <div class="card-body text-center py-4">
+          <div class="text-muted small mb-1">ระดับน้ำต่ำสุด</div>
+          <div id="kpi-min" class="display-5 fw-bold text-success">—</div>
+          <div class="text-muted small">m</div>
+          <div id="kpi-min-time" class="text-muted" style="font-size:.72rem;">—</div>
+        </div>
+      </div>
+    </div>
+
+    {# Average #}
+    <div class="col-6 col-lg-3">
+      <div class="card h-100 border-0 shadow-sm border-top border-4 border-info">
+        <div class="card-body text-center py-4">
+          <div class="text-muted small mb-1">ค่าเฉลี่ย</div>
+          <div id="kpi-avg" class="display-5 fw-bold text-info">—</div>
+          <div class="text-muted small">m</div>
+          <div id="kpi-count" class="text-muted" style="font-size:.72rem;">— readings</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# ── Chart ───────────────────────────────────────────────────────────────── #}
+  <div class="card border-0 shadow-sm mb-3">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-2">
+      <span class="fw-semibold">
+        <i class="fas fa-chart-area text-primary me-2"></i>Water Level Trend
+      </span>
+      <span id="chart-period-label" class="badge bg-light text-dark">Last 24 hours</span>
+    </div>
+    <div class="card-body p-2">
+      <div style="height:300px; position:relative;">
+        <canvas id="tideChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  {# ── Detail row ──────────────────────────────────────────────────────────── #}
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-header bg-white py-2">
+          <span class="fw-semibold"><i class="fas fa-info-circle me-2 text-secondary"></i>Station Info</span>
+        </div>
+        <div class="card-body">
+          <table class="table table-sm mb-0">
+            <tbody>
+              <tr><th scope="row" class="text-muted fw-normal" style="width:40%">Channel</th><td id="info-channel">—</td></tr>
+              <tr><th scope="row" class="text-muted fw-normal">Instrument</th><td>Valeport Tide Master</td></tr>
+              <tr><th scope="row" class="text-muted fw-normal">Location</th>
+                <td><a id="info-location" href="#" target="_blank" rel="noopener" class="text-decoration-none">—</a></td>
+              </tr>
+              <tr><th scope="row" class="text-muted fw-normal">Last Entry ID</th><td id="info-entry">—</td></tr>
+              <tr><th scope="row" class="text-muted fw-normal">Readings (period)</th><td id="info-count">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-header bg-white py-2">
+          <span class="fw-semibold"><i class="fas fa-tachometer-alt me-2 text-secondary"></i>Gauge</span>
+        </div>
+        <div class="card-body d-flex align-items-center justify-content-center">
+          <div class="text-center">
+            <svg id="gauge-svg" viewBox="0 0 200 120" width="260" style="overflow:visible">
+              <!-- background arc -->
+              <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e9ecef" stroke-width="18" stroke-linecap="round"/>
+              <!-- value arc -->
+              <path id="gauge-arc" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#0d6efd" stroke-width="18"
+                    stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="251.3"
+                    style="transition:stroke-dashoffset .8s ease, stroke .4s ease"/>
+              <!-- tick marks -->
+              <line x1="20" y1="100" x2="28" y2="100" stroke="#adb5bd" stroke-width="2" transform="rotate(-90 100 100)"/>
+              <line x1="20" y1="100" x2="28" y2="100" stroke="#adb5bd" stroke-width="2" transform="rotate(-45 100 100)"/>
+              <line x1="20" y1="100" x2="28" y2="100" stroke="#adb5bd" stroke-width="2" transform="rotate(0 100 100)"/>
+              <line x1="20" y1="100" x2="28" y2="100" stroke="#adb5bd" stroke-width="2" transform="rotate(45 100 100)"/>
+              <line x1="20" y1="100" x2="28" y2="100" stroke="#adb5bd" stroke-width="2" transform="rotate(90 100 100)"/>
+              <!-- labels -->
+              <text x="14" y="103" font-size="9" fill="#6c757d" text-anchor="middle" id="gauge-label-min">0</text>
+              <text x="186" y="103" font-size="9" fill="#6c757d" text-anchor="middle" id="gauge-label-max">4</text>
+              <!-- center value -->
+              <text id="gauge-val" x="100" y="98" font-size="24" font-weight="700" fill="#0d6efd" text-anchor="middle">—</text>
+              <text x="100" y="114" font-size="10" fill="#6c757d" text-anchor="middle">m MSL</text>
+            </svg>
+            <div id="gauge-status" class="badge mt-1 fs-6 px-3 py-2 bg-secondary">Loading…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+const API_URL = "{% url 'tide_monitor:api_data' %}";
+const REFRESH_INTERVAL = 60; // seconds
+
+let currentPeriod = '24h';
+let chart = null;
+let countdown = REFRESH_INTERVAL;
+let countdownTimer = null;
+let refreshTimer = null;
+
+// ─── Chart setup ────────────────────────────────────────────────────────────
+const ctx = document.getElementById('tideChart').getContext('2d');
+
+function createChart(labels, values) {
+  if (chart) { chart.destroy(); }
+  const maxVal = values.length ? Math.max(...values) : 4;
+  const minVal = values.length ? Math.min(...values) : 0;
+  const pad = (maxVal - minVal) * 0.15 || 0.3;
+
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Water Level (m)',
+        data: values,
+        borderColor: '#0d6efd',
+        backgroundColor: 'rgba(13,110,253,.08)',
+        borderWidth: 2,
+        pointRadius: values.length > 120 ? 0 : 3,
+        pointHoverRadius: 5,
+        fill: true,
+        tension: 0.3,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: {
+        x: {
+          grid: { color: 'rgba(0,0,0,.04)' },
+          ticks: { maxTicksLimit: 12, maxRotation: 0, font: { size: 11 } }
+        },
+        y: {
+          min: Math.max(0, minVal - pad),
+          max: maxVal + pad,
+          grid: { color: 'rgba(0,0,0,.06)' },
+          ticks: {
+            font: { size: 11 },
+            callback: v => v.toFixed(2) + ' m'
+          }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ' ' + ctx.parsed.y.toFixed(3) + ' m',
+          }
+        }
+      }
+    }
+  });
+}
+
+// ─── Gauge ───────────────────────────────────────────────────────────────────
+const GAUGE_ARC_LEN = 251.3; // circumference of the semicircle path used
+
+function updateGauge(current, minVal, maxVal) {
+  const arc = document.getElementById('gauge-arc');
+  const valEl = document.getElementById('gauge-val');
+  const statusEl = document.getElementById('gauge-status');
+  const labelMin = document.getElementById('gauge-label-min');
+  const labelMax = document.getElementById('gauge-label-max');
+
+  if (current === null) {
+    arc.style.strokeDashoffset = GAUGE_ARC_LEN;
+    valEl.textContent = '—';
+    statusEl.className = 'badge mt-1 fs-6 px-3 py-2 bg-secondary';
+    statusEl.textContent = 'No data';
+    return;
+  }
+
+  const range = maxVal - minVal || 1;
+  const pct = Math.min(Math.max((current - minVal) / range, 0), 1);
+  const offset = GAUGE_ARC_LEN * (1 - pct);
+  arc.style.strokeDashoffset = offset;
+  valEl.textContent = current.toFixed(3);
+  labelMin.textContent = minVal.toFixed(1);
+  labelMax.textContent = maxVal.toFixed(1);
+
+  // Color by relative position
+  if (pct >= 0.8) {
+    arc.style.stroke = '#dc3545';
+    valEl.setAttribute('fill', '#dc3545');
+    statusEl.className = 'badge mt-1 fs-6 px-3 py-2 bg-danger';
+    statusEl.textContent = 'HIGH';
+  } else if (pct >= 0.5) {
+    arc.style.stroke = '#fd7e14';
+    valEl.setAttribute('fill', '#fd7e14');
+    statusEl.className = 'badge mt-1 fs-6 px-3 py-2 bg-warning text-dark';
+    statusEl.textContent = 'RISING';
+  } else {
+    arc.style.stroke = '#0d6efd';
+    valEl.setAttribute('fill', '#0d6efd');
+    statusEl.className = 'badge mt-1 fs-6 px-3 py-2 bg-primary';
+    statusEl.textContent = 'NORMAL';
+  }
+}
+
+// ─── Time formatter ──────────────────────────────────────────────────────────
+function fmtTime(isoStr) {
+  if (!isoStr) return '—';
+  try {
+    const d = new Date(isoStr);
+    return d.toLocaleString('th-TH', {
+      day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit',
+      timeZone: 'Asia/Bangkok'
+    });
+  } catch { return isoStr; }
+}
+
+const periodLabels = { '1h': 'Last 1 hour', '6h': 'Last 6 hours', '24h': 'Last 24 hours', '7d': 'Last 7 days' };
+
+// ─── Data fetch & UI update ───────────────────────────────────────────────────
+async function fetchData() {
+  const errorEl = document.getElementById('error-alert');
+  const badge = document.getElementById('refresh-badge');
+  badge.classList.replace('bg-secondary', 'bg-warning');
+
+  try {
+    const res = await fetch(`${API_URL}?period=${currentPeriod}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const d = await res.json();
+
+    if (d.error) throw new Error(d.error);
+
+    errorEl.classList.add('d-none');
+
+    // KPI cards
+    document.getElementById('kpi-current').textContent = d.current !== null ? d.current.toFixed(3) : '—';
+    document.getElementById('kpi-current-time').textContent = fmtTime(d.current_time);
+    document.getElementById('kpi-max').textContent = d.max !== null ? d.max.toFixed(3) : '—';
+    document.getElementById('kpi-max-time').textContent = fmtTime(d.max_time);
+    document.getElementById('kpi-min').textContent = d.min !== null ? d.min.toFixed(3) : '—';
+    document.getElementById('kpi-min-time').textContent = fmtTime(d.min_time);
+    document.getElementById('kpi-avg').textContent = d.avg !== null ? d.avg.toFixed(3) : '—';
+    document.getElementById('kpi-count').textContent = (d.count || 0) + ' readings';
+
+    // Info table
+    document.getElementById('info-channel').textContent = d.channel_name || '—';
+    document.getElementById('info-count').textContent = (d.count || 0) + ' readings';
+    document.getElementById('info-entry').textContent = d.last_entry_id || '—';
+    if (d.channel_location && d.channel_location.lat) {
+      const locEl = document.getElementById('info-location');
+      locEl.textContent = `${parseFloat(d.channel_location.lat).toFixed(4)}°N, ${parseFloat(d.channel_location.lng).toFixed(4)}°E`;
+      locEl.href = `https://maps.google.com/?q=${d.channel_location.lat},${d.channel_location.lng}`;
+    }
+
+    // Chart period label
+    document.getElementById('chart-period-label').textContent = periodLabels[currentPeriod] || currentPeriod;
+
+    // Chart
+    createChart(d.chart_labels || [], d.chart_values || []);
+
+    // Gauge
+    updateGauge(d.current, d.min !== null ? d.min : 0, d.max !== null ? d.max : 4);
+
+  } catch (err) {
+    document.getElementById('error-msg').textContent = 'Cannot reach ThingSpeak: ' + err.message;
+    errorEl.classList.remove('d-none');
+  } finally {
+    badge.classList.replace('bg-warning', 'bg-secondary');
+  }
+}
+
+// ─── Auto-refresh countdown ───────────────────────────────────────────────────
+function startCountdown() {
+  countdown = REFRESH_INTERVAL;
+  clearInterval(countdownTimer);
+  countdownTimer = setInterval(() => {
+    countdown -= 1;
+    document.getElementById('countdown').textContent = countdown;
+    if (countdown <= 0) {
+      clearInterval(countdownTimer);
+    }
+  }, 1000);
+}
+
+function scheduleRefresh() {
+  clearTimeout(refreshTimer);
+  startCountdown();
+  refreshTimer = setTimeout(() => {
+    fetchData().then(scheduleRefresh);
+  }, REFRESH_INTERVAL * 1000);
+}
+
+// ─── Period buttons ──────────────────────────────────────────────────────────
+document.querySelectorAll('#period-btns [data-period]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#period-btns [data-period]').forEach(b => {
+      b.classList.remove('active', 'btn-primary');
+      b.classList.add('btn-outline-primary');
+    });
+    btn.classList.add('active', 'btn-primary');
+    btn.classList.remove('btn-outline-primary');
+    currentPeriod = btn.dataset.period;
+    clearTimeout(refreshTimer);
+    fetchData().then(scheduleRefresh);
+  });
+});
+
+document.getElementById('refresh-now-btn').addEventListener('click', () => {
+  clearTimeout(refreshTimer);
+  fetchData().then(scheduleRefresh);
+});
+
+// ─── Boot ─────────────────────────────────────────────────────────────────────
+fetchData().then(scheduleRefresh);
+</script>
+{% endblock %}

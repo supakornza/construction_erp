@@ -1,0 +1,19 @@
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="hidden" name="import_type" value="{{ import_type }}">
+  <input type="hidden" name="duplicate_action" value="update">
+  <div class="mb-2">
+    <label class="form-label small">Project</label>
+    <select name="project" class="form-select form-select-sm" required>
+      <option value="">Select project...</option>
+      {% for p in projects %}
+      <option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.project_name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label small">Excel File</label>
+    <input type="file" name="excel_file" class="form-control form-control-sm" accept=".xlsx,.xls" required>
+  </div>
+  <button type="submit" class="btn btn-sm w-100 {{ button_class }}"><i class="fas fa-upload me-1" aria-hidden="true"></i>{{ button_label }}</button>
+</form>

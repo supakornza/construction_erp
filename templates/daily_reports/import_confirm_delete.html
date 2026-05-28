@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}ยืนยันการลบ Contractor Import – Construction ERP{% endblock %}
+{% block page_title %}ยืนยันการลบ Contractor Import{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-lg-5">
+    <section role="alertdialog"
+             aria-labelledby="imp-del-title"
+             aria-describedby="imp-del-desc"
+             class="card border-danger">
+        <div class="card-header bg-danger text-white fw-semibold" id="imp-del-title">
+            <i class="fas fa-exclamation-triangle me-2" aria-hidden="true"></i>ยืนยันการลบ Contractor Import
+        </div>
+        <div class="card-body">
+            <div id="imp-del-desc">
+                <p class="mb-1">ยืนยันการลบ Contractor Import ต่อไปนี้แบบถาวร?</p>
+                <ul class="mb-3">
+                    <li><strong>โครงการ:</strong> {{ ci.project.contract_no }} – {{ ci.project.project_name }}</li>
+                    <li><strong>วันที่รายงาน:</strong> {{ ci.report_date }}</li>
+                    <li><strong>ผู้รับเหมา:</strong> {{ ci.contractor_name|default:'-' }}</li>
+                    <li><strong>จำนวนกิจกรรม:</strong> {{ ci.activities.count }}</li>
+                    <li><strong>สถานะ:</strong> {{ ci.get_status_display }}</li>
+                </ul>
+                <p class="text-danger small mb-3"><i class="fas fa-exclamation-circle me-1" aria-hidden="true"></i>การลบนี้ไม่สามารถกู้คืนได้ Daily Report ที่เชื่อมโยง (ถ้ามี) จะ<strong>ไม่</strong>ถูกลบ</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{% url 'daily_reports:import_detail' ci.pk %}"
+                   id="impCancelBtn" autofocus
+                   class="btn btn-outline-secondary"
+                   style="min-height:44px">
+                    ยกเลิก
+                </a>
+                <form method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" style="min-height:44px"
+                            aria-label="ยืนยันลบ Contractor Import วันที่ {{ ci.report_date }} ผู้รับเหมา {{ ci.contractor_name|default:'ไม่ระบุ' }}">
+                        <i class="fas fa-trash me-1" aria-hidden="true"></i>ยืนยันลบ
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+</div>
+<script>
+(function () {
+    const c = document.getElementById('impCancelBtn');
+    if (c) c.focus({preventScroll: false});
+})();
+</script>
+{% endblock %}

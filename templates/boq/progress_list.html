@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Daily Progress – Construction ERP{% endblock %}
+{% block page_title %}Daily Progress Records{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">Daily Progress Records</h4>
+    <a href="{% url 'boq:progress_create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Record Progress</a>
+</div>
+<div class="card"><div class="table-responsive">
+    <table class="table table-hover mb-0">
+        <thead class="table-light"><tr><th>Date</th><th>Project</th><th>BOQ Item</th><th>Daily Qty</th><th>Remarks</th></tr></thead>
+        <tbody>
+        {% for r in records %}
+        <tr>
+            <td>{{ r.record_date|thai_be_date }}</td>
+            <td>{{ r.project.contract_no }}</td>
+            <td>{{ r.boq_item.item_no }} – {{ r.boq_item.description|truncatechars:40 }}</td>
+            <td>{{ r.daily_quantity|floatformat:3|intcomma }} {{ r.boq_item.unit }}</td>
+            <td>{{ r.remarks|default:'-' }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-center text-muted py-4">No progress records.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div></div>
+{% endblock %}

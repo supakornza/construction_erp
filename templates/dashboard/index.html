@@ -1,0 +1,746 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block extra_head %}
+<style>
+  #topbar { display:none; }
+  .page-content {
+    background:#f6f9fd;
+    min-height:100vh;
+    padding:0;
+  }
+  .bs-dashboard {
+    color:#0f172a;
+    padding:22px 24px 26px;
+  }
+  .bs-top {
+    align-items:center;
+    display:grid;
+    gap:16px;
+    grid-template-columns:minmax(210px, 1fr) minmax(260px, 420px) auto;
+    margin-bottom:18px;
+  }
+  .bs-title h1 {
+    font-size:1.55rem;
+    font-weight:800;
+    line-height:1.15;
+    margin:0;
+  }
+  .bs-title p {
+    color:#64748b;
+    font-size:.84rem;
+    margin:.2rem 0 0;
+  }
+  .bs-search,
+  .bs-date-pill,
+  .bs-icon-btn,
+  .bs-user {
+    background:#fff;
+    border:1px solid #dfe7f1;
+    border-radius:8px;
+    box-shadow:0 8px 24px rgba(15,23,42,.04);
+  }
+  .bs-search {
+    align-items:center;
+    display:flex;
+    gap:.65rem;
+    min-height:42px;
+    padding:0 .9rem;
+  }
+  .bs-search i { color:#64748b; }
+  .bs-search input,
+  .bs-search select {
+    background:transparent;
+    border:0;
+    color:#0f172a;
+    font-size:.82rem;
+    outline:0;
+    width:100%;
+  }
+  .bs-actions {
+    align-items:center;
+    display:flex;
+    gap:.55rem;
+    justify-content:flex-end;
+  }
+  .bs-icon-btn {
+    align-items:center;
+    color:#475569;
+    display:inline-flex;
+    height:38px;
+    justify-content:center;
+    position:relative;
+    width:38px;
+  }
+  .bs-badge-dot {
+    align-items:center;
+    background:#ef4444;
+    border:2px solid #fff;
+    border-radius:999px;
+    color:#fff;
+    display:flex;
+    font-size:.58rem;
+    font-weight:800;
+    height:17px;
+    justify-content:center;
+    position:absolute;
+    right:-4px;
+    top:-5px;
+    width:17px;
+  }
+  .bs-user {
+    align-items:center;
+    display:flex;
+    gap:.55rem;
+    min-height:38px;
+    padding:.25rem .45rem .25rem .3rem;
+  }
+  .bs-avatar {
+    align-items:center;
+    background:#0d6efd;
+    border-radius:999px;
+    color:#fff;
+    display:flex;
+    font-size:.76rem;
+    font-weight:800;
+    height:30px;
+    justify-content:center;
+    width:30px;
+  }
+  .bs-user strong {
+    display:block;
+    font-size:.76rem;
+    line-height:1.1;
+  }
+  .bs-user span {
+    color:#64748b;
+    display:block;
+    font-size:.66rem;
+    line-height:1.1;
+  }
+  .bs-date-row {
+    display:flex;
+    justify-content:flex-end;
+    margin:-6px 0 14px;
+  }
+  .bs-date-pill {
+    align-items:center;
+    color:#334155;
+    display:inline-flex;
+    font-size:.78rem;
+    font-weight:700;
+    gap:.55rem;
+    min-height:34px;
+    padding:0 .8rem;
+  }
+  .bs-kpis {
+    display:grid;
+    gap:16px;
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+    margin-bottom:16px;
+  }
+  .bs-card {
+    background:#fff;
+    border:1px solid #e2e8f0;
+    border-radius:8px;
+    box-shadow:0 10px 28px rgba(15,23,42,.06);
+    min-width:0;
+  }
+  .bs-kpi {
+    align-items:center;
+    display:flex;
+    gap:1rem;
+    min-height:116px;
+    padding:1.15rem;
+  }
+  .bs-kpi-icon,
+  .bs-quick-icon,
+  .bs-row-icon {
+    align-items:center;
+    border-radius:999px;
+    color:#fff;
+    display:inline-flex;
+    flex:0 0 auto;
+    justify-content:center;
+  }
+  .bs-kpi-icon { height:46px; width:46px; }
+  .bs-kpi small {
+    color:#475569;
+    display:block;
+    font-size:.76rem;
+    font-weight:700;
+    margin-bottom:.2rem;
+  }
+  .bs-kpi strong {
+    color:#0f172a;
+    display:block;
+    font-size:1.55rem;
+    font-weight:850;
+    line-height:1.12;
+  }
+  .bs-trend {
+    color:#10b981;
+    display:block;
+    font-size:.72rem;
+    font-weight:800;
+    margin-top:.55rem;
+  }
+  .bs-grid-main {
+    display:grid;
+    gap:16px;
+    grid-template-columns:1.08fr 1.35fr 1fr;
+    margin-bottom:16px;
+  }
+  .bs-grid-lower {
+    display:grid;
+    gap:16px;
+    grid-template-columns:1.08fr 1.35fr 1fr;
+    margin-bottom:16px;
+  }
+  .bs-panel {
+    padding:1rem;
+  }
+  .bs-panel-head {
+    align-items:center;
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:1rem;
+  }
+  .bs-panel-head h2 {
+    font-size:.93rem;
+    font-weight:800;
+    margin:0;
+  }
+  .bs-panel-head a,
+  .bs-panel-head span {
+    color:#0d6efd;
+    font-size:.72rem;
+    font-weight:800;
+  }
+  .bs-status-wrap {
+    align-items:center;
+    display:grid;
+    gap:1.1rem;
+    grid-template-columns:150px 1fr;
+    min-height:260px;
+  }
+  .bs-donut {
+    align-items:center;
+    background:
+      radial-gradient(circle, #fff 0 53%, transparent 54%),
+      conic-gradient(#0d6efd 0 48%, #f59e0b 48% 62%, #10b981 62% 84%, #94a3b8 84% 100%);
+    border-radius:999px;
+    display:flex;
+    flex-direction:column;
+    height:150px;
+    justify-content:center;
+    width:150px;
+  }
+  .bs-donut strong {
+    font-size:1.75rem;
+    font-weight:850;
+    line-height:1;
+  }
+  .bs-donut span {
+    color:#475569;
+    font-size:.72rem;
+    font-weight:700;
+  }
+  .bs-legend {
+    display:grid;
+    gap:.78rem;
+  }
+  .bs-legend-row {
+    align-items:flex-start;
+    display:grid;
+    gap:.55rem;
+    grid-template-columns:9px 1fr;
+  }
+  .bs-dot {
+    border-radius:999px;
+    height:9px;
+    margin-top:.35rem;
+    width:9px;
+  }
+  .bs-legend-row strong {
+    display:block;
+    font-size:.78rem;
+    line-height:1.15;
+  }
+  .bs-legend-row span {
+    color:#64748b;
+    display:block;
+    font-size:.72rem;
+    margin-top:.18rem;
+  }
+  .bs-progress-list {
+    display:grid;
+    gap:1rem;
+  }
+  .bs-project-row {
+    align-items:center;
+    display:grid;
+    gap:.75rem;
+    grid-template-columns:56px minmax(0, 1fr) 46px minmax(90px, 1fr) auto;
+  }
+  .bs-thumb {
+    align-items:center;
+    background:linear-gradient(135deg,#e0f2fe,#dbeafe);
+    border:1px solid #d7e3f2;
+    border-radius:7px;
+    color:#0d6efd;
+    display:flex;
+    height:48px;
+    justify-content:center;
+    width:56px;
+  }
+  .bs-project-row strong {
+    display:block;
+    font-size:.78rem;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .bs-project-row span {
+    color:#64748b;
+    display:block;
+    font-size:.68rem;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .bs-bar {
+    background:#e8eef6;
+    border-radius:999px;
+    height:5px;
+    overflow:hidden;
+  }
+  .bs-bar > i {
+    background:#0d6efd;
+    border-radius:inherit;
+    display:block;
+    height:100%;
+  }
+  .bs-pill {
+    border-radius:999px;
+    display:inline-flex;
+    font-size:.62rem;
+    font-weight:800;
+    padding:.16rem .42rem;
+    white-space:nowrap;
+  }
+  .bs-pill-blue { background:#eff6ff; color:#0d6efd; border:1px solid #bfdbfe; }
+  .bs-pill-green { background:#ecfdf5; color:#047857; border:1px solid #bbf7d0; }
+  .bs-cash-metrics {
+    display:grid;
+    gap:.8rem;
+    margin-bottom:1rem;
+  }
+  .bs-cash-row {
+    align-items:center;
+    display:flex;
+    justify-content:space-between;
+  }
+  .bs-cash-row span { color:#334155; font-size:.78rem; font-weight:800; }
+  .bs-cash-row strong { font-size:1.05rem; font-weight:850; }
+  .bs-positive { color:#10b981; }
+  .bs-negative { color:#ef4444; }
+  .bs-chart-wrap {
+    height:190px;
+    position:relative;
+  }
+  .bs-list {
+    display:grid;
+    gap:.8rem;
+  }
+  .bs-transaction,
+  .bs-update {
+    align-items:center;
+    border-bottom:1px solid #edf2f7;
+    display:grid;
+    gap:.75rem;
+    grid-template-columns:auto minmax(0, 1fr) auto;
+    padding-bottom:.78rem;
+  }
+  .bs-transaction:last-child,
+  .bs-update:last-child { border-bottom:0; padding-bottom:0; }
+  .bs-row-icon {
+    border-radius:8px;
+    height:28px;
+    width:28px;
+  }
+  .bs-row-main strong {
+    display:block;
+    font-size:.75rem;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .bs-row-main span {
+    color:#64748b;
+    display:block;
+    font-size:.66rem;
+    margin-top:.15rem;
+  }
+  .bs-row-side {
+    font-size:.72rem;
+    font-weight:800;
+    text-align:right;
+    white-space:nowrap;
+  }
+  .bs-row-side small {
+    color:#64748b;
+    display:block;
+    font-size:.64rem;
+    font-weight:700;
+    margin-top:.15rem;
+  }
+  .bs-update {
+    grid-template-columns:62px minmax(0, 1fr) auto;
+  }
+  .bs-update-img {
+    align-items:center;
+    background:#e0f2fe;
+    border-radius:7px;
+    color:#0d6efd;
+    display:flex;
+    height:50px;
+    justify-content:center;
+    width:62px;
+  }
+  .bs-update p {
+    color:#334155;
+    font-size:.72rem;
+    line-height:1.35;
+    margin:.2rem 0 0;
+  }
+  .bs-quick {
+    padding:1rem 1rem .9rem;
+  }
+  .bs-quick h2 {
+    font-size:.93rem;
+    font-weight:800;
+    margin:0 0 1rem;
+  }
+  .bs-quick-grid {
+    display:grid;
+    gap:14px;
+    grid-template-columns:repeat(8, minmax(74px, 1fr));
+  }
+  .bs-quick-link {
+    align-items:center;
+    color:#334155;
+    display:flex;
+    flex-direction:column;
+    gap:.55rem;
+    min-width:0;
+    text-align:center;
+  }
+  .bs-quick-icon {
+    border-radius:8px;
+    height:58px;
+    width:58px;
+  }
+  .bs-quick-link span {
+    color:#334155;
+    font-size:.72rem;
+    font-weight:800;
+    line-height:1.2;
+  }
+  @media (max-width:1200px) {
+    .bs-top { grid-template-columns:1fr; }
+    .bs-actions,
+    .bs-date-row { justify-content:flex-start; }
+    .bs-grid-main,
+    .bs-grid-lower { grid-template-columns:1fr 1fr; }
+    .bs-grid-main .bs-card:last-child,
+    .bs-grid-lower .bs-card:last-child { grid-column:1 / -1; }
+    .bs-kpis { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+    .bs-quick-grid { grid-template-columns:repeat(4, minmax(0, 1fr)); }
+  }
+  @media (max-width:768px) {
+    .bs-dashboard { padding:16px 12px 20px; }
+    .bs-grid-main,
+    .bs-grid-lower,
+    .bs-kpis { grid-template-columns:1fr; }
+    .bs-grid-main .bs-card:last-child,
+    .bs-grid-lower .bs-card:last-child { grid-column:auto; }
+    .bs-status-wrap { grid-template-columns:1fr; justify-items:center; }
+    .bs-project-row { grid-template-columns:46px minmax(0, 1fr) 40px; }
+    .bs-project-row .bs-bar,
+    .bs-project-row .bs-pill { display:none; }
+    .bs-quick-grid { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bs-dashboard">
+  <div class="bs-top">
+    <div class="bs-title">
+      <h1>Dashboard</h1>
+      <p>Overview of your construction business</p>
+    </div>
+    <form class="bs-search" method="get" id="dashboard-project-filter">
+      <i class="fas fa-search" aria-hidden="true"></i>
+      <select name="project" id="dashboard-project-select" aria-label="Filter project" onchange="this.form.submit()">
+        <option value="">Search projects, vendors, invoices...</option>
+        {% for project in projects %}
+        <option value="{{ project.pk }}" {% if selected_project_id == project.pk|stringformat:"s" %}selected{% endif %}>{{ project.project_name }}</option>
+        {% endfor %}
+      </select>
+    </form>
+    <div class="bs-actions">
+      <a class="bs-icon-btn" href="{% url 'notifications:list' %}" aria-label="Notifications">
+        <i class="far fa-bell"></i>
+        {% if notif_unread_count > 0 %}<span class="bs-badge-dot">{{ notif_unread_count }}</span>{% endif %}
+      </a>
+      <a class="bs-icon-btn" href="{% url 'documents:list' %}" aria-label="Documents"><i class="far fa-envelope"></i></a>
+      <a class="bs-icon-btn" href="{% url 'accounts:profile' %}" aria-label="Help"><i class="far fa-circle-question"></i></a>
+      <a class="bs-user" href="{% url 'accounts:profile' %}">
+        <span class="bs-avatar">{{ user.get_full_name_or_username|first|upper }}</span>
+        <span>
+          <strong>{{ user.get_full_name_or_username }}</strong>
+          <span>{{ user.get_role_display }}</span>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <div class="bs-date-row">
+    <span class="bs-date-pill"><i class="far fa-calendar"></i>{{ today|date:"M j, Y" }} - {{ dashboard_scope_label }}</span>
+  </div>
+
+  <section class="bs-kpis">
+    <div class="bs-card bs-kpi">
+      <span class="bs-kpi-icon" style="background:#0d6efd"><i class="far fa-clipboard"></i></span>
+      <div>
+        <small>Total Projects</small>
+        <strong>{{ total_project_count|intcomma }}</strong>
+        <span class="bs-trend"><i class="fas fa-arrow-up"></i> {{ active_projects_count }} active now</span>
+      </div>
+    </div>
+    <div class="bs-card bs-kpi">
+      <span class="bs-kpi-icon" style="background:#22c55e"><i class="fas fa-dollar-sign"></i></span>
+      <div>
+        <small>Total Contract</small>
+        <strong>฿ {{ total_contract_value|floatformat:0|intcomma }}</strong>
+        <span class="bs-trend"><i class="fas fa-arrow-up"></i> Portfolio value</span>
+      </div>
+    </div>
+    <div class="bs-card bs-kpi">
+      <span class="bs-kpi-icon" style="background:#7c3aed"><i class="far fa-wallet"></i></span>
+      <div>
+        <small>Earned Value</small>
+        <strong>฿ {{ total_earned_value|floatformat:0|intcomma }}</strong>
+        <span class="bs-trend"><i class="fas fa-arrow-up"></i> {{ overall_progress_pct }}% complete</span>
+      </div>
+    </div>
+    <div class="bs-card bs-kpi">
+      <span class="bs-kpi-icon" style="background:#fb923c"><i class="far fa-clock"></i></span>
+      <div>
+        <small>Pending Actions</small>
+        <strong>{{ owner_attention_count|intcomma }}</strong>
+        <span class="bs-trend"><i class="fas fa-arrow-up"></i> Reports and safety issues</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="bs-grid-main">
+    <div class="bs-card bs-panel">
+      <div class="bs-panel-head">
+        <h2>Project Status Overview</h2>
+      </div>
+      <div class="bs-status-wrap">
+        <div class="bs-donut">
+          <strong>{{ total_project_count|intcomma }}</strong>
+          <span>Total Projects</span>
+        </div>
+        <div class="bs-legend">
+          {% for item in status_overview %}
+          <div class="bs-legend-row">
+            <i class="bs-dot" style="background:{{ item.color }}"></i>
+            <div><strong>{{ item.label }}</strong><span>{{ item.count|intcomma }} ({{ item.percent }}%)</span></div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <a href="{% url 'projects:list' %}" class="fw-bold small">View all projects <i class="fas fa-arrow-right ms-1"></i></a>
+    </div>
+
+    <div class="bs-card bs-panel">
+      <div class="bs-panel-head">
+        <h2>Project Progress</h2>
+        <a href="{% url 'boq:progress_list' %}">View all <i class="fas fa-arrow-right ms-1"></i></a>
+      </div>
+      <div class="bs-progress-list">
+        {% for row in dashboard_progress_list %}
+        <div class="bs-project-row">
+          <span class="bs-thumb"><i class="fas fa-building"></i></span>
+          <div>
+            <strong>{{ row.project.project_name }}</strong>
+            <span>{{ row.project.contract_no }}</span>
+          </div>
+          <strong>{{ row.percent }}%</strong>
+          <span class="bs-bar"><i style="width:{{ row.percent }}%"></i></span>
+          <span class="bs-pill {% if row.project.status == 'Completed' %}bs-pill-green{% else %}bs-pill-blue{% endif %}">{{ row.project.status }}</span>
+        </div>
+        {% empty %}
+        <div class="text-secondary small">No BOQ progress data yet.</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="bs-card bs-panel">
+      <div class="bs-panel-head">
+        <h2>Cash Flow Summary</h2>
+        <span>This Month</span>
+      </div>
+      <div class="bs-cash-metrics">
+        <div class="bs-cash-row"><span>Contract Value</span><strong class="bs-positive">฿ {{ total_contract_value|floatformat:0|intcomma }}</strong></div>
+        <div class="bs-cash-row"><span>Remaining Value</span><strong class="bs-negative">฿ {{ total_remaining_value|floatformat:0|intcomma }}</strong></div>
+        <div class="bs-cash-row"><span>Earned Value</span><strong class="bs-positive">฿ {{ total_earned_value|floatformat:0|intcomma }}</strong></div>
+      </div>
+      <div class="bs-chart-wrap"><canvas id="cashFlowChart"></canvas></div>
+    </div>
+  </section>
+
+  <section class="bs-grid-lower">
+    <div class="bs-card bs-panel">
+      <div class="bs-panel-head">
+        <h2>Recent Transactions</h2>
+        <a href="{% url 'materials:delivery_list' %}">View all <i class="fas fa-arrow-right ms-1"></i></a>
+      </div>
+      <div class="bs-list">
+        {% for d in recent_deliveries|slice:":5" %}
+        <div class="bs-transaction">
+          <span class="bs-row-icon" style="background:#22c55e"><i class="fas fa-truck"></i></span>
+          <div class="bs-row-main">
+            <strong>{{ d.material.name }} delivery</strong>
+            <span>{{ d.project.contract_no }}{% if d.source %} · {{ d.source }}{% endif %}</span>
+          </div>
+          <div class="bs-row-side bs-positive">{{ d.quantity|floatformat:1|intcomma }} {{ d.material.unit }}<small>{{ d.delivery_date|date:"M j, Y" }}</small></div>
+        </div>
+        {% empty %}
+        <div class="text-secondary small">No recent material deliveries.</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="bs-card bs-panel">
+      <div class="bs-panel-head">
+        <h2>Budget vs Actual</h2>
+        <span>This Year</span>
+      </div>
+      <div class="bs-chart-wrap" style="height:275px"><canvas id="budgetActualChart"></canvas></div>
+      <div class="row g-2 mt-3 text-center">
+        <div class="col"><small class="text-secondary fw-bold d-block">Total Budget</small><strong>฿ {{ total_contract_value|floatformat:0|intcomma }}</strong></div>
+        <div class="col"><small class="text-secondary fw-bold d-block">Total Actual</small><strong>฿ {{ total_earned_value|floatformat:0|intcomma }}</strong></div>
+        <div class="col"><small class="text-secondary fw-bold d-block">Variance</small><strong class="bs-positive">฿ {{ total_remaining_value|floatformat:0|intcomma }}</strong></div>
+      </div>
+    </div>
+
+    <div class="bs-card bs-panel">
+      <div class="bs-panel-head">
+        <h2>Site Updates</h2>
+        <a href="{% url 'daily_reports:list' %}">View all <i class="fas fa-arrow-right ms-1"></i></a>
+      </div>
+      <div class="bs-list">
+        {% for r in latest_reports|slice:":4" %}
+        <a class="bs-update" href="{% url 'daily_reports:detail' r.pk %}">
+          <span class="bs-update-img"><i class="fas fa-hard-hat"></i></span>
+          <span class="bs-row-main">
+            <strong>{{ r.project.project_name }}</strong>
+            <p>{{ r.report_date|date:"M j, Y" }} report prepared by {{ r.prepared_by.get_full_name|default:r.prepared_by.username }}</p>
+          </span>
+          <span class="bs-row-side text-secondary">{{ r.status }}</span>
+        </a>
+        {% empty %}
+        <div class="text-secondary small">No site updates yet.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="bs-card bs-quick">
+    <h2>Quick Access</h2>
+    <div class="bs-quick-grid">
+      <a class="bs-quick-link" href="{% url 'projects:create' %}"><span class="bs-quick-icon" style="background:#0d6efd"><i class="far fa-rectangle-list"></i></span><span>Create Project</span></a>
+      <a class="bs-quick-link" href="{% url 'boq:create' %}"><span class="bs-quick-icon" style="background:#22c55e"><i class="fas fa-list-check"></i></span><span>Create BOQ</span></a>
+      <a class="bs-quick-link" href="{% url 'procurement:pr_create' %}"><span class="bs-quick-icon" style="background:#fb923c"><i class="fas fa-clipboard-list"></i></span><span>Create PR</span></a>
+      <a class="bs-quick-link" href="{% url 'daily_reports:create' %}"><span class="bs-quick-icon" style="background:#7c3aed"><i class="fas fa-file-lines"></i></span><span>Daily Report</span></a>
+      <a class="bs-quick-link" href="{% url 'materials:delivery_create' %}"><span class="bs-quick-icon" style="background:#06b6d4"><i class="fas fa-boxes-stacked"></i></span><span>Material Delivery</span></a>
+      <a class="bs-quick-link" href="{% url 'boq:claim_create' %}"><span class="bs-quick-icon" style="background:#eab308"><i class="fas fa-receipt"></i></span><span>Create Claim</span></a>
+      <a class="bs-quick-link" href="{% url 'documents:create' %}"><span class="bs-quick-icon" style="background:#f43f5e"><i class="fas fa-file-arrow-up"></i></span><span>Upload Document</span></a>
+      <a class="bs-quick-link" href="{% url 'hr:employee_create' %}"><span class="bs-quick-icon" style="background:#2563eb"><i class="far fa-user"></i></span><span>Add Employee</span></a>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+Chart.defaults.font.family = "'Inter','Segoe UI',system-ui,sans-serif";
+Chart.defaults.color = '#64748b';
+Chart.defaults.borderColor = 'rgba(148,163,184,.22)';
+
+(function () {
+  const cashRaw = '{{ cash_flow_chart_json|escapejs }}';
+  const budgetRaw = '{{ budget_actual_chart_json|escapejs }}';
+  const moneyLabel = value => '฿ ' + Number(value || 0).toLocaleString() + 'M';
+  const projectSelect = document.getElementById('dashboard-project-select');
+  projectSelect?.addEventListener('change', function () {
+    document.getElementById('dashboard-project-filter')?.submit();
+  });
+
+  try {
+    const cash = JSON.parse(cashRaw);
+    const canvas = document.getElementById('cashFlowChart');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      const gradient = ctx.createLinearGradient(0, 0, 0, 190);
+      gradient.addColorStop(0, 'rgba(16,185,129,.34)');
+      gradient.addColorStop(1, 'rgba(16,185,129,0)');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: cash.labels,
+          datasets: [{ data: cash.values, fill: true, borderColor: '#10b981', backgroundColor: gradient, pointRadius: 2.5, pointBackgroundColor: '#10b981', tension: .35 }]
+        },
+        options: {
+          responsive:true,
+          maintainAspectRatio:false,
+          plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label: c => moneyLabel(c.parsed.y) } } },
+          scales:{ x:{ grid:{ display:false } }, y:{ beginAtZero:true, ticks:{ callback: v => v + 'M' } } }
+        }
+      });
+    }
+  } catch (e) { console.error('cashFlowChart', e); }
+
+  try {
+    const data = JSON.parse(budgetRaw);
+    const canvas = document.getElementById('budgetActualChart');
+    if (canvas) {
+      new Chart(canvas.getContext('2d'), {
+        type:'bar',
+        data:{
+          labels:data.labels,
+          datasets:[
+            { label:'Budget', data:data.budget, backgroundColor:'rgba(191,211,238,.85)', borderRadius:4, maxBarThickness:22 },
+            { label:'Actual', data:data.actual, backgroundColor:'#0d6efd', borderRadius:4, maxBarThickness:22 }
+          ]
+        },
+        options:{
+          responsive:true,
+          maintainAspectRatio:false,
+          plugins:{ legend:{ labels:{ boxWidth:10, usePointStyle:true } }, tooltip:{ callbacks:{ label: c => c.dataset.label + ': ' + moneyLabel(c.parsed.y) } } },
+          scales:{ x:{ grid:{ display:false }, ticks:{ maxRotation:0, autoSkip:true } }, y:{ beginAtZero:true, ticks:{ callback: v => v + 'M' } } }
+        }
+      });
+    }
+  } catch (e) { console.error('budgetActualChart', e); }
+})();
+</script>
+{% endblock %}

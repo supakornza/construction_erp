@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE|default:'th' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d1f35'/><text x='16' y='23' font-size='20' text-anchor='middle' fill='%23f0a500'>🏗</text></svg>">
+    <title>{% block title %}Construction ERP{% endblock %}</title>
+
+    <!-- Inter font (modern, cross-platform) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5.3 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Custom Design System -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}?v=pc-ops-20260514-3">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+{% comment %} Skip-to-content (WCAG 2.4.1 Bypass Blocks). Bootstrap's .visually-hidden-focusable
+   keeps the link invisible until it receives keyboard focus, at which point it
+   appears in the top-left so the user can press Enter to jump past the sidebar. {% endcomment %}
+<a href="#main-content" class="visually-hidden-focusable position-absolute top-0 start-0 m-2 p-2 bg-primary text-white rounded" style="z-index:2000">
+    ข้ามไปยังเนื้อหาหลัก
+</a>
+{% if user.is_authenticated %}
+    {% include "includes/sidebar.html" %}
+    <!-- Mobile backdrop (closes sidebar when tapped) -->
+    <div id="sidebar-backdrop"></div>
+    {% comment %} `<main>` is the landmark target for the skip-link; tabindex=-1 lets it
+       receive programmatic focus without becoming part of the tab order. {% endcomment %}
+    <main id="main-content" tabindex="-1">
+        {% include "includes/navbar.html" %}
+        <div class="page-content">
+            {% include "includes/messages.html" %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+{% else %}
+    <main id="main-content" tabindex="-1">
+        {% block auth_content %}{% endblock %}
+    </main>
+{% endif %}
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Chart.js 4 -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<!-- Custom JS -->
+<script src="{% static 'js/custom.js' %}"></script>
+{% block extra_js %}{% endblock %}
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags static %}
+{% block title %}{% if form.instance.pk %}Edit{% else %}New{% endif %} Rock Record - Construction ERP{% endblock %}
+{% block page_title %}{% if form.instance.pk %}Edit Rock Record{% else %}New Rock Daily Record{% endif %}{% endblock %}
+
+{% block content %}
+{% url 'project_controls:rock_list' as rock_list_url %}
+{% if form.instance.pk %}
+  {% include "project_controls/includes/page_header.html" with back_url=rock_list_url icon_class="fas fa-mountain text-secondary" title="Edit Rock Record" subtitle=form.instance.record_date|thai_be_date %}
+{% else %}
+  {% include "project_controls/includes/page_header.html" with back_url=rock_list_url icon_class="fas fa-mountain text-secondary" title="New Rock Daily Record" %}
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+
+  <div class="card mb-3">
+    <div class="card-header"><i class="fas fa-mountain me-2" aria-hidden="true"></i>Rock at TCT Port & Placement</div>
+    <div class="card-body">
+      {% crispy form %}
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span><i class="fas fa-truck-moving me-2" aria-hidden="true"></i>Transport Placements</span>
+      <button type="button" class="btn btn-sm btn-outline-success" id="add-barge-btn">
+        <i class="fas fa-plus me-1" aria-hidden="true"></i>Add Transport
+      </button>
+    </div>
+    <div class="card-body p-0">
+      {{ barge_formset.management_form }}
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered mb-0 pc-form-table">
+          <thead class="table-light">
+            <tr>
+              <th style="min-width:180px">Transport Unit</th>
+              <th style="width:120px">Qty (Ton)</th>
+              <th style="width:80px">Trips</th>
+              <th style="width:120px">Type</th>
+              <th style="min-width:200px">Station</th>
+              <th style="min-width:160px">Remarks</th>
+              <th>Del</th>
+            </tr>
+          </thead>
+          <tbody id="barge-tbody">
+            {% for bf in barge_formset %}
+            <tr class="formset-row" data-formset="barge">
+              <td>{{ bf.barge }}{{ bf.id }}</td>
+              <td>{{ bf.quantity_ton }}</td>
+              <td>{{ bf.trips }}</td>
+              <td>{{ bf.placement_type }}</td>
+              <td>{{ bf.station }}</td>
+              <td>{{ bf.remarks }}</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
+                {{ bf.DELETE }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <template id="barge-empty-row">
+    <tr class="formset-row" data-formset="barge">
+      <td>{{ barge_formset.empty_form.barge }}{{ barge_formset.empty_form.id }}</td>
+      <td>{{ barge_formset.empty_form.quantity_ton }}</td>
+      <td>{{ barge_formset.empty_form.trips }}</td>
+      <td>{{ barge_formset.empty_form.placement_type }}</td>
+      <td>{{ barge_formset.empty_form.station }}</td>
+      <td>{{ barge_formset.empty_form.remarks }}</td>
+      <td class="text-center">
+        <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
+        {{ barge_formset.empty_form.DELETE }}
+      </td>
+    </tr>
+  </template>
+
+  <div class="card mb-3">
+    <div class="card-header"><i class="fas fa-calculator me-2" aria-hidden="true"></i>Rock Entry Helper</div>
+    <div class="card-body">
+      <div class="row g-3 small">
+        <div class="col-md-3"><span class="text-muted d-block">Transport total</span><strong id="rock-helper-transport">0.00 T</strong></div>
+        <div class="col-md-3"><span class="text-muted d-block">Outside plot suggestion</span><strong id="rock-helper-outside">0.00 T</strong></div>
+        <div class="col-md-3"><span class="text-muted d-block">Inside accum suggestion</span><strong id="rock-helper-inside">0.00 T</strong></div>
+        <div class="col-md-3"><span class="text-muted d-block">Stock after placement</span><strong id="rock-helper-stock">0.00 T</strong></div>
+      </div>
+      <div id="rock-helper-warning" class="alert alert-warning py-2 px-3 mt-3 mb-0 d-none"></div>
+    </div>
+  </div>
+
+  {% include "project_controls/includes/form_actions.html" with submit_label="Save Record" cancel_url=rock_list_url %}
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+{% include "project_controls/includes/day_name_sync.html" %}
+<script src="{% static 'js/project_controls/formsets.js' %}"></script>
+<script>
+const rockPreviousByProject = {{ form_helper_json|default:"{}"|safe }};
+ProjectControlsDayName.bindById('id_record_date', 'id_day_name');
+ProjectControlsFormsets.applyBootstrapClasses(document.getElementById('barge-tbody'));
+ProjectControlsFormsets.bindAddButton({
+  buttonId: 'add-barge-btn',
+  tbodyId: 'barge-tbody',
+  templateId: 'barge-empty-row',
+  prefix: 'barge_placements',
+  afterAdd: function(row) {
+    bindRockPlacementRow(row);
+    updateRockPlacedDailyTon();
+  },
+});
+
+function parseTon(value) {
+  const n = Number(String(value || '0').replace(/,/g, ''));
+  return Number.isFinite(n) ? n : 0;
+}
+
+function activeRockPlacementRows() {
+  return Array.from(document.querySelectorAll('#barge-tbody tr.formset-row')).filter((row) => {
+    const deleteInput = row.querySelector('input[type="checkbox"][name$="-DELETE"]');
+    return !row.classList.contains('formset-row-deleted') && !(deleteInput && deleteInput.checked);
+  });
+}
+
+function updateRockPlacedDailyTon() {
+  const placedInput = document.getElementById('id_placed_daily_ton');
+  if (!placedInput) return;
+  let outsideTotal = 0;
+  const total = activeRockPlacementRows().reduce((sum, row) => {
+    const qtyInput = row.querySelector('input[name$="-quantity_ton"]');
+    const qty = parseTon(qtyInput?.value);
+    const typeValue = row.querySelector('select[name$="-placement_type"]')?.value || '';
+    const stationValue = (row.querySelector('input[name$="-station"]')?.value || '').toLowerCase();
+    if (typeValue === 'Onshore' || stationValue.includes('outside')) {
+      outsideTotal += qty;
+    }
+    return sum + qty;
+  }, 0);
+  placedInput.value = total.toFixed(2);
+  const outsideInput = document.getElementById('id_core_outside_daily');
+  if (outsideInput && outsideInput.dataset.userEdited !== '1') outsideInput.value = outsideTotal.toFixed(2);
+  updateRockHelper(total, outsideTotal);
+}
+
+function updateRockHelper(total, outsideTotal) {
+  const projectId = document.getElementById('id_project')?.value || '';
+  const previous = rockPreviousByProject[projectId] || {};
+  const deliveredToday = parseTon(document.getElementById('id_tct_daily_ton')?.value);
+  const stockAfter = parseTon(previous.stock) + deliveredToday - total;
+  const insideSuggestion = Math.max(parseTon(previous.core_inside_accum) + total - outsideTotal, 0);
+  const insideInput = document.getElementById('id_core_inside_accum');
+  if (insideInput && insideInput.dataset.userEdited !== '1') insideInput.value = insideSuggestion.toFixed(2);
+  document.getElementById('rock-helper-transport').textContent = total.toFixed(2) + ' T';
+  document.getElementById('rock-helper-outside').textContent = outsideTotal.toFixed(2) + ' T';
+  document.getElementById('rock-helper-inside').textContent = insideSuggestion.toFixed(2) + ' T';
+  document.getElementById('rock-helper-stock').textContent = stockAfter.toFixed(2) + ' T';
+  const warning = document.getElementById('rock-helper-warning');
+  if (warning) {
+    if (stockAfter < 0) {
+      warning.textContent = 'Transport quantity is higher than available rock stock.';
+      warning.classList.remove('d-none');
+    } else {
+      warning.classList.add('d-none');
+    }
+  }
+}
+
+function bindRockPlacementRow(row) {
+  if (!row) return;
+  row.querySelectorAll('input[name$="-quantity_ton"], input[name$="-station"], select[name$="-placement_type"]').forEach((input) => {
+    input.addEventListener('input', updateRockPlacedDailyTon);
+    input.addEventListener('change', updateRockPlacedDailyTon);
+  });
+}
+
+['id_tct_daily_ton','id_project'].forEach((id) => document.getElementById(id)?.addEventListener('change', updateRockPlacedDailyTon));
+['id_core_outside_daily','id_core_inside_accum'].forEach((id) => {
+  document.getElementById(id)?.addEventListener('input', (event) => { event.target.dataset.userEdited = '1'; });
+});
+document.querySelectorAll('#barge-tbody tr.formset-row').forEach(bindRockPlacementRow);
+document.getElementById('barge-tbody')?.addEventListener('click', (event) => {
+  if (event.target.closest('.formset-delete-btn')) {
+    window.setTimeout(updateRockPlacedDailyTon, 0);
+  }
+});
+updateRockPlacedDailyTon();
+</script>
+{% endblock %}

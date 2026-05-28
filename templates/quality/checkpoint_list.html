@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Quality Checkpoints - Construction ERP{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Quality Checkpoints</h4>
+    <a href="{% url 'quality:checkpoint_create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>New Checkpoint</a>
+</div>
+{% include "quality/_tabs.html" %}
+<div class="card"><div class="table-responsive"><table class="table table-hover mb-0">
+    <thead class="table-light"><tr><th>Project</th><th>Checkpoint</th><th>Spec Ref</th><th>Criteria</th><th>Frequency</th><th>Active</th><th></th></tr></thead>
+    <tbody>
+    {% for cp in checkpoints %}
+    <tr>
+        <td>{{ cp.project.contract_no }}</td><td>{{ cp.checkpoint_name }}</td><td>{{ cp.specification_ref|default:"-" }}</td><td>{{ cp.acceptance_criteria|truncatechars:60 }}</td><td>{{ cp.frequency|default:"-" }}</td><td>{{ cp.is_active|yesno:"Yes,No" }}</td>
+        <td class="text-end"><a href="{% url 'quality:checkpoint_update' cp.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit"></i></a></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="7" class="text-center text-muted py-4">No quality checkpoints.</td></tr>
+    {% endfor %}
+    </tbody>
+</table></div></div>
+{% endblock %}

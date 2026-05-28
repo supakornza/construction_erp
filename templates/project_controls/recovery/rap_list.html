@@ -1,0 +1,66 @@
+﻿{% extends "base.html" %}
+{% block title %}Recovery Action Plans โ€“ Construction ERP{% endblock %}
+{% block page_title %}Recovery Action Plans{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h5 class="mb-0"><i class="fas fa-tasks me-2 text-danger" aria-hidden="true"></i>Recovery Action Plans (RAP)</h5>
+  <div class="d-flex gap-2">
+    <a href="{% url 'project_controls:recovery_dashboard' %}" class="btn btn-sm btn-outline-warning">
+      <i class="fas fa-chart-bar me-1" aria-hidden="true"></i>Dashboard
+    </a>
+    <a href="{% url 'project_controls:rap_create' %}" class="btn btn-sm btn-primary">
+      <i class="fas fa-plus me-1" aria-hidden="true"></i>New RAP
+    </a>
+  </div>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-sm table-hover mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>Project</th>
+          <th>Title</th>
+          <th>Period</th>
+          <th>Status</th>
+          <th class="text-end">Items</th>
+          <th class="text-end">% Complete</th>
+          <th>Prepared By</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rap in raps %}
+        <tr>
+          <td>{{ rap.project.project_name }}</td>
+          <td><a href="{% url 'project_controls:rap_detail' rap.pk %}">{{ rap.title }}</a></td>
+          <td>{{ rap.start_date|thai_be_date }} - {{ rap.end_date|thai_be_date }}</td>
+          <td>
+            {% if rap.status == 'Approved' %}<span class="badge bg-success">Approved</span>
+            {% elif rap.status == 'Submitted' %}<span class="badge bg-info">Submitted</span>
+            {% elif rap.status == 'Reviewed' %}<span class="badge bg-primary">Reviewed</span>
+            {% elif rap.status == 'Rejected' %}<span class="badge bg-danger">Rejected</span>
+            {% else %}<span class="badge bg-warning text-dark">Draft</span>{% endif %}
+          </td>
+          <td class="text-end">{{ rap.action_items.count }}</td>
+          <td class="text-end">
+            <div class="progress" style="height:18px;min-width:80px">
+              <div class="progress-bar bg-success" style="width:{{ rap.overall_completion|floatformat:0 }}%">
+                {{ rap.overall_completion|floatformat:1|intcomma }}%
+              </div>
+            </div>
+          </td>
+          <td>{{ rap.prepared_by|default:'โ€“' }}</td>
+          <td>
+            <a href="{% url 'project_controls:rap_detail' rap.pk %}" class="btn btn-xs btn-outline-secondary"><i class="fas fa-eye" aria-hidden="true"></i></a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="text-center text-muted py-4" role="status">No RAPs found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

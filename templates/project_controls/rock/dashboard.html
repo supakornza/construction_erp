@@ -1,0 +1,651 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}Dashboard ความคืบหน้างานหิน – Construction ERP{% endblock %}
+{% block page_title %}Dashboard ความคืบหน้างานหิน{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── Layout ──────────────────────────────────────────────────── */
+  .rdb { display: grid; grid-template-columns: minmax(0,1fr); gap: 16px; }
+  .rdb-layout { display: grid; grid-template-columns: minmax(0,1fr) 268px; gap: 16px; align-items: start; min-width: 0; }
+
+  /* ── Header ──────────────────────────────────────────────────── */
+  .rdb-header {
+    background: linear-gradient(135deg, #155e75 0%, #0f766e 58%, #334155 100%);
+    border-radius: 8px;
+    color: #fff;
+    padding: 22px 28px 18px;
+    box-shadow: 0 10px 24px rgba(15,23,42,.18);
+    position: relative;
+    overflow: hidden;
+  }
+  .rdb-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='52' height='52' viewBox='0 0 52 52' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='26' cy='26' r='4'/%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .rdb-header-top { align-items: flex-start; display: flex; gap: 16px; justify-content: space-between; position: relative; }
+  .rdb-header-title h2 { font-size: 1.85rem; font-weight: 900; letter-spacing: -.5px; margin: 0; text-shadow: 0 2px 6px rgba(0,0,0,.22); }
+  .rdb-header-title .sub { font-size: .86rem; margin-top: 5px; opacity: .82; }
+  .rdb-header-badge { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); border-radius: 8px; flex-shrink: 0; padding: 8px 16px; text-align: right; }
+  .rdb-header-badge .blabel { font-size: .68rem; letter-spacing: .05em; opacity: .75; text-transform: uppercase; }
+  .rdb-header-badge .bvalue { font-size: 1.7rem; font-weight: 900; line-height: 1.15; }
+  .rdb-prog-wrap { margin-top: 14px; position: relative; }
+  .rdb-prog-track { background: rgba(255,255,255,.18); border-radius: 999px; height: 10px; overflow: hidden; }
+  .rdb-prog-fill { background: linear-gradient(90deg, #34d399, #10b981); border-radius: 999px; height: 100%; transition: width .7s ease; }
+  .rdb-prog-labels { display: flex; font-size: .73rem; justify-content: space-between; margin-top: 5px; opacity: .78; }
+
+  /* ── KPI grid ────────────────────────────────────────────────── */
+  .rdb-kpis { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
+  .rdb-kpi {
+    background: #fff;
+    border: 1px solid #e8edf4;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(15,23,42,.05);
+    padding: 15px 13px 13px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .rdb-kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--c, #2563eb); border-radius: 8px 8px 0 0; }
+  .rdb-kpi:hover { box-shadow: 0 8px 18px rgba(15,23,42,.10); transform: translateY(-1px); }
+  .rdb-kpi .ki { align-items: center; background: var(--cb, #eff6ff); border-radius: 8px; color: var(--c, #2563eb); display: flex; font-size: .88rem; height: 32px; justify-content: center; margin-bottom: 8px; width: 32px; }
+  .rdb-kpi .kl { color: #64748b; font-size: .72rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
+  .rdb-kpi .kv { color: #0f172a; font-size: 1.7rem; font-weight: 900; line-height: 1.1; margin: 4px 0 2px; overflow-wrap: anywhere; }
+  .rdb-kpi .ks { color: #64748b; font-size: .71rem; }
+  .rdb-kpi.blue   { --c:#2563eb; --cb:#eff6ff; }
+  .rdb-kpi.green  { --c:#059669; --cb:#ecfdf5; }
+  .rdb-kpi.orange { --c:#d97706; --cb:#fffbeb; }
+  .rdb-kpi.purple { --c:#7c3aed; --cb:#f5f3ff; }
+  .rdb-kpi.cyan   { --c:#0891b2; --cb:#ecfeff; }
+  .rdb-kpi.teal   { --c:#0f7f9f; --cb:#e0f4f9; }
+  .rdb-kpi.warn   { --c:#dc2626; --cb:#fef2f2; }
+
+  /* ── Panels ──────────────────────────────────────────────────── */
+  .rdb-panel { background: #fff; border: 1px solid #e8edf4; border-radius: 8px; box-shadow: 0 2px 8px rgba(15,23,42,.06); height: 100%; padding: 16px 16px 12px; }
+  .rdb-pt { align-items: center; border-bottom: 1px solid #f1f5f9; display: flex; gap: 9px; margin-bottom: 14px; padding-bottom: 11px; }
+  .rdb-pt .ico { align-items: center; background: #e0f4f9; border-radius: 6px; color: #0f7f9f; display: flex; flex-shrink: 0; font-size: .8rem; height: 28px; justify-content: center; width: 28px; }
+  .rdb-pt h2 { color: #1e293b; font-size: .82rem; font-weight: 900; letter-spacing: .04em; margin: 0; text-transform: uppercase; }
+  .rdb-chart { height: 300px; }
+  .rdb-wide-chart { height: 320px; }
+
+  /* ── Stock bars ──────────────────────────────────────────────── */
+  .rdb-bar-row { margin-bottom: 14px; }
+  .rdb-bar-lbl { align-items: center; color: #334155; display: flex; font-size: .82rem; font-weight: 700; justify-content: space-between; margin-bottom: 5px; }
+  .rdb-bar-track { background: #f1f5f9; border-radius: 999px; height: 13px; overflow: hidden; }
+  .rdb-bar-fill { border-radius: 999px; height: 100%; transition: width .5s ease; }
+
+  /* ── Tables ──────────────────────────────────────────────────── */
+  .rdb-tbl { font-size: .82rem; width: 100%; }
+  .rdb-tbl thead th { background: #f8fafc; border-bottom: 2px solid #e8edf4; color: #475569; font-size: .69rem; font-weight: 800; letter-spacing: .06em; padding: 8px 10px; text-transform: uppercase; white-space: nowrap; }
+  .rdb-tbl tbody td { border-bottom: 1px solid #f1f5f9; color: #1e293b; padding: 9px 10px; vertical-align: middle; }
+  .rdb-tbl tbody tr:last-child td { border-bottom: none; }
+  .rdb-tbl tbody tr:hover td { background: #f8fafc; }
+  .minibar { background: #e8edf4; border-radius: 999px; height: 5px; margin-top: 4px; overflow: hidden; width: 90px; }
+  .minibar-fill { border-radius: 999px; height: 100%; }
+
+  /* ── Status pills ────────────────────────────────────────────── */
+  .spill { align-items: center; border-radius: 999px; display: inline-flex; font-size: .7rem; font-weight: 800; gap: 4px; letter-spacing: .02em; padding: .2rem .65rem; }
+  .spill::before { background: currentColor; border-radius: 50%; content: ''; flex-shrink: 0; height: 5px; width: 5px; }
+  .sp-done { background: #dcfce7; color: #166534; }
+  .sp-prog { background: #dbeafe; color: #1d4ed8; }
+  .sp-wait { background: #f1f5f9; color: #475569; }
+
+  /* ── Alert banner ────────────────────────────────────────────── */
+  .rdb-alert { align-items: flex-start; background: #fff7ed; border: 1px solid #fed7aa; border-left: 4px solid #f97316; border-radius: 6px; color: #9a3412; display: flex; gap: 10px; padding: 12px 14px; }
+
+  /* ── Empty ───────────────────────────────────────────────────── */
+  .rdb-empty { background: #fff; border: 2px dashed #cbd5e1; border-radius: 8px; color: #64748b; padding: 52px 24px; text-align: center; }
+
+  /* ── Sidebar ─────────────────────────────────────────────────── */
+  .rdb-sc { background: #fff; border: 1px solid #e8edf4; border-radius: 8px; box-shadow: 0 2px 6px rgba(15,23,42,.05); margin-bottom: 12px; padding: 14px; }
+  .rdb-st { align-items: center; border-bottom: 1px solid #f1f5f9; color: #334155; display: flex; font-size: .76rem; font-weight: 900; gap: 6px; justify-content: space-between; letter-spacing: .05em; margin-bottom: 12px; padding-bottom: 8px; text-transform: uppercase; }
+  .rdb-st i { color: #0f7f9f; }
+  .rdb-fl { color: #64748b; display: block; font-size: .7rem; font-weight: 700; letter-spacing: .04em; margin-bottom: 3px; text-transform: uppercase; }
+  .rdb-fg { display: grid; gap: 9px; }
+  .rdb-actions { display: grid; gap: 7px; }
+  .rdb-btn { align-items: center; border-radius: 6px; display: flex; font-size: .82rem; font-weight: 700; gap: 8px; padding: 8px 12px; text-decoration: none; transition: opacity .15s; }
+  .rdb-btn:hover { opacity: .85; }
+  .rdb-btn-teal { background: #0f7f9f; color: #fff; }
+  .rdb-btn-out  { background: #f0f9fb; border: 1px solid #b6dce8; color: #0a5f78; }
+
+  /* ── Responsive ──────────────────────────────────────────────── */
+  @media (max-width: 1240px) {
+    .rdb-layout { grid-template-columns: minmax(0,1fr); }
+    .rdb-kpis   { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  }
+  @media (max-width: 640px) {
+    .rdb-header-title h2 { font-size: 1.3rem; }
+    .rdb-header-badge    { display: none; }
+    .rdb-kpis            { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .rdb-kpi .kv         { font-size: 1.4rem; }
+  }
+  @media (max-width: 520px) {
+    .rdb-header { padding: 18px; }
+    .rdb-kpis  { grid-template-columns: minmax(0,1fr); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="rdb">
+
+  <!-- ─── Header ────────────────────────────────────────────────── -->
+  <div class="rdb-header">
+    <div class="rdb-header-top">
+      <div class="rdb-header-title">
+        <h2><i class="fas fa-layer-group me-2" style="opacity:.75" aria-hidden="true"></i>Dashboard ความคืบหน้างานหิน</h2>
+        <div class="sub">
+          {% if selected_project %}
+            {{ selected_project.contract_no }} &nbsp;·&nbsp; {{ selected_project.project_name }}
+          {% else %}
+            No active project selected
+          {% endif %}
+          &nbsp;·&nbsp; As of {% now "d M Y" %}
+        </div>
+      </div>
+      {% if data.placement_completion_percent is not None %}
+      <div class="rdb-header-badge">
+        <div class="blabel">% เสร็จ</div>
+        <div class="bvalue">{{ data.placement_completion_percent|floatformat:1 }}%</div>
+      </div>
+      {% endif %}
+    </div>
+    {% if data.placement_completion_percent is not None %}
+    <div class="rdb-prog-wrap">
+      <div class="rdb-prog-track">
+        <div class="rdb-prog-fill" style="width:{% if data.placement_completion_percent > 100 %}100{% else %}{{ data.placement_completion_percent|floatformat:0 }}{% endif %}%"></div>
+      </div>
+      <div class="rdb-prog-labels">
+        <span>0%</span>
+        <span>{{ data.total_placed|default:0|floatformat:0|intcomma }} of {{ data.total_delivered|default:0|floatformat:0|intcomma }} tons placed</span>
+        <span>100%</span>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="rdb-layout">
+    <main class="rdb">
+
+      <!-- ─── KPI Cards ─────────────────────────────────────────── -->
+      <section class="rdb-kpis">
+        <div class="rdb-kpi blue">
+          <div class="ki"><i class="fas fa-truck-ramp-box" aria-hidden="true"></i></div>
+          <div class="kl">รับเข้ารวม</div>
+          <div class="kv">{{ data.total_delivered|default:0|floatformat:0|intcomma }} tons</div>
+          <div class="ks">tons to site</div>
+        </div>
+        <div class="rdb-kpi green">
+          <div class="ki"><i class="fas fa-layer-group" aria-hidden="true"></i></div>
+          <div class="kl">วางหินรวม</div>
+          <div class="kv">{{ data.total_placed|default:0|floatformat:0|intcomma }} tons</div>
+          <div class="ks">tons placed</div>
+        </div>
+        <div class="rdb-kpi orange">
+          <div class="ki"><i class="fas fa-warehouse" aria-hidden="true"></i></div>
+          <div class="kl">คงเหลือในสต็อก</div>
+          <div class="kv">{{ data.available_stock_balance|default:0|floatformat:0|intcomma }} tons</div>
+          <div class="ks">delivered − placed</div>
+        </div>
+        <div class="rdb-kpi purple">
+          <div class="ki"><i class="fas fa-chart-pie" aria-hidden="true"></i></div>
+          <div class="kl">% วางหินเทียบเป้า</div>
+          <div class="kv">{% if data.placement_completion_percent is not None %}{{ data.placement_completion_percent|floatformat:1 }}%{% else %}N/A{% endif %}</div>
+          <div class="ks">vs BOQ target</div>
+        </div>
+        <div class="rdb-kpi warn">
+          <div class="ki"><i class="fas fa-hourglass-half" aria-hidden="true"></i></div>
+          <div class="kl">เหลือต้องวางตาม BOQ</div>
+          <div class="kv">{% if data.remaining_quantity_to_boq is not None %}{{ data.remaining_quantity_to_boq|floatformat:0|intcomma }} tons{% else %}N/A{% endif %}</div>
+          <div class="ks">tons remaining</div>
+        </div>
+        <div class="rdb-kpi teal">
+          <div class="ki"><i class="fas fa-gauge-high" aria-hidden="true"></i></div>
+          <div class="kl">ค่าเฉลี่ยวาง/วัน</div>
+          <div class="kv">{% if data.average_daily_placement is not None %}{{ data.average_daily_placement|floatformat:0|intcomma }} tons/day{% else %}N/A{% endif %}</div>
+          <div class="ks">production days only</div>
+        </div>
+        <div class="rdb-kpi cyan">
+          <div class="ki"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
+          <div class="kl">วันที่คาดเสร็จ</div>
+          <div class="kv" style="font-size:1.2rem">{% if data.forecast_completion_date %}{{ data.forecast_completion_date|thai_be_date }}{% else %}N/A{% endif %}</div>
+          <div class="ks">based on avg placement</div>
+        </div>
+        <div class="rdb-kpi blue">
+          <div class="ki"><i class="fas fa-truck" aria-hidden="true"></i></div>
+          <div class="kl">รับเข้าวันล่าสุด</div>
+          <div class="kv">{{ data.latest_daily_delivered|default:0|floatformat:0|intcomma }} tons</div>
+          <div class="ks">{% if data.latest_date %}{{ data.latest_date|thai_be_date }}{% else %}No data{% endif %}</div>
+        </div>
+        <div class="rdb-kpi green">
+          <div class="ki"><i class="fas fa-circle-down" aria-hidden="true"></i></div>
+          <div class="kl">วางวันล่าสุด</div>
+          <div class="kv">{{ data.latest_daily_placed|default:0|floatformat:0|intcomma }} tons</div>
+          <div class="ks">{% if data.latest_date %}{{ data.latest_date|thai_be_date }}{% else %}No data{% endif %}</div>
+        </div>
+      </section>
+
+      <!-- ─── Alert ─────────────────────────────────────────────── -->
+      {% if data.core_outside_accum %}
+      <div class="rdb-alert">
+        <i class="fas fa-triangle-exclamation mt-1 flex-shrink-0" aria-hidden="true"></i>
+        <div><strong>วางหิน Core นอกพื้นที่:</strong> สะสม {{ data.core_outside_accum|floatformat:0|intcomma }} ตัน — กรุณาตรวจสอบบันทึกการวาง</div>
+      </div>
+      {% endif %}
+
+      {% if mat_del_summary and mat_del_summary.count > 0 %}
+      <!-- ─── Material Deliveries linked panel ─────────────────── -->
+      <section class="row g-3">
+        <div class="col-12">
+          <div class="rdb-panel">
+            <div class="rdb-pt">
+              <div class="ico" style="background:#fef3c7;color:#d97706"><i class="fas fa-truck-ramp-box" aria-hidden="true"></i></div>
+              <h2>ข้อมูลรับวัสดุ → สต็อกหิน</h2>
+              <a href="{% url 'materials:dashboard' %}?project={{ selected_project.pk }}" class="ms-auto btn btn-outline-secondary" style="font-size:.82rem">
+                <i class="fas fa-external-link-alt me-1" aria-hidden="true"></i>Material Dashboard
+              </a>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-3">
+                <div class="p-3 rounded" style="background:#fffbeb;border:1px solid #fde68a">
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">รับเข้ารวม (วัสดุ)</div>
+                  <div style="font-size:1.6rem;font-weight:900;color:#92400e">{{ mat_del_summary.total_qty|floatformat:2|intcomma }}</div>
+                  <div class="text-body-secondary" style="font-size:.72rem">{{ mat_del_summary.count }} records</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="p-3 rounded" style="background:#ecfdf5;border:1px solid #a7f3d0">
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">คงเหลือในสต็อก (Project Controls)</div>
+                  <div style="font-size:1.6rem;font-weight:900;color:#065f46">{{ data.available_stock_balance|default:0|floatformat:0|intcomma }}</div>
+                  <div class="text-body-secondary" style="font-size:.72rem">tons (delivered − placed)</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="p-3 rounded" style="background:#eff6ff;border:1px solid #bfdbfe">
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">รถเข้าวันนี้</div>
+                  <div style="font-size:1.6rem;font-weight:900;color:#1d4ed8">{{ mat_del_summary.today_trucks }}</div>
+                  <div class="text-body-secondary" style="font-size:.72rem">คัน · {{ mat_del_summary.today_qty|floatformat:2|intcomma }} units วันนี้</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="p-3 rounded" style="background:#f8fafc;border:1px solid #e2e8f0">
+                  <div class="text-body-secondary" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em">By Material</div>
+                  {% for m in mat_del_summary.by_material %}
+                  <div class="d-flex justify-content-between" style="font-size:.78rem;padding:2px 0;border-bottom:1px solid #f1f5f9">
+                    <span>{{ m.material__name }}</span>
+                    <span class="fw-bold">{{ m.qty|floatformat:1|intcomma }} {{ m.material__unit }}</span>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if data.has_data %}
+
+      <!-- ─── Charts row 1 ──────────────────────────────────────── -->
+      <section class="row g-3">
+        <div class="col-xl-7">
+          <div class="rdb-panel">
+            <div class="rdb-pt"><div class="ico"><i class="fas fa-chart-line" aria-hidden="true"></i></div><h2>ปริมาณรับเข้าเทียบกับวางหินรายวัน</h2></div>
+            <div class="rdb-chart"><canvas id="rockDailyChart" role="img" aria-label="กราฟปริมาณหินรับเข้า วางหิน และเป้าหมายรายวัน" aria-describedby="rockDailyChartTable"></canvas></div>
+            <div id="rockDailyChartTable" class="visually-hidden"></div>
+          </div>
+        </div>
+        <div class="col-xl-5">
+          <div class="rdb-panel">
+            <div class="rdb-pt"><div class="ico"><i class="fas fa-truck-moving" aria-hidden="true"></i></div><h2>ปริมาณวางหินตามหน่วยขนส่ง</h2></div>
+            <div class="rdb-chart"><canvas id="rockBargeChart" role="img" aria-label="กราฟปริมาณวางหินแยกตามหน่วยขนส่ง" aria-describedby="rockBargeChartTable"></canvas></div>
+            <div id="rockBargeChartTable" class="visually-hidden"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Stock Balance + Transport Table ──────────────────────── -->
+      <section class="row g-3">
+        <div class="col-xl-4">
+          <div class="rdb-panel">
+            <div class="rdb-pt"><div class="ico"><i class="fas fa-scale-balanced" aria-hidden="true"></i></div><h2>สรุปยอดสต็อกหิน</h2></div>
+            <div class="rdb-bar-row">
+              <div class="rdb-bar-lbl"><span>Total Delivered</span><span style="color:#2563eb">{{ data.total_delivered|floatformat:0|intcomma }} t</span></div>
+              <div class="rdb-bar-track"><div class="rdb-bar-fill" style="width:100%;background:#2563eb"></div></div>
+            </div>
+            <div class="rdb-bar-row">
+              <div class="rdb-bar-lbl"><span>Total Placed</span><span style="color:#059669">{{ data.total_placed|floatformat:0|intcomma }} t</span></div>
+              <div class="rdb-bar-track"><div class="rdb-bar-fill" style="width:{% if data.total_delivered %}{% widthratio data.total_placed data.total_delivered 100 %}{% else %}0{% endif %}%;background:#059669"></div></div>
+            </div>
+            <div class="rdb-bar-row">
+              <div class="rdb-bar-lbl"><span>Stock Balance</span><span style="color:#d97706">{{ data.available_stock_balance|floatformat:0|intcomma }} t</span></div>
+              <div class="rdb-bar-track"><div class="rdb-bar-fill" style="width:{% if data.available_stock_balance > 0 and data.total_delivered %}{% widthratio data.available_stock_balance data.total_delivered 100 %}{% else %}0{% endif %}%;background:#d97706"></div></div>
+            </div>
+            <div class="mt-3 p-3 rounded" style="background:#f0f9fb;border:1px solid #b6dce8">
+              <div class="text-body-secondary" style="font-size:.75rem;margin-bottom:2px">Stock % of Delivered</div>
+              <div class="fw-black" style="font-size:1.65rem;color:#0f7f9f;font-weight:900">
+                {% if data.stock_percent is not None %}{{ data.stock_percent|floatformat:1 }}%{% else %}N/A{% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-8">
+          <div class="rdb-panel">
+            <div class="rdb-pt"><div class="ico"><i class="fas fa-truck-moving" aria-hidden="true"></i></div><h2>เที่ยวขนส่งและปริมาณ</h2></div>
+            <div class="table-responsive">
+              <table class="rdb-tbl" aria-label="เที่ยวขนส่งและปริมาณหิน">
+                <thead>
+                  <tr>
+                    <th scope="col">หน่วยขนส่ง</th>
+                    <th class="text-end">Total (tons)</th>
+                    <th scope="col" class="text-end">เที่ยว</th>
+                    <th class="text-end">Avg / Trip</th>
+                    <th class="text-end">Latest Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for b in data.barge_totals %}
+                  <tr>
+                    <td class="fw-bold">{{ b.barge__name }}</td>
+                    <td class="text-end fw-bold" style="color:#2563eb">{{ b.total_qty|floatformat:0|intcomma }} tons</td>
+                    <td class="text-end">{% if b.total_trips %}{{ b.total_trips }} trips{% else %}<span class="text-body-secondary">—</span>{% endif %}</td>
+                    <td class="text-end">{% if b.average_tons_per_trip %}{{ b.average_tons_per_trip|floatformat:1|intcomma }} tons/trip{% else %}<span class="text-body-secondary">—</span>{% endif %}</td>
+                    <td class="text-end text-body-secondary">{% if b.latest_trip_date %}{{ b.latest_trip_date|thai_be_date }}{% else %}—{% endif %}</td>
+                  </tr>
+                  {% empty %}
+                  <tr><td colspan="5" class="text-center text-body-secondary py-4" role="status">ไม่มีข้อมูลขนส่งตามตัวกรองที่เลือก</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Accumulative Chart ────────────────────────────────── -->
+      <section>
+        <div class="rdb-panel">
+          <div class="rdb-pt"><div class="ico"><i class="fas fa-chart-area" aria-hidden="true"></i></div><h2>ปริมาณสะสมรับเข้าเทียบกับวางหิน</h2></div>
+          <div class="rdb-wide-chart"><canvas id="rockAccumChart" role="img" aria-label="กราฟปริมาณหินสะสม รับเข้า วางหิน แผนสะสม และเป้าหมาย BOQ" aria-describedby="rockAccumChartTable"></canvas></div>
+          <div id="rockAccumChartTable" class="visually-hidden"></div>
+        </div>
+      </section>
+
+      <!-- ─── Station Table ─────────────────────────────────────── -->
+      <section>
+        <div class="rdb-panel">
+          <div class="rdb-pt"><div class="ico"><i class="fas fa-map-pin" aria-hidden="true"></i></div><h2>ความคืบหน้าการวางหินตาม Station</h2></div>
+          <div class="table-responsive">
+            <table class="rdb-tbl" aria-label="ความคืบหน้าการวางหินตาม Station">
+              <thead>
+                <tr>
+                  <th scope="col">ช่วง Station</th>
+                  <th scope="col">วัสดุ</th>
+                  <th class="text-end">Delivered (t)</th>
+                  <th class="text-end">Placed (t)</th>
+                  <th scope="col">ความคืบหน้า</th>
+                  <th scope="col">สถานะ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in data.station_rows %}
+                <tr>
+                  <td class="fw-bold">{{ row.station_range }}</td>
+                  <td><span class="badge bg-light text-dark border" style="font-size:.72rem">{{ row.material_type }}</span></td>
+                  <td class="text-end">{{ row.delivered_quantity_ton|floatformat:0|intcomma }} tons</td>
+                  <td class="text-end fw-bold">{{ row.placed_quantity_ton|floatformat:0|intcomma }} tons</td>
+                  <td>
+                    <div style="font-size:.78rem;font-weight:700;color:#334155;margin-bottom:3px">{{ row.completion_percent|floatformat:1 }}%</div>
+                    <div class="minibar"><div class="minibar-fill" style="width:{% if row.completion_percent > 100 %}100{% else %}{{ row.completion_percent|floatformat:0 }}{% endif %}%;background:{% if row.completion_percent >= 100 %}#059669{% elif row.completion_percent >= 50 %}#0891b2{% else %}#b45309{% endif %}"></div></div>
+                  </td>
+                  <td>
+                    <span class="spill {% if row.status == 'Completed' %}sp-done{% elif row.status == 'In Progress' %}sp-prog{% else %}sp-wait{% endif %}">
+                      {{ row.status }}
+                    </span>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center text-body-secondary py-4" role="status">ยังไม่มีข้อมูลความคืบหน้าตาม Station กรุณาเพิ่มช่วง Station ใน admin เมื่อพร้อม</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {% else %}
+      <div class="rdb-empty" role="status">
+        <i class="fas fa-database fa-2x mb-3" style="color:#cbd5e1" aria-hidden="true"></i>
+        <div class="fw-bold mb-1">ยังไม่มีข้อมูลความคืบหน้าหิน</div>
+        <div class="small">เลือกโครงการ หรือเพิ่มบันทึกประจำวันเพื่อแสดง Dashboard</div>
+      </div>
+      {% endif %}
+    </main>
+
+    <!-- ─── Sidebar ────────────────────────────────────────────── -->
+    <aside>
+      <form method="get" class="rdb-sc rdb-fg">
+        <div class="rdb-st"><span><i class="fas fa-filter" aria-hidden="true"></i> Filters</span></div>
+        <div>
+          <label class="rdb-fl" for="rockFilterProject">โครงการ</label>
+          <select id="rockFilterProject" name="project" class="form-select form-select-sm">
+            <option value="">เลือกโครงการแรกที่ใช้งานอยู่</option>
+            {% for p in projects %}
+            <option value="{{ p.pk }}" {% if selected_project and selected_project.pk == p.pk %}selected{% endif %}>{{ p.contract_no }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="rdb-fl" for="rockFilterRange">ช่วงวันที่</label>
+          <select id="rockFilterRange" name="range" class="form-select form-select-sm">
+            <option value="">ทุกช่วงเวลา</option>
+            <option value="7"  {% if request.GET.range == '7'  %}selected{% endif %}>7 วันล่าสุด</option>
+            <option value="14" {% if request.GET.range == '14' %}selected{% endif %}>14 วันล่าสุด</option>
+            <option value="30" {% if request.GET.range == '30' %}selected{% endif %}>30 วันล่าสุด</option>
+          </select>
+        </div>
+        <div>
+          <label class="rdb-fl" for="rockFilterDateFrom">จากวันที่</label>
+          <input id="rockFilterDateFrom" type="date" name="date_from" value="{{ request.GET.date_from }}" class="form-control form-control-sm">
+        </div>
+        <div>
+          <label class="rdb-fl" for="rockFilterDateTo">ถึงวันที่</label>
+          <input id="rockFilterDateTo" type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control form-control-sm">
+        </div>
+        <div>
+          <label class="rdb-fl" for="rockFilterBarge">หน่วยขนส่ง</label>
+          <select id="rockFilterBarge" name="barge" class="form-select form-select-sm">
+            <option value="">ทุกหน่วยขนส่ง</option>
+            {% for barge in barges %}
+            <option value="{{ barge.pk }}" {% if request.GET.barge == barge.pk|stringformat:"s" %}selected{% endif %}>{{ barge.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="rdb-fl" for="rockFilterMaterialType">ประเภทวัสดุ</label>
+          <select id="rockFilterMaterialType" name="material_type" class="form-select form-select-sm">
+            <option value="">ทุกชนิดวัสดุ</option>
+            {% for value, label in material_type_choices %}
+            <option value="{{ value }}" {% if request.GET.material_type == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="rdb-fl" for="rockFilterStationRange">ช่วง Station</label>
+          <input id="rockFilterStationRange" type="text" name="station_range" value="{{ request.GET.station_range }}" class="form-control form-control-sm" placeholder="เช่น 0+000 – 0+100">
+        </div>
+        <div>
+          <label class="rdb-fl" for="rockFilterSource">แหล่งวัสดุ / Quarry</label>
+          <input id="rockFilterSource" type="text" name="source_quarry" value="{{ request.GET.source_quarry }}" class="form-control form-control-sm" placeholder="ชื่อแหล่งวัสดุ">
+        </div>
+        <div>
+          <label class="rdb-fl" for="rockFilterDestination">ปลายทาง / พื้นที่วาง</label>
+          <input id="rockFilterDestination" type="text" name="destination_area" value="{{ request.GET.destination_area }}" class="form-control form-control-sm" placeholder="พื้นที่วางหิน">
+        </div>
+        <button class="rdb-btn rdb-btn-teal w-100 mt-1 justify-content-center" type="submit">
+          <i class="fas fa-filter" aria-hidden="true"></i> Apply Filters
+        </button>
+      </form>
+
+      <div class="rdb-sc">
+        <div class="rdb-st"><span><i class="fas fa-bolt" aria-hidden="true"></i> Quick Actions</span></div>
+        <div class="rdb-actions">
+          <a href="{% url 'project_controls:rock_list' %}" class="rdb-btn rdb-btn-out"><i class="fas fa-table-list" aria-hidden="true"></i>รายการบันทึก</a>
+          <a href="{% url 'project_controls:rock_create' %}" class="rdb-btn rdb-btn-teal"><i class="fas fa-plus" aria-hidden="true"></i>บันทึกใหม่</a>
+          {% if selected_project %}
+          <a href="{% url 'project_controls:rock_export_excel' selected_project.pk %}" class="rdb-btn rdb-btn-out"><i class="fas fa-file-excel" aria-hidden="true"></i>ส่งออก Excel</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="rdb-sc">
+        <div class="rdb-st"><span><i class="fas fa-bullseye" aria-hidden="true"></i> Target Setup</span></div>
+        {% if not data.settings %}
+        <div class="small text-body-secondary">Target quantity and daily target are configured in Django Admin under Rock Dashboard Settings.</div>
+        <div class="mt-2 small fw-semibold" style="color:#d97706"><i class="fas fa-circle-exclamation me-1" aria-hidden="true"></i>No target configured.</div>
+        {% else %}
+        <div class="p-3 rounded" style="background:#f0f9fb;border:1px solid #b6dce8;text-align:center">
+          <div class="text-body-secondary small">BOQ Target</div>
+          <div class="fw-bold mt-1" style="font-size:1.4rem;color:#0f7f9f">{{ data.settings.target_quantity_ton|floatformat:0|intcomma }} tons</div>
+        </div>
+        {% endif %}
+      </div>
+    </aside>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const chartData = {{ data.chart_data|safe }};
+const bargeLabels = [{% for b in data.barge_totals %}'{{ b.barge__name|escapejs }}'{% if not forloop.last %},{% endif %}{% endfor %}];
+const bargeValues = [{% for b in data.barge_totals %}{{ b.total_qty|default:0 }}{% if not forloop.last %},{% endif %}{% endfor %}];
+const grid = { color: '#f1f5f9' };
+const fmt = v => Number(v || 0).toLocaleString();
+const bargeColors = ['#0f7f9f','#2563eb','#059669','#7c3aed','#d97706','#dc2626','#0891b2','#065f46'];
+
+const bargePlugin = {
+  id: 'bargePlugin',
+  afterDatasetsDraw(chart) {
+    const { ctx } = chart;
+    ctx.save();
+    ctx.fillStyle = '#475569';
+    ctx.font = '600 10px system-ui, sans-serif';
+    chart.data.datasets.forEach((ds, di) => {
+      chart.getDatasetMeta(di).data.forEach((bar, i) => {
+        const v = ds.data[i];
+        if (!v) return;
+        ctx.fillText(fmt(v) + ' t', bar.x + 6, bar.y + 4);
+      });
+    });
+    ctx.restore();
+  }
+};
+
+function makeChart(id, cfg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const tableId = el.getAttribute('aria-describedby');
+  if (tableId) renderChartTable(tableId, cfg);
+  if (window.Chart) new Chart(el, cfg);
+}
+
+function renderChartTable(id, cfg) {
+  const target = document.getElementById(id);
+  const labels = cfg.data?.labels || [];
+  const datasets = cfg.data?.datasets || [];
+  if (!target || !labels.length || !datasets.length) return;
+  const esc = v => String(v ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  target.innerHTML = `
+    <table>
+      <caption>${esc(document.getElementById(id.replace('Table', ''))?.getAttribute('aria-label') || 'ข้อมูลกราฟ')}</caption>
+      <thead><tr><th>รายการ</th>${datasets.map(ds => `<th>${esc(ds.label || 'ค่า')}</th>`).join('')}</tr></thead>
+      <tbody>${labels.map((label, i) => `<tr><th>${esc(label)}</th>${datasets.map(ds => `<td>${esc(ds.data?.[i] ?? '')}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table>`;
+}
+
+makeChart('rockDailyChart', {
+  type: 'line',
+  data: {
+    labels: chartData.labels || [],
+    datasets: [
+      { label: 'รับเข้า',    data: chartData.daily_delivered || [], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.08)',  borderWidth: 2, tension: .3, fill: true, pointRadius: 3, pointHoverRadius: 6 },
+      { label: 'วางแล้ว',       data: chartData.daily_placed    || [], borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.08)',   borderWidth: 2, tension: .3, fill: true, pointRadius: 3, pointHoverRadius: 6 },
+      { label: 'เป้าหมายรายวัน', data: chartData.daily_target    || [], borderColor: '#f59e0b', borderDash: [7,4], borderWidth: 1.5, pointRadius: 0, tension: 0, fill: false }
+    ]
+  },
+  options: {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16, font: { size: 11 } } },
+      tooltip: { callbacks: { label: c => `${c.dataset.label}: ${fmt(c.raw)} ตัน` } }
+    },
+    scales: {
+      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'ตัน', font: { size: 11 } } },
+      x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } }
+    }
+  }
+});
+
+makeChart('rockBargeChart', {
+  type: 'bar',
+  plugins: [bargePlugin],
+  data: {
+    labels: bargeLabels,
+    datasets: [{
+      data: bargeValues,
+      backgroundColor: bargeLabels.map((_, i) => bargeColors[i % bargeColors.length]),
+      borderRadius: 4
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    maintainAspectRatio: false,
+    layout: { padding: { right: 72 } },
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: c => `${fmt(c.raw)} ตัน` } }
+    },
+    scales: {
+      x: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'ตัน', font: { size: 11 } } },
+      y: { grid: { display: false }, ticks: { autoSkip: false } }
+    }
+  }
+});
+
+makeChart('rockAccumChart', {
+  type: 'line',
+  data: {
+    labels: chartData.labels || [],
+    datasets: [
+      { label: 'รับเข้าสะสม',    data: chartData.accum_delivered || [], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.06)',  borderWidth: 2.5, tension: .25, fill: true },
+      { label: 'วางสะสม',       data: chartData.accum_placed    || [], borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.06)',   borderWidth: 2.5, tension: .25, fill: true },
+      { label: 'แผนสะสม', data: chartData.planned_accum   || [], borderColor: '#f59e0b', borderDash: [7,4], borderWidth: 1.5, pointRadius: 0, tension: .2, fill: false },
+      { label: 'BOQ / เป้าหมาย',       data: chartData.target_line     || [], borderColor: '#7c3aed', borderDash: [3,4], borderWidth: 1.5, pointRadius: 0, tension: 0,   fill: false }
+    ]
+  },
+  options: {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16, font: { size: 11 } } },
+      tooltip: {
+        callbacks: {
+          title: items => chartData.full_dates?.[items[0].dataIndex] || items[0].label,
+          afterBody: items => {
+            const v = chartData.variance?.[items[0].dataIndex];
+            return v == null ? 'ส่วนต่าง: N/A' : `ส่วนต่าง: ${fmt(v)} ตัน`;
+          },
+          label: c => `${c.dataset.label}: ${c.raw == null ? 'N/A' : fmt(c.raw) + ' ตัน'}`
+        }
+      }
+    },
+    scales: {
+      y: { beginAtZero: true, grid, ticks: { callback: fmt }, title: { display: true, text: 'สะสม (ตัน)', font: { size: 11 } } },
+      x: { grid: { display: false }, ticks: { maxTicksLimit: 10 } }
+    }
+  }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,10 @@
+<div class="pc-empty-state">
+  <div class="pc-empty-icon"><i class="{{ icon_class|default:'fas fa-inbox' }}" aria-hidden="true"></i></div>
+  <div class="pc-empty-title">{{ title|default:"No records found" }}</div>
+  {% if message %}<div class="pc-empty-message">{{ message }}</div>{% endif %}
+  {% if action_url and action_label %}
+  <a href="{{ action_url }}" class="btn btn-sm btn-primary mt-3">
+    <i class="fas fa-plus me-1" aria-hidden="true"></i>{{ action_label }}
+  </a>
+  {% endif %}
+</div>

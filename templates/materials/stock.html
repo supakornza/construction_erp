@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}ยอดคงเหลือวัสดุ – Construction ERP{% endblock %}
+{% block page_title %}ยอดคงเหลือวัสดุ{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0"><i class="fas fa-warehouse me-2 text-primary" aria-hidden="true"></i>ยอดคงเหลือวัสดุ</h4>
+</div>
+<div class="card mb-3"><div class="card-body py-2">
+    <form method="get" class="d-flex gap-2 align-items-end flex-wrap">
+        <div>
+            <label for="stockProject" class="form-label small mb-1">โครงการ</label>
+            <select id="stockProject" name="project" class="form-select" style="width:auto;min-height:44px">
+                <option value="">— เลือกโครงการ —</option>
+                {% for p in projects %}
+                <option value="{{ p.pk }}" {% if selected_project and selected_project.pk == p.pk %}selected{% endif %}>{{ p.project_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit" style="min-height:44px">ดูยอดคงเหลือ</button>
+    </form>
+</div></div>
+{% if selected_project %}
+<div class="card">
+    <h2 class="card-header h6 mb-0" id="stockHdr">ยอดคงเหลือของ {{ selected_project.project_name }}</h2>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0" aria-labelledby="stockHdr">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">วัสดุ</th>
+                    <th scope="col">หน่วย</th>
+                    <th scope="col">รับเข้า</th>
+                    <th scope="col">ใช้ไป</th>
+                    <th scope="col">คงเหลือ</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for s in stock_data %}
+            <tr>
+                <td>{{ s.material.name }}</td>
+                <td>{{ s.material.unit }}</td>
+                <td>{{ s.delivered }}</td>
+                <td>{{ s.used }}</td>
+                <td class="fw-bold {% if s.balance < 0 %}text-danger-emphasis{% else %}text-success-emphasis{% endif %}">
+                    {# Icon prefix conveys status without relying on color alone (WCAG 1.4.1) #}
+                    <i class="fas {% if s.balance < 0 %}fa-exclamation-triangle text-danger{% else %}fa-check-circle text-success{% endif %} me-1" aria-hidden="true"></i>{{ s.balance|floatformat:3|intcomma }}
+                    <span class="visually-hidden">{% if s.balance < 0 %}— ขาดสต๊อก{% else %}— คงเหลือเพียงพอ{% endif %}</span>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center text-body-secondary py-4" role="status">ไม่มีข้อมูลยอดคงเหลือของโครงการนี้</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

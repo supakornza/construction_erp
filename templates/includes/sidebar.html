@@ -1,0 +1,234 @@
+{% load static i18n %}
+{% with vn=request.resolver_match.view_name %}
+<nav id="sidebar" aria-label="{% trans 'Main navigation' %}">
+    <div class="sidebar-header">
+        <a href="{% url 'dashboard:index' %}" class="sidebar-brand">
+            <i class="fas fa-hard-hat nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">Construction ERP</span>
+        </a>
+        <button id="sidebar-collapse-btn" class="sidebar-collapse-btn d-none d-md-flex" type="button"
+                aria-label="{% trans 'Toggle sidebar' %}" aria-expanded="true" aria-controls="sidebar">
+            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+        </button>
+    </div>
+
+    <div class="sidebar-scroll">
+
+        <div class="nav-section"><span class="sidebar-label">{% trans "Dashboard" %}</span></div>
+        <a href="{% url 'dashboard:index' %}" class="nav-link {% if request.resolver_match.namespace == 'dashboard' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Dashboard' %}">
+            <i class="fas fa-tachometer-alt nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Dashboard" %}</span>
+        </a>
+        <a href="{% url 'tide_monitor:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'tide_monitor' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Tide Monitor' %}">
+            <i class="fas fa-water nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Tide Monitor" %}</span>
+        </a>
+        <a href="{% url 'turbidity_monitor:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'turbidity_monitor' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Turbidity Monitor' %}">
+            <i class="fas fa-vial nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Turbidity Monitor" %}</span>
+        </a>
+        <a href="{% url 'project_controls:rock_dashboard' %}" class="nav-link {% if vn == 'project_controls:rock_dashboard' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Rock Progress' %}">
+            <i class="fas fa-mountain nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Rock Progress" %}</span>
+        </a>
+        <a href="{% url 'project_controls:sand_dashboard' %}" class="nav-link {% if vn == 'project_controls:sand_dashboard' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Sand Progress' %}">
+            <i class="fas fa-water nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Sand Progress" %}</span>
+        </a>
+
+        <div class="nav-section"><span class="sidebar-label">{% trans "Projects" %}</span></div>
+        <a href="{% url 'projects:list' %}" class="nav-link {% if request.resolver_match.namespace == 'projects' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Projects' %}">
+            <i class="fas fa-building nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Projects" %}</span>
+        </a>
+
+        <div class="nav-section"><span class="sidebar-label">{% trans "Daily Reports" %}</span></div>
+        <a href="{% url 'daily_reports:list' %}" class="nav-link {% if request.resolver_match.namespace == 'daily_reports' and 'import' not in vn %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Daily Reports' %}">
+            <i class="fas fa-clipboard-list nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Daily Reports" %}</span>
+        </a>
+        <a href="{% url 'daily_reports:import_list' %}" class="nav-link {% if 'import' in vn %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Contractor Imports' %}">
+            <i class="fas fa-file-import nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Contractor Imports" %}</span>
+        </a>
+
+        <div class="nav-section"><span class="sidebar-label">{% trans "Resources" %}</span></div>
+        <a href="{% url 'manpower:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'manpower' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Manpower' %}">
+            <i class="fas fa-users nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Manpower" %}</span>
+        </a>
+        <a href="{% url 'equipment:list' %}" class="nav-link {% if request.resolver_match.namespace == 'equipment' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Equipment' %}">
+            <i class="fas fa-truck-monster nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Equipment" %}</span>
+        </a>
+        <a href="{% url 'materials:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'materials' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Materials' %}">
+            <i class="fas fa-boxes nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Materials" %}</span>
+        </a>
+
+        {% if user.can_view_procurement %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "Procurement" %}</span></div>
+        <a href="{% url 'procurement:pr_list' %}" class="nav-link {% if request.resolver_match.namespace == 'procurement' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Procurement' %}">
+            <i class="fas fa-shopping-cart nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Procurement" %}</span>
+        </a>
+        {% endif %}
+
+        {% if user.can_view_boq %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "BOQ & Progress" %}</span></div>
+        <a href="{% url 'boq:list' %}" class="nav-link {% if request.resolver_match.namespace == 'boq' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'BOQ & Progress' %}">
+            <i class="fas fa-chart-line nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "BOQ & Progress" %}</span>
+        </a>
+        {% endif %}
+
+        {% if user.can_view_project_controls %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "Project Controls" %}</span></div>
+        <a href="{% url 'project_controls:dashboard' %}" class="nav-link {% if vn == 'project_controls:dashboard' or vn == 'project_controls:rock_list' or vn == 'project_controls:sand_list' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Rock & Sand Control' %}">
+            <i class="fas fa-water nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Rock & Sand Control" %}</span>
+        </a>
+        <a href="{% url 'project_controls:revetment_dashboard' %}" class="nav-link {% if 'project_controls:revetment' in vn %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Revetment Progress' %}">
+            <i class="fas fa-layer-group nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Revetment Progress" %}</span>
+        </a>
+        <a href="{% url 'project_controls:recovery_plan_list' %}" class="nav-link {% if 'project_controls:recovery_plan' in vn %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Recovery Plans' %}">
+            <i class="fas fa-calendar-check nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Recovery Plans" %}</span>
+        </a>
+        <a href="{% url 'project_controls:project_action_plan_list' %}" class="nav-link {% if 'project_controls:project_action_plan' in vn %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Project Action Plans' %}">
+            <i class="fas fa-clipboard-check nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Project Action Plans" %}</span>
+        </a>
+        <a href="{% url 'project_controls:rap_list' %}" class="nav-link {% if 'project_controls:rap' in vn or 'project_controls:progress' in vn %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Recovery Action Plans' %}">
+            <i class="fas fa-tasks nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Recovery Action Plans" %}</span>
+        </a>
+        <a href="{% url 'project_controls:logistics_list' %}" class="nav-link {% if 'project_controls:logistics' in vn %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Logistics' %}">
+            <i class="fas fa-truck nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Logistics" %}</span>
+        </a>
+        {% endif %}
+
+        {% if user.can_view_hr %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "HR & Attendance" %}</span></div>
+        <a href="{% url 'hr:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'hr' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'HR & Attendance' %}">
+            <i class="fas fa-users-cog nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "HR & Attendance" %}</span>
+        </a>
+        {% endif %}
+
+        {% if user.can_view_drawings %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "Drawings & RFI" %}</span></div>
+        <a href="{% url 'drawings:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'drawings' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Drawings & RFI' %}">
+            <i class="fas fa-drafting-compass nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Drawings & RFI" %}</span>
+        </a>
+        {% endif %}
+
+        {% if user.can_view_subcontractors %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "Subcontractors" %}</span></div>
+        <a href="{% url 'subcontractors:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'subcontractors' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Subcontractors' %}">
+            <i class="fas fa-hard-hat nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Subcontractors" %}</span>
+        </a>
+        {% endif %}
+
+        {% if user.can_view_maintenance %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "Maintenance" %}</span></div>
+        <a href="{% url 'maintenance:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'maintenance' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Maintenance' %}">
+            <i class="fas fa-tools nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Maintenance" %}</span>
+        </a>
+        {% endif %}
+
+        {% if user.can_view_change_orders %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "Change Orders" %}</span></div>
+        <a href="{% url 'change_orders:list' %}" class="nav-link {% if request.resolver_match.namespace == 'change_orders' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Change Orders' %}">
+            <i class="fas fa-exchange-alt nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Change Orders" %}</span>
+        </a>
+        {% endif %}
+
+        {% if user.can_access_financial %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "Cost Control" %}</span></div>
+        <a href="{% url 'cost_control:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'cost_control' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Cost Control' %}">
+            <i class="fas fa-coins nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Cost Control" %}</span>
+        </a>
+        {% endif %}
+
+        {% if user.can_view_safety %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "Safety" %}</span></div>
+        <a href="{% url 'safety:toolbox_list' %}" class="nav-link {% if request.resolver_match.namespace == 'safety' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Safety' %}">
+            <i class="fas fa-shield-alt nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Safety" %}</span>
+        </a>
+        {% endif %}
+
+        {% if user.can_view_quality %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "Quality" %}</span></div>
+        <a href="{% url 'quality:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'quality' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Quality Control' %}">
+            <i class="fas fa-clipboard-check nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Quality Control" %}</span>
+        </a>
+        {% endif %}
+
+        {% if user.can_view_documents %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "Documents" %}</span></div>
+        <a href="{% url 'documents:list' %}" class="nav-link {% if request.resolver_match.namespace == 'documents' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Documents' %}">
+            <i class="fas fa-folder-open nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Documents" %}</span>
+        </a>
+        {% endif %}
+
+        {% if user.role == 'admin' or user.is_superuser %}
+        <div class="nav-section"><span class="sidebar-label">{% trans "Admin" %}</span></div>
+        <a href="{% url 'accounts:user_list' %}" class="nav-link {% if request.resolver_match.namespace == 'accounts' and request.resolver_match.url_name != 'role_list' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Users' %}">
+            <i class="fas fa-user-cog nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Users" %}</span>
+        </a>
+        <a href="{% url 'accounts:role_list' %}" class="nav-link {% if request.resolver_match.url_name == 'role_list' %}active{% endif %}"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Roles' %}">
+            <i class="fas fa-user-shield nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Roles" %}</span>
+        </a>
+        <a href="{% url 'admin:index' %}" class="nav-link"
+           data-bs-toggle="tooltip" data-bs-placement="right" title="{% trans 'Django Admin' %}">
+            <i class="fas fa-cog nav-icon" aria-hidden="true"></i>
+            <span class="sidebar-label">{% trans "Django Admin" %}</span>
+        </a>
+        {% endif %}
+
+    </div>
+</nav>
+{% endwith %}

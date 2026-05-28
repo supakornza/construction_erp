@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{{ document.document_no }} – Construction ERP{% endblock %}
+{% block page_title %}{{ document.document_no }}{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'documents:list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="mb-0">{{ document.document_no }} – Rev.{{ document.revision }}</h4>
+    <div class="ms-auto d-flex gap-2">
+        <a href="{{ document.file.url }}" class="btn btn-sm btn-outline-primary" target="_blank"><i class="fas fa-download me-1"></i>Download</a>
+        <a href="{% url 'documents:update' document.pk %}" class="btn btn-sm btn-primary"><i class="fas fa-edit me-1"></i>Edit</a>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-md-5">
+        <div class="card"><div class="card-body">
+            <dl class="row small mb-0">
+                <dt class="col-5">Document No</dt><dd class="col-7">{{ document.document_no }}</dd>
+                <dt class="col-5">Title</dt><dd class="col-7">{{ document.title }}</dd>
+                <dt class="col-5">Category</dt><dd class="col-7">{{ document.category }}</dd>
+                <dt class="col-5">Revision</dt><dd class="col-7">{{ document.revision }}</dd>
+                <dt class="col-5">Status</dt><dd class="col-7"><span class="badge bg-{% if document.status == 'Current' %}success{% elif document.status == 'Superseded' %}warning{% else %}secondary{% endif %}">{{ document.status }}</span></dd>
+                <dt class="col-5">Project</dt><dd class="col-7">{{ document.project.project_name }}</dd>
+                <dt class="col-5">Uploaded By</dt><dd class="col-7">{{ document.uploaded_by.get_full_name|default:'-' }}</dd>
+                <dt class="col-5">Uploaded At</dt><dd class="col-7">{{ document.uploaded_at|thai_be_datetime }}</dd>
+            </dl>
+        </div></div>
+    </div>
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Revision History</h6>
+                <a href="{% url 'documents:add_revision' document.pk %}" class="btn btn-sm btn-primary">Add Revision</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-sm mb-0">
+                    <thead class="table-light"><tr><th>Rev</th><th>Description</th><th>Revised By</th><th>Date</th><th></th></tr></thead>
+                    <tbody>
+                    {% for r in revisions %}
+                    <tr>
+                        <td>{{ r.revision_no }}</td>
+                        <td>{{ r.change_description|truncatechars:50 }}</td>
+                        <td>{{ r.revised_by.get_full_name|default:'-' }}</td>
+                        <td>{{ r.revised_at|thai_be_date }}</td>
+                        <td>{% if r.file %}<a href="{{ r.file.url }}" class="btn btn-sm btn-outline-primary" target="_blank"><i class="fas fa-download"></i></a>{% endif %}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-muted">No revisions.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

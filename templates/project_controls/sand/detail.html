@@ -1,0 +1,105 @@
+﻿{% extends "base.html" %}
+{% block title %}Sand Record {{ record.record_date|thai_be_date }} - Construction ERP{% endblock %}
+{% block page_title %}Sand Daily Record - {{ record.record_date|thai_be_date }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4 flex-wrap gap-2">
+  <a href="{% url 'project_controls:sand_list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>
+  <h5 class="mb-0">Sand Record - {{ record.record_date|thai_be_date }} ({{ record.day_name }})</h5>
+  <div class="ms-auto">
+    <a href="{% url 'project_controls:sand_update' record.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit me-1" aria-hidden="true"></i>Edit</a>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-header fw-semibold bg-info text-white"><i class="fas fa-warehouse me-2" aria-hidden="true"></i>Stock Destinations</div>
+      <div class="card-body">
+        <table class="table table-sm mb-0">
+          <thead class="table-light"><tr><th>Destination</th><th class="text-end">Daily (T)</th><th class="text-end">Accum (T)</th></tr></thead>
+          <tbody>
+            <tr><td>TCT Pier</td><td class="text-end">{{ record.tct_daily_ton|floatformat:2|intcomma }}</td><td class="text-end fw-bold">{{ record.tct_accum_ton|floatformat:2|intcomma }}</td></tr>
+            <tr><td>Stockpile Sand MTP3</td><td class="text-end">{{ record.mtp3_daily_ton|floatformat:2|intcomma }}</td><td class="text-end fw-bold">{{ record.mtp3_accum_ton|floatformat:2|intcomma }}</td></tr>
+            <tr class="table-info fw-bold"><td>Total</td><td class="text-end">{{ record.total_daily_ton|floatformat:2|intcomma }}</td><td class="text-end">{{ record.total_accum_ton|floatformat:2|intcomma }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-header fw-semibold bg-success text-white"><i class="fas fa-mound me-2" aria-hidden="true"></i>Sand Sources</div>
+      <div class="card-body">
+        <table class="table table-sm mb-0">
+          <thead class="table-light"><tr><th>Source</th><th class="text-end">Daily (T)</th><th class="text-end">Accum (T)</th></tr></thead>
+          <tbody>
+            <tr><td>Chalothon Sand Pit</td><td class="text-end">{{ record.chalothon_daily_ton|floatformat:2|intcomma }}</td><td class="text-end fw-bold">{{ record.chalothon_accum_ton|floatformat:2|intcomma }}</td></tr>
+            <tr><td>Khlong Bang Phai (Oswald)</td><td class="text-end">{{ record.khlong_bang_phai_daily_ton|floatformat:2|intcomma }}</td><td class="text-end fw-bold">{{ record.khlong_bang_phai_accum_ton|floatformat:2|intcomma }}</td></tr>
+            <tr class="table-success fw-bold"><td>Total Source</td><td class="text-end">{{ record.total_source_daily_ton|floatformat:2|intcomma }}</td><td class="text-end">{{ record.total_source_accum_ton|floatformat:2|intcomma }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {# Remaining Stock #}
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-header fw-semibold bg-warning"><i class="fas fa-warehouse me-2" aria-hidden="true"></i>Remaining Stock</div>
+      <div class="card-body">
+        <dl class="row mb-0">
+          <dt class="col-7">TCT Pier</dt>
+          <dd class="col-5 text-end fw-bold fs-5">{{ record.remaining_tct|floatformat:2|intcomma }}</dd>
+          <dt class="col-7">Stockpile Sand MTP3</dt>
+          <dd class="col-5 text-end fw-bold fs-5">{{ record.remaining_mtp3|floatformat:2|intcomma }}</dd>
+          <dt class="col-7 border-top pt-2">Total Remaining</dt>
+          <dd class="col-5 text-end fw-bold fs-4 border-top pt-2 text-danger">{{ record.total_remaining|floatformat:2|intcomma }}</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card mb-3">
+  <div class="card-header fw-semibold"><i class="fas fa-water me-2" aria-hidden="true"></i>Sand Placement</div>
+  <div class="table-responsive">
+    <table class="table table-sm mb-0">
+      <thead class="table-light"><tr><th>Type</th><th class="text-end">Daily (T)</th><th class="text-end">Accum (T)</th></tr></thead>
+      <tbody>
+        <tr><td>Offshore Transport</td><td class="text-end">{{ record.offshore_daily_ton|floatformat:2|intcomma }}</td><td class="text-end fw-bold">{{ record.offshore_accum_ton|floatformat:2|intcomma }}</td></tr>
+        <tr><td>Onshore</td><td class="text-end">{{ record.onshore_daily_ton|floatformat:2|intcomma }}</td><td class="text-end fw-bold">{{ record.onshore_accum_ton|floatformat:2|intcomma }}</td></tr>
+        <tr><td>Inside Plot Tank</td><td class="text-end">{{ record.inside_plot_daily|floatformat:2|intcomma }}</td><td class="text-end fw-bold">{{ record.inside_plot_accum|floatformat:2|intcomma }}</td></tr>
+        <tr><td>Outside Plot Tank</td><td class="text-end">{{ record.outside_plot_daily|floatformat:2|intcomma }}</td><td class="text-end fw-bold">{{ record.outside_plot_accum|floatformat:2|intcomma }}</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{# Transport Placements #}
+<div class="card mb-3">
+  <div class="card-header fw-semibold"><i class="fas fa-truck-moving me-2" aria-hidden="true"></i>Transport Placements</div>
+  <div class="table-responsive">
+    <table class="table table-sm mb-0">
+      <thead class="table-light">
+        <tr><th>Transport Unit</th><th>Type</th><th class="text-end">Qty (Ton)</th><th class="text-end">Trips</th><th>Station</th></tr>
+      </thead>
+      <tbody>
+        {% for bp in record.barge_placements.all %}
+        <tr>
+          <td><strong>{{ bp.barge.name }}</strong></td>
+          <td>{{ bp.placement_type }}</td>
+          <td class="text-end">{{ bp.quantity_ton|floatformat:2|intcomma }}</td>
+          <td class="text-end">{{ bp.trips }}</td>
+          <td>{{ bp.station|default:'-' }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-muted text-center" role="status">No transport placements</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if record.remarks %}
+<div class="alert alert-light border"><strong>Remarks:</strong> {{ record.remarks }}</div>
+{% endif %}
+{% endblock %}

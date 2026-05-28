@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}บันทึกการรับวัสดุ – Construction ERP{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'materials:delivery_list' %}"
+       class="btn btn-outline-secondary me-3 d-inline-flex align-items-center justify-content-center"
+       style="min-width:44px;min-height:44px"
+       aria-label="กลับไปยังรายการรับวัสดุ">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+    </a>
+    <div>
+        <h4 class="mb-0">{% if form.instance.pk %}แก้ไข{% else %}บันทึก{% endif %}การรับวัสดุ</h4>
+        <div class="text-muted small">กรอกข้อมูลการรับวัสดุเข้ากองหรือพื้นที่จัดเก็บ</div>
+    </div>
+</div>
+<div class="card shadow-sm"><div class="card-body">
+{% crispy form %}
+{# hidden fields populated by JS after a successful OCR preview call #}
+<input type="hidden" name="ocr_template" id="id_ocr_template">
+<input type="hidden" name="ocr_confidence" id="id_ocr_confidence">
+<input type="hidden" name="ocr_raw_text" id="id_ocr_raw_text">
+</div></div>
+
+{% comment %} OCR status region. Stays in DOM at all times (using HTML5 `hidden` to
+  avoid display while empty) so SR / AT can subscribe to live changes.
+  `aria-live="polite"` queues announcements after current speech — OCR is
+  status info, not an interrupt. `aria-atomic="true"` re-reads the whole
+  banner each update so partial updates aren't garbled. {% endcomment %}
+<div id="ocr-banner" class="alert mt-3"
+     aria-live="polite" aria-atomic="true" hidden></div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// ─── auto-fill เวลาปัจจุบัน ───────────────────────────────────────
+(function () {
+  const timeInput = document.getElementById('id_delivery_time');
+  if (timeInput && !timeInput.value) {
+    const now = new Date();
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    timeInput.value = `${hh}:${mm}`;
+  }
+})();
+
+// ─── filter WorkArea dropdowns by Project ────────────────────────
+const workAreas = {{ form.work_areas_json|safe }};
+
+function filterWorkAreaDropdown(selectId, projectId, keepValue) {
+  const select = document.getElementById(selectId);
+  if (!select) return;
+  while (select.options.length > 1) select.remove(1);
+  const filtered = projectId
+    ? workAreas.filter(wa => wa.project_id === projectId)
+    : workAreas;
+  filtered.forEach(wa => {
+    const opt = document.createElement('option');
+    opt.value = wa.id;
+    opt.textContent = wa.name;
+    if (String(wa.id) === keepValue) opt.selected = true;
+    select.appendChild(opt);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  const projectSelect = document.getElementById('id_project');
+  const initialProject = projectSelect ? (parseInt(projectSelect.value) || null) : null;
+  filterWorkAreaDropdown('id_source_area', initialProject, document.getElementById('id_source_area')?.value || '');
+  filterWorkAreaDropdown('id_destination', initialProject, document.getElementById('id_destination')?.value || '');
+  if (projectSelect) {
+    projectSelect.addEventListener('change', function () {
+      const pid = parseInt(this.value) || null;
+      filterWorkAreaDropdown('id_source_area', pid, '');
+      filterWorkAreaDropdown('id_destination', pid, '');
+    });
+  }
+
+  // ─── OCR pre-fill on delivery_image upload ──────────────────────
+  const imgInput = document.getElementById('id_delivery_image');
+  if (imgInput) imgInput.addEventListener('change', handleOcrUpload);
+});
+
+const OCR_URL = "{% url 'materials:delivery_ocr_preview' %}";
+const OCR_LOW_CONF = 0.70;
+
+function getCsrf() {
+  return document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+}
+
+// Render a banner using textContent for all dynamic strings to avoid XSS
+// from API-returned supplier names or browser-provided error messages.
+// Decorative icon gets aria-hidden so screen readers don't read the icon font as garbage.
+function setBanner(text, cls, opts) {
+  const b = document.getElementById('ocr-banner');
+  if (!b) return;
+  b.className = `alert alert-${cls} mt-3`;
+  b.textContent = '';
+  if (opts && opts.icon) {
+    const i = document.createElement('i');
+    i.className = opts.icon + ' me-2';
+    i.setAttribute('aria-hidden', 'true');
+    b.appendChild(i);
+  }
+  b.appendChild(document.createTextNode(text));
+  // Reveal via `hidden` (not Bootstrap's d-none) so SR sees the change as a
+  // content update to a persistent live region, not as a new DOM node.
+  b.removeAttribute('hidden');
+}
+
+// Remove any prior OCR markers (icons in labels, helper spans) so a second
+// upload doesn't stack indicators.
+function clearOcrMarkers() {
+  document.querySelectorAll('.ocr-marker, .ocr-help').forEach(el => el.remove());
+  document.querySelectorAll('.border-warning, .border-success, .bg-warning-subtle').forEach(el => {
+    el.classList.remove('border-warning', 'border-success', 'bg-warning-subtle');
+    el.removeAttribute('aria-describedby');
+  });
+}
+
+function setFormField(id, value) {
+  const el = document.getElementById(id);
+  if (!el) return false;
+  if (el.value && el.value.trim() !== '') return false;
+  el.value = value;
+  return true;
+}
+
+// Mark a field as OCR-filled, using BOTH color and an icon next to the
+// label (non-color cue per WCAG 1.4.1). Confidence info is exposed via
+// aria-describedby pointing to a visible helper, so keyboard / mobile /
+// screen-reader users all get the same info — not just hover users.
+function highlightField(id, conf) {
+  const el = document.getElementById(id);
+  if (!el) return null;          // return DOM element if low-conf, else null
+  const low = conf < OCR_LOW_CONF;
+  const pct = Math.round(conf * 100);
+
+  if (low) {
+    el.classList.add('border-warning', 'bg-warning-subtle');
+  } else {
+    el.classList.add('border-success');
+  }
+
+  // Icon in label (visual + assistive)
+  const label = document.querySelector(`label[for="${id}"]`);
+  if (label) {
+    const marker = document.createElement('span');
+    marker.className = 'ocr-marker me-1';
+    const icon = document.createElement('i');
+    icon.className = low
+      ? 'fas fa-exclamation-triangle text-warning'
+      : 'fas fa-magic-wand-sparkles text-success';
+    icon.setAttribute('aria-hidden', 'true');
+    marker.appendChild(icon);
+    const srOnly = document.createElement('span');
+    srOnly.className = 'visually-hidden';
+    srOnly.textContent = low
+      ? 'ฟิลด์นี้อ่านจากรูปด้วยความมั่นใจต่ำ — กรุณาตรวจ. '
+      : 'ฟิลด์นี้อ่านจากรูปสำเร็จ. ';
+    marker.appendChild(srOnly);
+    label.prepend(marker);
+  }
+
+  // Visible helper text below the field, also referenced by aria-describedby
+  const helperId = `${id}-ocr-help`;
+  const help = document.createElement('div');
+  help.id = helperId;
+  help.className = `ocr-help form-text small ${low ? 'text-warning-emphasis' : 'text-success-emphasis'}`;
+  help.textContent = low
+    ? `OCR ความมั่นใจ ${pct}% — โปรดตรวจ`
+    : `OCR เติมให้ (${pct}%)`;
+  // Insert right after the input (or its wrapper)
+  const wrapper = el.closest('.mb-3, .form-group, .form-floating') || el.parentElement;
+  if (wrapper) wrapper.appendChild(help);
+  const prev = el.getAttribute('aria-describedby') || '';
+  el.setAttribute('aria-describedby', prev ? `${prev} ${helperId}` : helperId);
+
+  return low ? el : null;
+}
+
+async function handleOcrUpload(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) {
+    setBanner('รูปใหญ่เกิน 10 MB — บีบอัดก่อนอัปโหลด', 'warning');
+    return;
+  }
+
+  setBanner('กำลังอ่านตั๋ว...', 'info', {icon: 'fas fa-spinner fa-spin'});
+
+  const fd = new FormData();
+  fd.append('image', file);
+  const projectSel = document.getElementById('id_project');
+  if (projectSel && projectSel.value) fd.append('project', projectSel.value);
+
+  try {
+    const r = await fetch(OCR_URL, {
+      method: 'POST', body: fd,
+      headers: {'X-CSRFToken': getCsrf()},
+    });
+    const j = await r.json();
+    if (!j.ok) {
+      setBanner(`อ่านตั๋วไม่สำเร็จ: ${j.error || 'unknown error'}`, 'danger');
+      return;
+    }
+
+    const map = {
+      delivery_note_no: 'id_delivery_note_no',
+      truck_no: 'id_truck_no',
+      source: 'id_source',
+      delivery_date: 'id_delivery_date',
+      delivery_time: 'id_delivery_time',
+      quantity: 'id_quantity',
+      material: 'id_material',
+    };
+    // Drop any stale OCR markers from a prior upload before re-applying.
+    clearOcrMarkers();
+
+    let filledCount = 0;
+    let lowConfCount = 0;
+    let firstLowConfEl = null;
+    for (const [k, v] of Object.entries(j.fields || {})) {
+      if (!v || k.startsWith('_')) continue;
+      const targetId = map[k];
+      if (!targetId) continue;
+      if (setFormField(targetId, v)) {
+        filledCount++;
+        const conf = (j.field_confidence || {})[k] ?? 1;
+        const lowEl = highlightField(targetId, conf);
+        if (lowEl) {
+          lowConfCount++;
+          if (!firstLowConfEl) firstLowConfEl = lowEl;
+        }
+      }
+    }
+
+    document.getElementById('id_ocr_template').value = j.template || '';
+    document.getElementById('id_ocr_confidence').value = j.overall_confidence || '';
+    document.getElementById('id_ocr_raw_text').value = j.raw_text || '';
+
+    const supplier = j.supplier || j.template || '?';
+    const conf = Math.round((j.overall_confidence || 0) * 100);
+    const warn = (j.warnings || []).length;
+    const reviewHint = lowConfCount > 0
+      ? ` — มี ${lowConfCount} ฟิลด์ที่ทำเครื่องหมายต้องตรวจ (ดูไอคอนเตือนข้างชื่อฟิลด์)`
+      : ' — ตรวจค่าทุกฟิลด์ก่อนบันทึก';
+    const msg = `อ่านได้ ${filledCount} ฟิลด์ จากตั๋ว ${supplier}` +
+                ` (ความมั่นใจ ${conf}%${warn ? `, ${warn} warning` : ''})` +
+                reviewHint;
+    setBanner(msg, filledCount > 0 ? 'success' : 'warning',
+              {icon: 'fas fa-check-circle'});
+
+    // Move focus to first low-confidence field so keyboard users land on
+    // what needs review. If everything is high-confidence, focus the
+    // material dropdown as a sensible next-step starting point.
+    if (firstLowConfEl) {
+      firstLowConfEl.focus({preventScroll: false});
+    } else if (filledCount > 0) {
+      const material = document.getElementById('id_material');
+      if (material) material.focus({preventScroll: false});
+    }
+  } catch (err) {
+    setBanner(`เกิดข้อผิดพลาด: ${err.message || err}`, 'danger');
+  }
+}
+</script>
+{% endblock %}

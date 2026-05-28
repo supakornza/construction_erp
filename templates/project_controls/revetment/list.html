@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Revetment Records - Construction ERP{% endblock %}
+{% block page_title %}Revetment Records{% endblock %}
+
+{% block content %}
+<div class="pc-page-header">
+  <div class="d-flex align-items-center gap-2">
+    <a href="{% url 'project_controls:revetment_dashboard' %}{% if request.GET.project %}?project={{ request.GET.project }}{% endif %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>
+    <h5 class="pc-page-title"><i class="fas fa-layer-group me-2 text-success" aria-hidden="true"></i>Revetment Daily Records</h5>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'project_controls:revetment_setup' %}{% if request.GET.project %}?project={{ request.GET.project }}{% endif %}" class="btn btn-sm btn-outline-success"><i class="fas fa-sliders-h me-1" aria-hidden="true"></i>Setup</a>
+    <a href="{% url 'project_controls:revetment_create' %}{% if request.GET.project %}?project={{ request.GET.project }}{% endif %}" class="btn btn-sm btn-primary"><i class="fas fa-plus me-1" aria-hidden="true"></i>New Entry</a>
+  </div>
+</div>
+
+<div class="card mb-3 pc-filter-card">
+  <div class="card-body">
+    <form method="get" class="row g-2 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label small fw-semibold">Project</label>
+        <select name="project" class="form-select form-select-sm">
+          <option value="">All Projects</option>
+          {% for p in projects %}
+          <option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.project_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small fw-semibold">From</label>
+        <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="form-control form-control-sm">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small fw-semibold">To</label>
+        <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control form-control-sm">
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-sm btn-outline-primary w-100"><i class="fas fa-filter me-1" aria-hidden="true"></i>Filter</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% url 'project_controls:revetment_create' as revetment_create_url %}
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Date</th>
+          <th>Day</th>
+          <th>Project</th>
+          <th class="text-end">Items</th>
+          <th class="text-end">Total Qty</th>
+          <th>Remarks</th>
+          <th><span class="visually-hidden">การกระทำ</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in records %}
+        <tr>
+          <td><a href="{% url 'project_controls:revetment_detail' record.pk %}">{{ record.record_date|thai_be_date }}</a></td>
+          <td class="{% if record.day_name == 'Sun' %}text-danger fw-semibold{% else %}text-muted{% endif %} small">{{ record.day_name }}</td>
+          <td>{{ record.project.project_name }}</td>
+          <td class="text-end">{{ record.items.count|intcomma }}</td>
+          <td class="text-end fw-semibold">{{ record.total_quantity|floatformat:3|intcomma }}</td>
+          <td>{{ record.remarks|default:"-" }}</td>
+          <td class="text-end">
+            <a href="{% url 'project_controls:revetment_update' record.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit" aria-hidden="true"></i></a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7">
+            {% include "project_controls/includes/empty_state.html" with icon_class="fas fa-layer-group" title="No revetment records found" message="Create the first revetment daily entry for this filter." action_url=revetment_create_url action_label="New Entry" %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

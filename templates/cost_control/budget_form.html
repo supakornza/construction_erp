@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Edit Budget Item{% else %}New Budget Item{% endif %} – Construction ERP{% endblock %}
+{% block page_title %}{% if object %}Edit Budget Item{% else %}New Budget Item{% endif %}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header fw-semibold">
+        <i class="fas fa-wallet me-2 text-warning"></i>{% if object %}Edit Budget Item{% else %}New Budget Item{% endif %}
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="row g-3">
+            {% for field in form %}
+            <div class="col-md-{% if field.name in 'description,remarks' %}12{% elif field.name in 'project,cost_code,boq_item' %}6{% else %}6{% endif %}">
+              <label class="form-label fw-semibold">{{ field.label }}{% if field.field.required %} <span class="text-danger">*</span>{% endif %}</label>
+              {{ field }}
+              {% if field.errors %}<div class="text-danger small mt-1">{{ field.errors }}</div>{% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-warning px-4">{% if object %}Save Changes{% else %}Create{% endif %}</button>
+            <a href="{% url 'cost_control:budget_list' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{% if form.instance.pk %}Edit{% else %}New{% endif %} Project – Construction ERP{% endblock %}
+{% block page_title %}{% if form.instance.pk %}Edit Project{% else %}New Project{% endif %}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'projects:list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="mb-0">{% if form.instance.pk %}Edit Project{% else %}Create New Project{% endif %}</h4>
+</div>
+<div class="card">
+    <div class="card-body">{% crispy form %}</div>
+</div>
+{% endblock %}

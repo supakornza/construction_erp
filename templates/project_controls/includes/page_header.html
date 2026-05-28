@@ -1,0 +1,15 @@
+<div class="pc-page-header">
+  <div class="d-flex align-items-center gap-2 min-w-0">
+    {% if back_url %}
+    <a href="{{ back_url }}" class="btn btn-sm btn-outline-secondary flex-shrink-0" title="Back">
+      <i class="fas fa-arrow-left" aria-hidden="true"></i>
+    </a>
+    {% endif %}
+    <div class="min-w-0">
+      <h5 class="pc-page-title">
+        {% if icon_class %}<i class="{{ icon_class }} me-2" aria-hidden="true"></i>{% endif %}{{ title }}
+      </h5>
+      {% if subtitle %}<div class="pc-page-subtitle">{{ subtitle }}</div>{% endif %}
+    </div>
+  </div>
+</div>

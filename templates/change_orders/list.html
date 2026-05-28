@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}Change Orders – Construction ERP{% endblock %}
+{% block page_title %}Change Orders{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0"><i class="fas fa-exchange-alt me-2 text-warning"></i>Change Orders</h4>
+    <a href="{% url 'change_orders:create' %}" class="btn btn-warning">
+        <i class="fas fa-plus me-1"></i>New Change Order
+    </a>
+</div>
+
+<!-- Filters -->
+<div class="card mb-3">
+    <div class="card-body py-2">
+        <form method="get" class="d-flex gap-2 flex-wrap align-items-end">
+            <div>
+                <label class="form-label small mb-1">Project</label>
+                <select name="project" class="form-select form-select-sm">
+                    <option value="">All Projects</option>
+                    {% for p in projects %}
+                    <option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.contract_no }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="form-label small mb-1">Status</label>
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">All</option>
+                    {% for val, label in status_choices %}
+                    <option value="{{ val }}" {% if request.GET.status == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="form-label small mb-1">Type</label>
+                <select name="type" class="form-select form-select-sm">
+                    <option value="">All Types</option>
+                    {% for val, label in type_choices %}
+                    <option value="{{ val }}" {% if request.GET.type == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-sm btn-primary">Filter</button>
+            <a href="{% url 'change_orders:list' %}" class="btn btn-sm btn-outline-secondary">Clear</a>
+        </form>
+    </div>
+</div>
+
+<!-- Table -->
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-sm mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>CO No.</th>
+                        <th>Project</th>
+                        <th>Title</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th class="text-end">Value Impact (THB)</th>
+                        <th class="text-center">Time (days)</th>
+                        <th>Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for co in change_orders %}
+                <tr>
+                    <td><a href="{% url 'change_orders:detail' co.pk %}" class="fw-semibold text-decoration-none">{{ co.co_no }}</a></td>
+                    <td><span class="text-muted small">{{ co.project.contract_no }}</span></td>
+                    <td>{{ co.title|truncatechars:60 }}</td>
+                    <td><span class="badge bg-secondary">{{ co.get_type_display|truncatechars:20 }}</span></td>
+                    <td><span class="badge bg-{{ co.status_color }}">{{ co.get_status_display }}</span></td>
+                    <td class="text-end {% if co.contract_value_impact > 0 %}text-success{% elif co.contract_value_impact < 0 %}text-danger{% endif %}">
+                        {% if co.contract_value_impact > 0 %}+{% endif %}{{ co.contract_value_impact|floatformat:0|intcomma }}
+                    </td>
+                    <td class="text-center {% if co.time_impact_days > 0 %}text-warning{% elif co.time_impact_days < 0 %}text-info{% endif %}">
+                        {% if co.time_impact_days > 0 %}+{% endif %}{{ co.time_impact_days }}
+                    </td>
+                    <td class="small">{{ co.initiated_date }}</td>
+                    <td>
+                        <a href="{% url 'change_orders:detail' co.pk %}" class="btn btn-xs btn-outline-primary">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" class="text-center text-muted py-4">No change orders found.</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% include "includes/pagination.html" %}
+{% endblock %}

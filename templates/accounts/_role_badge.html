@@ -1,0 +1,20 @@
+{% comment %}Usage: {% include "accounts/_role_badge.html" with role=u.role label=u.get_role_display %}{% endcomment %}
+{% if role == 'admin' %}<span class="badge bg-danger">{{ label }}</span>
+{% elif role == 'project_manager' %}<span class="badge bg-primary">{{ label }}</span>
+{% elif role == 'construction_manager' %}<span class="badge bg-primary bg-opacity-75">{{ label }}</span>
+{% elif role == 'office_engineer' %}<span class="badge bg-info">{{ label }}</span>
+{% elif role == 'engineer' %}<span class="badge bg-info text-dark">{{ label }}</span>
+{% elif role == 'site_engineer' %}<span class="badge bg-info bg-opacity-75 text-dark">{{ label }}</span>
+{% elif role == 'inspector' %}<span class="badge bg-warning text-dark">{{ label }}</span>
+{% elif role == 'quantity_surveyor' %}<span class="badge role-qs">{{ label }}</span>
+{% elif role == 'safety_officer' %}<span class="badge bg-danger bg-opacity-75">{{ label }}</span>
+{% elif role == 'document_controller' %}<span class="badge bg-secondary">{{ label }}</span>
+{% elif role == 'project_coordinator' %}<span class="badge bg-teal">{{ label }}</span>
+{% elif role == 'legal_officer' %}<span class="badge role-legal">{{ label }}</span>
+{% elif role == 'environmental_specialist' %}<span class="badge bg-success bg-opacity-75">{{ label }}</span>
+{% elif role == 'senior_advisor' %}<span class="badge role-advisor">{{ label }}</span>
+{% elif role == 'contractor' %}<span class="badge role-contractor">{{ label }}</span>
+{% elif role == 'owner' %}<span class="badge bg-success">{{ label }}</span>
+{% elif role == 'storekeeper' %}<span class="badge bg-secondary bg-opacity-75">{{ label }}</span>
+{% else %}<span class="badge bg-secondary">{{ label }}</span>
+{% endif %}

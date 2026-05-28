@@ -1,0 +1,18 @@
+﻿{% extends "base.html" %}
+{% block title %}{{ claim.claim_no }} โ€“ Construction ERP{% endblock %}
+{% block page_title %}{{ claim.claim_no }}{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'boq:claim_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="mb-0">{{ claim.claim_no }}</h4>
+    <span class="badge badge-{{ claim.status|lower }} ms-3">{{ claim.status }}</span>
+</div>
+<div class="card" style="max-width:600px;"><div class="card-body">
+    <dl class="row small mb-0">
+        <dt class="col-4">Project</dt><dd class="col-8">{{ claim.project.project_name }}</dd>
+        <dt class="col-4">Claim Date</dt><dd class="col-8">{{ claim.claim_date|thai_be_date }}</dd>
+        <dt class="col-4">Period</dt><dd class="col-8">{{ claim.period_from }} โ€“ {{ claim.period_to }}</dd>
+        <dt class="col-4">Total Claimed</dt><dd class="col-8 fw-bold">{{ claim.total_claimed_amount|floatformat:2|intcomma }} THB</dd>
+    </dl>
+</div></div>
+{% endblock %}

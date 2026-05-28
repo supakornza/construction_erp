@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Leave Requests – HR{% endblock %}
+{% block page_title %}Leave Requests{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0"><i class="fas fa-calendar-minus me-2 text-success"></i>Leave Requests</h4>
+    <a href="{% url 'hr:leave_create' %}" class="btn btn-success"><i class="fas fa-plus me-1"></i>New Request</a>
+</div>
+
+<div class="card mb-3"><div class="card-body py-2">
+    <form method="get" class="d-flex gap-2 align-items-end flex-wrap">
+        <div>
+            <label class="form-label small mb-1">Status</label>
+            <select name="status" class="form-select form-select-sm">
+                <option value="">All</option>
+                {% for val, lbl in status_choices %}<option value="{{ val }}" {% if request.GET.status == val %}selected{% endif %}>{{ lbl }}</option>{% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="form-label small mb-1">Project</label>
+            <select name="project" class="form-select form-select-sm">
+                <option value="">All</option>
+                {% for p in projects %}<option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.contract_no }}</option>{% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-sm btn-primary">Filter</button>
+        <a href="{% url 'hr:leave_list' %}" class="btn btn-sm btn-outline-secondary">Clear</a>
+    </form>
+</div></div>
+
+<div class="card"><div class="card-body p-0">
+    <table class="table table-hover table-sm mb-0">
+        <thead class="table-dark">
+            <tr><th>Employee</th><th>Type</th><th>Start</th><th>End</th><th>Days</th><th>Status</th><th>Submitted</th><th></th></tr>
+        </thead>
+        <tbody>
+        {% for leave in leaves %}
+        <tr>
+            <td><a href="{% url 'hr:leave_detail' leave.pk %}" class="text-decoration-none fw-semibold">{{ leave.employee.full_name }}</a></td>
+            <td class="small">{{ leave.get_leave_type_display }}</td>
+            <td class="small">{{ leave.start_date }}</td>
+            <td class="small">{{ leave.end_date }}</td>
+            <td>{{ leave.days }}</td>
+            <td><span class="badge bg-{{ leave.status_color }}">{{ leave.get_status_display }}</span></td>
+            <td class="small text-muted">{{ leave.submitted_at|date:"d M Y"|default:'—' }}</td>
+            <td><a href="{% url 'hr:leave_detail' leave.pk %}" class="btn btn-xs btn-outline-primary"><i class="fas fa-eye"></i></a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="text-center text-muted py-4">No leave requests found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div></div>
+{% include "includes/pagination.html" %}
+{% endblock %}

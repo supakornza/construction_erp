@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Overtime – HR{% endblock %}
+{% block page_title %}Overtime Requests{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0"><i class="fas fa-clock me-2 text-warning"></i>Overtime Requests</h4>
+    <a href="{% url 'hr:ot_create' %}" class="btn btn-warning"><i class="fas fa-plus me-1"></i>New OT Request</a>
+</div>
+
+<div class="card mb-3"><div class="card-body py-2">
+    <form method="get" class="d-flex gap-2 align-items-end flex-wrap">
+        <div>
+            <label class="form-label small mb-1">Status</label>
+            <select name="status" class="form-select form-select-sm">
+                <option value="">All</option>
+                {% for val, lbl in status_choices %}<option value="{{ val }}" {% if request.GET.status == val %}selected{% endif %}>{{ lbl }}</option>{% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="form-label small mb-1">Project</label>
+            <select name="project" class="form-select form-select-sm">
+                <option value="">All</option>
+                {% for p in projects %}<option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.contract_no }}</option>{% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-sm btn-primary">Filter</button>
+        <a href="{% url 'hr:ot_list' %}" class="btn btn-sm btn-outline-secondary">Clear</a>
+    </form>
+</div></div>
+
+<div class="card"><div class="card-body p-0">
+    <table class="table table-hover table-sm mb-0">
+        <thead class="table-dark">
+            <tr><th>Employee</th><th>Project</th><th>OT Date</th><th>Planned hrs</th><th>Actual hrs</th><th>Status</th><th>Reason</th><th></th></tr>
+        </thead>
+        <tbody>
+        {% for ot in ot_requests %}
+        <tr>
+            <td class="fw-semibold small">{{ ot.employee.full_name }}</td>
+            <td class="small text-muted">{{ ot.project.contract_no|default:'—' }}</td>
+            <td class="small">{{ ot.ot_date }}</td>
+            <td class="text-center">{{ ot.planned_hours }}</td>
+            <td class="text-center">{{ ot.actual_hours|default:'—' }}</td>
+            <td><span class="badge bg-{{ ot.status_color }}">{{ ot.get_status_display }}</span></td>
+            <td class="small text-muted">{{ ot.reason|truncatechars:40 }}</td>
+            <td>
+                {% if ot.status == 'Draft' and user.is_approver %}
+                <form method="post" action="{% url 'hr:ot_approve' ot.pk %}" class="d-inline">
+                    {% csrf_token %}
+                    <button class="btn btn-xs btn-success"><i class="fas fa-check"></i></button>
+                </form>
+                <form method="post" action="{% url 'hr:ot_reject' ot.pk %}" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="rejection_reason" value="Rejected">
+                    <button class="btn btn-xs btn-danger"><i class="fas fa-times"></i></button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="text-center text-muted py-4">No OT requests found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div></div>
+{% include "includes/pagination.html" %}
+{% endblock %}

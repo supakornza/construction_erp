@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Revetment Record {{ record.record_date|thai_be_date }}{% endblock %}
+{% block page_title %}Revetment Record - {{ record.record_date|thai_be_date }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <div class="d-flex align-items-center gap-2">
+    <a href="{% url 'project_controls:revetment_list' %}?project={{ record.project.pk }}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>
+    <h5 class="mb-0"><i class="fas fa-layer-group me-2 text-success" aria-hidden="true"></i>{{ record.record_date|thai_be_date }} {% if record.day_name %}({{ record.day_name }}){% endif %}</h5>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'project_controls:revetment_update' record.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit me-1" aria-hidden="true"></i>Edit</a>
+    <a href="{% url 'project_controls:revetment_dashboard' %}?project={{ record.project.pk }}" class="btn btn-sm btn-outline-success"><i class="fas fa-chart-line me-1" aria-hidden="true"></i>Dashboard</a>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="text-muted small">Project</div>
+        <div class="fw-semibold">{{ record.project.project_name }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="text-muted small">Items</div>
+        <div class="fs-4 fw-bold">{{ record.items.count|intcomma }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="text-muted small">Total Quantity</div>
+        <div class="fs-4 fw-bold">{{ record.total_quantity|floatformat:3|intcomma }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header fw-semibold">Daily Items</div>
+  <div class="table-responsive">
+    <table class="table table-sm table-hover mb-0 align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>SOP</th>
+          <th>Station</th>
+          <th>Group</th>
+          <th>Activity</th>
+          <th class="text-end">Qty</th>
+          <th>Unit</th>
+          <th>Status</th>
+          <th>Inspection Date</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in record.items.all %}
+        <tr>
+          <td>{{ item.station.sop|default:"-" }}</td>
+          <td class="fw-semibold">{{ item.station.station }}</td>
+          <td>{{ item.activity.group_name }}</td>
+          <td>{{ item.activity.name }}</td>
+          <td class="text-end">{% if item.quantity_done is not None %}{{ item.quantity_done|floatformat:3|intcomma }}{% else %}-{% endif %}</td>
+          <td>{{ item.activity.display_unit }}</td>
+          <td>{{ item.status|default:"-" }}</td>
+          <td>{% if item.inspection_date %}{{ item.inspection_date|thai_be_date }}{% else %}-{% endif %}</td>
+          <td>{{ item.remarks|default:"-" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="9" class="text-center text-muted py-3" role="status">No items recorded.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if record.remarks %}
+<div class="card">
+  <div class="card-header fw-semibold">Remarks</div>
+  <div class="card-body">{{ record.remarks|linebreaks }}</div>
+</div>
+{% endif %}
+{% endblock %}

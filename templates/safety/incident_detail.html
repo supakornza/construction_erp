@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Incident – Construction ERP{% endblock %}
+{% block page_title %}Incident Report{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'safety:incident_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="mb-0">{{ incident.get_type_display }} – {{ incident.incident_date|thai_be_date }}</h4>
+    <a href="{% url 'safety:incident_update' incident.pk %}" class="btn btn-sm btn-primary ms-auto">Edit</a>
+</div>
+<div class="card" style="max-width:700px;"><div class="card-body">
+    <dl class="row small mb-0">
+        <dt class="col-4">Project</dt><dd class="col-8">{{ incident.project.project_name }}</dd>
+        <dt class="col-4">Date/Time</dt><dd class="col-8">{{ incident.incident_date|thai_be_date }} {{ incident.incident_time|default:'' }}</dd>
+        <dt class="col-4">Location</dt><dd class="col-8">{{ incident.location }}</dd>
+        <dt class="col-4">Type</dt><dd class="col-8"><span class="badge bg-danger">{{ incident.get_type_display }}</span></dd>
+        <dt class="col-4">Injured Person</dt><dd class="col-8">{{ incident.injured_person|default:'-' }}</dd>
+        <dt class="col-4">Description</dt><dd class="col-8">{{ incident.description }}</dd>
+        <dt class="col-4">Root Cause</dt><dd class="col-8">{{ incident.root_cause|default:'-' }}</dd>
+        <dt class="col-4">Corrective Action</dt><dd class="col-8">{{ incident.corrective_action|default:'-' }}</dd>
+        <dt class="col-4">Reported By</dt><dd class="col-8">{{ incident.reported_by.get_full_name|default:'-' }}</dd>
+        <dt class="col-4">Status</dt><dd class="col-8"><span class="badge badge-{{ incident.status|lower }}">{{ incident.status }}</span></dd>
+    </dl>
+</div></div>
+{% endblock %}

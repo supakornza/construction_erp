@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Leave – {{ leave.employee.full_name }}{% endblock %}
+{% block page_title %}Leave Request{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'hr:leave_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="mb-0 me-3">Leave Request</h4>
+    <span class="badge bg-{{ leave.status_color }} fs-6">{{ leave.get_status_display }}</span>
+    <div class="ms-auto d-flex gap-2">
+        {% if leave.status == 'Submitted' and user.is_approver %}
+        <form method="post" action="{% url 'hr:leave_approve' leave.pk %}">
+            {% csrf_token %}
+            <button class="btn btn-sm btn-success"><i class="fas fa-check me-1"></i>Approve</button>
+        </form>
+        <a href="{% url 'hr:leave_reject' leave.pk %}" class="btn btn-sm btn-danger">
+            <i class="fas fa-times me-1"></i>Reject
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header"><h6 class="mb-0">Details</h6></div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-4">Employee</dt>
+                    <dd class="col-8 fw-semibold">{{ leave.employee.full_name }} ({{ leave.employee.employee_no }})</dd>
+                    <dt class="col-4">Leave Type</dt>
+                    <dd class="col-8">{{ leave.get_leave_type_display }}</dd>
+                    <dt class="col-4">Period</dt>
+                    <dd class="col-8">{{ leave.start_date }} – {{ leave.end_date }} <span class="badge bg-info">{{ leave.days }} days</span></dd>
+                    <dt class="col-4">Reason</dt>
+                    <dd class="col-8">{{ leave.reason }}</dd>
+                    <dt class="col-4">Submitted</dt>
+                    <dd class="col-8">{{ leave.submitted_at|date:"d M Y H:i"|default:'—' }}</dd>
+                    {% if leave.approved_by %}
+                    <dt class="col-4">Decided By</dt>
+                    <dd class="col-8">{{ leave.approved_by.get_full_name }} — {{ leave.decided_at|date:"d M Y H:i" }}</dd>
+                    {% endif %}
+                    {% if leave.rejection_reason %}
+                    <dt class="col-4">Rejection</dt>
+                    <dd class="col-8 text-danger">{{ leave.rejection_reason }}</dd>
+                    {% endif %}
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

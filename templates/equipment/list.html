@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Equipment – Construction ERP{% endblock %}
+{% block page_title %}Equipment{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0"><i class="fas fa-truck-monster me-2 text-primary"></i>Equipment</h4>
+    <div class="d-flex gap-2">
+        <a href="{% url 'equipment:record_list' %}" class="btn btn-outline-secondary">Daily Records</a>
+        <a href="{% url 'equipment:create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Add Equipment</a>
+    </div>
+</div>
+<div class="card"><div class="table-responsive">
+    <table class="table table-hover mb-0">
+        <thead class="table-light"><tr><th>Name</th><th>Category</th><th>Reg. No</th><th>Project</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+        {% for e in equipment_list %}
+        <tr>
+            <td><a href="{% url 'equipment:detail' e.pk %}">{{ e.name }}</a></td>
+            <td>{{ e.category }}</td>
+            <td>{{ e.registration_no|default:'-' }}</td>
+            <td>{{ e.project.contract_no|default:'-' }}</td>
+            <td><span class="badge bg-{% if e.status == 'Active' %}success{% elif e.status == 'Inactive' %}secondary{% else %}warning{% endif %}">{{ e.status }}</span></td>
+            <td>
+                <a href="{% url 'equipment:detail' e.pk %}" class="btn btn-sm btn-outline-secondary" title="Detail"><i class="fas fa-eye"></i></a>
+                <a href="{% url 'equipment:update' e.pk %}" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fas fa-edit"></i></a>
+                {% if request.user.is_superuser or request.user.role == 'admin' %}
+                <form method="post" action="{% url 'equipment:delete' e.pk %}" class="d-inline" onsubmit="return confirm('Delete equipment {{ e.name }}?')">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-center text-muted py-4">No equipment found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div></div>
+{% endblock %}

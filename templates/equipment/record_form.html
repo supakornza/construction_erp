@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Equipment Record – Construction ERP{% endblock %}
+{% block page_title %}Equipment Record{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'equipment:record_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="mb-0">{% if form.instance.pk %}Edit{% else %}Add{% endif %} Equipment Record</h4>
+</div>
+<div class="card" style="max-width:700px;"><div class="card-body">{% crispy form %}</div></div>
+{% endblock %}

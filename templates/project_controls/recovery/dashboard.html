@@ -1,0 +1,146 @@
+﻿{% extends "base.html" %}
+{% block title %}Recovery Dashboard โ€“ Construction ERP{% endblock %}
+{% block page_title %}Recovery Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h5 class="mb-0"><i class="fas fa-chart-line me-2 text-warning" aria-hidden="true"></i>Recovery Progress Dashboard</h5>
+  <div class="d-flex gap-2 flex-wrap">
+    <form method="get" class="d-flex gap-2">
+      <select name="project" class="form-select form-select-sm" style="min-width:200px" onchange="this.form.submit()">
+        <option value="">All Projects</option>
+        {% for p in projects %}
+        <option value="{{ p.pk }}" {% if selected_project and selected_project.pk == p.pk %}selected{% endif %}>{{ p.project_name }}</option>
+        {% endfor %}
+      </select>
+    </form>
+    <a href="{% url 'project_controls:recovery_plan_list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-calendar-check me-1" aria-hidden="true"></i>Plans</a>
+    <a href="{% url 'project_controls:rap_list' %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-tasks me-1" aria-hidden="true"></i>RAPs</a>
+  </div>
+</div>
+
+{# RAP Status KPIs #}
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card border-danger text-center">
+      <div class="card-body">
+        <div class="fs-1 fw-bold text-danger">{{ data.delayed }}</div>
+        <div class="text-muted small">Delayed Items</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-success text-center">
+      <div class="card-body">
+        <div class="fs-1 fw-bold text-success">{{ data.ahead }}</div>
+        <div class="text-muted small">Ahead of Schedule</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-primary text-center">
+      <div class="card-body">
+        <div class="fs-1 fw-bold text-primary">{{ data.on_track }}</div>
+        <div class="text-muted small">On Track</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <div class="fs-1 fw-bold">{{ data.overall_pct|floatformat:1|intcomma }}%</div>
+        <div class="text-muted small">Overall Completion</div>
+        <div class="progress mt-2" style="height:8px">
+          <div class="progress-bar bg-success" style="width:{{ data.overall_pct|floatformat:0 }}%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  {# Status Doughnut #}
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-header fw-semibold">RAP Item Status</div>
+      <div class="card-body d-flex align-items-center justify-content-center">
+        <canvas id="statusChart" width="260" height="260"></canvas>
+      </div>
+    </div>
+  </div>
+  {# Deviation Chart #}
+  <div class="col-md-8">
+    <div class="card h-100">
+      <div class="card-header fw-semibold">Plan vs Actual โ€“ Active Recovery Plan</div>
+      <div class="card-body">
+        {% if data.active_plan_chart %}
+        <canvas id="planChart" height="100"></canvas>
+        {% else %}
+        <div class="text-muted text-center py-4">No active recovery plan found.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{# Recent RAPs #}
+<div class="card mb-3">
+  <div class="card-header fw-semibold"><i class="fas fa-tasks me-2" aria-hidden="true"></i>Recent Recovery Action Plans</div>
+  <div class="table-responsive">
+    <table class="table table-sm mb-0">
+      <thead class="table-light">
+        <tr><th>Title</th><th>Period</th><th>Status</th><th class="text-end">% Complete</th></tr>
+      </thead>
+      <tbody>
+        {% for rap in data.recent_raps %}
+        <tr>
+          <td><a href="{% url 'project_controls:rap_detail' rap.pk %}">{{ rap.title }}</a></td>
+          <td>{{ rap.start_date|thai_be_date }} - {{ rap.end_date|thai_be_date }}</td>
+          <td>
+            {% if rap.status == 'Approved' %}<span class="badge bg-success">Approved</span>
+            {% elif rap.status == 'Submitted' %}<span class="badge bg-info">Submitted</span>
+            {% else %}<span class="badge bg-warning text-dark">{{ rap.status }}</span>{% endif %}
+          </td>
+          <td class="text-end">
+            <div class="progress" style="height:16px">
+              <div class="progress-bar bg-success" style="width:{{ rap.overall_completion|floatformat:0 }}%">{{ rap.overall_completion|floatformat:1 }}%</div>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-muted text-center py-3" role="status">No RAPs found</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+new Chart(document.getElementById('statusChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Delayed', 'On Track', 'Ahead'],
+    datasets: [{ data: [{{ data.delayed }}, {{ data.on_track }}, {{ data.ahead }}], backgroundColor: ['#dc3545','#0d6efd','#198754'] }]
+  },
+  options: { responsive: false, plugins: { legend: { position: 'bottom' } } }
+});
+
+{% if data.active_plan_chart %}
+const pc = {{ data.active_plan_chart|safe }};
+new Chart(document.getElementById('planChart'), {
+  type: 'bar',
+  data: {
+    labels: pc.labels,
+    datasets: [
+      { label: 'Plan (T)', data: pc.plan, backgroundColor: 'rgba(13,110,253,0.5)' },
+      { label: 'Actual (T)', data: pc.actual, backgroundColor: 'rgba(25,135,84,0.7)' }
+    ]
+  },
+  options: { responsive: true, plugins: { legend: { position: 'top' } } }
+});
+{% endif %}
+</script>
+{% endblock %}

@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+{% block title %}รายการรับวัสดุ – Construction ERP{% endblock %}
+{% block page_title %}รายการรับวัสดุ{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0"><i class="fas fa-truck me-2 text-primary" aria-hidden="true"></i>รายการรับวัสดุ</h4>
+  <div class="d-flex flex-wrap justify-content-end gap-2">
+    <a href="{% url 'materials:dashboard' %}" class="btn btn-outline-secondary" style="min-height:44px">
+      <i class="fas fa-arrow-left me-1" aria-hidden="true"></i>ย้อนกลับ Dashboard
+    </a>
+    <a href="{% url 'materials:delivery_export_excel' %}{% if filter_params %}?{{ filter_params }}{% endif %}" class="btn btn-outline-success" style="min-height:44px">
+      <i class="fas fa-file-excel me-1" aria-hidden="true"></i>Excel
+    </a>
+    <a href="{% url 'materials:delivery_export_pdf' %}{% if filter_params %}?{{ filter_params }}{% endif %}" class="btn btn-outline-danger" style="min-height:44px">
+      <i class="fas fa-file-pdf me-1" aria-hidden="true"></i>PDF A4
+    </a>
+    <a href="{% url 'materials:delivery_create' %}" class="btn btn-primary" style="min-height:44px"><i class="fas fa-plus me-1" aria-hidden="true"></i>บันทึกการรับวัสดุ</a>
+  </div>
+</div>
+
+<!-- Filter bar -->
+<div class="card mb-3">
+  <div class="card-body py-2">
+    <form method="get" class="row g-2 align-items-end">
+      <input type="hidden" name="view" value="{{ view_mode }}">
+      <input type="hidden" name="sort" value="{{ current_sort }}">
+      <div class="col-md-2 col-6">
+        <label class="form-label form-label-sm mb-1 text-body-secondary">โครงการ</label>
+        <select name="project" class="form-select form-select-sm">
+          <option value="">ทุกโครงการ</option>
+          {% for p in projects %}<option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.contract_no }} — {{ p.project_name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 col-6">
+        <label class="form-label form-label-sm mb-1 text-body-secondary">วัสดุ</label>
+        <select name="material" class="form-select form-select-sm">
+          <option value="">ทุกวัสดุ</option>
+          {% for m in materials %}<option value="{{ m.pk }}" {% if request.GET.material == m.pk|stringformat:"s" %}selected{% endif %}>{{ m.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 col-6">
+        <label class="form-label form-label-sm mb-1 text-body-secondary">วันที่ (จาก)</label>
+        <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="form-control form-control-sm">
+      </div>
+      <div class="col-md-2 col-6">
+        <label class="form-label form-label-sm mb-1 text-body-secondary">วันที่ (ถึง)</label>
+        <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control form-control-sm">
+      </div>
+      <div class="col-md-1 col-6">
+        <label class="form-label form-label-sm mb-1 text-body-secondary">แหล่งวัสดุ</label>
+        <input type="text" name="source" value="{{ request.GET.source }}" class="form-control form-control-sm" placeholder="ค้นหา...">
+      </div>
+      <div class="col-md-1 col-6">
+        <label class="form-label form-label-sm mb-1 text-body-secondary">ทะเบียนรถ</label>
+        <input type="text" name="truck_no" value="{{ request.GET.truck_no }}" class="form-control form-control-sm" placeholder="ค้นหา...">
+      </div>
+      <div class="col-md-1 col-6">
+        <label class="form-label form-label-sm mb-1 text-body-secondary">เลขที่ใบส่งของ</label>
+        <input type="text" name="dn" value="{{ request.GET.dn }}" class="form-control form-control-sm" placeholder="ค้นหา...">
+      </div>
+      <div class="col-md-2 col-12 d-flex gap-1">
+        <button class="btn btn-primary flex-grow-1" type="submit" style="min-height:44px"><i class="fas fa-search me-1" aria-hidden="true"></i>ค้นหา</button>
+        <a href="{% url 'materials:delivery_list' %}" class="btn btn-outline-secondary d-inline-flex align-items-center" style="min-height:44px">ล้าง</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Toolbar: view toggle + count -->
+<div class="d-flex justify-content-between align-items-center mb-2">
+  <div class="btn-group btn-group-sm" role="group" aria-label="เลือกมุมมองการแสดงผล">
+    <button type="button" onclick="setViewMode('table')"
+      aria-pressed="{% if view_mode == 'table' %}true{% else %}false{% endif %}"
+      class="btn {% if view_mode == 'table' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">
+      <i class="fas fa-table me-1" aria-hidden="true"></i>ตาราง
+    </button>
+    <button type="button" onclick="setViewMode('log')"
+      aria-pressed="{% if view_mode == 'log' %}true{% else %}false{% endif %}"
+      class="btn {% if view_mode == 'log' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">
+      <i class="fas fa-clipboard-list me-1" aria-hidden="true"></i>Log
+    </button>
+  </div>
+  <span class="text-muted small">
+    {{ page_obj.paginator.count|intcomma }} รายการ
+    {% if page_obj.paginator.num_pages > 1 %}&nbsp;·&nbsp; หน้า {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}{% endif %}
+  </span>
+</div>
+
+{% if view_mode == 'log' %}
+<!-- ===== LOG VIEW ===== -->
+<div class="card"><div class="table-responsive">
+  <table class="table table-sm table-hover mb-0" style="font-size:.83rem"
+    aria-label="รายการรับวัสดุ มุมมอง Log {% if is_paginated %}— หน้า {{ page_obj.number }} จาก {{ page_obj.paginator.num_pages }}{% endif %} (รวม {{ page_obj.paginator.count|intcomma }} รายการ)">
+    <thead class="table-dark">
+      <tr>
+        <th {% if current_sort == "date" %}aria-sort="ascending"{% elif current_sort == "-date" %}aria-sort="descending"{% else %}aria-sort="none"{% endif %}><button type="button" class="btn btn-link p-0 text-decoration-none text-reset fw-semibold border-0 align-baseline" onclick="dlSort('date', false)">วันที่/เวลา
+          {% if current_sort == 'date' %}<i class="fas fa-sort-up ms-1" aria-hidden="true"></i>{% elif current_sort == '-date' %}<i class="fas fa-sort-down ms-1" aria-hidden="true"></i>{% else %}<i class="fas fa-sort ms-1" style="opacity:.4" aria-hidden="true"></i>{% endif %}</button></th>
+        <th {% if current_sort == "project" %}aria-sort="ascending"{% elif current_sort == "-project" %}aria-sort="descending"{% else %}aria-sort="none"{% endif %}><button type="button" class="btn btn-link p-0 text-decoration-none text-reset fw-semibold border-0 align-baseline" onclick="dlSort('project', true)">โครงการ
+          {% if current_sort == 'project' %}<i class="fas fa-sort-up ms-1" aria-hidden="true"></i>{% elif current_sort == '-project' %}<i class="fas fa-sort-down ms-1" aria-hidden="true"></i>{% else %}<i class="fas fa-sort ms-1" style="opacity:.4" aria-hidden="true"></i>{% endif %}</button></th>
+        <th {% if current_sort == "material" %}aria-sort="ascending"{% elif current_sort == "-material" %}aria-sort="descending"{% else %}aria-sort="none"{% endif %}><button type="button" class="btn btn-link p-0 text-decoration-none text-reset fw-semibold border-0 align-baseline" onclick="dlSort('material', true)">วัสดุ
+          {% if current_sort == 'material' %}<i class="fas fa-sort-up ms-1" aria-hidden="true"></i>{% elif current_sort == '-material' %}<i class="fas fa-sort-down ms-1" aria-hidden="true"></i>{% else %}<i class="fas fa-sort ms-1" style="opacity:.4" aria-hidden="true"></i>{% endif %}</button></th>
+        <th {% if current_sort == "source" %}aria-sort="ascending"{% elif current_sort == "-source" %}aria-sort="descending"{% else %}aria-sort="none"{% endif %}><button type="button" class="btn btn-link p-0 text-decoration-none text-reset fw-semibold border-0 align-baseline" onclick="dlSort('source', true)">แหล่งวัสดุ
+          {% if current_sort == 'source' %}<i class="fas fa-sort-up ms-1" aria-hidden="true"></i>{% elif current_sort == '-source' %}<i class="fas fa-sort-down ms-1" aria-hidden="true"></i>{% else %}<i class="fas fa-sort ms-1" style="opacity:.4" aria-hidden="true"></i>{% endif %}</button></th>
+        <th {% if current_sort == "truck" %}aria-sort="ascending"{% elif current_sort == "-truck" %}aria-sort="descending"{% else %}aria-sort="none"{% endif %}><button type="button" class="btn btn-link p-0 text-decoration-none text-reset fw-semibold border-0 align-baseline" onclick="dlSort('truck', true)">ทะเบียนรถ
+          {% if current_sort == 'truck' %}<i class="fas fa-sort-up ms-1" aria-hidden="true"></i>{% elif current_sort == '-truck' %}<i class="fas fa-sort-down ms-1" aria-hidden="true"></i>{% else %}<i class="fas fa-sort ms-1" style="opacity:.4" aria-hidden="true"></i>{% endif %}</button></th>
+        <th {% if current_sort == "dn" %}aria-sort="ascending"{% elif current_sort == "-dn" %}aria-sort="descending"{% else %}aria-sort="none"{% endif %}><button type="button" class="btn btn-link p-0 text-decoration-none text-reset fw-semibold border-0 align-baseline" onclick="dlSort('dn', true)">เลขที่ใบส่งของ
+          {% if current_sort == 'dn' %}<i class="fas fa-sort-up ms-1" aria-hidden="true"></i>{% elif current_sort == '-dn' %}<i class="fas fa-sort-down ms-1" aria-hidden="true"></i>{% else %}<i class="fas fa-sort ms-1" style="opacity:.4" aria-hidden="true"></i>{% endif %}</button></th>
+        <th class="text-end" {% if current_sort == "qty" %}aria-sort="ascending"{% elif current_sort == "-qty" %}aria-sort="descending"{% else %}aria-sort="none"{% endif %}><button type="button" class="btn btn-link p-0 text-decoration-none text-reset fw-semibold border-0 align-baseline" onclick="dlSort('qty', false)">ปริมาณ
+          {% if current_sort == 'qty' %}<i class="fas fa-sort-up ms-1" aria-hidden="true"></i>{% elif current_sort == '-qty' %}<i class="fas fa-sort-down ms-1" aria-hidden="true"></i>{% else %}<i class="fas fa-sort ms-1" style="opacity:.4" aria-hidden="true"></i>{% endif %}</button></th>
+        <th class="text-end" {% if current_sort == "price" %}aria-sort="ascending"{% elif current_sort == "-price" %}aria-sort="descending"{% else %}aria-sort="none"{% endif %}><button type="button" class="btn btn-link p-0 text-decoration-none text-reset fw-semibold border-0 align-baseline" onclick="dlSort('price', false)">ราคา/หน่วย
+          {% if current_sort == 'price' %}<i class="fas fa-sort-up ms-1" aria-hidden="true"></i>{% elif current_sort == '-price' %}<i class="fas fa-sort-down ms-1" aria-hidden="true"></i>{% else %}<i class="fas fa-sort ms-1" style="opacity:.4" aria-hidden="true"></i>{% endif %}</button></th>
+        <th class="text-end">มูลค่า</th>
+        <th>หมายเหตุ</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for d in deliveries %}
+    <tr>
+      <td class="text-nowrap">
+        {{ d.delivery_date|thai_be_date }}
+        {% if d.delivery_time %}<br><span class="text-muted" style="font-size:.72rem"><i class="fas fa-clock me-1" aria-hidden="true"></i>{{ d.delivery_time|time:"H:i" }}</span>{% endif %}
+      </td>
+      <td class="text-nowrap">{{ d.project.contract_no }}</td>
+      <td>{{ d.material.name }}</td>
+      <td>
+        {{ d.source_area.name|default:"—" }}
+        {% if d.source %}<br><span class="text-muted" style="font-size:.72rem">{{ d.source }}</span>{% endif %}
+      </td>
+      <td>{{ d.truck_no|default:"—" }}</td>
+      <td>
+        {{ d.delivery_note_no|default:"—" }}
+        {% if d.delivery_note_no and d.project_id|stringformat:"s"|add:"|"|add:d.delivery_note_no in duplicate_dns_keys %}<span class="badge bg-warning text-dark ms-1" title="เลขที่ใบส่งของซ้ำในโครงการนี้">ซ้ำ<span class="visually-hidden">: เลขที่ใบส่งของนี้ถูกใช้ในรายการอื่นของโครงการเดียวกันแล้ว ตรวจสอบก่อน</span></span>{% endif %}
+        {% if d.delivery_image %} <a href="{{ d.delivery_image.url }}" target="_blank" rel="noopener" aria-label="ดูรูปตั๋วใบส่งของ (เปิดในแท็บใหม่)" class="ms-1 d-inline-flex align-items-center"><i class="fas fa-image text-success" aria-hidden="true"></i></a>{% endif %}
+      </td>
+      <td class="text-end text-nowrap fw-semibold">{{ d.quantity|floatformat:3|intcomma }} <span class="text-muted fw-normal">{{ d.material.unit }}</span></td>
+      <td class="text-end">{{ d.unit_price|default:"—" }}</td>
+      <td class="text-end">{% if d.total_amount %}{{ d.total_amount|floatformat:2|intcomma }}{% else %}—{% endif %}</td>
+      <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" class="text-body-secondary" title="{{ d.remarks|default:'' }}">{{ d.remarks|default:"" }}</td>
+      <td class="text-nowrap">
+        <a href="{% url 'materials:delivery_update' d.pk %}"
+           class="btn btn-sm btn-outline-primary d-inline-flex align-items-center justify-content-center"
+           style="min-width:32px;min-height:32px"
+           aria-label="แก้ไขรายการรับวัสดุของ {{ d.material.name }} วันที่ {{ d.delivery_date|thai_be_date }}">
+          <i class="fas fa-edit" aria-hidden="true"></i>
+        </a>
+        {% if request.user.is_superuser or request.user.role == 'admin' %}
+        <form method="post" action="{% url 'materials:delivery_delete' d.pk %}" class="d-inline" onsubmit="return confirm('ลบรายการนี้?')">
+          {% csrf_token %}<button type="submit"
+            class="btn btn-sm btn-outline-danger d-inline-flex align-items-center justify-content-center"
+            style="min-width:32px;min-height:32px"
+            aria-label="ลบรายการรับวัสดุของ {{ d.material.name }} วันที่ {{ d.delivery_date|thai_be_date }}">
+            <i class="fas fa-trash" aria-hidden="true"></i>
+          </button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="11" class="text-center text-body-secondary py-5" role="status">ไม่มีข้อมูลที่ตรงกับเงื่อนไข</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div></div>
+
+{% else %}
+<!-- ===== TABLE VIEW ===== -->
+<div class="card"><div class="table-responsive">
+  <table class="table table-hover mb-0"
+    aria-label="รายการรับวัสดุ มุมมองตาราง {% if is_paginated %}— หน้า {{ page_obj.number }} จาก {{ page_obj.paginator.num_pages }}{% endif %} (รวม {{ page_obj.paginator.count|intcomma }} รายการ)">
+    <thead class="table-light">
+      <tr>
+        <th {% if current_sort == "date" %}aria-sort="ascending"{% elif current_sort == "-date" %}aria-sort="descending"{% else %}aria-sort="none"{% endif %}><button type="button" class="btn btn-link p-0 text-decoration-none text-reset fw-semibold border-0 align-baseline" onclick="dlSort('date', false)">วันที่
+          {% if current_sort == 'date' %}<i class="fas fa-sort-up text-primary ms-1" aria-hidden="true"></i>{% elif current_sort == '-date' %}<i class="fas fa-sort-down text-primary ms-1" aria-hidden="true"></i>{% else %}<i class="fas fa-sort text-muted ms-1" style="opacity:.4" aria-hidden="true"></i>{% endif %}</button></th>
+        <th {% if current_sort == "project" %}aria-sort="ascending"{% elif current_sort == "-project" %}aria-sort="descending"{% else %}aria-sort="none"{% endif %}><button type="button" class="btn btn-link p-0 text-decoration-none text-reset fw-semibold border-0 align-baseline" onclick="dlSort('project', true)">โครงการ
+          {% if current_sort == 'project' %}<i class="fas fa-sort-up text-primary ms-1" aria-hidden="true"></i>{% elif current_sort == '-project' %}<i class="fas fa-sort-down text-primary ms-1" aria-hidden="true"></i>{% else %}<i class="fas fa-sort text-muted ms-1" style="opacity:.4" aria-hidden="true"></i>{% endif %}</button></th>
+        <th {% if current_sort == "material" %}aria-sort="ascending"{% elif current_sort == "-material" %}aria-sort="descending"{% else %}aria-sort="none"{% endif %}><button type="button" class="btn btn-link p-0 text-decoration-none text-reset fw-semibold border-0 align-baseline" onclick="dlSort('material', true)">วัสดุ
+          {% if current_sort == 'material' %}<i class="fas fa-sort-up text-primary ms-1" aria-hidden="true"></i>{% elif current_sort == '-material' %}<i class="fas fa-sort-down text-primary ms-1" aria-hidden="true"></i>{% else %}<i class="fas fa-sort text-muted ms-1" style="opacity:.4" aria-hidden="true"></i>{% endif %}</button></th>
+        <th {% if current_sort == "source" %}aria-sort="ascending"{% elif current_sort == "-source" %}aria-sort="descending"{% else %}aria-sort="none"{% endif %}><button type="button" class="btn btn-link p-0 text-decoration-none text-reset fw-semibold border-0 align-baseline" onclick="dlSort('source', true)">แหล่งวัสดุ
+          {% if current_sort == 'source' %}<i class="fas fa-sort-up text-primary ms-1" aria-hidden="true"></i>{% elif current_sort == '-source' %}<i class="fas fa-sort-down text-primary ms-1" aria-hidden="true"></i>{% else %}<i class="fas fa-sort text-muted ms-1" style="opacity:.4" aria-hidden="true"></i>{% endif %}</button></th>
+        <th {% if current_sort == "dn" %}aria-sort="ascending"{% elif current_sort == "-dn" %}aria-sort="descending"{% else %}aria-sort="none"{% endif %}><button type="button" class="btn btn-link p-0 text-decoration-none text-reset fw-semibold border-0 align-baseline" onclick="dlSort('dn', true)">เลขที่ใบส่งของ
+          {% if current_sort == 'dn' %}<i class="fas fa-sort-up text-primary ms-1" aria-hidden="true"></i>{% elif current_sort == '-dn' %}<i class="fas fa-sort-down text-primary ms-1" aria-hidden="true"></i>{% else %}<i class="fas fa-sort text-muted ms-1" style="opacity:.4" aria-hidden="true"></i>{% endif %}</button></th>
+        <th {% if current_sort == "truck" %}aria-sort="ascending"{% elif current_sort == "-truck" %}aria-sort="descending"{% else %}aria-sort="none"{% endif %}><button type="button" class="btn btn-link p-0 text-decoration-none text-reset fw-semibold border-0 align-baseline" onclick="dlSort('truck', true)">ทะเบียนรถ
+          {% if current_sort == 'truck' %}<i class="fas fa-sort-up text-primary ms-1" aria-hidden="true"></i>{% elif current_sort == '-truck' %}<i class="fas fa-sort-down text-primary ms-1" aria-hidden="true"></i>{% else %}<i class="fas fa-sort text-muted ms-1" style="opacity:.4" aria-hidden="true"></i>{% endif %}</button></th>
+        <th class="text-end" {% if current_sort == "qty" %}aria-sort="ascending"{% elif current_sort == "-qty" %}aria-sort="descending"{% else %}aria-sort="none"{% endif %}><button type="button" class="btn btn-link p-0 text-decoration-none text-reset fw-semibold border-0 align-baseline" onclick="dlSort('qty', false)">ปริมาณ
+          {% if current_sort == 'qty' %}<i class="fas fa-sort-up text-primary ms-1" aria-hidden="true"></i>{% elif current_sort == '-qty' %}<i class="fas fa-sort-down text-primary ms-1" aria-hidden="true"></i>{% else %}<i class="fas fa-sort text-muted ms-1" style="opacity:.4" aria-hidden="true"></i>{% endif %}</button></th>
+        <th class="text-end" {% if current_sort == "price" %}aria-sort="ascending"{% elif current_sort == "-price" %}aria-sort="descending"{% else %}aria-sort="none"{% endif %}><button type="button" class="btn btn-link p-0 text-decoration-none text-reset fw-semibold border-0 align-baseline" onclick="dlSort('price', false)">ราคา/หน่วย
+          {% if current_sort == 'price' %}<i class="fas fa-sort-up text-primary ms-1" aria-hidden="true"></i>{% elif current_sort == '-price' %}<i class="fas fa-sort-down text-primary ms-1" aria-hidden="true"></i>{% else %}<i class="fas fa-sort text-muted ms-1" style="opacity:.4" aria-hidden="true"></i>{% endif %}</button></th>
+        <th class="text-end">มูลค่า</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for d in deliveries %}
+    <tr>
+      <td class="text-nowrap">
+        {{ d.delivery_date|thai_be_date }}
+        {% if d.delivery_time %}<br><span class="text-muted small"><i class="fas fa-clock me-1" aria-hidden="true"></i>{{ d.delivery_time|time:"H:i" }}</span>{% endif %}
+      </td>
+      <td>{{ d.project.contract_no }}</td>
+      <td>{{ d.material.name }}</td>
+      <td>
+        {{ d.source_area.name|default:'-' }}
+        {% if d.source %}<br><span class="text-muted small">{{ d.source }}</span>{% endif %}
+      </td>
+      <td>
+        {{ d.delivery_note_no|default:'-' }}
+        {% if d.delivery_note_no and d.project_id|stringformat:"s"|add:"|"|add:d.delivery_note_no in duplicate_dns_keys %}<span class="badge bg-warning text-dark ms-1" title="เลขที่ใบส่งของซ้ำในโครงการนี้">ซ้ำ<span class="visually-hidden">: เลขที่ใบส่งของนี้ถูกใช้ในรายการอื่นของโครงการเดียวกันแล้ว ตรวจสอบก่อน</span></span>{% endif %}
+        {% if d.delivery_image %} <a href="{{ d.delivery_image.url }}" target="_blank" rel="noopener" aria-label="ดูรูปตั๋วใบส่งของ (เปิดในแท็บใหม่)" class="ms-1 d-inline-flex align-items-center"><i class="fas fa-image text-success" aria-hidden="true"></i></a>{% endif %}
+      </td>
+      <td>{{ d.truck_no|default:'-' }}</td>
+      <td class="text-end fw-semibold">{{ d.quantity|floatformat:3|intcomma }} {{ d.material.unit }}</td>
+      <td class="text-end">{{ d.unit_price|default:'-' }}</td>
+      <td class="text-end">{% if d.total_amount %}{{ d.total_amount|floatformat:2|intcomma }}{% else %}-{% endif %}</td>
+      <td class="text-nowrap">
+        <a href="{% url 'materials:delivery_update' d.pk %}"
+           class="btn btn-outline-primary d-inline-flex align-items-center justify-content-center"
+           style="min-width:44px;min-height:44px"
+           aria-label="แก้ไขรายการรับวัสดุของ {{ d.material.name }} วันที่ {{ d.delivery_date|thai_be_date }}">
+          <i class="fas fa-edit" aria-hidden="true"></i>
+        </a>
+        {% if request.user.is_superuser or request.user.role == 'admin' %}
+        <form method="post" action="{% url 'materials:delivery_delete' d.pk %}" class="d-inline" onsubmit="return confirm('ลบรายการนี้?')">
+          {% csrf_token %}<button type="submit"
+            class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center"
+            style="min-width:44px;min-height:44px"
+            aria-label="ลบรายการรับวัสดุของ {{ d.material.name }} วันที่ {{ d.delivery_date|thai_be_date }}">
+            <i class="fas fa-trash" aria-hidden="true"></i>
+          </button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="10" class="text-center text-body-secondary py-5" role="status">ไม่มีข้อมูลที่ตรงกับเงื่อนไข</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div></div>
+{% endif %}
+
+<!-- Pagination -->
+{% if is_paginated %}
+{% comment %} Pagination a11y (group 3):
+   - nav has Thai aria-label (was English "pagination")
+   - prev/next links carry aria-label so SR doesn't read raw chevron glyph
+   - chevron glyphs marked aria-hidden (decorative)
+   - disabled state uses aria-disabled="true" so SR + ATs know it's unclickable
+   - active page uses aria-current="page" (recommended pattern for paginators) {% endcomment %}
+<nav class="mt-3 d-flex justify-content-center" aria-label="หน้า">
+  <ul class="pagination pagination-sm">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="?{{ filter_params }}&page={{ page_obj.previous_page_number }}" aria-label="หน้าก่อนหน้า"><span aria-hidden="true">&lsaquo;</span></a></li>
+    {% else %}
+    <li class="page-item disabled"><span class="page-link" aria-disabled="true" aria-label="หน้าก่อนหน้า (หน้าแรกอยู่แล้ว)"><span aria-hidden="true">&lsaquo;</span></span></li>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+      <li class="page-item active"><span class="page-link" aria-current="page" aria-label="หน้า {{ num }} (หน้าปัจจุบัน)">{{ num }}</span></li>
+      {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+      <li class="page-item"><a class="page-link" href="?{{ filter_params }}&page={{ num }}" aria-label="หน้า {{ num }}">{{ num }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="?{{ filter_params }}&page={{ page_obj.next_page_number }}" aria-label="หน้าถัดไป"><span aria-hidden="true">&rsaquo;</span></a></li>
+    {% else %}
+    <li class="page-item disabled"><span class="page-link" aria-disabled="true" aria-label="หน้าถัดไป (หน้าสุดท้ายอยู่แล้ว)"><span aria-hidden="true">&rsaquo;</span></span></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function dlSort(col, defaultAsc) {
+  const url = new URL(window.location.href);
+  const cur = url.searchParams.get('sort') || '';
+  let next;
+  if (cur === col) { next = '-' + col; }
+  else if (cur === '-' + col) { next = col; }
+  else { next = defaultAsc ? col : '-' + col; }
+  url.searchParams.set('sort', next);
+  url.searchParams.delete('page');
+  window.location.href = url.toString();
+}
+
+function setViewMode(mode) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('view', mode);
+  window.location.href = url.toString();
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% load humanize project_control_tags %}
+{% block title %}Project Action Register - Construction ERP{% endblock %}
+{% block page_title %}Project Action Register{% endblock %}
+
+{% block extra_head %}
+<style>
+  .action-register-table th {
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  .action-register-table td {
+    border-left: 1px solid #eef1f4;
+    font-size: 0.82rem;
+    vertical-align: middle;
+  }
+  .action-id-cell {
+    border-left: 4px solid #d9d9d9 !important;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .party-chip,
+  .register-chip {
+    border-radius: 999px;
+    display: inline-flex;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+    margin: 0.1rem 0.15rem 0.1rem 0;
+    padding: 0.42rem 0.65rem;
+    white-space: nowrap;
+  }
+  .party-chip { background: #4f6bed; color: #fff; }
+  .party-chip:nth-child(2n) { background: #d94b0b; }
+  .party-chip:nth-child(3n) { background: #cfe8ff; color: #005ea8; }
+  .chip-high { background: #ffd6dc; color: #b4232d; }
+  .chip-medium { background: #d6ebff; color: #005ea8; }
+  .chip-low { background: #e7eaee; color: #495057; }
+  .chip-critical { background: #f8b4bd; color: #842029; }
+  .chip-finish { background: #cef1d2; color: #198754; }
+  .chip-open { background: #ffe8b8; color: #996200; }
+  .chip-progress { background: #d6ebff; color: #005ea8; }
+  .chip-pending { background: #e7eaee; color: #495057; }
+  .chip-technical { background: #d6ebff; color: #005ea8; }
+  .chip-documentation { background: #cef1d2; color: #198754; }
+  .chip-regulatory { background: #ffe4b8; color: #996200; }
+  .chip-safety { background: #ffd6dc; color: #b4232d; }
+  .chip-site { background: #ffd6dc; color: #b4232d; }
+  .chip-security { background: #c9f5f2; color: #087f7a; }
+  .chip-coordination { background: #ffd7d2; color: #b42318; }
+  .chip-commercial { background: #c9f5f2; color: #087f7a; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <div>
+    <h4 class="mb-1"><i class="fas fa-clipboard-check me-2 text-primary" aria-hidden="true"></i>Project Action Register</h4>
+    <div class="text-muted small">Flat register for meeting actions, issues, and project follow-up items</div>
+  </div>
+  <a href="{% url 'project_controls:project_action_plan_create' %}{% if request.GET.project %}?project={{ request.GET.project }}{% endif %}" class="btn btn-primary">
+    <i class="fas fa-plus me-1" aria-hidden="true"></i> New Action
+  </a>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-4">
+    <div class="card border-start border-4 border-primary h-100">
+      <div class="card-body py-3">
+        <div class="text-muted small">Open / Active</div>
+        <div class="fs-3 fw-bold">{{ open_count|intcomma }} actions</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-start border-4 border-danger h-100">
+      <div class="card-body py-3">
+        <div class="text-muted small">Overdue</div>
+        <div class="fs-3 fw-bold text-danger">{{ overdue_count|intcomma }} actions</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-start border-4 border-success h-100">
+      <div class="card-body py-3">
+        <div class="text-muted small">Finish / Cancelled</div>
+        <div class="fs-3 fw-bold text-success">{{ closed_count|intcomma }} actions</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mb-3">
+  <div class="card-body">
+    <form method="get" class="row g-2 align-items-end">
+      <div class="col-md-3">
+        <label class="form-label small text-muted">Project</label>
+        <select name="project" class="form-select form-select-sm">
+          <option value="">All projects</option>
+          {% for project in projects %}
+          <option value="{{ project.pk }}" {% if request.GET.project == project.pk|stringformat:"s" %}selected{% endif %}>{{ project.project_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label small text-muted">Status</label>
+        <select name="status" class="form-select form-select-sm">
+          <option value="">All</option>
+          {% for value, label in status_choices %}
+          <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label small text-muted">Priority</label>
+        <select name="priority" class="form-select form-select-sm">
+          <option value="">All</option>
+          {% for value, label in priority_choices %}
+          <option value="{{ value }}" {% if request.GET.priority == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label small text-muted">Category</label>
+        <select name="category" class="form-select form-select-sm">
+          <option value="">All</option>
+          {% for value, label in category_choices %}
+          <option value="{{ value }}" {% if request.GET.category == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label small text-muted">Search</label>
+        <input type="search" name="q" value="{{ request.GET.q }}" class="form-control form-control-sm" placeholder="ACT, description, remarks">
+      </div>
+      <div class="col-md-1 d-grid">
+        <button class="btn btn-sm btn-outline-primary" type="submit"><i class="fas fa-filter" aria-hidden="true"></i></button>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small text-muted">Responsible Party</label>
+        <input type="search" name="responsible" value="{{ request.GET.responsible }}" class="form-control form-control-sm" placeholder="PMC, ITD">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small text-muted">Meeting Reference</label>
+        <input type="search" name="meeting_reference" value="{{ request.GET.meeting_reference }}" class="form-control form-control-sm" placeholder="Weekly #2">
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover action-register-table align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Action ID</th>
+          <th>Date Raised <i class="fas fa-info-circle text-muted" aria-hidden="true"></i></th>
+          <th>Description (TH)</th>
+          <th>Responsible Party</th>
+          <th>Due Date <i class="fas fa-info-circle text-muted" aria-hidden="true"></i></th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th>Category</th>
+          <th>Meeting Reference</th>
+          <th>Remarks</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for plan in plans %}
+        <tr class="{% if plan.is_overdue %}table-danger{% endif %}">
+          <td class="action-id-cell">
+            <a href="{% url 'project_controls:project_action_plan_detail' plan.pk %}" class="text-decoration-none">{{ plan.action_id }}</a>
+          </td>
+          <td>{{ plan.date_raised|thai_be_date }}</td>
+          <td style="min-width: 340px;">{{ plan.description_th|default:"-" }}</td>
+          <td style="min-width: 150px;">
+            {% for party in plan.responsible_parties|split_parties %}
+            <span class="party-chip">{{ party }}</span>
+            {% empty %}-{% endfor %}
+          </td>
+          <td class="{% if plan.is_overdue %}fw-semibold text-danger{% endif %}">{{ plan.due_date|thai_be_date }}</td>
+          <td>
+            <span class="register-chip {% if plan.priority == 'High' %}chip-high{% elif plan.priority == 'Medium' %}chip-medium{% elif plan.priority == 'Critical' %}chip-critical{% else %}chip-low{% endif %}">{{ plan.priority }}</span>
+          </td>
+          <td>
+            <span class="register-chip {% if plan.status == 'Finish' %}chip-finish{% elif plan.status == 'In Progress' %}chip-progress{% elif plan.status == 'Pending' %}chip-pending{% else %}chip-open{% endif %}">{{ plan.status }}</span>
+          </td>
+          <td>
+            <span class="register-chip {% if plan.category == 'Technical' %}chip-technical{% elif plan.category == 'Documentation' %}chip-documentation{% elif plan.category == 'Regulatory' %}chip-regulatory{% elif plan.category == 'Safety' %}chip-safety{% elif plan.category == 'Site Management' %}chip-site{% elif plan.category == 'Security' %}chip-security{% elif plan.category == 'Coordination' %}chip-coordination{% elif plan.category == 'Commercial' %}chip-commercial{% else %}chip-pending{% endif %}">{{ plan.category }}</span>
+          </td>
+          <td>{{ plan.meeting_reference|default:"-" }}</td>
+          <td style="min-width: 260px;">{{ plan.remarks|default:"-" }}</td>
+          <td class="text-end">
+            <a href="{% url 'project_controls:project_action_plan_update' plan.pk %}" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fas fa-edit" aria-hidden="true"></i></a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="11" class="text-center py-5 text-muted" role="status">No project action records found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

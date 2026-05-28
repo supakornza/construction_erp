@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% if form.instance.pk %}Edit{% else %}New{% endif %} Revetment Record{% endblock %}
+{% block page_title %}{% if form.instance.pk %}Edit Revetment Record{% else %}New Revetment Daily Entry{% endif %}{% endblock %}
+
+{% block content %}
+<div class="pc-page-header">
+  <div class="d-flex align-items-center gap-2 min-w-0">
+    <a href="{% url 'project_controls:revetment_list' %}{% if selected_project %}?project={{ selected_project.pk }}{% endif %}" class="btn btn-sm btn-outline-secondary flex-shrink-0" title="Back"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>
+    <h5 class="pc-page-title"><i class="fas fa-layer-group me-2 text-success" aria-hidden="true"></i>{% if form.instance.pk %}Edit Revetment Record{% else %}New Revetment Daily Entry{% endif %}</h5>
+  </div>
+</div>
+
+<form method="post" novalidate>
+  {% csrf_token %}
+  <div class="card mb-3">
+    <div class="card-header fw-semibold">Record Details</div>
+    <div class="card-body">
+      {{ form.non_field_errors }}
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Project</label>
+          {{ form.project }}
+          {{ form.project.errors }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Record date</label>
+          {{ form.record_date }}
+          {{ form.record_date.errors }}
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Day name</label>
+          {{ form.day_name }}
+          {{ form.day_name.errors }}
+        </div>
+        <div class="col-md-12">
+          <label class="form-label">Remarks</label>
+          {{ form.remarks }}
+          {{ form.remarks.errors }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span class="fw-semibold"><i class="fas fa-tasks me-2" aria-hidden="true"></i>Daily Items</span>
+      <button type="button" id="add-item-row" class="btn btn-sm btn-outline-success"><i class="fas fa-plus me-1" aria-hidden="true"></i>Add Row</button>
+    </div>
+    <div class="table-responsive">
+      {{ item_formset.management_form }}
+      {{ item_formset.non_form_errors }}
+      <table class="table table-sm align-middle mb-0 pc-form-table" id="item-formset-table">
+        <thead class="table-light">
+          <tr>
+            <th style="min-width:150px">Station</th>
+            <th style="min-width:220px">Activity</th>
+            <th style="width:130px">Qty Done</th>
+            <th style="width:130px">Status</th>
+            <th style="width:150px">Inspection Date</th>
+            <th style="min-width:220px">Remarks</th>
+            <th>Del</th>
+          </tr>
+        </thead>
+        <tbody id="item-formset-body">
+          {% for item_form in item_formset %}
+          <tr class="formset-row item-form-row">
+            <td>{{ item_form.id }}{{ item_form.station }}{{ item_form.station.errors }}</td>
+            <td>{{ item_form.activity }}{{ item_form.activity.errors }}</td>
+            <td>{{ item_form.quantity_done }}{{ item_form.quantity_done.errors }}</td>
+            <td>{{ item_form.status }}{{ item_form.status.errors }}</td>
+            <td>{{ item_form.inspection_date }}{{ item_form.inspection_date.errors }}</td>
+            <td>{{ item_form.remarks }}{{ item_form.remarks.errors }}</td>
+            <td class="text-center">
+              <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
+              {{ item_form.DELETE }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <template id="empty-item-row">
+    <tr class="formset-row item-form-row">
+      <td>{{ item_formset.empty_form.id }}{{ item_formset.empty_form.station }}</td>
+      <td>{{ item_formset.empty_form.activity }}</td>
+      <td>{{ item_formset.empty_form.quantity_done }}</td>
+      <td>{{ item_formset.empty_form.status }}</td>
+      <td>{{ item_formset.empty_form.inspection_date }}</td>
+      <td>{{ item_formset.empty_form.remarks }}</td>
+      <td class="text-center">
+        <button type="button" class="btn btn-sm btn-outline-danger formset-delete-btn" title="Delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
+        {{ item_formset.empty_form.DELETE }}
+      </td>
+    </tr>
+  </template>
+
+  <div class="pc-form-actions">
+    <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-save me-2" aria-hidden="true"></i>Save Record</button>
+    <a href="{% url 'project_controls:revetment_list' %}{% if selected_project %}?project={{ selected_project.pk }}{% endif %}" class="btn btn-outline-secondary btn-lg">Cancel</a>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+{% include "project_controls/includes/day_name_sync.html" %}
+<script src="{% static 'js/project_controls/formsets.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  ProjectControlsFormsets.applyBootstrapClasses(document);
+  ProjectControlsDayName.bindById('id_record_date', 'id_day_name');
+  ProjectControlsFormsets.bindAddButton({
+    buttonId: 'add-item-row',
+    tbodyId: 'item-formset-body',
+    templateId: 'empty-item-row',
+    prefix: 'items',
+  });
+});
+</script>
+{% endblock %}

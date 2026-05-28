@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}ยืนยันการลบรายการรับวัสดุ – Construction ERP{% endblock %}
+{% block page_title %}ยืนยันการลบ{% endblock %}
+{% block content %}
+{% comment %} Confirmation prompt as an inline ARIA alertdialog (not a modal — full-page
+  confirm). `role="alertdialog"` tells SR users this is a decision they need
+  to make; `aria-labelledby`/`aria-describedby` give the heading + body as
+  the dialog's accessible name + description. Cancel autofocuses to make
+  the safe option the default for keyboard users. {% endcomment %}
+<section role="alertdialog"
+         aria-labelledby="del-title"
+         aria-describedby="del-desc"
+         class="card border-danger mx-auto"
+         style="max-width:480px;margin-top:2rem;">
+    <div class="card-body">
+        <h2 id="del-title" class="h5 text-danger">
+            <i class="fas fa-exclamation-triangle me-2" aria-hidden="true"></i>ยืนยันการลบรายการรับวัสดุ
+        </h2>
+        <div id="del-desc" class="mt-3">
+            <p class="mb-2">ยืนยันการลบรายการนี้?</p>
+            <ul class="mb-3 small">
+                <li>วัสดุ: <strong>{{ object.material.name }}</strong></li>
+                <li>ปริมาณ: <strong>{{ object.quantity|floatformat:3|intcomma }} {{ object.material.unit }}</strong></li>
+                <li>วันที่: <strong>{{ object.delivery_date|thai_be_date }}</strong></li>
+                {% if object.delivery_note_no %}<li>เลขที่ใบส่งของ: <strong>{{ object.delivery_note_no }}</strong></li>{% endif %}
+                {% if object.truck_no %}<li>ทะเบียนรถ: <strong>{{ object.truck_no }}</strong></li>{% endif %}
+            </ul>
+            <p class="small text-body-secondary">การลบนี้ไม่สามารถกู้คืนได้</p>
+        </div>
+        <form method="post" class="d-flex gap-2">{% csrf_token %}
+            {% comment %} Cancel first → keyboard Tab lands on the safer option first.
+               Delete carries a contextual aria-label so SR confirms what's
+               being deleted, not just "Delete". {% endcomment %}
+            <a href="{% url 'materials:delivery_list' %}"
+               class="btn btn-secondary"
+               id="cancelBtn" autofocus
+               style="min-height:44px">
+                ยกเลิก
+            </a>
+            <button type="submit" class="btn btn-danger" style="min-height:44px"
+                    aria-label="ยืนยันลบรายการรับวัสดุ {{ object.material.name }} ปริมาณ {{ object.quantity|floatformat:3 }} {{ object.material.unit }} วันที่ {{ object.delivery_date|thai_be_date }}">
+                <i class="fas fa-trash me-1" aria-hidden="true"></i>ลบรายการ
+            </button>
+        </form>
+    </div>
+</section>
+
+<script>
+// `autofocus` on an <a> is unreliable cross-browser; force focus to the
+// safer Cancel link so keyboard users start on the non-destructive choice.
+(function () {
+    const c = document.getElementById('cancelBtn');
+    if (c) c.focus({preventScroll: false});
+})();
+</script>
+{% endblock %}

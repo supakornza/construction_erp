@@ -1,0 +1,7 @@
+<div class="btn-group mb-3" role="group" aria-label="Quality navigation">
+    <a href="{% url 'quality:dashboard' %}" class="btn btn-outline-secondary {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Overview</a>
+    <a href="{% url 'quality:inspection_list' %}" class="btn btn-outline-secondary {% if 'inspection' in request.resolver_match.url_name %}active{% endif %}">Inspections</a>
+    <a href="{% url 'quality:ncr_list' %}" class="btn btn-outline-secondary {% if 'ncr' in request.resolver_match.url_name %}active{% endif %}">NCR</a>
+    <a href="{% url 'quality:punch_list' %}" class="btn btn-outline-secondary {% if 'punch' in request.resolver_match.url_name %}active{% endif %}">Punch List</a>
+    <a href="{% url 'quality:checkpoint_list' %}" class="btn btn-outline-secondary {% if 'checkpoint' in request.resolver_match.url_name %}active{% endif %}">Checkpoints</a>
+</div>

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{% if object %}Edit {{ object.full_name }}{% else %}Add Employee{% endif %} – HR{% endblock %}
+{% block page_title %}{% if object %}Edit Employee{% else %}Add Employee{% endif %}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'hr:employee_list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="mb-0">{% if object %}Edit {{ object.full_name }}{% else %}New Employee{% endif %}</h4>
+</div>
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">{% crispy form %}</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

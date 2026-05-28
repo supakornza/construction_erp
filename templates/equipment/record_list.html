@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Equipment Records – Construction ERP{% endblock %}
+{% block page_title %}Daily Equipment Records{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0"><i class="fas fa-truck-monster me-2 text-primary"></i>Equipment Daily Records</h4>
+    <a href="{% url 'equipment:record_create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Add Record</a>
+</div>
+<div class="card mb-3"><div class="card-body py-2">
+    <form method="get" class="d-flex gap-2">
+        <select name="project" class="form-select form-select-sm" style="width:auto;">
+            <option value="">All Projects</option>
+            {% for p in projects %}<option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.contract_no }}</option>{% endfor %}
+        </select>
+        <input type="date" name="date" value="{{ request.GET.date }}" class="form-control form-control-sm" style="width:auto;">
+        <button class="btn btn-sm btn-outline-secondary" type="submit">Filter</button>
+    </form>
+</div></div>
+<div class="card"><div class="table-responsive">
+    <table class="table table-hover mb-0">
+        <thead class="table-light"><tr><th>Date</th><th>Project</th><th>Equipment</th><th>Status</th><th>Hours</th><th>Actions</th></tr></thead>
+        <tbody>
+        {% for r in records %}
+        <tr>
+            <td>{{ r.report_date|thai_be_date }}</td>
+            <td>{{ r.project.contract_no }}</td>
+            <td>{{ r.equipment.name }}</td>
+            <td><span class="badge bg-{% if r.status == 'Working' %}success{% elif r.status == 'Standby' %}warning{% elif r.status == 'Breakdown' %}danger{% else %}secondary{% endif %}">{{ r.status }}</span></td>
+            <td>{{ r.working_hours }}h</td>
+            <td><a href="{% url 'equipment:record_update' r.pk %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-center text-muted py-4">No records found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div></div>
+{% endblock %}

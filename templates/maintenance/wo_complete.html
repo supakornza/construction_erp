@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Complete {{ wo.wo_no }} – Maintenance{% endblock %}
+{% block page_title %}Complete Work Order{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="alert alert-info d-flex align-items-center mb-3">
+            <i class="fas fa-info-circle me-2"></i>
+            <div>
+                Completing <strong>{{ wo.wo_no }}</strong>: {{ wo.title }}<br>
+                <small class="text-muted">Equipment: {{ wo.equipment }}</small>
+            </div>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <!-- WO Completion Fields -->
+            <div class="card mb-3">
+                <div class="card-header"><h6 class="mb-0"><i class="fas fa-check-circle me-1 text-success"></i>Completion Details</h6></div>
+                <div class="card-body">
+                    {% crispy form %}
+                </div>
+            </div>
+
+            <!-- Parts Formset -->
+            <div class="card mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="fas fa-cogs me-1 text-secondary"></i>Parts Used</h6>
+                    <button type="button" class="btn btn-xs btn-outline-secondary" id="add-part">
+                        <i class="fas fa-plus me-1"></i>Add Part
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    {{ part_formset.management_form }}
+                    <table class="table table-sm mb-0" id="parts-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Part Name</th>
+                                <th>Part No.</th>
+                                <th>Qty</th>
+                                <th>Unit</th>
+                                <th>Unit Cost</th>
+                                <th>Del</th>
+                            </tr>
+                        </thead>
+                        <tbody id="parts-tbody">
+                        {% for pf in part_formset %}
+                        <tr class="part-row">
+                            {% for hidden in pf.hidden_fields %}{{ hidden }}{% endfor %}
+                            <td>{{ pf.part_name }}</td>
+                            <td>{{ pf.part_no }}</td>
+                            <td>{{ pf.quantity }}</td>
+                            <td>{{ pf.unit }}</td>
+                            <td>{{ pf.unit_cost }}</td>
+                            <td>
+                                {% if pf.instance.pk %}
+                                <div class="form-check">{{ pf.DELETE }}</div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-check me-1"></i>Mark as Completed
+                </button>
+                <a href="{% url 'maintenance:wo_detail' wo.pk %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+(function () {
+    var totalForms = document.getElementById('id_parts-TOTAL_FORMS');
+    document.getElementById('add-part').addEventListener('click', function () {
+        var tbody = document.getElementById('parts-tbody');
+        var rows = tbody.querySelectorAll('.part-row');
+        var idx = rows.length;
+        var tmpl = rows[rows.length - 1];
+        var newRow = document.createElement('tr');
+        newRow.className = 'part-row';
+
+        var cells = tmpl.querySelectorAll('td');
+        cells.forEach(function (cell) {
+            var newCell = document.createElement('td');
+            cell.querySelectorAll('input').forEach(function (inp) {
+                var newInp = document.createElement('input');
+                newInp.type = inp.type;
+                newInp.name = inp.name.replace(/-\d+-/, '-' + idx + '-');
+                newInp.id = inp.id.replace(/_\d+_/, '_' + idx + '_');
+                newInp.className = inp.className;
+                newInp.value = '';
+                newCell.appendChild(newInp);
+            });
+            newRow.appendChild(newCell);
+        });
+
+        tbody.appendChild(newRow);
+        totalForms.value = idx + 1;
+    });
+})();
+</script>
+{% endblock %}

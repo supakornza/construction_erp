@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Edit Cost Code{% else %}New Cost Code{% endif %} – Construction ERP{% endblock %}
+{% block page_title %}{% if object %}Edit Cost Code{% else %}New Cost Code{% endif %}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="card">
+      <div class="card-header fw-semibold">
+        <i class="fas fa-tags me-2 text-warning"></i>{% if object %}Edit Cost Code – {{ object.code }}{% else %}New Cost Code{% endif %}
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{{ field.label }}{% if field.field.required %} <span class="text-danger">*</span>{% endif %}</label>
+            {{ field }}
+            {% if field.errors %}<div class="text-danger small mt-1">{{ field.errors }}</div>{% endif %}
+            {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+          </div>
+          {% endfor %}
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-warning px-4">{% if object %}Save Changes{% else %}Create{% endif %}</button>
+            <a href="{% url 'cost_control:cost_code_list' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

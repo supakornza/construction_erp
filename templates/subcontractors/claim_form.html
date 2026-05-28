@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags humanize %}
+{% block title %}New Payment Claim – Subcontractors{% endblock %}
+{% block page_title %}New Payment Claim{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="alert alert-info d-flex align-items-start mb-3">
+            <i class="fas fa-info-circle me-2 mt-1"></i>
+            <div>
+                Contract: <strong>{{ contract.contract_no }} – {{ contract.title }}</strong><br>
+                <small class="text-muted">
+                    {{ contract.subcontractor.name }} · Retention: {{ contract.retention_pct }}%
+                    · Balance: {{ contract.balance|floatformat:0|intcomma }} ฿
+                </small>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-file-invoice-dollar me-2 text-warning"></i>Payment Claim</h6>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {% crispy form %}
+                </form>
+            </div>
+        </div>
+        <div class="mt-2">
+            <a href="{% url 'subcontractors:contract_detail' contract.pk %}"
+               class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to Contract
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

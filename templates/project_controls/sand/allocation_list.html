@@ -1,0 +1,78 @@
+﻿{% extends "base.html" %}
+{% block title %}Sand Allocation โ€“ Construction ERP{% endblock %}
+{% block page_title %}Sand Allocation{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h5 class="mb-0"><i class="fas fa-calculator me-2 text-info" aria-hidden="true"></i>Sand Allocation Calculator</h5>
+  <div class="d-flex gap-2">
+    <a href="{% url 'project_controls:sand_list' %}" class="btn btn-sm btn-outline-secondary">
+      <i class="fas fa-arrow-left me-1" aria-hidden="true"></i>Sand Records
+    </a>
+    <a href="{% url 'project_controls:sand_allocation_create' %}" class="btn btn-sm btn-primary">
+      <i class="fas fa-plus me-1" aria-hidden="true"></i>New Allocation
+    </a>
+  </div>
+</div>
+
+<div class="card mb-3">
+  <div class="card-body py-2">
+    <form method="get" class="row g-2 align-items-end">
+      <div class="col-md-5">
+        <select name="project" class="form-select form-select-sm">
+          <option value="">All Projects</option>
+          {% for p in projects %}
+          <option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.project_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2"><button class="btn btn-sm btn-primary w-100">Filter</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-sm table-hover mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>Project</th>
+          <th>Date</th>
+          <th class="text-end">Total Sand (T)</th>
+          <th class="text-end">TCT Pier %</th>
+          <th class="text-end">MTP3 Stock %</th>
+          <th class="text-end">TCT Pier Qty (T)</th>
+          <th class="text-end">MTP3 Stock Qty (T)</th>
+          <th class="text-end">Total Trips</th>
+          <th class="text-end">TCT Pier Trips</th>
+          <th class="text-end">MTP3 Stock Trips</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for alloc in allocations %}
+        <tr>
+          <td>{{ alloc.project.project_name }}</td>
+          <td><a href="{% url 'project_controls:sand_allocation_detail' alloc.pk %}">{{ alloc.calculation_date|thai_be_date }}</a></td>
+          <td class="text-end fw-bold">{{ alloc.total_sand_quantity|floatformat:2|intcomma }}</td>
+          <td class="text-end text-info">{{ alloc.tct_percentage|floatformat:1|intcomma }}%</td>
+          <td class="text-end text-primary">{{ alloc.mtp3_percentage|floatformat:1|intcomma }}%</td>
+          <td class="text-end">{{ alloc.calculated_tct_quantity|floatformat:2|intcomma }}</td>
+          <td class="text-end">{{ alloc.calculated_mtp3_quantity|floatformat:2|intcomma }}</td>
+          <td class="text-end">{{ alloc.total_trips }}</td>
+          <td class="text-end">{{ alloc.calculated_tct_trips }}</td>
+          <td class="text-end">{{ alloc.calculated_mtp3_trips }}</td>
+          <td>
+            <a href="{% url 'project_controls:sand_allocation_detail' alloc.pk %}" class="btn btn-xs btn-outline-info">
+              <i class="fas fa-eye" aria-hidden="true"></i>
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="11" class="text-center text-muted py-4" role="status">No allocations found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

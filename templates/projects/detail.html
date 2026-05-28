@@ -1,0 +1,120 @@
+﻿{% extends "base.html" %}
+{% block title %}{{ project.project_name }} โ€“ Construction ERP{% endblock %}
+{% block page_title %}{{ project.project_name }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'projects:list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="mb-0">{{ project.project_name }}</h4>
+    <div class="ms-auto d-flex gap-2">
+        <a href="{% url 'reports:material_delivery_excel' project.pk %}" class="btn btn-sm btn-outline-success">
+            <i class="fas fa-file-excel me-1"></i>Materials Excel
+        </a>
+        <a href="{% url 'reports:boq_progress_excel' project.pk %}" class="btn btn-sm btn-outline-info">
+            <i class="fas fa-file-excel me-1"></i>BOQ Excel
+        </a>
+        <a href="{% url 'reports:weekly_report' project.pk %}" class="btn btn-sm btn-outline-success">
+            <i class="fas fa-calendar-week me-1"></i>Weekly Report
+        </a>
+        <a href="{% url 'projects:update' project.pk %}" class="btn btn-sm btn-primary">
+            <i class="fas fa-edit me-1"></i>Edit
+        </a>
+    </div>
+</div>
+
+<ul class="nav nav-tabs mb-4" id="projectTabs" role="tablist">
+    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#overview">Overview</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#work-areas">Work Areas</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#stakeholders">Stakeholders</button></li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade show active" id="overview">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header"><h6 class="mb-0">Project Details</h6></div>
+                    <div class="card-body">
+                        <dl class="row small mb-0">
+                            <dt class="col-5">Contract No</dt><dd class="col-7">{{ project.contract_no }}</dd>
+                            <dt class="col-5">Status</dt><dd class="col-7"><span class="badge badge-{{ project.status|lower }}">{{ project.status }}</span></dd>
+                            <dt class="col-5">Owner</dt><dd class="col-7">{{ project.owner }}</dd>
+                            <dt class="col-5">Contractor</dt><dd class="col-7">{{ project.contractor }}</dd>
+                            <dt class="col-5">Consultant</dt><dd class="col-7">{{ project.consultant|default:'-' }}</dd>
+                            <dt class="col-5">Location</dt><dd class="col-7">{{ project.location|default:'-' }}</dd>
+                            <dt class="col-5">Start Date</dt><dd class="col-7">{{ project.start_date|thai_be_date }}</dd>
+                            <dt class="col-5">Finish Date</dt><dd class="col-7">{{ project.finish_date|thai_be_date }}</dd>
+                            <dt class="col-5">Duration</dt><dd class="col-7">{{ project.duration_days }} days</dd>
+                            <dt class="col-5">Contract Value</dt><dd class="col-7 fw-bold">{{ project.contract_value|floatformat:2|intcomma }} THB</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header"><h6 class="mb-0">Description</h6></div>
+                    <div class="card-body">{{ project.description|default:"No description provided."|linebreaks }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="work-areas">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6>Work Areas</h6>
+            <a href="{% url 'projects:work_area_add' project.pk %}" class="btn btn-sm btn-primary">
+                <i class="fas fa-plus me-1"></i>Add Work Area
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light"><tr><th>Name</th><th>Area (sqm)</th><th>Description</th><th class="text-end">Actions</th></tr></thead>
+                <tbody>
+                {% for wa in work_areas %}
+                <tr>
+                    <td>{{ wa.name }}</td>
+                    <td>{{ wa.area_sqm|default:'-'|intcomma }}</td>
+                    <td>{{ wa.description|default:'-' }}</td>
+                    <td class="text-end">
+                        <a href="{% url 'projects:work_area_update' wa.pk %}" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-edit me-1"></i>Edit
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="text-muted text-center">No work areas added.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="stakeholders">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6>Stakeholders</h6>
+            <a href="{% url 'projects:stakeholder_add' project.pk %}" class="btn btn-sm btn-primary">
+                <i class="fas fa-plus me-1"></i>Add Stakeholder
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light"><tr><th>Name</th><th>Company</th><th>Role</th><th>Email</th><th>Phone</th><th>Primary</th></tr></thead>
+                <tbody>
+                {% for s in stakeholders %}
+                <tr>
+                    <td>{{ s.name }}</td>
+                    <td>{{ s.company }}</td>
+                    <td>{{ s.role }}</td>
+                    <td>{{ s.email|default:'-' }}</td>
+                    <td>{{ s.phone|default:'-' }}</td>
+                    <td>{% if s.is_primary %}<i class="fas fa-star text-warning"></i>{% endif %}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-muted text-center">No stakeholders added.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

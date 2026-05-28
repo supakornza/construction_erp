@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Attendance Entry – HR{% endblock %}
+{% block page_title %}Attendance Entry{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'hr:attendance_dashboard' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="mb-0">Manual Attendance Entry</h4>
+</div>
+<div class="row"><div class="col-md-6"><div class="card"><div class="card-body">{% crispy form %}</div></div></div></div>
+{% endblock %}

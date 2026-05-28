@@ -1,0 +1,114 @@
+# Thai translations for Construction ERP
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# ── Navigation ──────────────────────────────────────────────────────
+msgid "Dashboard"
+msgstr "แดชบอร์ด"
+
+msgid "Tide Monitor"
+msgstr "ระดับน้ำ"
+
+msgid "Turbidity Monitor"
+msgstr "ความขุ่นน้ำ"
+
+msgid "Rock Progress"
+msgstr "ความคืบหน้าหิน"
+
+msgid "Sand Progress"
+msgstr "ความคืบหน้าทราย"
+
+msgid "Projects"
+msgstr "โครงการ"
+
+msgid "Daily Reports"
+msgstr "รายงานประจำวัน"
+
+msgid "Contractor Imports"
+msgstr "นำเข้าข้อมูลผู้รับเหมา"
+
+msgid "Resources"
+msgstr "ทรัพยากร"
+
+msgid "Manpower"
+msgstr "กำลังแรงงาน"
+
+msgid "Equipment"
+msgstr "เครื่องจักร"
+
+msgid "Materials"
+msgstr "วัสดุ"
+
+msgid "Procurement"
+msgstr "จัดซื้อจัดจ้าง"
+
+msgid "BOQ & Progress"
+msgstr "BOQ และความคืบหน้า"
+
+msgid "Project Controls"
+msgstr "ควบคุมโครงการ"
+
+msgid "Rock & Sand Control"
+msgstr "ควบคุมหินและทราย"
+
+msgid "Revetment Progress"
+msgstr "ความคืบหน้าเขื่อน"
+
+msgid "Recovery Plans"
+msgstr "แผนฟื้นตัว"
+
+msgid "Project Action Plans"
+msgstr "แผนปฏิบัติการโครงการ"
+
+msgid "Recovery Action Plans"
+msgstr "แผนปฏิบัติการฟื้นตัว"
+
+msgid "Logistics"
+msgstr "โลจิสติกส์"
+
+msgid "Transport Units"
+msgstr "หน่วยขนส่ง"
+
+msgid "Cost Control"
+msgstr "ควบคุมต้นทุน"
+
+msgid "Safety"
+msgstr "ความปลอดภัย"
+
+msgid "Quality"
+msgstr "คุณภาพ"
+
+msgid "Quality Control"
+msgstr "ควบคุมคุณภาพ"
+
+msgid "Documents"
+msgstr "เอกสาร"
+
+msgid "Admin"
+msgstr "ผู้ดูแลระบบ"
+
+msgid "Users"
+msgstr "ผู้ใช้งาน"
+
+msgid "Roles"
+msgstr "บทบาท"
+
+# ── Navbar ──────────────────────────────────────────────────────────
+msgid "Back"
+msgstr "ย้อนกลับ"
+
+msgid "Go back"
+msgstr "ย้อนกลับ"
+
+msgid "Profile"
+msgstr "โปรไฟล์"
+
+msgid "Change Password"
+msgstr "เปลี่ยนรหัสผ่าน"
+
+msgid "Logout"
+msgstr "ออกจากระบบ"

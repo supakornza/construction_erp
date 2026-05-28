@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load project_control_tags %}
+{% block title %}{{ plan.action_id }} - Construction ERP{% endblock %}
+{% block page_title %}Project Action{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
+  <div>
+    <h4 class="mb-1"><i class="fas fa-clipboard-check me-2 text-primary" aria-hidden="true"></i>{{ plan.action_id }}</h4>
+    <div class="text-muted">{{ plan.project.contract_no }} · {{ plan.project.project_name }}</div>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'project_controls:project_action_plan_list' %}?project={{ plan.project_id }}" class="btn btn-outline-secondary">
+      <i class="fas fa-list me-1" aria-hidden="true"></i> Register
+    </a>
+    <a href="{% url 'project_controls:project_action_plan_update' plan.pk %}" class="btn btn-primary">
+      <i class="fas fa-edit me-1" aria-hidden="true"></i> Edit
+    </a>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <dl class="row mb-0">
+      <dt class="col-md-3">Action ID</dt><dd class="col-md-9">{{ plan.action_id }}</dd>
+      <dt class="col-md-3">Date Raised</dt><dd class="col-md-9">{{ plan.date_raised|thai_be_date }}</dd>
+      <dt class="col-md-3">Description (TH)</dt><dd class="col-md-9">{{ plan.description_th|linebreaksbr|default:"-" }}</dd>
+      <dt class="col-md-3">Responsible Party</dt>
+      <dd class="col-md-9">
+        {% for party in plan.responsible_parties|split_parties %}
+        <span class="badge rounded-pill text-bg-primary me-1">{{ party }}</span>
+        {% empty %}-{% endfor %}
+      </dd>
+      <dt class="col-md-3">Due Date</dt><dd class="col-md-9 {% if plan.is_overdue %}text-danger fw-semibold{% endif %}">{{ plan.due_date|thai_be_date }}</dd>
+      <dt class="col-md-3">Priority</dt><dd class="col-md-9">{{ plan.priority }}</dd>
+      <dt class="col-md-3">Status</dt><dd class="col-md-9">{{ plan.status }}</dd>
+      <dt class="col-md-3">Category</dt><dd class="col-md-9">{{ plan.category }}</dd>
+      <dt class="col-md-3">Meeting Reference</dt><dd class="col-md-9">{{ plan.meeting_reference|default:"-" }}</dd>
+      <dt class="col-md-3">Remarks</dt><dd class="col-md-9">{{ plan.remarks|linebreaksbr|default:"-" }}</dd>
+    </dl>
+  </div>
+</div>
+{% endblock %}

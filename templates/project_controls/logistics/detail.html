@@ -1,0 +1,65 @@
+﻿{% extends "base.html" %}
+{% block title %}{{ scenario.scenario_name }} โ€“ Construction ERP{% endblock %}
+{% block page_title %}Logistics Scenario{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4 flex-wrap gap-2">
+  <a href="{% url 'project_controls:logistics_list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>
+  <h5 class="mb-0">{{ scenario.scenario_name }}</h5>
+  <span class="badge bg-secondary ms-1">{{ scenario.material_type }}</span>
+  <div class="ms-auto d-flex gap-2">
+    <a href="{% url 'project_controls:logistics_update' scenario.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit me-1" aria-hidden="true"></i>Edit</a>
+    <a href="{% url 'project_controls:logistics_compare' %}?s={{ scenario.pk }}" class="btn btn-sm btn-outline-info"><i class="fas fa-balance-scale me-1" aria-hidden="true"></i>Compare</a>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header fw-semibold"><i class="fas fa-sliders-h me-2" aria-hidden="true"></i>Input Parameters</div>
+      <div class="card-body">
+        <dl class="row mb-0">
+          <dt class="col-6">Project</dt><dd class="col-6">{{ scenario.project.project_name }}</dd>
+          <dt class="col-6">Material Type</dt><dd class="col-6">{{ scenario.material_type }}</dd>
+          <dt class="col-6">Distance (km)</dt><dd class="col-6 fw-bold">{{ scenario.route_distance_km|floatformat:2|intcomma }}</dd>
+          <dt class="col-6">Avg Speed (km/h)</dt><dd class="col-6">{{ scenario.average_speed_kmph|floatformat:1|intcomma }}</dd>
+          <dt class="col-6">Loading Time (min)</dt><dd class="col-6">{{ scenario.loading_time_min|floatformat:0|intcomma }}</dd>
+          <dt class="col-6">Unloading Time (min)</dt><dd class="col-6">{{ scenario.unloading_time_min|floatformat:0|intcomma }}</dd>
+          <dt class="col-6">Working Hours/Day</dt><dd class="col-6">{{ scenario.working_hours }}</dd>
+          <dt class="col-6">Number of Trucks</dt><dd class="col-6">{{ scenario.number_of_trucks }}</dd>
+          <dt class="col-6">Truck Capacity (T)</dt><dd class="col-6">{{ scenario.truck_capacity_ton|floatformat:2|intcomma }}</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100 bg-success text-white">
+      <div class="card-header fw-semibold border-0"><i class="fas fa-calculator me-2" aria-hidden="true"></i>Calculated Results</div>
+      <div class="card-body">
+        <div class="row g-3 text-center">
+          <div class="col-6">
+            <div class="fs-3 fw-bold">{{ scenario.one_way_travel_time_min|floatformat:1|intcomma }}</div>
+            <div class="small opacity-75">One-way Travel (min)</div>
+          </div>
+          <div class="col-6">
+            <div class="fs-3 fw-bold">{{ scenario.cycle_time_min|floatformat:1|intcomma }}</div>
+            <div class="small opacity-75">Cycle Time (min)</div>
+          </div>
+          <div class="col-6">
+            <div class="fs-3 fw-bold">{{ scenario.trips_per_truck_per_day }}</div>
+            <div class="small opacity-75">Trips/Truck/Day</div>
+          </div>
+          <div class="col-6">
+            <div class="fs-1 fw-bold">{{ scenario.total_tonnage_per_day|floatformat:1|intcomma }}</div>
+            <div class="small opacity-75">Total T/Day</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if scenario.remarks %}
+<div class="alert alert-light border"><strong>Remarks:</strong> {{ scenario.remarks }}</div>
+{% endif %}
+{% endblock %}
