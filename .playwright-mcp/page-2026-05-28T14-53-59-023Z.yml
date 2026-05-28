@@ -1,0 +1,433 @@
+- generic [active] [ref=e1]:
+  - link "ข้ามไปยังเนื้อหาหลัก" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - navigation "Main navigation" [ref=e3]:
+    - generic [ref=e4]:
+      - link "Construction ERP" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: 
+        - generic [ref=e7]: Construction ERP
+      - button "Toggle sidebar" [expanded] [ref=e8] [cursor=pointer]:
+        - generic [ref=e9]: 
+    - generic [ref=e10]:
+      - generic [ref=e11]: Dashboard
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e13]: 
+        - generic [ref=e14]: Dashboard
+      - link "Tide Monitor" [ref=e15] [cursor=pointer]:
+        - /url: /tide-monitor/
+        - generic [ref=e16]: 
+        - generic [ref=e17]: Tide Monitor
+      - link "Turbidity Monitor" [ref=e18] [cursor=pointer]:
+        - /url: /turbidity-monitor/
+        - generic [ref=e19]: 
+        - generic [ref=e20]: Turbidity Monitor
+      - link "Rock Progress" [ref=e21] [cursor=pointer]:
+        - /url: /project-controls/rock/dashboard/
+        - generic [ref=e22]: 
+        - generic [ref=e23]: Rock Progress
+      - link "Sand Progress" [ref=e24] [cursor=pointer]:
+        - /url: /project-controls/sand/dashboard/
+        - generic [ref=e25]: 
+        - generic [ref=e26]: Sand Progress
+      - generic [ref=e27]: Projects
+      - link "Projects" [ref=e28] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e29]: 
+        - generic [ref=e30]: Projects
+      - generic [ref=e31]: Daily Reports
+      - link "Daily Reports" [ref=e32] [cursor=pointer]:
+        - /url: /daily-reports/
+        - generic [ref=e33]: 
+        - generic [ref=e34]: Daily Reports
+      - link "Contractor Imports" [ref=e35] [cursor=pointer]:
+        - /url: /daily-reports/import/
+        - generic [ref=e36]: 
+        - generic [ref=e37]: Contractor Imports
+      - generic [ref=e38]: Resources
+      - link "Manpower" [ref=e39] [cursor=pointer]:
+        - /url: /manpower/dashboard/
+        - generic [ref=e40]: 
+        - generic [ref=e41]: Manpower
+      - link "Equipment" [ref=e42] [cursor=pointer]:
+        - /url: /equipment/
+        - generic [ref=e43]: 
+        - generic [ref=e44]: Equipment
+      - link "Materials" [ref=e45] [cursor=pointer]:
+        - /url: /materials/dashboard/
+        - generic [ref=e46]: 
+        - generic [ref=e47]: Materials
+      - generic [ref=e48]: Procurement
+      - link "Procurement" [ref=e49] [cursor=pointer]:
+        - /url: /procurement/pr/
+        - generic [ref=e50]: 
+        - generic [ref=e51]: Procurement
+      - generic [ref=e52]: BOQ & Progress
+      - link "BOQ & Progress" [ref=e53] [cursor=pointer]:
+        - /url: /boq/
+        - generic [ref=e54]: 
+        - generic [ref=e55]: BOQ & Progress
+      - generic [ref=e56]: Project Controls
+      - link "Rock & Sand Control" [ref=e57] [cursor=pointer]:
+        - /url: /project-controls/
+        - generic [ref=e58]: 
+        - generic [ref=e59]: Rock & Sand Control
+      - link "Revetment Progress" [ref=e60] [cursor=pointer]:
+        - /url: /project-controls/revetment/dashboard/
+        - generic [ref=e61]: 
+        - generic [ref=e62]: Revetment Progress
+      - link "Recovery Plans" [ref=e63] [cursor=pointer]:
+        - /url: /project-controls/recovery/plans/
+        - generic [ref=e64]: 
+        - generic [ref=e65]: Recovery Plans
+      - link "Project Action Plans" [ref=e66] [cursor=pointer]:
+        - /url: /project-controls/action-plans/
+        - generic [ref=e67]: 
+        - generic [ref=e68]: Project Action Plans
+      - link "Recovery Action Plans" [ref=e69] [cursor=pointer]:
+        - /url: /project-controls/recovery/rap/
+        - generic [ref=e70]: 
+        - generic [ref=e71]: Recovery Action Plans
+      - link "Logistics" [ref=e72] [cursor=pointer]:
+        - /url: /project-controls/logistics/
+        - generic [ref=e73]: 
+        - generic [ref=e74]: Logistics
+      - generic [ref=e75]: HR & Attendance
+      - link "HR & Attendance" [ref=e76] [cursor=pointer]:
+        - /url: /hr/
+        - generic [ref=e77]: 
+        - generic [ref=e78]: HR & Attendance
+      - generic [ref=e79]: Drawings & RFI
+      - link "Drawings & RFI" [ref=e80] [cursor=pointer]:
+        - /url: /drawings/
+        - generic [ref=e81]: 
+        - generic [ref=e82]: Drawings & RFI
+      - generic [ref=e83]: Subcontractors
+      - link "Subcontractors" [ref=e84] [cursor=pointer]:
+        - /url: /subcontractors/
+        - generic [ref=e85]: 
+        - generic [ref=e86]: Subcontractors
+      - generic [ref=e87]: Maintenance
+      - link "Maintenance" [ref=e88] [cursor=pointer]:
+        - /url: /maintenance/
+        - generic [ref=e89]: 
+        - generic [ref=e90]: Maintenance
+      - generic [ref=e91]: Change Orders
+      - link "Change Orders" [ref=e92] [cursor=pointer]:
+        - /url: /change-orders/
+        - generic [ref=e93]: 
+        - generic [ref=e94]: Change Orders
+      - generic [ref=e95]: Cost Control
+      - link "Cost Control" [ref=e96] [cursor=pointer]:
+        - /url: /cost-control/
+        - generic [ref=e97]: 
+        - generic [ref=e98]: Cost Control
+      - generic [ref=e99]: Safety
+      - link "Safety" [ref=e100] [cursor=pointer]:
+        - /url: /safety/toolbox/
+        - generic [ref=e101]: 
+        - generic [ref=e102]: Safety
+      - generic [ref=e103]: Quality
+      - link "Quality Control" [ref=e104] [cursor=pointer]:
+        - /url: /quality/
+        - generic [ref=e105]: 
+        - generic [ref=e106]: Quality Control
+      - generic [ref=e107]: Documents
+      - link "Documents" [ref=e108] [cursor=pointer]:
+        - /url: /documents/
+        - generic [ref=e109]: 
+        - generic [ref=e110]: Documents
+      - generic [ref=e111]: Admin
+      - link "Users" [ref=e112] [cursor=pointer]:
+        - /url: /accounts/users/
+        - generic [ref=e113]: 
+        - generic [ref=e114]: Users
+      - link "Roles" [ref=e115] [cursor=pointer]:
+        - /url: /accounts/roles/
+        - generic [ref=e116]: 
+        - generic [ref=e117]: Roles
+      - link "Django Admin" [ref=e118] [cursor=pointer]:
+        - /url: /admin/
+        - generic [ref=e119]: 
+        - generic [ref=e120]: Django Admin
+  - main [ref=e121]:
+    - navigation "Top toolbar" [ref=e122]:
+      - text: 
+      - button "Go back" [ref=e123] [cursor=pointer]:
+        - generic [ref=e124]: 
+        - generic [ref=e125]: Back
+      - generic [ref=e126]:
+        - generic [ref=e127]:
+          - button "เปลี่ยนภาษาเป็นไทย" [ref=e129] [cursor=pointer]: TH
+          - button "Switch language to English" [pressed] [ref=e131] [cursor=pointer]: EN
+        - generic [ref=e132]:
+          - button "การแจ้งเตือน, ยังไม่อ่าน 0 รายการ" [ref=e133] [cursor=pointer]:
+            - generic [ref=e134]: 
+          - text: 
+        - generic [ref=e135]:
+          - 'button "เมนูผู้ใช้ admin (บทบาท: Admin)" [ref=e136] [cursor=pointer]':
+            - generic [ref=e137]: A
+            - generic [ref=e138]: admin
+            - generic [ref=e139]: Admin
+          - text:   
+    - generic [ref=e141]:
+      - generic [ref=e142]:
+        - generic [ref=e143]:
+          - heading "Dashboard" [level=1] [ref=e144]
+          - paragraph [ref=e145]: Overview of your construction business
+        - generic [ref=e146]:
+          - generic [ref=e147]: 
+          - combobox "Filter project" [ref=e148]:
+            - option "Search projects, vendors, invoices..." [selected]
+            - option "Port Expansion Project Phase 1"
+            - option "Thai Tank Land Reclamation Chang Project"
+        - generic [ref=e149]:
+          - link "Notifications" [ref=e150] [cursor=pointer]:
+            - /url: /notifications/
+            - generic [ref=e151]: 
+          - link "Documents" [ref=e152] [cursor=pointer]:
+            - /url: /documents/
+            - generic [ref=e153]: 
+          - link "Help" [ref=e154] [cursor=pointer]:
+            - /url: /accounts/profile/
+            - generic [ref=e155]: 
+          - link "A admin Admin" [ref=e156] [cursor=pointer]:
+            - /url: /accounts/profile/
+            - generic [ref=e157]: A
+            - generic [ref=e158]:
+              - strong [ref=e159]: admin
+              - generic [ref=e160]: Admin
+      - generic [ref=e162]:
+        - generic [ref=e163]: 
+        - text: May 28, 2026 - All Active Projects
+      - generic [ref=e164]:
+        - generic [ref=e165]:
+          - generic [ref=e167]: 
+          - generic [ref=e168]:
+            - generic [ref=e169]: Total Projects
+            - strong [ref=e170]: "2"
+            - generic [ref=e171]:
+              - generic [ref=e172]: 
+              - text: 2 active now
+        - generic [ref=e173]:
+          - generic [ref=e175]: $
+          - generic [ref=e176]:
+            - generic [ref=e177]: Total Contract
+            - strong [ref=e178]: ฿ 650,000,000
+            - generic [ref=e179]:
+              - generic [ref=e180]: 
+              - text: Portfolio value
+        - generic [ref=e181]:
+          - generic [ref=e183]: 
+          - generic [ref=e184]:
+            - generic [ref=e185]: Earned Value
+            - strong [ref=e186]: ฿ 4,474,230
+            - generic [ref=e187]:
+              - generic [ref=e188]: 
+              - text: 0.7% complete
+        - generic [ref=e189]:
+          - generic [ref=e191]: 
+          - generic [ref=e192]:
+            - generic [ref=e193]: Pending Actions
+            - strong [ref=e194]: "2"
+            - generic [ref=e195]:
+              - generic [ref=e196]: 
+              - text: Reports and safety issues
+      - generic [ref=e197]:
+        - generic [ref=e198]:
+          - heading "Project Status Overview" [level=2] [ref=e200]
+          - generic [ref=e201]:
+            - generic [ref=e202]:
+              - strong [ref=e203]: "2"
+              - generic [ref=e204]: Total Projects
+            - generic [ref=e205]:
+              - generic [ref=e208]:
+                - strong [ref=e209]: In Progress
+                - generic [ref=e210]: 2 (100.0%)
+              - generic [ref=e213]:
+                - strong [ref=e214]: On Hold
+                - generic [ref=e215]: 0 (0.0%)
+              - generic [ref=e218]:
+                - strong [ref=e219]: Completed
+                - generic [ref=e220]: 0 (0.0%)
+              - generic [ref=e223]:
+                - strong [ref=e224]: Planning
+                - generic [ref=e225]: 0 (0.0%)
+              - generic [ref=e228]:
+                - strong [ref=e229]: Closed
+                - generic [ref=e230]: 0 (0.0%)
+          - link "View all projects " [ref=e231] [cursor=pointer]:
+            - /url: /projects/
+            - text: View all projects
+            - generic [ref=e232]: 
+        - generic [ref=e233]:
+          - generic [ref=e234]:
+            - heading "Project Progress" [level=2] [ref=e235]
+            - link "View all " [ref=e236] [cursor=pointer]:
+              - /url: /boq/progress/
+              - text: View all
+              - generic [ref=e237]: 
+          - generic [ref=e238]:
+            - generic [ref=e239]:
+              - generic [ref=e241]: 
+              - generic [ref=e242]:
+                - strong [ref=e243]: Port Expansion Project Phase 1
+                - generic [ref=e244]: CON-2024-001
+              - strong [ref=e245]: 2.5%
+              - generic [ref=e248]: Active
+            - generic [ref=e249]:
+              - generic [ref=e251]: 
+              - generic [ref=e252]:
+                - strong [ref=e253]: Thai Tank Land Reclamation Chang Project
+                - generic [ref=e254]: P06643
+              - strong [ref=e255]: 0.0%
+              - generic [ref=e257]: Active
+        - generic [ref=e258]:
+          - generic [ref=e259]:
+            - heading "Cash Flow Summary" [level=2] [ref=e260]
+            - generic [ref=e261]: This Month
+          - generic [ref=e262]:
+            - generic [ref=e263]:
+              - generic [ref=e264]: Contract Value
+              - strong [ref=e265]: ฿ 650,000,000
+            - generic [ref=e266]:
+              - generic [ref=e267]: Remaining Value
+              - strong [ref=e268]: ฿ 645,525,770
+            - generic [ref=e269]:
+              - generic [ref=e270]: Earned Value
+              - strong [ref=e271]: ฿ 4,474,230
+      - generic [ref=e274]:
+        - generic [ref=e275]:
+          - generic [ref=e276]:
+            - heading "Recent Transactions" [level=2] [ref=e277]
+            - link "View all " [ref=e278] [cursor=pointer]:
+              - /url: /materials/deliveries/
+              - text: View all
+              - generic [ref=e279]: 
+          - generic [ref=e280]:
+            - generic [ref=e281]:
+              - generic [ref=e283]: 
+              - generic [ref=e284]:
+                - strong [ref=e285]: Sand delivery
+                - generic [ref=e286]: P06643
+              - generic [ref=e287]:
+                - text: 40.5 Tons
+                - generic [ref=e288]: May 24, 2026
+            - generic [ref=e289]:
+              - generic [ref=e291]: 
+              - generic [ref=e292]:
+                - strong [ref=e293]: Sand delivery
+                - generic [ref=e294]: P06643
+              - generic [ref=e295]:
+                - text: 36.3 Tons
+                - generic [ref=e296]: May 24, 2026
+            - generic [ref=e297]:
+              - generic [ref=e299]: 
+              - generic [ref=e300]:
+                - strong [ref=e301]: Sand delivery
+                - generic [ref=e302]: P06643
+              - generic [ref=e303]:
+                - text: 40.8 Tons
+                - generic [ref=e304]: May 24, 2026
+            - generic [ref=e305]:
+              - generic [ref=e307]: 
+              - generic [ref=e308]:
+                - strong [ref=e309]: Sand delivery
+                - generic [ref=e310]: P06643
+              - generic [ref=e311]:
+                - text: 36.4 Tons
+                - generic [ref=e312]: May 24, 2026
+            - generic [ref=e313]:
+              - generic [ref=e315]: 
+              - generic [ref=e316]:
+                - strong [ref=e317]: Sand delivery
+                - generic [ref=e318]: P06643
+              - generic [ref=e319]:
+                - text: 35.5 Tons
+                - generic [ref=e320]: May 24, 2026
+        - generic [ref=e321]:
+          - generic [ref=e322]:
+            - heading "Budget vs Actual" [level=2] [ref=e323]
+            - generic [ref=e324]: This Year
+          - generic [ref=e327]:
+            - generic [ref=e328]:
+              - generic [ref=e329]: Total Budget
+              - strong [ref=e330]: ฿ 650,000,000
+            - generic [ref=e331]:
+              - generic [ref=e332]: Total Actual
+              - strong [ref=e333]: ฿ 4,474,230
+            - generic [ref=e334]:
+              - generic [ref=e335]: Variance
+              - strong [ref=e336]: ฿ 645,525,770
+        - generic [ref=e337]:
+          - generic [ref=e338]:
+            - heading "Site Updates" [level=2] [ref=e339]
+            - link "View all " [ref=e340] [cursor=pointer]:
+              - /url: /daily-reports/
+              - text: View all
+              - generic [ref=e341]: 
+          - generic [ref=e342]:
+            - link " Thai Tank Land Reclamation Chang Project May 16, 2026 report prepared by supakorn punyapachum Draft" [ref=e343] [cursor=pointer]:
+              - /url: /daily-reports/31/
+              - generic [ref=e345]: 
+              - generic [ref=e346]:
+                - strong [ref=e347]: Thai Tank Land Reclamation Chang Project
+                - paragraph [ref=e348]: May 16, 2026 report prepared by supakorn punyapachum
+              - generic [ref=e349]: Draft
+            - link " Port Expansion Project Phase 1 May 15, 2026 report prepared by Sara Lee Draft" [ref=e350] [cursor=pointer]:
+              - /url: /daily-reports/30/
+              - generic [ref=e352]: 
+              - generic [ref=e353]:
+                - strong [ref=e354]: Port Expansion Project Phase 1
+                - paragraph [ref=e355]: May 15, 2026 report prepared by Sara Lee
+              - generic [ref=e356]: Draft
+            - link " Port Expansion Project Phase 1 May 14, 2026 report prepared by Sara Lee Draft" [ref=e357] [cursor=pointer]:
+              - /url: /daily-reports/29/
+              - generic [ref=e359]: 
+              - generic [ref=e360]:
+                - strong [ref=e361]: Port Expansion Project Phase 1
+                - paragraph [ref=e362]: May 14, 2026 report prepared by Sara Lee
+              - generic [ref=e363]: Draft
+            - link " Port Expansion Project Phase 1 May 13, 2026 report prepared by Sara Lee Draft" [ref=e364] [cursor=pointer]:
+              - /url: /daily-reports/28/
+              - generic [ref=e366]: 
+              - generic [ref=e367]:
+                - strong [ref=e368]: Port Expansion Project Phase 1
+                - paragraph [ref=e369]: May 13, 2026 report prepared by Sara Lee
+              - generic [ref=e370]: Draft
+      - generic [ref=e371]:
+        - heading "Quick Access" [level=2] [ref=e372]
+        - generic [ref=e373]:
+          - link " Create Project" [ref=e374] [cursor=pointer]:
+            - /url: /projects/create/
+            - generic [ref=e376]: 
+            - generic [ref=e377]: Create Project
+          - link " Create BOQ" [ref=e378] [cursor=pointer]:
+            - /url: /boq/create/
+            - generic [ref=e380]: 
+            - generic [ref=e381]: Create BOQ
+          - link " Create PR" [ref=e382] [cursor=pointer]:
+            - /url: /procurement/pr/create/
+            - generic [ref=e384]: 
+            - generic [ref=e385]: Create PR
+          - link " Daily Report" [ref=e386] [cursor=pointer]:
+            - /url: /daily-reports/create/
+            - generic [ref=e388]: 
+            - generic [ref=e389]: Daily Report
+          - link " Material Delivery" [ref=e390] [cursor=pointer]:
+            - /url: /materials/deliveries/create/
+            - generic [ref=e392]: 
+            - generic [ref=e393]: Material Delivery
+          - link " Create Claim" [ref=e394] [cursor=pointer]:
+            - /url: /boq/claims/create/
+            - generic [ref=e396]: 
+            - generic [ref=e397]: Create Claim
+          - link " Upload Document" [ref=e398] [cursor=pointer]:
+            - /url: /documents/upload/
+            - generic [ref=e400]: 
+            - generic [ref=e401]: Upload Document
+          - link " Add Employee" [ref=e402] [cursor=pointer]:
+            - /url: /hr/employees/create/
+            - generic [ref=e404]: 
+            - generic [ref=e405]: Add Employee
