@@ -15,3 +15,13 @@ tessdata/
 *.log
 .DS_Store
 *.swp
+.secrets.baseline
+.pre-commit-framework/
+*.egg-info/
+dist/
+build/
+.coverage
+htmlcov/
+.pytest_cache/
+.idea/
+.vscode/
