@@ -14,6 +14,7 @@ router.register(r'boq/progress', views.BOQProgressViewSet)
 router.register(r'safety/inspections', views.SafetyInspectionViewSet)
 router.register(r'documents', views.DocumentViewSet)
 router.register(r'dashboard/chart-data', views.DashboardChartDataViewSet, basename='dashboard-chart')
+router.register(r'materials/transport-summary', views.MaterialTransportSummaryViewSet, basename='material-transport-summary')
 
 urlpatterns = [
     path('', include(router.urls)),

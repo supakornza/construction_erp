@@ -1,7 +1,10 @@
+from datetime import datetime
+
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from .authentication import DigestTokenAuthentication
 from .permissions import IsAdminOrReadOnly, IsProjectMember
 from apps.projects.models import Project
 from apps.projects.serializers import ProjectSerializer
@@ -131,6 +134,67 @@ class DocumentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsProjectMember]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['project', 'status', 'category']
+
+
+class MaterialTransportSummaryViewSet(viewsets.ViewSet):
+    authentication_classes = [DigestTokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def list(self, request):
+        from django.db.models import Sum
+        from apps.project_controls.models import RockDailyRecord, SandDailyRecord
+
+        date_str = request.query_params.get('date')
+        if not date_str:
+            return Response({'error': 'date parameter is required'}, status=400)
+        try:
+            target_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        except ValueError:
+            return Response({'error': 'Invalid date format, use YYYY-MM-DD'}, status=400)
+
+        rock_qs = RockDailyRecord.objects.filter(record_date=target_date).select_related('project')
+        sand_qs = SandDailyRecord.objects.filter(record_date=target_date).select_related('project')
+
+        rock_agg = rock_qs.aggregate(
+            ton=Sum('tct_daily_ton'), trips=Sum('tct_trips'), trucks=Sum('tct_trucks')
+        )
+        sand_agg = sand_qs.aggregate(
+            ton=Sum('total_daily_ton'),
+            trips_tct=Sum('tct_trips'),
+            trips_mtp3=Sum('mtp3_trips'),
+            trucks_tct=Sum('tct_trucks'),
+            trucks_mtp3=Sum('mtp3_trucks'),
+        )
+
+        rock_ton = float(rock_agg['ton'] or 0)
+        rock_trips = rock_agg['trips'] or 0
+        rock_trucks = rock_agg['trucks'] or 0
+        sand_ton = float(sand_agg['ton'] or 0)
+        sand_trips = (sand_agg['trips_tct'] or 0) + (sand_agg['trips_mtp3'] or 0)
+        sand_trucks = (sand_agg['trucks_tct'] or 0) + (sand_agg['trucks_mtp3'] or 0)
+
+        project_ids = set(
+            list(rock_qs.values_list('project_id', flat=True)) +
+            list(sand_qs.values_list('project_id', flat=True))
+        )
+        projects = []
+        for pid in project_ids:
+            rock_r = rock_qs.filter(project_id=pid).first()
+            sand_r = sand_qs.filter(project_id=pid).first()
+            contract_no = (rock_r or sand_r).project.contract_no
+            projects.append({
+                'project': contract_no,
+                'rock_ton': float(rock_r.tct_daily_ton) if rock_r else 0,
+                'sand_ton': float(sand_r.total_daily_ton) if sand_r else 0,
+            })
+
+        return Response({
+            'date': date_str,
+            'rock': {'daily_ton': rock_ton, 'trips': rock_trips, 'trucks': rock_trucks},
+            'sand': {'daily_ton': sand_ton, 'trips': sand_trips, 'trucks': sand_trucks},
+            'total_ton': rock_ton + sand_ton,
+            'projects': projects,
+        })
 
 
 class DashboardChartDataViewSet(viewsets.ViewSet):
