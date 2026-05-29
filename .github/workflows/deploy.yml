@@ -20,4 +20,4 @@ jobs:
             git pull origin main
             docker compose build --no-cache
             docker compose up -d
-            echo "Deploy complete: $(date)"
+            echo "Deploy complete: $(date '+%Y-%m-%d %H:%M:%S %Z')"
