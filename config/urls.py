@@ -31,6 +31,7 @@ urlpatterns = [
     path('drawings/', include('apps.drawings.urls', namespace='drawings')),
     path('notifications/', include('apps.notifications.urls', namespace='notifications')),
     path('ai-agent/', include('apps.ai_agent.urls', namespace='ai_agent')),
+    path('kanban/', include('apps.kanban.urls', namespace='kanban')),
 ]
 
 if settings.DEBUG:

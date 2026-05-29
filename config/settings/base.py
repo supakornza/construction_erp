@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'apps.drawings',
     'apps.notifications',
     'apps.ai_agent',
+    'apps.kanban',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block page_title %}{% trans "Delete Task" %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5" style="max-width: 500px;">
+  <div class="card border-0 shadow-sm">
+    <div class="card-body text-center p-5">
+      <div class="mb-3" style="font-size: 2.8rem; color: #ef4444;">
+        <i class="fas fa-trash-alt"></i>
+      </div>
+      <h5 class="fw-bold mb-2">{% trans "Delete Task?" %}</h5>
+      <p class="text-muted mb-4">
+        "<strong>{{ object.title }}</strong>" {% trans "will be permanently deleted." %}
+      </p>
+      <form method="post">
+        {% csrf_token %}
+        <a href="{% url 'kanban:board' %}" class="btn btn-outline-secondary me-2">
+          {% trans "Cancel" %}
+        </a>
+        <button type="submit" class="btn btn-danger">
+          <i class="fas fa-trash-alt me-1"></i>{% trans "Delete" %}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

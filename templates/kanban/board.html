@@ -1,0 +1,432 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block page_title %}Kanban Board{% endblock %}
+
+{% block extra_head %}
+<style>
+  .page-content { padding: 0 !important; overflow: hidden; }
+
+  .kb-wrap {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 58px);
+    background: #f0f4f9;
+  }
+
+  /* ── Toolbar ── */
+  .kb-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .kb-toolbar h1 {
+    font-size: 1rem;
+    font-weight: 800;
+    margin: 0;
+    color: #0f172a;
+    white-space: nowrap;
+  }
+  .kb-total {
+    font-size: .75rem;
+    color: #64748b;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .kb-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 7px;
+    padding: 4px 10px;
+    min-width: 200px;
+  }
+  .kb-filter i { color: #94a3b8; font-size: .8rem; }
+  .kb-filter select {
+    border: none;
+    background: transparent;
+    font-size: .8rem;
+    color: #334155;
+    outline: none;
+    flex: 1;
+  }
+  .kb-btn-new {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #0d6efd;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 7px 14px;
+    font-size: .8rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background .15s;
+  }
+  .kb-btn-new:hover { background: #0a58ca; color: #fff; }
+
+  /* ── Board ── */
+  .kb-board {
+    display: flex;
+    flex: 1;
+    gap: 14px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-height: 0;
+  }
+
+  /* ── Column ── */
+  .kb-col {
+    display: flex;
+    flex-direction: column;
+    background: #e8eef6;
+    border-radius: 10px;
+    flex: 0 0 272px;
+    min-width: 220px;
+    max-height: 100%;
+  }
+  .kb-col-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px 9px;
+    border-bottom: 3px solid transparent;
+    border-radius: 10px 10px 0 0;
+  }
+  .kb-col-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .kb-col-label {
+    font-size: .8rem;
+    font-weight: 700;
+    color: #334155;
+    flex: 1;
+  }
+  .kb-col-count {
+    font-size: .7rem;
+    font-weight: 700;
+    background: #fff;
+    border-radius: 99px;
+    padding: 1px 8px;
+    color: #475569;
+  }
+
+  /* ── Cards list ── */
+  .kb-cards {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 56px;
+  }
+  .kb-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #94a3b8;
+    font-size: .75rem;
+    pointer-events: none;
+    user-select: none;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 0;
+  }
+
+  /* ── Card ── */
+  .kb-card {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(15,23,42,.06);
+    overflow: hidden;
+    cursor: grab;
+    transition: box-shadow .15s;
+  }
+  .kb-card:active { cursor: grabbing; }
+  .kb-card:hover { box-shadow: 0 4px 14px rgba(15,23,42,.1); }
+  .kb-card-bar { height: 3px; }
+  .kb-card-body { padding: 10px 11px 9px; }
+  .kb-card-title {
+    font-size: .8rem;
+    font-weight: 600;
+    color: #0f172a;
+    line-height: 1.35;
+    margin-bottom: 7px;
+    word-break: break-word;
+  }
+  .kb-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  .kb-tag {
+    font-size: .64rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+  }
+  .kb-card-foot {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  .kb-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #0d6efd;
+    color: #fff;
+    font-size: .6rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .kb-priority {
+    font-size: .63rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .kb-priority-high   { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
+  .kb-priority-medium { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+  .kb-priority-low    { background: #ecfdf5; color: #059669; border: 1px solid #bbf7d0; }
+  .kb-due {
+    font-size: .66rem;
+    color: #64748b;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+  }
+  .kb-due.overdue { color: #ef4444; font-weight: 700; }
+  .kb-card-actions {
+    margin-left: auto;
+    display: none;
+    gap: 2px;
+  }
+  .kb-card:hover .kb-card-actions { display: flex; }
+  .kb-btn-icon {
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    color: #64748b;
+    text-decoration: none;
+    font-size: .7rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: background .12s, color .12s;
+  }
+  .kb-btn-icon:hover { background: #f1f5f9; color: #0f172a; }
+  .kb-btn-icon.danger:hover { background: #fef2f2; color: #ef4444; }
+
+  /* ── Add task footer ── */
+  .kb-col-add {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    font-size: .77rem;
+    font-weight: 600;
+    color: #64748b;
+    text-decoration: none;
+    border-top: 1px solid #d8e2ee;
+    border-radius: 0 0 10px 10px;
+    transition: color .12s, background .12s;
+    flex-shrink: 0;
+  }
+  .kb-col-add:hover { color: #0d6efd; background: #eef5ff; }
+
+  /* ── Drag states ── */
+  .kb-ghost {
+    opacity: .35;
+    background: #dbeafe !important;
+    border: 2px dashed #0d6efd !important;
+  }
+  .kb-dragging {
+    box-shadow: 0 10px 30px rgba(15,23,42,.2) !important;
+    transform: rotate(1.5deg);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="kb-wrap">
+
+  <!-- Toolbar -->
+  <div class="kb-toolbar">
+    <h1><i class="fas fa-th-large me-2 text-primary" aria-hidden="true"></i>{% trans "Kanban Board" %}</h1>
+    <span class="kb-total">{{ total_tasks }} {% trans "tasks" %}</span>
+
+    <form method="get" class="kb-filter" id="project-filter-form">
+      <i class="fas fa-building" aria-hidden="true"></i>
+      <select name="project" onchange="this.form.submit()" aria-label="{% trans 'Filter by project' %}">
+        <option value="">{% trans "All projects" %}</option>
+        {% for p in projects %}
+        <option value="{{ p.pk }}" {% if selected_project_id == p.pk|stringformat:"s" %}selected{% endif %}>
+          {{ p.project_name }}
+        </option>
+        {% endfor %}
+      </select>
+    </form>
+
+    <a class="kb-btn-new"
+       href="{% url 'kanban:task_create' %}{% if selected_project_id %}?project={{ selected_project_id }}{% endif %}">
+      <i class="fas fa-plus" aria-hidden="true"></i> {% trans "New Task" %}
+    </a>
+  </div>
+
+  <!-- Board -->
+  <div class="kb-board">
+    {% for col in columns %}
+    <div class="kb-col">
+
+      <div class="kb-col-head" style="border-bottom-color: {{ col.color }}">
+        <span class="kb-col-dot" style="background: {{ col.color }}"></span>
+        <span class="kb-col-label">{{ col.label }}</span>
+        <span class="kb-col-count">{{ col.count }}</span>
+      </div>
+
+      <div class="kb-cards" data-column="{{ col.key }}">
+        {% for task in col.tasks %}
+        <div class="kb-card" data-id="{{ task.pk }}">
+          <div class="kb-card-bar" style="background: {{ task.priority_color }}"></div>
+          <div class="kb-card-body">
+            <div class="kb-card-title">{{ task.title }}</div>
+
+            {% if task.project %}
+            <div class="kb-card-tags">
+              <span class="kb-tag">{{ task.project.contract_no }}</span>
+            </div>
+            {% endif %}
+
+            <div class="kb-card-foot">
+              {% if task.assignee %}
+              <span class="kb-avatar" title="{{ task.assignee.get_full_name_or_username }}">
+                {{ task.assignee.get_full_name_or_username|first|upper }}
+              </span>
+              {% endif %}
+
+              <span class="kb-priority kb-priority-{{ task.priority }}">
+                {{ task.get_priority_display }}
+              </span>
+
+              {% if task.due_date %}
+              <span class="kb-due {% if task.is_overdue %}overdue{% endif %}">
+                <i class="far fa-calendar-alt" aria-hidden="true"></i>{{ task.due_date|date:"M j" }}
+              </span>
+              {% endif %}
+
+              <div class="kb-card-actions">
+                <a href="{% url 'kanban:task_edit' task.pk %}" class="kb-btn-icon" title="{% trans 'Edit' %}">
+                  <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                </a>
+                <a href="{% url 'kanban:task_delete' task.pk %}" class="kb-btn-icon danger" title="{% trans 'Delete' %}">
+                  <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="kb-empty" data-empty="true">
+          <i class="fas fa-inbox fa-lg" aria-hidden="true"></i>
+          <span>{% trans "No tasks" %}</span>
+        </div>
+        {% endfor %}
+      </div>
+
+      <a class="kb-col-add"
+         href="{% url 'kanban:task_create' %}?column={{ col.key }}{% if selected_project_id %}&project={{ selected_project_id }}{% endif %}">
+        <i class="fas fa-plus" style="font-size:.7rem" aria-hidden="true"></i> {% trans "Add task" %}
+      </a>
+
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  function getCsrf() {
+    const cookie = document.cookie.split('; ').find(function(r){ return r.startsWith('csrftoken='); });
+    return cookie ? cookie.split('=')[1] : '';
+  }
+
+  function refreshColumn(listEl) {
+    const realCards = listEl.querySelectorAll('.kb-card');
+    const count = realCards.length;
+
+    listEl.closest('.kb-col').querySelector('.kb-col-count').textContent = count;
+
+    const emptyEl = listEl.querySelector('[data-empty="true"]');
+    if (emptyEl) {
+      emptyEl.style.display = count ? 'none' : '';
+    }
+  }
+
+  document.querySelectorAll('.kb-cards').forEach(function(list) {
+    Sortable.create(list, {
+      group: 'kanban',
+      animation: 150,
+      ghostClass: 'kb-ghost',
+      dragClass: 'kb-dragging',
+      onEnd: function(evt) {
+        var taskId = evt.item.dataset.id;
+        var newColumn = evt.to.dataset.column;
+        var orderedIds = Array.from(evt.to.querySelectorAll('.kb-card')).map(function(el) {
+          return el.dataset.id;
+        });
+
+        refreshColumn(evt.from);
+        refreshColumn(evt.to);
+
+        fetch('/kanban/tasks/' + taskId + '/move/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrf(),
+          },
+          body: JSON.stringify({ column: newColumn, ordered_ids: orderedIds }),
+        }).then(function(r) {
+          if (!r.ok) { location.reload(); }
+        });
+      },
+    });
+  });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags i18n %}
+{% block page_title %}{% if form.instance.pk %}{% trans "Edit Task" %}{% else %}{% trans "New Task" %}{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4" style="max-width: 700px;">
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-white d-flex align-items-center justify-content-between py-3 border-bottom">
+      <h5 class="mb-0 fw-bold">
+        <i class="fas fa-th-large me-2 text-primary"></i>
+        {% if form.instance.pk %}{% trans "Edit Task" %}{% else %}{% trans "New Task" %}{% endif %}
+      </h5>
+      <a href="{% url 'kanban:board' %}" class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>{% trans "Back to Board" %}
+      </a>
+    </div>
+    <div class="card-body p-4">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% crispy form %}
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
