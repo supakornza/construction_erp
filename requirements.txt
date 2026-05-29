@@ -1,7 +1,7 @@
 asgiref==3.11.1
 charset-normalizer==3.4.7
 crispy-bootstrap5==2024.10
-Django==6.0.5
+Django==5.2.14
 django-crispy-forms==2.6
 django-environ==0.13.0
 django-filter==25.2
