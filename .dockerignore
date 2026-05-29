@@ -4,7 +4,10 @@ venv/
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
 .env
+.env.backup*
+*.backup*
 *.sqlite3
 staticfiles/
 media/
