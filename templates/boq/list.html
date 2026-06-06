@@ -1,54 +1,143 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
+{% load humanize %}
 {% block title %}BOQ – Construction ERP{% endblock %}
 {% block page_title %}Bill of Quantities{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── BOQ page-scoped styles (bq-* prefix). Built on the shared design tokens. ── */
+
+  /* Action toolbar: keep buttons from cramping; wrap gracefully on narrow screens */
+  .bq-toolbar { gap: .5rem; flex-wrap: wrap; }
+
+  /* Summary cards equal height + consistent header iconography */
+  .bq-summary .card-header { display: flex; align-items: center; gap: .5rem; }
+
+  /* Chart: reserve space + centred loading state so layout doesn't jump */
+  .bq-chart-wrap { position: relative; max-width: 280px; width: 100%; min-height: 220px; }
+  .bq-chart-loading {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); font-size: .8rem; gap: .5rem;
+  }
+
+  /* Main WBS table -------------------------------------------------------- */
+  .bq-table-card .table-responsive { max-height: 70vh; }
+
+  /* Sticky header so column labels stay visible when scrolling 150+ rows */
+  .bq-table thead th {
+    position: sticky; top: 0; z-index: 2;
+    box-shadow: inset 0 -1px 0 var(--border-color);
+  }
+
+  /* Header / section rows: tinted band + brand left accent for clear grouping */
+  .bq-table tr.bq-row-header > td {
+    background: var(--bg-raised);
+    font-weight: 600;
+    color: var(--text-primary);
+    border-top: 2px solid var(--border-color);
+  }
+  .bq-table tr.bq-row-header > td:first-child { box-shadow: inset 3px 0 0 var(--brand); }
+  .bq-table tr.bq-row-header:hover > td { background: var(--bg-raised); }
+
+  /* Hierarchical indentation: keep the base cell padding (1rem) + 1.1rem per WBS level */
+  .bq-table td.bq-indent { padding-left: calc(1rem + var(--lvl, 0) * 1.1rem); }
+  .bq-itemno { display: inline-flex; align-items: center; gap: .4rem; }
+  /* Hide the leaf chevron on top-level items (no indent) to reduce noise */
+  .bq-itemno .fa-angle-right { opacity: .55; }
+
+  /* หมวดงาน (section) badge: brand-tinted pill, consistent with design system */
+  .bq-cat-badge {
+    background: var(--brand-light);
+    color: var(--brand-dark);
+    font-weight: 600;
+    border: none;
+    max-width: 220px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    display: inline-block; vertical-align: middle;
+  }
+
+  /* Progress cell: align bar + label consistently */
+  .bq-progress { min-width: 120px; }
+  .bq-progress .progress { height: 8px; min-width: 64px; background: var(--bg-raised); }
+  .bq-progress .bq-pct { font-variant-numeric: tabular-nums; min-width: 42px; text-align: right; }
+
+  /* Right-aligned numeric columns use tabular figures so digits line up */
+  .bq-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  /* Row action buttons grouped tightly, revealed/strengthened on hover */
+  .bq-actions { display: inline-flex; gap: .35rem; justify-content: flex-end; }
+
+  /* Grand total footer stands apart */
+  .bq-table tfoot td {
+    background: var(--text-primary);
+    color: #fff;
+    font-weight: 700;
+    border-top: 2px solid var(--border-color);
+    position: sticky; bottom: 0; z-index: 2;
+  }
+  .bq-table tfoot .bq-num { color: #fff; }
+
+  @media (max-width: 991.98px) {
+    .bq-cat-badge { max-width: 140px; }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4 bq-toolbar">
     <h4 class="mb-0"><i class="fas fa-chart-line me-2 text-primary"></i>BOQ Items</h4>
-    <div class="d-flex gap-2">
-        <a href="{% url 'boq:progress_list' %}" class="btn btn-outline-secondary">Daily Progress</a>
-        <a href="{% url 'boq:claim_list' %}" class="btn btn-outline-secondary">Payment Claims</a>
+    <div class="d-flex bq-toolbar">
+        <a href="{% url 'boq:progress_list' %}" class="btn btn-outline-secondary"><i class="fas fa-clipboard-list me-1"></i>Daily Progress</a>
+        <a href="{% url 'boq:claim_list' %}" class="btn btn-outline-secondary"><i class="fas fa-file-invoice-dollar me-1"></i>Payment Claims</a>
         <a href="{% url 'boq:import' %}" class="btn btn-outline-primary"><i class="fas fa-file-csv me-1"></i>Import CSV</a>
         <a href="{% url 'boq:create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Add Item</a>
     </div>
 </div>
+
 <div class="card mb-3"><div class="card-body py-2">
-    <form method="get" class="d-flex gap-2">
+    <form method="get" class="d-flex gap-2 align-items-center flex-wrap">
+        <label class="form-label mb-0 small text-muted"><i class="fas fa-filter me-1"></i>Project</label>
         <select name="project" class="form-select form-select-sm" style="width:auto;">
             <option value="">All Projects</option>
             {% for p in projects %}<option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.contract_no }}</option>{% endfor %}
         </select>
-        <button class="btn btn-sm btn-outline-secondary" type="submit">Filter</button>
+        <button class="btn btn-sm btn-outline-secondary" type="submit">Apply</button>
+        {% if request.GET.project %}<a href="{% url 'boq:list' %}" class="btn btn-sm btn-link text-muted">Clear</a>{% endif %}
     </form>
 </div></div>
-<div class="row g-3 mb-3">
+
+<div class="row g-3 mb-3 bq-summary">
     <div class="col-lg-5">
         <div class="card h-100">
-            <div class="card-header fw-semibold"><i class="fas fa-chart-pie me-2 text-warning"></i>Budget by Section <span class="text-muted small fw-normal">— สัดส่วนงบประมาณตามหมวดงาน</span></div>
+            <div class="card-header fw-semibold"><i class="fas fa-chart-pie text-warning"></i>Budget by Section <span class="text-muted small fw-normal">— สัดส่วนงบประมาณตามหมวดงาน</span></div>
             <div class="card-body d-flex justify-content-center align-items-center">
                 {% if sections %}
-                <div style="max-width:260px;width:100%;"><canvas id="boqSectionChart" height="220"></canvas></div>
+                <div class="bq-chart-wrap">
+                    <div class="bq-chart-loading" id="boqChartLoading"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loading chart…</div>
+                    <canvas id="boqSectionChart" height="220"></canvas>
+                </div>
                 {% else %}
-                <p class="text-muted text-center mb-0 py-4">No BOQ items to summarize.</p>
+                <p class="text-muted text-center mb-0 py-4"><i class="fas fa-chart-pie d-block mb-2 fs-3 opacity-25"></i>No BOQ items to summarize.</p>
                 {% endif %}
             </div>
         </div>
     </div>
     <div class="col-lg-7">
         <div class="card h-100">
-            <div class="card-header fw-semibold"><i class="fas fa-ranking-star me-2 text-danger"></i>Top 10 Cost Items <span class="text-muted small fw-normal">— 10 รายการมูลค่าสูงสุด</span></div>
+            <div class="card-header fw-semibold"><i class="fas fa-ranking-star text-danger"></i>Top 10 Cost Items <span class="text-muted small fw-normal">— 10 รายการมูลค่าสูงสุด</span></div>
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-sm table-hover mb-0">
-                        <thead class="table-light"><tr><th style="width:36px;">#</th><th>Item No</th><th>Item (งาน)</th>{% if not request.GET.project %}<th>Project</th>{% endif %}<th class="text-end">Contract Amount</th><th class="text-end" style="width:80px;">% of Total</th></tr></thead>
+                        <thead><tr><th style="width:36px;">#</th><th>Item No</th><th>Item (งาน)</th>{% if not request.GET.project %}<th>Project</th>{% endif %}<th class="text-end">Contract Amount</th><th class="text-end" style="width:84px;">% of Total</th></tr></thead>
                         <tbody>
                         {% for row in top_items %}
                         <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ row.item.item_no }}</td>
-                            <td>{{ row.item.description }}</td>
+                            <td class="text-muted">{{ forloop.counter }}</td>
+                            <td class="fw-semibold">{{ row.item.item_no }}</td>
+                            <td>{{ row.item.description|truncatechars:60 }}</td>
                             {% if not request.GET.project %}<td class="text-muted small">{{ row.item.project.contract_no }}</td>{% endif %}
-                            <td class="text-end">{{ row.item.contract_amount|floatformat:0|intcomma }}</td>
-                            <td class="text-end small">{{ row.percent|floatformat:1 }}%</td>
+                            <td class="bq-num">{{ row.item.contract_amount|floatformat:0|intcomma }}</td>
+                            <td class="bq-num small">{{ row.percent|floatformat:1 }}%</td>
                         </tr>
                         {% empty %}
                         <tr><td colspan="6" class="text-center text-muted py-4">No BOQ items yet.</td></tr>
@@ -60,70 +149,96 @@
         </div>
     </div>
 </div>
-<div class="card"><div class="table-responsive">
-    <table class="table table-hover mb-0">
-        <thead class="table-light"><tr><th>Item No</th><th>Item (งาน)</th><th>หมวดงาน</th><th>Contract Qty</th><th>Unit</th><th>Cumulative</th><th>% Complete</th><th>Contract Amt</th><th>Earned Value</th><th></th></tr></thead>
+
+<div class="card bq-table-card">
+    <div class="card-header fw-semibold d-flex align-items-center">
+        <i class="fas fa-sitemap me-2 text-primary"></i>WBS Items
+        <span class="text-muted small fw-normal ms-2">— โครงสร้างรายการงาน</span>
+        <span class="badge bg-light text-dark border ms-auto">{{ items|length }} รายการ</span>
+    </div>
+    <div class="table-responsive">
+    <table class="table table-hover mb-0 bq-table">
+        <thead><tr>
+            <th>Item No</th>
+            <th>Item (งาน)</th>
+            <th>หมวดงาน</th>
+            <th class="text-end">Contract Qty</th>
+            <th>Unit</th>
+            <th class="text-end">Cumulative</th>
+            <th style="min-width:130px;">% Complete</th>
+            <th class="text-end">Contract Amt</th>
+            <th class="text-end">Earned Value</th>
+            <th class="text-end" style="width:96px;"></th>
+        </tr></thead>
         <tbody>
         {% for item in items %}
         {% if item.item_type == 'header' %}
-        <tr class="table-light">
-            <td colspan="7" class="fw-semibold" style="padding-left:{{ item.level }}rem"><i class="fas fa-layer-group me-2 text-muted"></i>{{ item.item_no }} {{ item.description }}</td>
-            <td class="fw-semibold">{{ item.subtotal|floatformat:0|intcomma }}</td>
-            <td class="text-muted small">{{ item.percent|floatformat:1 }}% of total</td>
+        <tr class="bq-row-header">
+            <td colspan="7" class="bq-indent" style="--lvl:{{ item.level }}"><i class="fas fa-layer-group me-2 text-muted"></i>{{ item.item_no }} {{ item.description }}</td>
+            <td class="bq-num">{{ item.subtotal|floatformat:0|intcomma }}</td>
+            <td class="bq-num text-muted small fw-normal">{{ item.percent|floatformat:1 }}% of total</td>
             <td>
-                <a href="{% url 'boq:update' item.pk %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a>
-                {% if request.user.is_superuser or request.user.role == 'admin' %}
-                <form method="post" action="{% url 'boq:delete' item.pk %}" class="d-inline" onsubmit="return confirm('Delete BOQ item {{ item.item_no }}?')">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
-                </form>
-                {% endif %}
+                <div class="bq-actions">
+                    <a href="{% url 'boq:update' item.pk %}" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fas fa-edit"></i></a>
+                    {% if request.user.is_superuser or request.user.role == 'admin' %}
+                    <form method="post" action="{% url 'boq:delete' item.pk %}" class="d-inline" onsubmit="return confirm('Delete BOQ item {{ item.item_no }}?')">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
+                    </form>
+                    {% endif %}
+                </div>
             </td>
         </tr>
         {% else %}
         <tr>
-            <td style="padding-left:{{ item.level }}rem">{{ item.item_no }}</td>
+            <td class="bq-indent" style="--lvl:{{ item.level }}"><span class="bq-itemno"><i class="fas fa-angle-right text-muted small"></i>{{ item.item_no }}</span></td>
             <td>{{ item.description }}</td>
-            <td><span class="badge bg-light text-dark border" title="{{ item.root.description }}">{{ item.root.item_no }} – {{ item.root.description|truncatechars:30 }}</span></td>
-            <td>{{ item.contract_quantity|floatformat:3|intcomma }} {{ item.unit }}</td>
-            <td>{{ item.unit }}</td>
-            <td>{{ item.cumulative_quantity|floatformat:3|intcomma }} {{ item.unit }}</td>
+            <td><span class="badge bq-cat-badge" title="{{ item.root.item_no }} – {{ item.root.description }}">{{ item.root.item_no }} – {{ item.root.description|truncatechars:30 }}</span></td>
+            <td class="bq-num">{{ item.contract_quantity|floatformat:3|intcomma }}</td>
+            <td class="text-muted small">{{ item.unit }}</td>
+            <td class="bq-num">{{ item.cumulative_quantity|floatformat:3|intcomma }}</td>
             <td>
-                <div class="d-flex align-items-center gap-2">
-                    <div class="progress flex-fill" style="height:8px;min-width:60px;">
-                        <div class="progress-bar bg-primary" style="width:{{ item.percent_complete|floatformat:1 }}%"></div>
+                <div class="d-flex align-items-center gap-2 bq-progress">
+                    <div class="progress flex-fill" role="progressbar" aria-valuenow="{{ item.percent_complete|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar {% if item.percent_complete >= 100 %}bg-success{% else %}bg-primary{% endif %}" style="width:{{ item.percent_complete|floatformat:1 }}%"></div>
                     </div>
-                    <span class="small">{{ item.percent_complete|floatformat:1|intcomma }}%</span>
+                    <span class="small bq-pct">{{ item.percent_complete|floatformat:1|intcomma }}%</span>
                 </div>
             </td>
-            <td>{{ item.contract_amount|floatformat:0|intcomma }}</td>
-            <td>{{ item.earned_value|floatformat:0|intcomma }}</td>
+            <td class="bq-num">{{ item.contract_amount|floatformat:0|intcomma }}</td>
+            <td class="bq-num">{{ item.earned_value|floatformat:0|intcomma }}</td>
             <td>
-                <a href="{% url 'boq:update' item.pk %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a>
-                {% if request.user.is_superuser or request.user.role == 'admin' %}
-                <form method="post" action="{% url 'boq:delete' item.pk %}" class="d-inline" onsubmit="return confirm('Delete BOQ item {{ item.item_no }}?')">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
-                </form>
-                {% endif %}
+                <div class="bq-actions">
+                    <a href="{% url 'boq:update' item.pk %}" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fas fa-edit"></i></a>
+                    {% if request.user.is_superuser or request.user.role == 'admin' %}
+                    <form method="post" action="{% url 'boq:delete' item.pk %}" class="d-inline" onsubmit="return confirm('Delete BOQ item {{ item.item_no }}?')">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
+                    </form>
+                    {% endif %}
+                </div>
             </td>
         </tr>
         {% endif %}
         {% empty %}
-        <tr><td colspan="10" class="text-center text-muted py-4">No BOQ items. <a href="{% url 'boq:create' %}">Add the first one.</a></td></tr>
+        <tr><td colspan="10" class="text-center text-muted py-5">
+            <i class="fas fa-folder-open d-block mb-2 fs-3 opacity-25"></i>
+            No BOQ items yet. <a href="{% url 'boq:create' %}">Add the first one</a> or <a href="{% url 'boq:import' %}">import from CSV</a>.
+        </td></tr>
         {% endfor %}
         </tbody>
         {% if items %}
         <tfoot>
-        <tr class="table-secondary fw-semibold">
+        <tr>
             <td colspan="7">Grand Total</td>
-            <td>{{ grand_total|floatformat:0|intcomma }}</td>
+            <td class="bq-num">{{ grand_total|floatformat:0|intcomma }}</td>
             <td colspan="2"></td>
         </tr>
         </tfoot>
         {% endif %}
     </table>
-</div></div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_scripts %}
@@ -132,6 +247,7 @@
 (function () {
   var canvas = document.getElementById('boqSectionChart');
   if (!canvas || typeof Chart === 'undefined') return;
+  var loading = document.getElementById('boqChartLoading');
   var labels = [{% for s in sections %}'{{ s.name|escapejs }}'{% if not forloop.last %},{% endif %}{% endfor %}];
   var values = [{% for s in sections %}{{ s.subtotal }}{% if not forloop.last %},{% endif %}{% endfor %}];
   var total = {{ grand_total }};
@@ -150,6 +266,7 @@
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: { onComplete: function () { if (loading) loading.style.display = 'none'; } },
       plugins: {
         legend: { position: 'right', labels: { font: { size: 11 }, boxWidth: 12 } },
         tooltip: {
@@ -163,6 +280,8 @@
       }
     }
   });
+  // Safety: hide loader shortly after init even if animation hook is skipped
+  setTimeout(function () { if (loading) loading.style.display = 'none'; }, 1200);
 })();
 </script>
 {% endif %}

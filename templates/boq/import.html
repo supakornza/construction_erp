@@ -44,7 +44,7 @@
           <td>{{ forloop.counter }}</td>
           <td>{{ item.item_no }}</td>
           <td>{{ item.description|truncatechars:80 }}</td>
-          <td>{% if item.item_type == 'header' %}<span class="badge bg-secondary">หมวด/Section</span>{% else %}<span class="badge bg-primary">รายการ/Item</span>{% endif %}</td>
+          <td>{% if item.item_type == 'header' %}<span class="badge badge-draft">หมวด/Section</span>{% else %}<span class="badge badge-submitted">รายการ/Item</span>{% endif %}</td>
           <td>{{ item.unit|default:"—" }}</td>
           <td class="text-end">{{ item.contract_quantity|default_if_none:"—" }}</td>
           <td class="text-end">{{ item.unit_rate|default_if_none:"—" }}</td>
