@@ -1,5 +1,5 @@
 ﻿{% extends "base.html" %}
-{% block title %}BOQ โ€“ Construction ERP{% endblock %}
+{% block title %}BOQ – Construction ERP{% endblock %}
 {% block page_title %}Bill of Quantities{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -7,6 +7,7 @@
     <div class="d-flex gap-2">
         <a href="{% url 'boq:progress_list' %}" class="btn btn-outline-secondary">Daily Progress</a>
         <a href="{% url 'boq:claim_list' %}" class="btn btn-outline-secondary">Payment Claims</a>
+        <a href="{% url 'boq:import' %}" class="btn btn-outline-primary"><i class="fas fa-file-csv me-1"></i>Import CSV</a>
         <a href="{% url 'boq:create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Add Item</a>
     </div>
 </div>
@@ -62,17 +63,26 @@
 <div class="card"><div class="table-responsive">
     <table class="table table-hover mb-0">
         <thead class="table-light"><tr><th>Item No</th><th>Description</th><th>Contract Qty</th><th>Unit</th><th>Cumulative</th><th>% Complete</th><th>Contract Amt</th><th>Earned Value</th><th></th></tr></thead>
-        {% for group in groups %}
         <tbody>
+        {% for item in items %}
+        {% if item.item_type == 'header' %}
         <tr class="table-light">
-            <td colspan="6" class="fw-semibold"><i class="fas fa-layer-group me-2 text-muted"></i>{{ group.name }} <span class="text-muted fw-normal">({{ group.items|length }} item{{ group.items|length|pluralize }})</span></td>
-            <td class="fw-semibold">{{ group.subtotal|floatformat:0|intcomma }}</td>
-            <td class="text-muted small">{{ group.percent|floatformat:1 }}% of total</td>
-            <td></td>
+            <td colspan="6" class="fw-semibold" style="padding-left:{{ item.level }}rem"><i class="fas fa-layer-group me-2 text-muted"></i>{{ item.item_no }} {{ item.description }}</td>
+            <td class="fw-semibold">{{ item.subtotal|floatformat:0|intcomma }}</td>
+            <td class="text-muted small">{{ item.percent|floatformat:1 }}% of total</td>
+            <td>
+                <a href="{% url 'boq:update' item.pk %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a>
+                {% if request.user.is_superuser or request.user.role == 'admin' %}
+                <form method="post" action="{% url 'boq:delete' item.pk %}" class="d-inline" onsubmit="return confirm('Delete BOQ item {{ item.item_no }}?')">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
+                </form>
+                {% endif %}
+            </td>
         </tr>
-        {% for item in group.items %}
+        {% else %}
         <tr>
-            <td>{{ item.item_no }}</td>
+            <td style="padding-left:{{ item.level }}rem">{{ item.item_no }}</td>
             <td>{{ item.description }}</td>
             <td>{{ item.contract_quantity|floatformat:3|intcomma }} {{ item.unit }}</td>
             <td>{{ item.unit }}</td>
@@ -97,14 +107,12 @@
                 {% endif %}
             </td>
         </tr>
-        {% endfor %}
-        </tbody>
+        {% endif %}
         {% empty %}
-        <tbody>
         <tr><td colspan="9" class="text-center text-muted py-4">No BOQ items. <a href="{% url 'boq:create' %}">Add the first one.</a></td></tr>
-        </tbody>
         {% endfor %}
-        {% if groups %}
+        </tbody>
+        {% if items %}
         <tfoot>
         <tr class="table-secondary fw-semibold">
             <td colspan="6">Grand Total</td>
@@ -132,7 +140,8 @@
       labels: labels,
       datasets: [{
         data: values,
-        backgroundColor: ['#0d6efd','#198754','#f59f00','#0dcaf0','#6f42c1','#dc3545','#20c997','#6c757d'],
+        /* Aligned with the design-system palette (brand + semantic tokens) for a cohesive chart */
+        backgroundColor: ['#3b82f6','#10b981','#f59e0b','#06b6d4','#8b5cf6','#ef4444','#14b8a6','#64748b'],
         borderColor: '#fff',
         borderWidth: 2
       }]

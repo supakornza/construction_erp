@@ -53,11 +53,11 @@
   --text-muted: #94a3b8;
   --text-placeholder: #cbd5e1;
 
-  /* Shadows */
-  --shadow-xs: 0 1px 2px rgba(0,0,0,.05);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
-  --shadow-md: 0 4px 8px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
-  --shadow-lg: 0 10px 28px rgba(0,0,0,.1), 0 4px 10px rgba(0,0,0,.05);
+  /* Shadows — softer, more layered for modern depth (tinted toward slate, not pure black) */
+  --shadow-xs: 0 1px 2px rgba(15,23,42,.04);
+  --shadow-sm: 0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+  --shadow-md: 0 4px 12px rgba(15,23,42,.07), 0 2px 4px rgba(15,23,42,.04);
+  --shadow-lg: 0 12px 32px rgba(15,23,42,.10), 0 4px 12px rgba(15,23,42,.05);
 
   /* Radius */
   --r-xs: 4px;
@@ -79,13 +79,21 @@
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 
 body {
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Inter drives the Latin UI; Noto Sans Thai gives Thai content matching weights
+     and proper diacritic spacing (Inter has no Thai glyphs, so Thai used to fall
+     back to an inconsistent system face). Both share a humanist sans character. */
+  font-family: 'Inter', 'Noto Sans Thai', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   background: var(--bg-body);
   color: var(--text-primary);
   line-height: 1.6;
+  letter-spacing: -0.003em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
+
+/* Thai script needs a touch more line-height for diacritics (sara/tone marks) */
+:lang(th) { line-height: 1.7; }
 
 a { color: var(--brand); text-decoration: none; }
 a:hover { color: var(--brand-dark); }
@@ -721,8 +729,26 @@ tr.formset-row-deleted td {
 :focus-visible {
   outline: 2px solid var(--brand);
   outline-offset: 2px;
+  border-radius: var(--r-xs);
 }
 .btn:focus-visible { box-shadow: 0 0 0 3px rgba(59,130,246,.25); }
+
+/* Respect users who prefer reduced motion — kill transforms/animations that
+   would otherwise move content (hover lifts, drag rotations, fades). */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .btn:active,
+  .btn-primary:hover,
+  .card:hover,
+  .pc-menu-card:hover,
+  .pc-ops-card:hover,
+  .pc-metric-card:hover { transform: none !important; }
+}
 
 /* Project Controls operational UI */
 .pc-page-header {
@@ -812,7 +838,7 @@ tr.formset-row-deleted td {
 }
 .pc-menu-card:hover {
   border-color: var(--brand);
-  box-shadow: 0 6px 16px rgba(13,110,253,.12);
+  box-shadow: 0 6px 16px rgba(59,130,246,.14);
   color: #1f2d3d;
   transform: translateY(-1px);
 }
@@ -1254,8 +1280,8 @@ tr.formset-row-deleted td {
 }
 .lang-btn:hover { background: #e9ecef; border-color: #adb5bd; color: #212529; }
 .lang-btn-active {
-    background: #0d6efd;
-    border-color: #0d6efd;
+    background: var(--brand);
+    border-color: var(--brand);
     color: #fff;
 }
-.lang-btn-active:hover { background: #0b5ed7; border-color: #0a58ca; color: #fff; }
+.lang-btn-active:hover { background: var(--brand-dark); border-color: var(--brand-dark); color: #fff; }

@@ -8,3 +8,18 @@
 </div>
 <div class="card" style="max-width:700px;"><div class="card-body">{% crispy form %}</div></div>
 {% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+  var typeField = document.getElementById('id_item_type');
+  var qtyRow = document.getElementById('qty-row');
+  if (!typeField || !qtyRow) return;
+  function toggle() {
+    qtyRow.style.display = (typeField.value === 'header') ? 'none' : '';
+  }
+  typeField.addEventListener('change', toggle);
+  toggle();
+})();
+</script>
+{% endblock %}

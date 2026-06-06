@@ -113,7 +113,7 @@ class BOQProgressExcelView(LoginRequiredMixin, View):
             cell.alignment = Alignment(horizontal='center', wrap_text=True)
             ws.column_dimensions[ws.cell(row=1, column=col).column_letter].width = w
 
-        items = BOQItem.objects.filter(project=project)
+        items = BOQItem.objects.filter(project=project, item_type='item')
         total_contract = 0
         total_earned = 0
         for row_num, item in enumerate(items, 2):

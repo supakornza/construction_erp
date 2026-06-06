@@ -166,7 +166,7 @@ if (typeof Chart !== 'undefined' && revetmentData.labels) {
       labels: revetmentData.labels,
       datasets: [
         { label: 'ปริมาณรายวัน', data: revetmentData.daily, backgroundColor: 'rgba(25, 135, 84, 0.55)', yAxisID: 'y' },
-        { label: 'ปริมาณสะสม', data: revetmentData.accum, type: 'line', borderColor: '#0d6efd', backgroundColor: '#0d6efd', tension: 0.25, yAxisID: 'y1' }
+        { label: 'ปริมาณสะสม', data: revetmentData.accum, type: 'line', borderColor: '#3b82f6', backgroundColor: '#3b82f6', tension: 0.25, yAxisID: 'y1' }
       ]
     },
     options: { responsive: true, scales: { y: { beginAtZero: true }, y1: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false } } } }

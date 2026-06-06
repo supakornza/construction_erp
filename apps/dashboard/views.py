@@ -172,7 +172,7 @@ def _quantity_balance(active_projects):
                     .values('total'))
 
     items = (BOQItem.objects
-             .filter(project__in=active_projects)
+             .filter(project__in=active_projects, item_type='item')
              .select_related('project')
              .annotate(completed_qty=Subquery(cum_subquery, output_field=DecimalField()))
              .order_by('project__project_name', 'item_no'))

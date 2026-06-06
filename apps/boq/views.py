@@ -1,10 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, FormView
 from apps.accounts.mixins import BOQViewMixin, FinancialWriteMixin
 from .models import BOQItem, DailyProgressRecord, PaymentClaim
-from .forms import BOQItemForm, DailyProgressRecordForm, PaymentClaimForm
+from .forms import BOQItemForm, DailyProgressRecordForm, PaymentClaimForm, BOQImportForm
 
 
 class BOQItemListView(BOQViewMixin, ListView):
@@ -13,43 +13,89 @@ class BOQItemListView(BOQViewMixin, ListView):
     context_object_name = 'items'
 
     def get_queryset(self):
-        qs = super().get_queryset().select_related('project')
+        qs = super().get_queryset().select_related('project', 'parent')
         project_id = self.request.GET.get('project')
         if project_id:
             qs = qs.filter(project_id=project_id)
-        return qs.order_by('category', 'item_no')
+        return qs
 
     def get_context_data(self, **kwargs):
         from decimal import Decimal
-        from itertools import groupby
         from apps.projects.models import Project
         ctx = super().get_context_data(**kwargs)
         ctx['projects'] = Project.objects.all()
 
         items = list(ctx['items'])
-        grand_total = sum((item.contract_amount for item in items), Decimal('0'))
+        by_id = {item.pk: item for item in items}
+
+        # Depth (for indentation) and root ancestor (for section grouping).
+        # Django templates reject underscore-prefixed attributes, so these
+        # transient annotations use plain names.
+        for item in items:
+            level = 0
+            root = item
+            pid = item.parent_id
+            while pid in by_id:
+                level += 1
+                root = by_id[pid]
+                pid = root.parent_id
+            item.level = level
+            item.root = root
+
+        # Bottom-up subtree subtotal rollup. `items` is in sort_key (pre-order
+        # depth-first) order, so reversed() visits children before parents —
+        # each item's running total can be folded straight into its parent's.
+        subtotal = {item.pk: item.contract_amount for item in items}
+        for item in reversed(items):
+            if item.parent_id in by_id:
+                subtotal[item.parent_id] += subtotal[item.pk]
+        for item in items:
+            item.subtotal = subtotal[item.pk]
+
+        line_items = [i for i in items if i.item_type == 'item']
+        grand_total = sum((i.contract_amount for i in line_items), Decimal('0'))
 
         def pct(amount):
             return (amount / grand_total * 100) if grand_total else Decimal('0')
 
+        for item in items:
+            item.percent = pct(item.subtotal)
+
         groups = []
-        for category, group_iter in groupby(items, key=lambda i: i.category):
-            group_items = list(group_iter)
-            subtotal = sum((i.contract_amount for i in group_items), Decimal('0'))
+        for root in [i for i in items if i.parent_id is None]:
             groups.append({
-                'name': category or 'Uncategorized',
-                'items': group_items,
-                'subtotal': subtotal,
-                'percent': pct(subtotal),
+                'name': root.description,
+                'items': [i for i in items if i.root.pk == root.pk and i.item_type == 'item'],
+                'subtotal': subtotal[root.pk],
+                'percent': pct(subtotal[root.pk]),
             })
         ctx['groups'] = groups
         ctx['grand_total'] = grand_total
         ctx['sections'] = sorted(groups, key=lambda g: g['subtotal'], reverse=True)
         ctx['top_items'] = [
             {'item': item, 'percent': pct(item.contract_amount)}
-            for item in sorted(items, key=lambda i: i.contract_amount, reverse=True)[:10]
+            for item in sorted(line_items, key=lambda i: i.contract_amount, reverse=True)[:10]
         ]
         return ctx
+
+
+class BOQImportView(FinancialWriteMixin, FormView):
+    form_class = BOQImportForm
+    template_name = 'boq/import.html'
+    success_url = reverse_lazy('boq:import')
+
+    def form_valid(self, form):
+        from .importers import import_boq_csv
+        result = import_boq_csv(
+            project=form.cleaned_data['project'],
+            uploaded_file=form.cleaned_data['csv_file'],
+            duplicate_action=form.cleaned_data['duplicate_action'],
+        )
+        if result['created']:
+            messages.success(self.request, f"Imported {len(result['created'])} BOQ item(s).")
+        if result['skipped']:
+            messages.warning(self.request, f"Skipped {len(result['skipped'])} row(s) — see details below.")
+        return self.render_to_response(self.get_context_data(form=self.form_class(), result=result))
 
 
 class BOQItemCreateView(FinancialWriteMixin, CreateView):

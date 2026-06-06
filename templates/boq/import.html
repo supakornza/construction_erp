@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Import BOQ – Construction ERP{% endblock %}
+{% block page_title %}Import BOQ from CSV{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'boq:list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="mb-0"><i class="fas fa-file-csv me-2 text-primary"></i>Import BOQ Items from CSV</h4>
+</div>
+
+<div class="card mb-4" style="max-width:700px;">
+  <div class="card-body">
+    <p class="text-muted small">
+      Upload a CSV with columns <code>รหัส</code> (item code), <code>รายการ</code> (description),
+      <code>หน่วย</code> (unit), <code>ปริมาณ</code> (quantity), <code>ราคาต่อหน่วย</code> (unit rate).
+      Rows whose codes have dots (e.g. <code>1.1</code>, <code>1.1.1</code>) are nested under the
+      matching parent code automatically; rows with no unit/quantity/rate become section headers.
+    </p>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% crispy form %}
+    </form>
+  </div>
+</div>
+
+{% if result %}
+<div class="card mb-4" style="max-width:900px;">
+  <div class="card-header fw-semibold"><i class="fas fa-clipboard-check me-2 text-success"></i>Import Summary</div>
+  <div class="card-body">
+    <p class="mb-1"><strong class="text-success">{{ result.created|length }}</strong> item(s) created/updated.</p>
+    <p class="mb-0"><strong class="{% if result.skipped %}text-warning{% else %}text-muted{% endif %}">{{ result.skipped|length }}</strong> row(s) skipped.</p>
+  </div>
+  {% if result.skipped %}
+  <div class="table-responsive">
+    <table class="table table-sm table-hover mb-0">
+      <thead class="table-light"><tr><th style="width:70px;">Row</th><th>Item Code</th><th>Description</th><th>Reason</th></tr></thead>
+      <tbody>
+      {% for row in result.skipped %}
+        <tr>
+          <td>{{ row.row }}</td>
+          <td>{{ row.item_no|default:"—" }}</td>
+          <td>{{ row.description|default:"—"|truncatechars:80 }}</td>
+          <td class="text-warning">{{ row.reason }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

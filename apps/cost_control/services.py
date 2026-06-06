@@ -52,7 +52,7 @@ def _boq_percent(project):
     """Return overall BOQ completion % (0–100 Decimal) for a project."""
     from apps.boq.models import BOQItem, DailyProgressRecord
 
-    items = list(BOQItem.objects.filter(project=project))
+    items = list(BOQItem.objects.filter(project=project, item_type='item'))
     if not items:
         return Decimal('0')
     total_contract = sum(i.contract_quantity * i.unit_rate for i in items)

@@ -6,6 +6,7 @@ app_name = 'boq'
 urlpatterns = [
     path('', views.BOQItemListView.as_view(), name='list'),
     path('create/', views.BOQItemCreateView.as_view(), name='create'),
+    path('import/', views.BOQImportView.as_view(), name='import'),
     path('<int:pk>/edit/', views.BOQItemUpdateView.as_view(), name='update'),
     path('<int:pk>/delete/', views.BOQItemDeleteView.as_view(), name='delete'),
     path('progress/', views.DailyProgressRecordListView.as_view(), name='progress_list'),

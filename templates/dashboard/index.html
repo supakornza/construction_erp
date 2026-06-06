@@ -151,7 +151,7 @@
   }
   .bs-panel-head a,
   .bs-panel-head span {
-    color:#0d6efd;
+    color:#3b82f6;
     font-size:.72rem;
     font-weight:800;
   }
@@ -166,7 +166,7 @@
     align-items:center;
     background:
       radial-gradient(circle, #fff 0 53%, transparent 54%),
-      conic-gradient(#0d6efd 0 48%, #f59e0b 48% 62%, #10b981 62% 84%, #94a3b8 84% 100%);
+      conic-gradient(#3b82f6 0 48%, #f59e0b 48% 62%, #10b981 62% 84%, #94a3b8 84% 100%);
     border-radius:999px;
     display:flex;
     flex-direction:column;
@@ -226,7 +226,7 @@
     background:linear-gradient(135deg,#e0f2fe,#dbeafe);
     border:1px solid #d7e3f2;
     border-radius:7px;
-    color:#0d6efd;
+    color:#3b82f6;
     display:flex;
     height:48px;
     justify-content:center;
@@ -254,7 +254,7 @@
     overflow:hidden;
   }
   .bs-bar > i {
-    background:#0d6efd;
+    background:#3b82f6;
     border-radius:inherit;
     display:block;
     height:100%;
@@ -267,7 +267,7 @@
     padding:.16rem .42rem;
     white-space:nowrap;
   }
-  .bs-pill-blue { background:#eff6ff; color:#0d6efd; border:1px solid #bfdbfe; }
+  .bs-pill-blue { background:#eff6ff; color:#3b82f6; border:1px solid #bfdbfe; }
   .bs-pill-green { background:#ecfdf5; color:#047857; border:1px solid #bbf7d0; }
   .bs-cash-metrics {
     display:grid;
@@ -340,7 +340,7 @@
     align-items:center;
     background:#e0f2fe;
     border-radius:7px;
-    color:#0d6efd;
+    color:#3b82f6;
     display:flex;
     height:50px;
     justify-content:center;
@@ -435,7 +435,7 @@
 
   <section class="bs-kpis">
     <div class="bs-card bs-kpi">
-      <span class="bs-kpi-icon" style="background:#0d6efd"><i class="far fa-clipboard"></i></span>
+      <span class="bs-kpi-icon" style="background:#3b82f6"><i class="far fa-clipboard"></i></span>
       <div>
         <small>Total Projects</small>
         <strong>{{ total_project_count|intcomma }}</strong>
@@ -587,7 +587,7 @@
   <section class="bs-card bs-quick">
     <h2>Quick Access</h2>
     <div class="bs-quick-grid">
-      <a class="bs-quick-link" href="{% url 'projects:create' %}"><span class="bs-quick-icon" style="background:#0d6efd"><i class="far fa-rectangle-list"></i></span><span>Create Project</span></a>
+      <a class="bs-quick-link" href="{% url 'projects:create' %}"><span class="bs-quick-icon" style="background:#3b82f6"><i class="far fa-rectangle-list"></i></span><span>Create Project</span></a>
       <a class="bs-quick-link" href="{% url 'boq:create' %}"><span class="bs-quick-icon" style="background:#22c55e"><i class="fas fa-list-check"></i></span><span>Create BOQ</span></a>
       <a class="bs-quick-link" href="{% url 'procurement:pr_create' %}"><span class="bs-quick-icon" style="background:#fb923c"><i class="fas fa-clipboard-list"></i></span><span>Create PR</span></a>
       <a class="bs-quick-link" href="{% url 'daily_reports:create' %}"><span class="bs-quick-icon" style="background:#7c3aed"><i class="fas fa-file-lines"></i></span><span>Daily Report</span></a>
@@ -649,7 +649,7 @@ Chart.defaults.borderColor = 'rgba(148,163,184,.22)';
           labels:data.labels,
           datasets:[
             { label:'Budget', data:data.budget, backgroundColor:'rgba(191,211,238,.85)', borderRadius:4, maxBarThickness:22 },
-            { label:'Actual', data:data.actual, backgroundColor:'#0d6efd', borderRadius:4, maxBarThickness:22 }
+            { label:'Actual', data:data.actual, backgroundColor:'#3b82f6', borderRadius:4, maxBarThickness:22 }
           ]
         },
         options:{
