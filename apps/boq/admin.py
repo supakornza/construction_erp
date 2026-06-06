@@ -9,8 +9,8 @@ class DailyProgressRecordInline(admin.TabularInline):
 
 @admin.register(BOQItem)
 class BOQItemAdmin(admin.ModelAdmin):
-    list_display = ['item_no', 'description', 'project', 'unit', 'contract_quantity', 'unit_rate']
-    list_filter = ['project']
+    list_display = ['item_no', 'category', 'description', 'project', 'unit', 'contract_quantity', 'unit_rate']
+    list_filter = ['project', 'category']
     search_fields = ['item_no', 'description']
     inlines = [DailyProgressRecordInline]
 

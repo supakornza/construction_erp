@@ -7,6 +7,7 @@ from apps.projects.models import Project
 class BOQItem(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='boq_items')
     item_no = models.CharField(max_length=20)
+    category = models.CharField(max_length=100, blank=True, default='')
     description = models.CharField(max_length=500)
     unit = models.CharField(max_length=50)
     contract_quantity = models.DecimalField(max_digits=15, decimal_places=3)

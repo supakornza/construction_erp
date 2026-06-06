@@ -147,22 +147,22 @@ class Command(BaseCommand):
     def _create_boq(self, project):
         from apps.boq.models import BOQItem
         boq_data = [
-            ('1.1', 'Mobilization & Demobilization', 'LS', '1.000', '2500000.00'),
-            ('2.1', 'Temporary Works & Cofferdams', 'm²', '2000.000', '1200.00'),
-            ('3.1', 'Dredging & Excavation', 'm³', '50000.000', '250.00'),
-            ('3.2', 'Disposal of Dredged Material', 'm³', '50000.000', '80.00'),
-            ('4.1', 'Core Rock Supply & Placement', 'Ton', '120000.000', '450.00'),
-            ('4.2', 'Armour Rock Supply & Placement', 'Ton', '45000.000', '850.00'),
-            ('4.3', 'Geotextile Filter Layer', 'm²', '85000.000', '120.00'),
-            ('5.1', 'Concrete Quay Wall (Precast)', 'm', '600.000', '35000.00'),
-            ('5.2', 'Steel Pipe Pile Driving', 'm', '8000.000', '2200.00'),
-            ('6.1', 'Yard Pavement & Drainage', 'm²', '25000.000', '800.00'),
+            ('1.1', 'Mobilization & Demobilization', 'Mobilization & Preliminaries', 'LS', '1.000', '2500000.00'),
+            ('2.1', 'Temporary Works & Cofferdams', 'Temporary Works', 'm²', '2000.000', '1200.00'),
+            ('3.1', 'Dredging & Excavation', 'Dredging & Earthworks', 'm³', '50000.000', '250.00'),
+            ('3.2', 'Disposal of Dredged Material', 'Dredging & Earthworks', 'm³', '50000.000', '80.00'),
+            ('4.1', 'Core Rock Supply & Placement', 'Rock & Geotextile Works', 'Ton', '120000.000', '450.00'),
+            ('4.2', 'Armour Rock Supply & Placement', 'Rock & Geotextile Works', 'Ton', '45000.000', '850.00'),
+            ('4.3', 'Geotextile Filter Layer', 'Rock & Geotextile Works', 'm²', '85000.000', '120.00'),
+            ('5.1', 'Concrete Quay Wall (Precast)', 'Marine Structures', 'm', '600.000', '35000.00'),
+            ('5.2', 'Steel Pipe Pile Driving', 'Marine Structures', 'm', '8000.000', '2200.00'),
+            ('6.1', 'Yard Pavement & Drainage', 'Pavement & Drainage', 'm²', '25000.000', '800.00'),
         ]
         items = []
-        for item_no, desc, unit, qty, rate in boq_data:
-            item, _ = BOQItem.objects.get_or_create(
+        for item_no, desc, cat, unit, qty, rate in boq_data:
+            item, _ = BOQItem.objects.update_or_create(
                 project=project, item_no=item_no,
-                defaults={'description': desc, 'unit': unit, 'contract_quantity': Decimal(qty), 'unit_rate': Decimal(rate)}
+                defaults={'description': desc, 'category': cat, 'unit': unit, 'contract_quantity': Decimal(qty), 'unit_rate': Decimal(rate)}
             )
             items.append(item)
         return items

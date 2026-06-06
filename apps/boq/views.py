@@ -11,19 +11,44 @@ class BOQItemListView(BOQViewMixin, ListView):
     model = BOQItem
     template_name = 'boq/list.html'
     context_object_name = 'items'
-    paginate_by = 30
 
     def get_queryset(self):
         qs = super().get_queryset().select_related('project')
         project_id = self.request.GET.get('project')
         if project_id:
             qs = qs.filter(project_id=project_id)
-        return qs
+        return qs.order_by('category', 'item_no')
 
     def get_context_data(self, **kwargs):
+        from decimal import Decimal
+        from itertools import groupby
         from apps.projects.models import Project
         ctx = super().get_context_data(**kwargs)
         ctx['projects'] = Project.objects.all()
+
+        items = list(ctx['items'])
+        grand_total = sum((item.contract_amount for item in items), Decimal('0'))
+
+        def pct(amount):
+            return (amount / grand_total * 100) if grand_total else Decimal('0')
+
+        groups = []
+        for category, group_iter in groupby(items, key=lambda i: i.category):
+            group_items = list(group_iter)
+            subtotal = sum((i.contract_amount for i in group_items), Decimal('0'))
+            groups.append({
+                'name': category or 'Uncategorized',
+                'items': group_items,
+                'subtotal': subtotal,
+                'percent': pct(subtotal),
+            })
+        ctx['groups'] = groups
+        ctx['grand_total'] = grand_total
+        ctx['sections'] = sorted(groups, key=lambda g: g['subtotal'], reverse=True)
+        ctx['top_items'] = [
+            {'item': item, 'percent': pct(item.contract_amount)}
+            for item in sorted(items, key=lambda i: i.contract_amount, reverse=True)[:10]
+        ]
         return ctx
 
 
