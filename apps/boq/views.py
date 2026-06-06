@@ -1,7 +1,10 @@
+import csv
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, FormView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, FormView, View
 from apps.accounts.mixins import BOQViewMixin, FinancialWriteMixin
 from .models import BOQItem, DailyProgressRecord, PaymentClaim
 from .forms import BOQItemForm, DailyProgressRecordForm, PaymentClaimForm, BOQImportForm
@@ -96,6 +99,19 @@ class BOQImportView(FinancialWriteMixin, FormView):
         if result['skipped']:
             messages.warning(self.request, f"Skipped {len(result['skipped'])} row(s) — see details below.")
         return self.render_to_response(self.get_context_data(form=self.form_class(), result=result))
+
+
+class BOQImportTemplateView(FinancialWriteMixin, View):
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="boq_import_template.csv"'
+        response.write('﻿')
+        writer = csv.writer(response)
+        writer.writerow(['รหัส', 'รายการ', 'หน่วย', 'ปริมาณ', 'ราคาต่อหน่วย'])
+        writer.writerow(['1', 'ก่อสร้างคันหินวางบนฐานรากเสาเข็ม', '', '', ''])
+        writer.writerow(['1.1', 'งานดำเนินการเพื่อการก่อสร้างงานหินถมป้องกันการกัดเซาะ', '', '', ''])
+        writer.writerow(['1.1.1', 'จัดทำท่าขึ้นลงสำหรับวัสดุก่อสร้าง (Steel Platform ขนาด 216 ตร.ม.)', 'ตร.ม.', '216', '14583'])
+        return response
 
 
 class BOQItemCreateView(FinancialWriteMixin, CreateView):

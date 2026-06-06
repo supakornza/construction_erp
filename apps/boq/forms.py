@@ -62,6 +62,10 @@ class BOQImportForm(forms.Form):
         self.fields['project'].queryset = Project.objects.all()
         self.helper = FormHelper()
         self.helper.form_tag = False
+        self.helper.layout = Layout(
+            'project', 'csv_file', 'duplicate_action',
+            Submit('submit', 'นำเข้าข้อมูล BOQ (Import)', css_class='btn btn-primary btn-lg mt-2'),
+        )
 
 
 class PaymentClaimForm(forms.ModelForm):

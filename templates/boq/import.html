@@ -3,9 +3,12 @@
 {% block title %}Import BOQ – Construction ERP{% endblock %}
 {% block page_title %}Import BOQ from CSV{% endblock %}
 {% block content %}
-<div class="d-flex align-items-center mb-4">
-    <a href="{% url 'boq:list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
-    <h4 class="mb-0"><i class="fas fa-file-csv me-2 text-primary"></i>Import BOQ Items from CSV</h4>
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center">
+        <a href="{% url 'boq:list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+        <h4 class="mb-0"><i class="fas fa-file-csv me-2 text-primary"></i>Import BOQ Items from CSV</h4>
+    </div>
+    <a href="{% url 'boq:import_template' %}" class="btn btn-outline-primary"><i class="fas fa-download me-1"></i>ดาวน์โหลด Template CSV</a>
 </div>
 
 <div class="card mb-4" style="max-width:700px;">
@@ -15,6 +18,7 @@
       <code>หน่วย</code> (unit), <code>ปริมาณ</code> (quantity), <code>ราคาต่อหน่วย</code> (unit rate).
       Rows whose codes have dots (e.g. <code>1.1</code>, <code>1.1.1</code>) are nested under the
       matching parent code automatically; rows with no unit/quantity/rate become section headers.
+      ไม่แน่ใจรูปแบบไฟล์? กดปุ่ม <strong>"ดาวน์โหลด Template CSV"</strong> ด้านบนเพื่อดูตัวอย่างคอลัมน์ที่ถูกต้อง
     </p>
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
@@ -30,6 +34,26 @@
     <p class="mb-1"><strong class="text-success">{{ result.created|length }}</strong> item(s) created/updated.</p>
     <p class="mb-0"><strong class="{% if result.skipped %}text-warning{% else %}text-muted{% endif %}">{{ result.skipped|length }}</strong> row(s) skipped.</p>
   </div>
+  {% if result.created %}
+  <div class="table-responsive">
+    <table class="table table-sm table-hover mb-0">
+      <thead class="table-light"><tr><th style="width:40px;">#</th><th>Item Code</th><th>Description</th><th>Type</th><th>Unit</th><th class="text-end">Quantity</th><th class="text-end">Unit Rate</th></tr></thead>
+      <tbody>
+      {% for item in result.created %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ item.item_no }}</td>
+          <td>{{ item.description|truncatechars:80 }}</td>
+          <td>{% if item.item_type == 'header' %}<span class="badge bg-secondary">หมวด/Section</span>{% else %}<span class="badge bg-primary">รายการ/Item</span>{% endif %}</td>
+          <td>{{ item.unit|default:"—" }}</td>
+          <td class="text-end">{{ item.contract_quantity|default_if_none:"—" }}</td>
+          <td class="text-end">{{ item.unit_rate|default_if_none:"—" }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
   {% if result.skipped %}
   <div class="table-responsive">
     <table class="table table-sm table-hover mb-0">

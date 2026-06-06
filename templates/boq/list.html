@@ -39,7 +39,7 @@
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-sm table-hover mb-0">
-                        <thead class="table-light"><tr><th style="width:36px;">#</th><th>Item No</th><th>Description</th>{% if not request.GET.project %}<th>Project</th>{% endif %}<th class="text-end">Contract Amount</th><th class="text-end" style="width:80px;">% of Total</th></tr></thead>
+                        <thead class="table-light"><tr><th style="width:36px;">#</th><th>Item No</th><th>Item (งาน)</th>{% if not request.GET.project %}<th>Project</th>{% endif %}<th class="text-end">Contract Amount</th><th class="text-end" style="width:80px;">% of Total</th></tr></thead>
                         <tbody>
                         {% for row in top_items %}
                         <tr>
@@ -62,12 +62,12 @@
 </div>
 <div class="card"><div class="table-responsive">
     <table class="table table-hover mb-0">
-        <thead class="table-light"><tr><th>Item No</th><th>Description</th><th>Contract Qty</th><th>Unit</th><th>Cumulative</th><th>% Complete</th><th>Contract Amt</th><th>Earned Value</th><th></th></tr></thead>
+        <thead class="table-light"><tr><th>Item No</th><th>Item (งาน)</th><th>หมวดงาน</th><th>Contract Qty</th><th>Unit</th><th>Cumulative</th><th>% Complete</th><th>Contract Amt</th><th>Earned Value</th><th></th></tr></thead>
         <tbody>
         {% for item in items %}
         {% if item.item_type == 'header' %}
         <tr class="table-light">
-            <td colspan="6" class="fw-semibold" style="padding-left:{{ item.level }}rem"><i class="fas fa-layer-group me-2 text-muted"></i>{{ item.item_no }} {{ item.description }}</td>
+            <td colspan="7" class="fw-semibold" style="padding-left:{{ item.level }}rem"><i class="fas fa-layer-group me-2 text-muted"></i>{{ item.item_no }} {{ item.description }}</td>
             <td class="fw-semibold">{{ item.subtotal|floatformat:0|intcomma }}</td>
             <td class="text-muted small">{{ item.percent|floatformat:1 }}% of total</td>
             <td>
@@ -84,6 +84,7 @@
         <tr>
             <td style="padding-left:{{ item.level }}rem">{{ item.item_no }}</td>
             <td>{{ item.description }}</td>
+            <td><span class="badge bg-light text-dark border" title="{{ item.root.description }}">{{ item.root.item_no }} – {{ item.root.description|truncatechars:30 }}</span></td>
             <td>{{ item.contract_quantity|floatformat:3|intcomma }} {{ item.unit }}</td>
             <td>{{ item.unit }}</td>
             <td>{{ item.cumulative_quantity|floatformat:3|intcomma }} {{ item.unit }}</td>
@@ -109,13 +110,13 @@
         </tr>
         {% endif %}
         {% empty %}
-        <tr><td colspan="9" class="text-center text-muted py-4">No BOQ items. <a href="{% url 'boq:create' %}">Add the first one.</a></td></tr>
+        <tr><td colspan="10" class="text-center text-muted py-4">No BOQ items. <a href="{% url 'boq:create' %}">Add the first one.</a></td></tr>
         {% endfor %}
         </tbody>
         {% if items %}
         <tfoot>
         <tr class="table-secondary fw-semibold">
-            <td colspan="6">Grand Total</td>
+            <td colspan="7">Grand Total</td>
             <td>{{ grand_total|floatformat:0|intcomma }}</td>
             <td colspan="2"></td>
         </tr>
