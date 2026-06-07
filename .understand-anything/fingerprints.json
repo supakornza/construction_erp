@@ -1,0 +1,3934 @@
+{
+  "version": "1.0.0",
+  "gitCommitHash": "cb62c5705b81f15eafedb25f09ad12dfe9ef286c",
+  "generatedAt": "2026-05-30T09:02:37.225Z",
+  "files": {
+    "apps/__init__.py": {
+      "filePath": "apps/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "apps/boq/__init__.py": {
+      "filePath": "apps/boq/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "apps/boq/admin.py": {
+      "filePath": "apps/boq/admin.py",
+      "contentHash": "e9973f59c711a04b3bc24f22482a8b264ca58b038b7acaf8b3ad7daf893c9f91",
+      "functions": [],
+      "classes": [
+        {
+          "name": "DailyProgressRecordInline",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "BOQItemAdmin",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "DailyProgressRecordAdmin",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "PaymentClaimAdmin",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "imports": [
+        {
+          "source": "django.contrib",
+          "specifiers": [
+            "admin"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "BOQItem",
+            "DailyProgressRecord",
+            "PaymentClaim"
+          ]
+        }
+      ],
+      "exports": [
+        "DailyProgressRecordInline",
+        "BOQItemAdmin",
+        "DailyProgressRecordAdmin",
+        "PaymentClaimAdmin"
+      ],
+      "totalLines": 31,
+      "hasStructuralAnalysis": true
+    },
+    "apps/boq/forms.py": {
+      "filePath": "apps/boq/forms.py",
+      "contentHash": "fc462191dc0b5f14b3c4a84b1d00bb8322aa3749b463cb7bb9763be652640db0",
+      "functions": [],
+      "classes": [
+        {
+          "name": "BOQItemForm",
+          "methods": [
+            "__init__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "DailyProgressRecordForm",
+          "methods": [
+            "__init__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "PaymentClaimForm",
+          "methods": [
+            "__init__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 19
+        }
+      ],
+      "imports": [
+        {
+          "source": "django",
+          "specifiers": [
+            "forms"
+          ]
+        },
+        {
+          "source": "crispy_forms.helper",
+          "specifiers": [
+            "FormHelper"
+          ]
+        },
+        {
+          "source": "crispy_forms.layout",
+          "specifiers": [
+            "Layout",
+            "Row",
+            "Column",
+            "Submit"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "BOQItem",
+            "DailyProgressRecord",
+            "PaymentClaim"
+          ]
+        }
+      ],
+      "exports": [
+        "BOQItemForm",
+        "DailyProgressRecordForm",
+        "PaymentClaimForm"
+      ],
+      "totalLines": 59,
+      "hasStructuralAnalysis": true
+    },
+    "apps/boq/models.py": {
+      "filePath": "apps/boq/models.py",
+      "contentHash": "3ee09205e9e884be4cfa333f3acb6e3bc0643d8558c1b7c18e446763ac66c1cb",
+      "functions": [],
+      "classes": [
+        {
+          "name": "BOQItem",
+          "methods": [
+            "__str__",
+            "contract_amount",
+            "cumulative_quantity",
+            "remaining_quantity",
+            "percent_complete",
+            "earned_value"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 37
+        },
+        {
+          "name": "DailyProgressRecord",
+          "methods": [
+            "__str__",
+            "clean"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 26
+        },
+        {
+          "name": "PaymentClaim",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 21
+        }
+      ],
+      "imports": [
+        {
+          "source": "django.db",
+          "specifiers": [
+            "models"
+          ]
+        },
+        {
+          "source": "django.db.models",
+          "specifiers": [
+            "Sum"
+          ]
+        },
+        {
+          "source": "apps.accounts.models",
+          "specifiers": [
+            "User"
+          ]
+        },
+        {
+          "source": "apps.projects.models",
+          "specifiers": [
+            "Project"
+          ]
+        }
+      ],
+      "exports": [
+        "BOQItem",
+        "DailyProgressRecord",
+        "PaymentClaim"
+      ],
+      "totalLines": 95,
+      "hasStructuralAnalysis": true
+    },
+    "apps/boq/serializers.py": {
+      "filePath": "apps/boq/serializers.py",
+      "contentHash": "abdd9bfaa55935c752da8e6da26c49fb6f199318337db61a04360f8ca13e6cb8",
+      "functions": [],
+      "classes": [
+        {
+          "name": "BOQItemSerializer",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "DailyProgressRecordSerializer",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "PaymentClaimSerializer",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "imports": [
+        {
+          "source": "rest_framework",
+          "specifiers": [
+            "serializers"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "BOQItem",
+            "DailyProgressRecord",
+            "PaymentClaim"
+          ]
+        }
+      ],
+      "exports": [
+        "BOQItemSerializer",
+        "DailyProgressRecordSerializer",
+        "PaymentClaimSerializer"
+      ],
+      "totalLines": 30,
+      "hasStructuralAnalysis": true
+    },
+    "apps/boq/urls.py": {
+      "filePath": "apps/boq/urls.py",
+      "contentHash": "149e8b109d9e581731870837cc0f72ff0cad326085ad6ddaf350216858a7dadb",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "django.urls",
+          "specifiers": [
+            "path"
+          ]
+        },
+        {
+          "source": ".",
+          "specifiers": [
+            "views"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 17,
+      "hasStructuralAnalysis": true
+    },
+    "apps/boq/views.py": {
+      "filePath": "apps/boq/views.py",
+      "contentHash": "266b8c2c7096ebb1a2b040cf076fbfe8c30bf772f4fad168bdc49ded8bc4afe7",
+      "functions": [],
+      "classes": [
+        {
+          "name": "BOQItemListView",
+          "methods": [
+            "get_queryset",
+            "get_context_data"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "BOQItemCreateView",
+          "methods": [
+            "form_valid"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "BOQItemUpdateView",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "BOQItemDeleteView",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "DailyProgressRecordListView",
+          "methods": [
+            "get_queryset"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "DailyProgressRecordCreateView",
+          "methods": [
+            "form_valid"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "PaymentClaimListView",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "PaymentClaimCreateView",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "PaymentClaimDetailView",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "imports": [
+        {
+          "source": "django.contrib",
+          "specifiers": [
+            "messages"
+          ]
+        },
+        {
+          "source": "django.contrib.auth.mixins",
+          "specifiers": [
+            "LoginRequiredMixin"
+          ]
+        },
+        {
+          "source": "django.urls",
+          "specifiers": [
+            "reverse_lazy"
+          ]
+        },
+        {
+          "source": "django.views.generic",
+          "specifiers": [
+            "ListView",
+            "CreateView",
+            "DetailView",
+            "UpdateView",
+            "DeleteView"
+          ]
+        },
+        {
+          "source": "apps.accounts.mixins",
+          "specifiers": [
+            "BOQViewMixin",
+            "FinancialWriteMixin"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "BOQItem",
+            "DailyProgressRecord",
+            "PaymentClaim"
+          ]
+        },
+        {
+          "source": ".forms",
+          "specifiers": [
+            "BOQItemForm",
+            "DailyProgressRecordForm",
+            "PaymentClaimForm"
+          ]
+        }
+      ],
+      "exports": [
+        "BOQItemListView",
+        "BOQItemCreateView",
+        "BOQItemUpdateView",
+        "BOQItemDeleteView",
+        "DailyProgressRecordListView",
+        "DailyProgressRecordCreateView",
+        "PaymentClaimListView",
+        "PaymentClaimCreateView",
+        "PaymentClaimDetailView"
+      ],
+      "totalLines": 97,
+      "hasStructuralAnalysis": true
+    },
+    "apps/change_orders/__init__.py": {
+      "filePath": "apps/change_orders/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "apps/change_orders/admin.py": {
+      "filePath": "apps/change_orders/admin.py",
+      "contentHash": "aa5996cb74400cde2991fa57bead5b186b96c7606aecdc06b0cda9ddb838c4f9",
+      "functions": [],
+      "classes": [
+        {
+          "name": "ChangeOrderItemInline",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "ChangeOrderAdmin",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 7
+        }
+      ],
+      "imports": [
+        {
+          "source": "django.contrib",
+          "specifiers": [
+            "admin"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "ChangeOrder",
+            "ChangeOrderItem"
+          ]
+        }
+      ],
+      "exports": [
+        "ChangeOrderItemInline",
+        "ChangeOrderAdmin"
+      ],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "apps/change_orders/apps.py": {
+      "filePath": "apps/change_orders/apps.py",
+      "contentHash": "b6288df19d7d6e8e1b924f4932d1144b32005edaa3786271ea9e948ed08d8ca3",
+      "functions": [],
+      "classes": [
+        {
+          "name": "ChangeOrdersConfig",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "imports": [
+        {
+          "source": "django.apps",
+          "specifiers": [
+            "AppConfig"
+          ]
+        }
+      ],
+      "exports": [
+        "ChangeOrdersConfig"
+      ],
+      "totalLines": 8,
+      "hasStructuralAnalysis": true
+    },
+    "apps/change_orders/forms.py": {
+      "filePath": "apps/change_orders/forms.py",
+      "contentHash": "f5c92a2b643afb72a7ee427046b228403de7aa1f2974374f4002381c8794c0e5",
+      "functions": [],
+      "classes": [
+        {
+          "name": "ChangeOrderForm",
+          "methods": [
+            "__init__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 28
+        },
+        {
+          "name": "ChangeOrderItemForm",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "RejectionForm",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 5
+        }
+      ],
+      "imports": [
+        {
+          "source": "django",
+          "specifiers": [
+            "forms"
+          ]
+        },
+        {
+          "source": "django.forms",
+          "specifiers": [
+            "inlineformset_factory"
+          ]
+        },
+        {
+          "source": "crispy_forms.helper",
+          "specifiers": [
+            "FormHelper"
+          ]
+        },
+        {
+          "source": "crispy_forms.layout",
+          "specifiers": [
+            "Layout",
+            "Row",
+            "Column",
+            "Submit",
+            "Field"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "ChangeOrder",
+            "ChangeOrderItem"
+          ]
+        }
+      ],
+      "exports": [
+        "ChangeOrderForm",
+        "ChangeOrderItemForm",
+        "RejectionForm"
+      ],
+      "totalLines": 70,
+      "hasStructuralAnalysis": true
+    },
+    "apps/change_orders/models.py": {
+      "filePath": "apps/change_orders/models.py",
+      "contentHash": "d363aaed993c8be1cf92893d500681ad0033b3bccaaccdc60d48bc60f8b04b79",
+      "functions": [],
+      "classes": [
+        {
+          "name": "ChangeOrder",
+          "methods": [
+            "__str__",
+            "items_total",
+            "is_editable",
+            "status_color",
+            "generate_co_no"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 93
+        },
+        {
+          "name": "ChangeOrderItem",
+          "methods": [
+            "__str__",
+            "quantity_change",
+            "amount"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 31
+        }
+      ],
+      "imports": [
+        {
+          "source": "decimal",
+          "specifiers": [
+            "Decimal"
+          ]
+        },
+        {
+          "source": "django.db",
+          "specifiers": [
+            "models"
+          ]
+        },
+        {
+          "source": "django.db.models",
+          "specifiers": [
+            "Sum"
+          ]
+        },
+        {
+          "source": "apps.accounts.models",
+          "specifiers": [
+            "User"
+          ]
+        },
+        {
+          "source": "apps.projects.models",
+          "specifiers": [
+            "Project"
+          ]
+        }
+      ],
+      "exports": [
+        "ChangeOrder",
+        "ChangeOrderItem"
+      ],
+      "totalLines": 134,
+      "hasStructuralAnalysis": true
+    },
+    "apps/change_orders/urls.py": {
+      "filePath": "apps/change_orders/urls.py",
+      "contentHash": "011c40e0a5e9b4469c997c959307631ab7db0402ddf220ea5acf58a15ae33fd7",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "django.urls",
+          "specifiers": [
+            "path"
+          ]
+        },
+        {
+          "source": ".",
+          "specifiers": [
+            "views"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 18,
+      "hasStructuralAnalysis": true
+    },
+    "apps/change_orders/views.py": {
+      "filePath": "apps/change_orders/views.py",
+      "contentHash": "1626e8f0fa9604d630ff04bebeb576167ad8de77853324ae181a6f2eac06c3f8",
+      "functions": [],
+      "classes": [
+        {
+          "name": "ChangeOrderListView",
+          "methods": [
+            "get_queryset",
+            "get_context_data"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 25
+        },
+        {
+          "name": "ChangeOrderCreateView",
+          "methods": [
+            "get_initial",
+            "get_context_data",
+            "form_valid"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 35
+        },
+        {
+          "name": "ChangeOrderDetailView",
+          "methods": [
+            "get_queryset",
+            "get_context_data"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "ChangeOrderUpdateView",
+          "methods": [
+            "dispatch",
+            "get_context_data",
+            "form_valid",
+            "get_success_url"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 35
+        },
+        {
+          "name": "ChangeOrderDeleteView",
+          "methods": [
+            "dispatch",
+            "delete"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "ChangeOrderSubmitView",
+          "methods": [
+            "post"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "ChangeOrderReviewView",
+          "methods": [
+            "post"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "ChangeOrderApproveView",
+          "methods": [
+            "post"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "ChangeOrderRejectView",
+          "methods": [
+            "get",
+            "post"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "ChangeOrderCancelView",
+          "methods": [
+            "post"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 10
+        }
+      ],
+      "imports": [
+        {
+          "source": "datetime",
+          "specifiers": [
+            "date"
+          ]
+        },
+        {
+          "source": "django.contrib",
+          "specifiers": [
+            "messages"
+          ]
+        },
+        {
+          "source": "django.contrib.auth.mixins",
+          "specifiers": [
+            "LoginRequiredMixin"
+          ]
+        },
+        {
+          "source": "django.core.exceptions",
+          "specifiers": [
+            "PermissionDenied"
+          ]
+        },
+        {
+          "source": "django.db",
+          "specifiers": [
+            "transaction"
+          ]
+        },
+        {
+          "source": "django.shortcuts",
+          "specifiers": [
+            "get_object_or_404",
+            "redirect",
+            "render"
+          ]
+        },
+        {
+          "source": "django.urls",
+          "specifiers": [
+            "reverse_lazy",
+            "reverse"
+          ]
+        },
+        {
+          "source": "django.views.generic",
+          "specifiers": [
+            "ListView",
+            "CreateView",
+            "DetailView",
+            "UpdateView",
+            "DeleteView",
+            "View"
+          ]
+        },
+        {
+          "source": "apps.accounts.mixins",
+          "specifiers": [
+            "ChangeOrderViewMixin",
+            "ChangeOrderWriteMixin",
+            "ChangeOrderApproveMixin"
+          ]
+        },
+        {
+          "source": "apps.projects.models",
+          "specifiers": [
+            "Project"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "ChangeOrder",
+            "ChangeOrderItem"
+          ]
+        },
+        {
+          "source": ".forms",
+          "specifiers": [
+            "ChangeOrderForm",
+            "ChangeOrderItemFormSet",
+            "RejectionForm"
+          ]
+        }
+      ],
+      "exports": [
+        "ChangeOrderListView",
+        "ChangeOrderCreateView",
+        "ChangeOrderDetailView",
+        "ChangeOrderUpdateView",
+        "ChangeOrderDeleteView",
+        "ChangeOrderSubmitView",
+        "ChangeOrderReviewView",
+        "ChangeOrderApproveView",
+        "ChangeOrderRejectView",
+        "ChangeOrderCancelView"
+      ],
+      "totalLines": 225,
+      "hasStructuralAnalysis": true
+    },
+    "apps/cost_control/__init__.py": {
+      "filePath": "apps/cost_control/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "apps/cost_control/admin.py": {
+      "filePath": "apps/cost_control/admin.py",
+      "contentHash": "898e0fc7c091b9e0cb9a727ebe12a6320ed42f1df6379f2f7b77b91547443712",
+      "functions": [],
+      "classes": [
+        {
+          "name": "CostCodeAdmin",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "BudgetItemAdmin",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "ActualCostAdmin",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "imports": [
+        {
+          "source": "django.contrib",
+          "specifiers": [
+            "admin"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "CostCode",
+            "BudgetItem",
+            "ActualCost"
+          ]
+        }
+      ],
+      "exports": [
+        "CostCodeAdmin",
+        "BudgetItemAdmin",
+        "ActualCostAdmin"
+      ],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
+    "apps/cost_control/apps.py": {
+      "filePath": "apps/cost_control/apps.py",
+      "contentHash": "6d044b3c6041bfb6b36d836d4821780188ae0a5eeed74120ddd5bd9a2ae6ecfa",
+      "functions": [],
+      "classes": [
+        {
+          "name": "CostControlConfig",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "imports": [
+        {
+          "source": "django.apps",
+          "specifiers": [
+            "AppConfig"
+          ]
+        }
+      ],
+      "exports": [
+        "CostControlConfig"
+      ],
+      "totalLines": 8,
+      "hasStructuralAnalysis": true
+    },
+    "apps/cost_control/forms.py": {
+      "filePath": "apps/cost_control/forms.py",
+      "contentHash": "e6b7a57d636858839dad6b3fd29e5c5b6382c43e09a9668c097fefda344a6def",
+      "functions": [],
+      "classes": [
+        {
+          "name": "CostCodeForm",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "BudgetItemForm",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "ActualCostForm",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 9
+        }
+      ],
+      "imports": [
+        {
+          "source": "django",
+          "specifiers": [
+            "forms"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "CostCode",
+            "BudgetItem",
+            "ActualCost"
+          ]
+        }
+      ],
+      "exports": [
+        "CostCodeForm",
+        "BudgetItemForm",
+        "ActualCostForm"
+      ],
+      "totalLines": 33,
+      "hasStructuralAnalysis": true
+    },
+    "apps/cost_control/models.py": {
+      "filePath": "apps/cost_control/models.py",
+      "contentHash": "d0a56dd75db7cfc37564e8acbb9735533c26ca528f2549f6901599f5b5260fa7",
+      "functions": [],
+      "classes": [
+        {
+          "name": "CostCode",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "BudgetItem",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 32
+        },
+        {
+          "name": "ActualCost",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 52
+        }
+      ],
+      "imports": [
+        {
+          "source": "decimal",
+          "specifiers": [
+            "Decimal"
+          ]
+        },
+        {
+          "source": "django.db",
+          "specifiers": [
+            "models"
+          ]
+        },
+        {
+          "source": "django.core.validators",
+          "specifiers": [
+            "MinValueValidator"
+          ]
+        },
+        {
+          "source": "apps.accounts.models",
+          "specifiers": [
+            "User"
+          ]
+        },
+        {
+          "source": "apps.projects.models",
+          "specifiers": [
+            "Project"
+          ]
+        },
+        {
+          "source": "apps.boq.models",
+          "specifiers": [
+            "BOQItem"
+          ]
+        }
+      ],
+      "exports": [
+        "CostCode",
+        "BudgetItem",
+        "ActualCost"
+      ],
+      "totalLines": 117,
+      "hasStructuralAnalysis": true
+    },
+    "apps/cost_control/services.py": {
+      "filePath": "apps/cost_control/services.py",
+      "contentHash": "96a3484896b6ff2200a9c063120d10fc8999a6ea17485ea47ed8841a117ea0a0",
+      "functions": [
+        {
+          "name": "calculate_cpi",
+          "params": [
+            "earned_value",
+            "actual_cost"
+          ],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "calculate_cost_variance",
+          "params": [
+            "earned_value",
+            "actual_cost"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "calculate_eac",
+          "params": [
+            "total_budget",
+            "cpi"
+          ],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "_cost_status",
+          "params": [
+            "cpi"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "_boq_percent",
+          "params": [
+            "project"
+          ],
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "get_cost_summary",
+          "params": [
+            "project"
+          ],
+          "exported": true,
+          "lineCount": 40
+        },
+        {
+          "name": "get_all_projects_cost_summary",
+          "params": [
+            "projects"
+          ],
+          "exported": true,
+          "lineCount": 45
+        },
+        {
+          "name": "get_all_projects_cost_summaries",
+          "params": [
+            "projects"
+          ],
+          "exported": true,
+          "lineCount": 48
+        },
+        {
+          "name": "get_cost_by_code",
+          "params": [
+            "project"
+          ],
+          "exported": true,
+          "lineCount": 30
+        },
+        {
+          "name": "get_cost_by_source",
+          "params": [
+            "project"
+          ],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "get_budget_vs_actual_chart_data",
+          "params": [
+            "projects"
+          ],
+          "exported": true,
+          "lineCount": 20
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "decimal",
+          "specifiers": [
+            "Decimal"
+          ]
+        },
+        {
+          "source": "django.db.models",
+          "specifiers": [
+            "Sum"
+          ]
+        }
+      ],
+      "exports": [
+        "calculate_cpi",
+        "calculate_cost_variance",
+        "calculate_eac",
+        "_cost_status",
+        "_boq_percent",
+        "get_cost_summary",
+        "get_all_projects_cost_summary",
+        "get_all_projects_cost_summaries",
+        "get_cost_by_code",
+        "get_cost_by_source",
+        "get_budget_vs_actual_chart_data"
+      ],
+      "totalLines": 274,
+      "hasStructuralAnalysis": true
+    },
+    "apps/cost_control/tests.py": {
+      "filePath": "apps/cost_control/tests.py",
+      "contentHash": "ef195e864e971872614ffd59c3b599203a817b0f4810b5641710833ad4710861",
+      "functions": [
+        {
+          "name": "_make_project",
+          "params": [
+            "user",
+            "contract_no"
+          ],
+          "exported": true,
+          "lineCount": 12
+        }
+      ],
+      "classes": [
+        {
+          "name": "CpiCalculationTests",
+          "methods": [
+            "test_normal_cpi",
+            "test_overrun_cpi",
+            "test_zero_actual_returns_none",
+            "test_zero_ev_zero_ac"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "CostVarianceTests",
+          "methods": [
+            "test_positive_variance",
+            "test_negative_variance",
+            "test_zero_variance"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "EacCalculationTests",
+          "methods": [
+            "test_normal_eac",
+            "test_eac_cpi_below_one",
+            "test_none_cpi_returns_none",
+            "test_zero_cpi_returns_none"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "CostSummaryTests",
+          "methods": [
+            "setUp",
+            "test_empty_project_returns_zeros",
+            "test_zero_actual_cost_is_na",
+            "test_actual_cost_recorded",
+            "test_summary_keys_present"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 45
+        },
+        {
+          "name": "DashboardIntegrationTests",
+          "methods": [
+            "setUp",
+            "test_dashboard_loads_without_cost_data",
+            "test_dashboard_loads_with_cost_data",
+            "test_cost_dashboard_loads"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 32
+        }
+      ],
+      "imports": [
+        {
+          "source": "decimal",
+          "specifiers": [
+            "Decimal"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "date"
+          ]
+        },
+        {
+          "source": "django.test",
+          "specifiers": [
+            "TestCase",
+            "Client"
+          ]
+        },
+        {
+          "source": "django.contrib.auth",
+          "specifiers": [
+            "get_user_model"
+          ]
+        },
+        {
+          "source": "apps.projects.models",
+          "specifiers": [
+            "Project"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "ActualCost",
+            "BudgetItem",
+            "CostCode"
+          ]
+        },
+        {
+          "source": ".services",
+          "specifiers": [
+            "calculate_cpi",
+            "calculate_cost_variance",
+            "calculate_eac",
+            "get_cost_summary"
+          ]
+        }
+      ],
+      "exports": [
+        "_make_project",
+        "CpiCalculationTests",
+        "CostVarianceTests",
+        "EacCalculationTests",
+        "CostSummaryTests",
+        "DashboardIntegrationTests"
+      ],
+      "totalLines": 153,
+      "hasStructuralAnalysis": true
+    },
+    "apps/cost_control/urls.py": {
+      "filePath": "apps/cost_control/urls.py",
+      "contentHash": "df61250dcc2385368aed954676a0e974dc3a02188263dde9541837aa95215de5",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "django.urls",
+          "specifiers": [
+            "path"
+          ]
+        },
+        {
+          "source": ".",
+          "specifiers": [
+            "views"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 27,
+      "hasStructuralAnalysis": true
+    },
+    "apps/cost_control/views.py": {
+      "filePath": "apps/cost_control/views.py",
+      "contentHash": "69327de9a1c7a7979bc6c8fd079c435492a9962ad96dfc581fad5b3904e67753",
+      "functions": [],
+      "classes": [
+        {
+          "name": "CostDashboardView",
+          "methods": [
+            "get_context_data"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 55
+        },
+        {
+          "name": "CostCodeListView",
+          "methods": [
+            "get_queryset",
+            "get_context_data"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "CostCodeCreateView",
+          "methods": [
+            "form_valid"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "CostCodeUpdateView",
+          "methods": [
+            "form_valid"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "CostCodeDeleteView",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "BudgetItemListView",
+          "methods": [
+            "get_queryset",
+            "get_context_data"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "BudgetItemCreateView",
+          "methods": [
+            "form_valid"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "BudgetItemUpdateView",
+          "methods": [
+            "form_valid"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "BudgetItemDeleteView",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "ActualCostListView",
+          "methods": [
+            "get_queryset",
+            "get_context_data"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 23
+        },
+        {
+          "name": "ActualCostCreateView",
+          "methods": [
+            "form_valid"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "ActualCostUpdateView",
+          "methods": [
+            "form_valid"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "ActualCostDeleteView",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "imports": [
+        {
+          "source": "django.contrib",
+          "specifiers": [
+            "messages"
+          ]
+        },
+        {
+          "source": "django.contrib.auth.mixins",
+          "specifiers": [
+            "LoginRequiredMixin"
+          ]
+        },
+        {
+          "source": "django.db.models",
+          "specifiers": [
+            "Sum"
+          ]
+        },
+        {
+          "source": "django.shortcuts",
+          "specifiers": [
+            "get_object_or_404"
+          ]
+        },
+        {
+          "source": "django.urls",
+          "specifiers": [
+            "reverse_lazy"
+          ]
+        },
+        {
+          "source": "django.views.generic",
+          "specifiers": [
+            "ListView",
+            "CreateView",
+            "UpdateView",
+            "DeleteView",
+            "TemplateView"
+          ]
+        },
+        {
+          "source": "apps.accounts.mixins",
+          "specifiers": [
+            "FinancialViewMixin",
+            "FinancialWriteMixin"
+          ]
+        },
+        {
+          "source": "apps.projects.models",
+          "specifiers": [
+            "Project"
+          ]
+        },
+        {
+          "source": ".forms",
+          "specifiers": [
+            "ActualCostForm",
+            "BudgetItemForm",
+            "CostCodeForm"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "ActualCost",
+            "BudgetItem",
+            "CostCode"
+          ]
+        },
+        {
+          "source": ".services",
+          "specifiers": [
+            "get_all_projects_cost_summaries",
+            "get_all_projects_cost_summary",
+            "get_budget_vs_actual_chart_data",
+            "get_cost_by_code",
+            "get_cost_by_source",
+            "get_cost_summary"
+          ]
+        }
+      ],
+      "exports": [
+        "CostDashboardView",
+        "CostCodeListView",
+        "CostCodeCreateView",
+        "CostCodeUpdateView",
+        "CostCodeDeleteView",
+        "BudgetItemListView",
+        "BudgetItemCreateView",
+        "BudgetItemUpdateView",
+        "BudgetItemDeleteView",
+        "ActualCostListView",
+        "ActualCostCreateView",
+        "ActualCostUpdateView",
+        "ActualCostDeleteView"
+      ],
+      "totalLines": 228,
+      "hasStructuralAnalysis": true
+    },
+    "apps/daily_reports/__init__.py": {
+      "filePath": "apps/daily_reports/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "apps/daily_reports/admin.py": {
+      "filePath": "apps/daily_reports/admin.py",
+      "contentHash": "2ce8232b6416d784d54017442b95ae11f3559c69245e6f08c76166e5ba700de2",
+      "functions": [],
+      "classes": [
+        {
+          "name": "DailyWorkActivityInline",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "DailyLookaheadInline",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "DailyProblemRemarkInline",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "DailyPhotoInline",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "DailyReportAdmin",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "DailyProblemRemarkAdmin",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "imports": [
+        {
+          "source": "django.contrib",
+          "specifiers": [
+            "admin"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "DailyReport",
+            "DailyWorkActivity",
+            "DailyLookahead",
+            "DailyProblemRemark",
+            "DailyPhoto"
+          ]
+        }
+      ],
+      "exports": [
+        "DailyWorkActivityInline",
+        "DailyLookaheadInline",
+        "DailyProblemRemarkInline",
+        "DailyPhotoInline",
+        "DailyReportAdmin",
+        "DailyProblemRemarkAdmin"
+      ],
+      "totalLines": 40,
+      "hasStructuralAnalysis": true
+    },
+    "apps/daily_reports/forms.py": {
+      "filePath": "apps/daily_reports/forms.py",
+      "contentHash": "fdb1ced3eefdbb0d7dfdf0b4733944bbbb7f99d46eba421be5312c31b8ac5fcc",
+      "functions": [],
+      "classes": [
+        {
+          "name": "DailyReportForm",
+          "methods": [
+            "__init__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 24
+        },
+        {
+          "name": "RejectionForm",
+          "methods": [
+            "__init__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "DailyPhotoForm",
+          "methods": [
+            "clean_photo"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 20
+        }
+      ],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "django",
+          "specifiers": [
+            "forms"
+          ]
+        },
+        {
+          "source": "django.core.files.base",
+          "specifiers": [
+            "ContentFile"
+          ]
+        },
+        {
+          "source": "django.core.files.uploadedfile",
+          "specifiers": [
+            "UploadedFile"
+          ]
+        },
+        {
+          "source": "django.forms",
+          "specifiers": [
+            "inlineformset_factory"
+          ]
+        },
+        {
+          "source": "crispy_forms.helper",
+          "specifiers": [
+            "FormHelper"
+          ]
+        },
+        {
+          "source": "crispy_forms.layout",
+          "specifiers": [
+            "Layout",
+            "Row",
+            "Column",
+            "Fieldset"
+          ]
+        },
+        {
+          "source": "apps.utils",
+          "specifiers": [
+            "image_to_jpeg_bytes"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "DailyReport",
+            "DailyWorkActivity",
+            "DailyLookahead",
+            "DailyProblemRemark",
+            "DailyPhoto"
+          ]
+        }
+      ],
+      "exports": [
+        "DailyReportForm",
+        "RejectionForm",
+        "DailyPhotoForm"
+      ],
+      "totalLines": 100,
+      "hasStructuralAnalysis": true
+    },
+    "apps/daily_reports/import_views.py": {
+      "filePath": "apps/daily_reports/import_views.py",
+      "contentHash": "4dbff682e61b7bf8f8cfe25e93016084e458af3c7148dceff9feb70b45837676",
+      "functions": [
+        {
+          "name": "_to_decimal",
+          "params": [
+            "val"
+          ],
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "_decimal_json_default",
+          "params": [
+            "obj"
+          ],
+          "exported": true,
+          "lineCount": 10
+        }
+      ],
+      "classes": [
+        {
+          "name": "ImportListView",
+          "methods": [
+            "get"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "ImportUploadView",
+          "methods": [
+            "get",
+            "post"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 47
+        },
+        {
+          "name": "ImportPdfEditView",
+          "methods": [
+            "get",
+            "post"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 99
+        },
+        {
+          "name": "ImportPreviewView",
+          "methods": [
+            "get",
+            "post"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 65
+        },
+        {
+          "name": "ImportDetailView",
+          "methods": [
+            "get"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "ImportCreateReportView",
+          "methods": [
+            "post"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 65
+        },
+        {
+          "name": "ImportDeleteView",
+          "methods": [
+            "get",
+            "post"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "ImportTemplateDownloadView",
+          "methods": [
+            "get"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 14
+        }
+      ],
+      "imports": [
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "date",
+            "timedelta",
+            "_datetime"
+          ]
+        },
+        {
+          "source": "decimal",
+          "specifiers": [
+            "Decimal"
+          ]
+        },
+        {
+          "source": "io",
+          "specifiers": [
+            "BytesIO"
+          ]
+        },
+        {
+          "source": "django.contrib",
+          "specifiers": [
+            "messages"
+          ]
+        },
+        {
+          "source": "django.contrib.auth.mixins",
+          "specifiers": [
+            "LoginRequiredMixin"
+          ]
+        },
+        {
+          "source": "django.http",
+          "specifiers": [
+            "HttpResponse"
+          ]
+        },
+        {
+          "source": "django.shortcuts",
+          "specifiers": [
+            "get_object_or_404",
+            "redirect",
+            "render"
+          ]
+        },
+        {
+          "source": "django.views",
+          "specifiers": [
+            "View"
+          ]
+        },
+        {
+          "source": "apps.projects.models",
+          "specifiers": [
+            "Project"
+          ]
+        },
+        {
+          "source": ".importer",
+          "specifiers": [
+            "build_template_workbook",
+            "parse_import_file"
+          ]
+        },
+        {
+          "source": ".pdf_parser",
+          "specifiers": [
+            "parse_pdf_report"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "ContractorImport",
+            "ContractorImportActivity",
+            "ContractorImportEquipment",
+            "ContractorImportLookahead",
+            "ContractorImportManpower",
+            "DailyLookahead",
+            "DailyReport",
+            "DailyWorkActivity"
+          ]
+        }
+      ],
+      "exports": [
+        "_to_decimal",
+        "_decimal_json_default",
+        "ImportListView",
+        "ImportUploadView",
+        "ImportPdfEditView",
+        "ImportPreviewView",
+        "ImportDetailView",
+        "ImportCreateReportView",
+        "ImportDeleteView",
+        "ImportTemplateDownloadView"
+      ],
+      "totalLines": 405,
+      "hasStructuralAnalysis": true
+    },
+    "apps/daily_reports/importer.py": {
+      "filePath": "apps/daily_reports/importer.py",
+      "contentHash": "fa8c33c44a11352812c6525e91ddd52700ed2b77f35162bfa522900a7ad07cc5",
+      "functions": [
+        {
+          "name": "_cell_str",
+          "params": [
+            "sheet",
+            "row",
+            "col"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "_to_decimal",
+          "params": [
+            "val"
+          ],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "_to_int",
+          "params": [
+            "val",
+            "default"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "parse_import_file",
+          "params": [
+            "uploaded_file"
+          ],
+          "exported": true,
+          "lineCount": 133
+        },
+        {
+          "name": "build_template_workbook",
+          "params": [],
+          "exported": true,
+          "lineCount": 143
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "openpyxl",
+          "specifiers": [
+            "openpyxl"
+          ]
+        },
+        {
+          "source": "decimal",
+          "specifiers": [
+            "Decimal",
+            "InvalidOperation"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "date",
+            "_datetime"
+          ]
+        }
+      ],
+      "exports": [
+        "_cell_str",
+        "_to_decimal",
+        "_to_int",
+        "parse_import_file",
+        "build_template_workbook"
+      ],
+      "totalLines": 315,
+      "hasStructuralAnalysis": true
+    },
+    "apps/daily_reports/models.py": {
+      "filePath": "apps/daily_reports/models.py",
+      "contentHash": "188aabe9966860d7312f240e1357e86866a9c96f67ccabf65190ef0439d8b9ee",
+      "functions": [],
+      "classes": [
+        {
+          "name": "DailyReport",
+          "methods": [
+            "__str__",
+            "clean"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 39
+        },
+        {
+          "name": "DailyWorkActivity",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "DailyLookahead",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "DailyProblemRemark",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 23
+        },
+        {
+          "name": "DailyPhoto",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "ContractorImport",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 40
+        },
+        {
+          "name": "ContractorImportEquipment",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "ContractorImportManpower",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "ContractorImportActivity",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "ContractorImportLookahead",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 16
+        }
+      ],
+      "imports": [
+        {
+          "source": "django.db",
+          "specifiers": [
+            "models"
+          ]
+        },
+        {
+          "source": "django.core.exceptions",
+          "specifiers": [
+            "ValidationError"
+          ]
+        },
+        {
+          "source": "apps.accounts.models",
+          "specifiers": [
+            "User"
+          ]
+        },
+        {
+          "source": "apps.projects.models",
+          "specifiers": [
+            "Project",
+            "WorkArea"
+          ]
+        }
+      ],
+      "exports": [
+        "DailyReport",
+        "DailyWorkActivity",
+        "DailyLookahead",
+        "DailyProblemRemark",
+        "DailyPhoto",
+        "ContractorImport",
+        "ContractorImportEquipment",
+        "ContractorImportManpower",
+        "ContractorImportActivity",
+        "ContractorImportLookahead"
+      ],
+      "totalLines": 221,
+      "hasStructuralAnalysis": true
+    },
+    "apps/daily_reports/pdf_parser.py": {
+      "filePath": "apps/daily_reports/pdf_parser.py",
+      "contentHash": "aaa3d87dfb2db2cdd93b0922d808f78c37fdc8acb7e429b5b5b8957dd98038cd",
+      "functions": [
+        {
+          "name": "_find_date",
+          "params": [
+            "text"
+          ],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "_clean_number",
+          "params": [
+            "val"
+          ],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "_clean_int",
+          "params": [
+            "val"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "_strip",
+          "params": [
+            "val"
+          ],
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "parse_pdf_report",
+          "params": [
+            "file_obj"
+          ],
+          "exported": true,
+          "lineCount": 149
+        },
+        {
+          "name": "_header_text",
+          "params": [
+            "table"
+          ],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "_page_has_lookahead",
+          "params": [
+            "text"
+          ],
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "_dispatch_table",
+          "params": [
+            "table",
+            "result",
+            "page_idx",
+            "in_lookahead"
+          ],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "_is_lookahead_table",
+          "params": [
+            "table"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "_parse_activities_table",
+          "params": [
+            "table",
+            "result"
+          ],
+          "exported": true,
+          "lineCount": 45
+        },
+        {
+          "name": "_parse_lookahead_table",
+          "params": [
+            "table",
+            "result"
+          ],
+          "exported": true,
+          "lineCount": 47
+        },
+        {
+          "name": "_parse_equipment_manpower_table",
+          "params": [
+            "table",
+            "result"
+          ],
+          "exported": true,
+          "lineCount": 45
+        },
+        {
+          "name": "_clean_unit",
+          "params": [
+            "val"
+          ],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "re",
+          "specifiers": [
+            "re"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "date",
+            "_datetime"
+          ]
+        },
+        {
+          "source": "decimal",
+          "specifiers": [
+            "Decimal",
+            "InvalidOperation"
+          ]
+        }
+      ],
+      "exports": [
+        "_find_date",
+        "_clean_number",
+        "_clean_int",
+        "_strip",
+        "parse_pdf_report",
+        "_header_text",
+        "_page_has_lookahead",
+        "_dispatch_table",
+        "_is_lookahead_table",
+        "_parse_activities_table",
+        "_parse_lookahead_table",
+        "_parse_equipment_manpower_table",
+        "_clean_unit"
+      ],
+      "totalLines": 401,
+      "hasStructuralAnalysis": true
+    },
+    "apps/daily_reports/serializers.py": {
+      "filePath": "apps/daily_reports/serializers.py",
+      "contentHash": "5eba07df693dd77f8912fe41d476255a966eb43b5c2bc6bb06129bb496ff07b4",
+      "functions": [],
+      "classes": [
+        {
+          "name": "DailyWorkActivitySerializer",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "DailyPhotoSerializer",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "DailyReportSerializer",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 9
+        }
+      ],
+      "imports": [
+        {
+          "source": "rest_framework",
+          "specifiers": [
+            "serializers"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "DailyReport",
+            "DailyWorkActivity",
+            "DailyLookahead",
+            "DailyProblemRemark",
+            "DailyPhoto"
+          ]
+        }
+      ],
+      "exports": [
+        "DailyWorkActivitySerializer",
+        "DailyPhotoSerializer",
+        "DailyReportSerializer"
+      ],
+      "totalLines": 26,
+      "hasStructuralAnalysis": true
+    },
+    "apps/daily_reports/urls.py": {
+      "filePath": "apps/daily_reports/urls.py",
+      "contentHash": "a8abb8d57b0227271be33103a833e4715555db69615d6ac57bd9e264a87f199e",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "django.urls",
+          "specifiers": [
+            "path"
+          ]
+        },
+        {
+          "source": ".",
+          "specifiers": [
+            "views",
+            "import_views"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 31,
+      "hasStructuralAnalysis": true
+    },
+    "apps/daily_reports/views.py": {
+      "filePath": "apps/daily_reports/views.py",
+      "contentHash": "b125b364cfafc1ce2a81392ff868f54e77978f5a937d8c8be8e56f4244eb55ee",
+      "functions": [],
+      "classes": [
+        {
+          "name": "DailyReportListView",
+          "methods": [
+            "get_queryset",
+            "get_context_data"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 22
+        },
+        {
+          "name": "DailyReportCreateView",
+          "methods": [
+            "get_context_data",
+            "form_valid",
+            "get_success_url"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 38
+        },
+        {
+          "name": "DailyReportDetailView",
+          "methods": [
+            "get_context_data"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "DailyReportUpdateView",
+          "methods": [
+            "get_queryset",
+            "get_context_data",
+            "form_valid",
+            "get_success_url"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 40
+        },
+        {
+          "name": "DailyReportDeleteView",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "SubmitReportView",
+          "methods": [
+            "post"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "ApproveReportView",
+          "methods": [
+            "post"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "RejectReportView",
+          "methods": [
+            "get_report",
+            "get_context_data",
+            "form_valid"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "ExportPDFView",
+          "methods": [
+            "get"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "PhotoReportPDFView",
+          "methods": [
+            "get"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "PhotoPreviewView",
+          "methods": [
+            "get"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "PhotoUploadView",
+          "methods": [
+            "post"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 26
+        },
+        {
+          "name": "PhotoDeleteView",
+          "methods": [
+            "post"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 7
+        }
+      ],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "django.contrib",
+          "specifiers": [
+            "messages"
+          ]
+        },
+        {
+          "source": "django.contrib.auth.mixins",
+          "specifiers": [
+            "LoginRequiredMixin"
+          ]
+        },
+        {
+          "source": "django.core.files.base",
+          "specifiers": [
+            "ContentFile"
+          ]
+        },
+        {
+          "source": "django.db",
+          "specifiers": [
+            "transaction"
+          ]
+        },
+        {
+          "source": "django.db.models",
+          "specifiers": [
+            "Max"
+          ]
+        },
+        {
+          "source": "django.http",
+          "specifiers": [
+            "FileResponse",
+            "Http404",
+            "HttpResponse"
+          ]
+        },
+        {
+          "source": "django.shortcuts",
+          "specifiers": [
+            "redirect",
+            "get_object_or_404"
+          ]
+        },
+        {
+          "source": "django.urls",
+          "specifiers": [
+            "reverse_lazy"
+          ]
+        },
+        {
+          "source": "django.views.generic",
+          "specifiers": [
+            "ListView",
+            "CreateView",
+            "DetailView",
+            "UpdateView",
+            "DeleteView",
+            "FormView",
+            "View"
+          ]
+        },
+        {
+          "source": "apps.utils",
+          "specifiers": [
+            "image_to_jpeg_bytes"
+          ]
+        },
+        {
+          "source": "apps.accounts.mixins",
+          "specifiers": [
+            "ApproverRequiredMixin",
+            "ManagerRequiredMixin",
+            "DailyReportViewMixin",
+            "DailyReportCreateMixin",
+            "DailyReportUpdateMixin"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "DailyReport",
+            "DailyWorkActivity",
+            "DailyLookahead",
+            "DailyProblemRemark",
+            "DailyPhoto"
+          ]
+        },
+        {
+          "source": ".forms",
+          "specifiers": [
+            "DailyReportForm",
+            "RejectionForm",
+            "DailyWorkActivityFormSet",
+            "DailyLookaheadFormSet",
+            "DailyProblemFormSet",
+            "DailyPhotoFormSet"
+          ]
+        }
+      ],
+      "exports": [
+        "DailyReportListView",
+        "DailyReportCreateView",
+        "DailyReportDetailView",
+        "DailyReportUpdateView",
+        "DailyReportDeleteView",
+        "SubmitReportView",
+        "ApproveReportView",
+        "RejectReportView",
+        "ExportPDFView",
+        "PhotoReportPDFView",
+        "PhotoPreviewView",
+        "PhotoUploadView",
+        "PhotoDeleteView"
+      ],
+      "totalLines": 268,
+      "hasStructuralAnalysis": true
+    },
+    "apps/procurement/__init__.py": {
+      "filePath": "apps/procurement/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "apps/procurement/admin.py": {
+      "filePath": "apps/procurement/admin.py",
+      "contentHash": "8490e44a73092bc64589644403edde4367e25e79905bc152cc33015f8233c0ba",
+      "functions": [],
+      "classes": [
+        {
+          "name": "PurchaseRequestItemInline",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "PurchaseOrderItemInline",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "SupplierAdmin",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "PurchaseRequestAdmin",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "PurchaseOrderAdmin",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "imports": [
+        {
+          "source": "django.contrib",
+          "specifiers": [
+            "admin"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "Supplier",
+            "PurchaseRequest",
+            "PurchaseRequestItem",
+            "PurchaseOrder",
+            "PurchaseOrderItem"
+          ]
+        }
+      ],
+      "exports": [
+        "PurchaseRequestItemInline",
+        "PurchaseOrderItemInline",
+        "SupplierAdmin",
+        "PurchaseRequestAdmin",
+        "PurchaseOrderAdmin"
+      ],
+      "totalLines": 37,
+      "hasStructuralAnalysis": true
+    },
+    "apps/procurement/forms.py": {
+      "filePath": "apps/procurement/forms.py",
+      "contentHash": "0a109f9d68122495b012312d0560fa3ef2717398b919423b9f8f098dee3ab82a",
+      "functions": [],
+      "classes": [
+        {
+          "name": "SupplierForm",
+          "methods": [
+            "__init__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "PurchaseRequestForm",
+          "methods": [
+            "__init__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "PurchaseOrderForm",
+          "methods": [
+            "__init__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 17
+        }
+      ],
+      "imports": [
+        {
+          "source": "django",
+          "specifiers": [
+            "forms"
+          ]
+        },
+        {
+          "source": "django.forms",
+          "specifiers": [
+            "inlineformset_factory"
+          ]
+        },
+        {
+          "source": "crispy_forms.helper",
+          "specifiers": [
+            "FormHelper"
+          ]
+        },
+        {
+          "source": "crispy_forms.layout",
+          "specifiers": [
+            "Layout",
+            "Row",
+            "Column",
+            "Submit"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "Supplier",
+            "PurchaseRequest",
+            "PurchaseRequestItem",
+            "PurchaseOrder",
+            "PurchaseOrderItem"
+          ]
+        }
+      ],
+      "exports": [
+        "SupplierForm",
+        "PurchaseRequestForm",
+        "PurchaseOrderForm"
+      ],
+      "totalLines": 77,
+      "hasStructuralAnalysis": true
+    },
+    "apps/procurement/models.py": {
+      "filePath": "apps/procurement/models.py",
+      "contentHash": "f3f1de951df7604e96302d398c58f3595661c5735bc6531e1278124e21318e27",
+      "functions": [],
+      "classes": [
+        {
+          "name": "Supplier",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "PurchaseRequest",
+          "methods": [
+            "__str__",
+            "save"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 30
+        },
+        {
+          "name": "PurchaseRequestItem",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "PurchaseOrder",
+          "methods": [
+            "__str__",
+            "save"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 29
+        },
+        {
+          "name": "PurchaseOrderItem",
+          "methods": [
+            "clean",
+            "save",
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 18
+        }
+      ],
+      "imports": [
+        {
+          "source": "django.db",
+          "specifiers": [
+            "models"
+          ]
+        },
+        {
+          "source": "django.core.exceptions",
+          "specifiers": [
+            "ValidationError"
+          ]
+        },
+        {
+          "source": "apps.accounts.models",
+          "specifiers": [
+            "User"
+          ]
+        },
+        {
+          "source": "apps.projects.models",
+          "specifiers": [
+            "Project"
+          ]
+        },
+        {
+          "source": "apps.materials.models",
+          "specifiers": [
+            "Material"
+          ]
+        }
+      ],
+      "exports": [
+        "Supplier",
+        "PurchaseRequest",
+        "PurchaseRequestItem",
+        "PurchaseOrder",
+        "PurchaseOrderItem"
+      ],
+      "totalLines": 116,
+      "hasStructuralAnalysis": true
+    },
+    "apps/procurement/serializers.py": {
+      "filePath": "apps/procurement/serializers.py",
+      "contentHash": "83f1b0a8e33ea0111a210552713890eea0d8952de78a143e56834a4985f19192",
+      "functions": [],
+      "classes": [
+        {
+          "name": "SupplierSerializer",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "PurchaseRequestItemSerializer",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "PurchaseRequestSerializer",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "PurchaseOrderItemSerializer",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "PurchaseOrderSerializer",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "imports": [
+        {
+          "source": "rest_framework",
+          "specifiers": [
+            "serializers"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "Supplier",
+            "PurchaseRequest",
+            "PurchaseRequestItem",
+            "PurchaseOrder",
+            "PurchaseOrderItem"
+          ]
+        }
+      ],
+      "exports": [
+        "SupplierSerializer",
+        "PurchaseRequestItemSerializer",
+        "PurchaseRequestSerializer",
+        "PurchaseOrderItemSerializer",
+        "PurchaseOrderSerializer"
+      ],
+      "totalLines": 37,
+      "hasStructuralAnalysis": true
+    },
+    "apps/procurement/urls.py": {
+      "filePath": "apps/procurement/urls.py",
+      "contentHash": "02308c1d414bea790715ad58d9f311b55c86cb5a70ee8714f7f2c13da1fac3c0",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "django.urls",
+          "specifiers": [
+            "path"
+          ]
+        },
+        {
+          "source": ".",
+          "specifiers": [
+            "views"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 18,
+      "hasStructuralAnalysis": true
+    },
+    "apps/procurement/views.py": {
+      "filePath": "apps/procurement/views.py",
+      "contentHash": "0d9a1956da601408681fe1561013c8812654b032d6fddacc14922080eb970681",
+      "functions": [],
+      "classes": [
+        {
+          "name": "ProcurementIndexView",
+          "methods": [
+            "get"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "SupplierListView",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "SupplierCreateView",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "SupplierUpdateView",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "PurchaseRequestListView",
+          "methods": [
+            "get_queryset"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "PurchaseRequestCreateView",
+          "methods": [
+            "get_context_data",
+            "form_valid",
+            "get_success_url"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 24
+        },
+        {
+          "name": "PurchaseRequestDetailView",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "PurchaseOrderListView",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "PurchaseOrderCreateView",
+          "methods": [
+            "get_context_data",
+            "form_valid",
+            "get_success_url"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 26
+        },
+        {
+          "name": "PurchaseOrderDetailView",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "imports": [
+        {
+          "source": "django.contrib",
+          "specifiers": [
+            "messages"
+          ]
+        },
+        {
+          "source": "django.contrib.auth.mixins",
+          "specifiers": [
+            "LoginRequiredMixin"
+          ]
+        },
+        {
+          "source": "django.db",
+          "specifiers": [
+            "transaction"
+          ]
+        },
+        {
+          "source": "django.shortcuts",
+          "specifiers": [
+            "redirect"
+          ]
+        },
+        {
+          "source": "django.urls",
+          "specifiers": [
+            "reverse_lazy"
+          ]
+        },
+        {
+          "source": "django.views",
+          "specifiers": [
+            "View"
+          ]
+        },
+        {
+          "source": "django.views.generic",
+          "specifiers": [
+            "ListView",
+            "CreateView",
+            "DetailView",
+            "UpdateView",
+            "DeleteView"
+          ]
+        },
+        {
+          "source": "apps.accounts.mixins",
+          "specifiers": [
+            "ApproverRequiredMixin",
+            "FinancialWriteMixin"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "Supplier",
+            "PurchaseRequest",
+            "PurchaseOrder"
+          ]
+        },
+        {
+          "source": ".forms",
+          "specifiers": [
+            "SupplierForm",
+            "PurchaseRequestForm",
+            "PurchaseRequestItemFormSet",
+            "PurchaseOrderForm",
+            "PurchaseOrderItemFormSet"
+          ]
+        }
+      ],
+      "exports": [
+        "ProcurementIndexView",
+        "SupplierListView",
+        "SupplierCreateView",
+        "SupplierUpdateView",
+        "PurchaseRequestListView",
+        "PurchaseRequestCreateView",
+        "PurchaseRequestDetailView",
+        "PurchaseOrderListView",
+        "PurchaseOrderCreateView",
+        "PurchaseOrderDetailView"
+      ],
+      "totalLines": 124,
+      "hasStructuralAnalysis": true
+    },
+    "apps/projects/__init__.py": {
+      "filePath": "apps/projects/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "apps/projects/admin.py": {
+      "filePath": "apps/projects/admin.py",
+      "contentHash": "b94892dc123ee33b54a335310f8766b8119f83cce362bcb22beabb740ed5468e",
+      "functions": [],
+      "classes": [
+        {
+          "name": "StakeholderInline",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "WorkAreaInline",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "ProjectAdmin",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "StakeholderAdmin",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "WorkAreaAdmin",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "imports": [
+        {
+          "source": "django.contrib",
+          "specifiers": [
+            "admin"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "Project",
+            "Stakeholder",
+            "WorkArea"
+          ]
+        }
+      ],
+      "exports": [
+        "StakeholderInline",
+        "WorkAreaInline",
+        "ProjectAdmin",
+        "StakeholderAdmin",
+        "WorkAreaAdmin"
+      ],
+      "totalLines": 37,
+      "hasStructuralAnalysis": true
+    },
+    "apps/projects/forms.py": {
+      "filePath": "apps/projects/forms.py",
+      "contentHash": "4e843a359ee05e8fe1eef824b06cb87ae41fc461ef7d1eea848e7b4457bd300a",
+      "functions": [],
+      "classes": [
+        {
+          "name": "ProjectForm",
+          "methods": [
+            "__init__",
+            "clean"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 35
+        },
+        {
+          "name": "StakeholderForm",
+          "methods": [
+            "__init__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "WorkAreaForm",
+          "methods": [
+            "__init__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 14
+        }
+      ],
+      "imports": [
+        {
+          "source": "django",
+          "specifiers": [
+            "forms"
+          ]
+        },
+        {
+          "source": "crispy_forms.helper",
+          "specifiers": [
+            "FormHelper"
+          ]
+        },
+        {
+          "source": "crispy_forms.layout",
+          "specifiers": [
+            "Layout",
+            "Row",
+            "Column",
+            "Submit",
+            "Fieldset"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "Project",
+            "Stakeholder",
+            "WorkArea"
+          ]
+        }
+      ],
+      "exports": [
+        "ProjectForm",
+        "StakeholderForm",
+        "WorkAreaForm"
+      ],
+      "totalLines": 74,
+      "hasStructuralAnalysis": true
+    },
+    "apps/projects/models.py": {
+      "filePath": "apps/projects/models.py",
+      "contentHash": "4ec95f0c3434b00f1f7baec61f83ffa4736a893ecbf9f7399b53e20e260d3749",
+      "functions": [],
+      "classes": [
+        {
+          "name": "Project",
+          "methods": [
+            "__str__",
+            "duration_days"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 31
+        },
+        {
+          "name": "Stakeholder",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "WorkArea",
+          "methods": [
+            "__str__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 11
+        }
+      ],
+      "imports": [
+        {
+          "source": "django.db",
+          "specifiers": [
+            "models"
+          ]
+        },
+        {
+          "source": "apps.accounts.models",
+          "specifiers": [
+            "User"
+          ]
+        }
+      ],
+      "exports": [
+        "Project",
+        "Stakeholder",
+        "WorkArea"
+      ],
+      "totalLines": 65,
+      "hasStructuralAnalysis": true
+    },
+    "apps/projects/serializers.py": {
+      "filePath": "apps/projects/serializers.py",
+      "contentHash": "717efb84cd9f962592bdb55db8ed5312ad42b145781b07d4c1ac7b0edcf5e55c",
+      "functions": [],
+      "classes": [
+        {
+          "name": "StakeholderSerializer",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "WorkAreaSerializer",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "ProjectSerializer",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "imports": [
+        {
+          "source": "rest_framework",
+          "specifiers": [
+            "serializers"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "Project",
+            "Stakeholder",
+            "WorkArea"
+          ]
+        }
+      ],
+      "exports": [
+        "StakeholderSerializer",
+        "WorkAreaSerializer",
+        "ProjectSerializer"
+      ],
+      "totalLines": 25,
+      "hasStructuralAnalysis": true
+    },
+    "apps/projects/urls.py": {
+      "filePath": "apps/projects/urls.py",
+      "contentHash": "97118ae4965770751f5fe94d6b87eba223d70b9a48850a9f80343f1867826a4f",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "django.urls",
+          "specifiers": [
+            "path"
+          ]
+        },
+        {
+          "source": ".",
+          "specifiers": [
+            "views"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 16,
+      "hasStructuralAnalysis": true
+    },
+    "apps/projects/views.py": {
+      "filePath": "apps/projects/views.py",
+      "contentHash": "02d57974bfd6d70d16f29747fb7c7d729d1f1f2810fae8dd60409792465236cd",
+      "functions": [],
+      "classes": [
+        {
+          "name": "ProjectListView",
+          "methods": [
+            "get_queryset",
+            "get_context_data"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "ProjectCreateView",
+          "methods": [
+            "form_valid"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "ProjectDetailView",
+          "methods": [
+            "get_context_data"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "ProjectUpdateView",
+          "methods": [
+            "get_success_url",
+            "form_valid"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "ProjectDeleteView",
+          "methods": [
+            "form_valid"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "StakeholderCreateView",
+          "methods": [
+            "get_project",
+            "form_valid",
+            "get_success_url",
+            "get_context_data"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "WorkAreaCreateView",
+          "methods": [
+            "get_project",
+            "form_valid",
+            "get_success_url",
+            "get_context_data"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "WorkAreaUpdateView",
+          "methods": [
+            "get_project",
+            "form_valid",
+            "get_success_url",
+            "get_context_data"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 19
+        }
+      ],
+      "imports": [
+        {
+          "source": "django.contrib",
+          "specifiers": [
+            "messages"
+          ]
+        },
+        {
+          "source": "django.contrib.auth.mixins",
+          "specifiers": [
+            "LoginRequiredMixin"
+          ]
+        },
+        {
+          "source": "django.urls",
+          "specifiers": [
+            "reverse_lazy"
+          ]
+        },
+        {
+          "source": "django.views.generic",
+          "specifiers": [
+            "ListView",
+            "CreateView",
+            "DetailView",
+            "UpdateView",
+            "DeleteView"
+          ]
+        },
+        {
+          "source": "apps.accounts.mixins",
+          "specifiers": [
+            "AdminRequiredMixin",
+            "ProjectViewMixin",
+            "ProjectWriteMixin"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "Project",
+            "Stakeholder",
+            "WorkArea"
+          ]
+        },
+        {
+          "source": ".forms",
+          "specifiers": [
+            "ProjectForm",
+            "StakeholderForm",
+            "WorkAreaForm"
+          ]
+        }
+      ],
+      "exports": [
+        "ProjectListView",
+        "ProjectCreateView",
+        "ProjectDetailView",
+        "ProjectUpdateView",
+        "ProjectDeleteView",
+        "StakeholderCreateView",
+        "WorkAreaCreateView",
+        "WorkAreaUpdateView"
+      ],
+      "totalLines": 143,
+      "hasStructuralAnalysis": true
+    },
+    "apps/utils.py": {
+      "filePath": "apps/utils.py",
+      "contentHash": "b25bdfd0b7f7a70f111b3d880ca6e397549f3d009b4bb2913c35ebfcd5a0c824",
+      "functions": [
+        {
+          "name": "image_to_jpeg_bytes",
+          "params": [
+            "path_or_file"
+          ],
+          "exported": true,
+          "lineCount": 11
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "io",
+          "specifiers": [
+            "io"
+          ]
+        }
+      ],
+      "exports": [
+        "image_to_jpeg_bytes"
+      ],
+      "totalLines": 21,
+      "hasStructuralAnalysis": true
+    },
+    "config/__init__.py": {
+      "filePath": "config/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "config/asgi.py": {
+      "filePath": "config/asgi.py",
+      "contentHash": "267536654f585aed4fa92b575d2eb020f3e3253a0226f84a14bef33927955680",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "django.core.asgi",
+          "specifiers": [
+            "get_asgi_application"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 6,
+      "hasStructuralAnalysis": true
+    },
+    "config/settings/__init__.py": {
+      "filePath": "config/settings/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "config/settings/base.py": {
+      "filePath": "config/settings/base.py",
+      "contentHash": "c5ad8a2d06d2055e20f0d907d30198d820702d0c8b10c608fb7036a8260e7146",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "environ",
+          "specifiers": [
+            "environ"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 155,
+      "hasStructuralAnalysis": true
+    },
+    "config/settings/development.py": {
+      "filePath": "config/settings/development.py",
+      "contentHash": "ab12ea26a7d2c4cff167783d63cd76fc2b906cb58eff27220b80bb9486325a05",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": ".base",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 12,
+      "hasStructuralAnalysis": true
+    },
+    "config/settings/production.py": {
+      "filePath": "config/settings/production.py",
+      "contentHash": "aebc040972c01978f027a89531bc3011993ce23a413d167236e1e9ff2433a76d",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": ".base",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "environ",
+          "specifiers": [
+            "environ"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 102,
+      "hasStructuralAnalysis": true
+    },
+    "config/urls.py": {
+      "filePath": "config/urls.py",
+      "contentHash": "23b707c2694eaa4463120e5cc4de509daec7d78beb4e24cc0c44010db0673130",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "django.contrib",
+          "specifiers": [
+            "admin"
+          ]
+        },
+        {
+          "source": "django.urls",
+          "specifiers": [
+            "path",
+            "include"
+          ]
+        },
+        {
+          "source": "django.conf",
+          "specifiers": [
+            "settings"
+          ]
+        },
+        {
+          "source": "django.conf.urls.static",
+          "specifiers": [
+            "static"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 40,
+      "hasStructuralAnalysis": true
+    },
+    "config/wsgi.py": {
+      "filePath": "config/wsgi.py",
+      "contentHash": "e2456b0b58b96ceb651b4763522a9664b654bd280f483a044b74da63cb4dec20",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "django.core.wsgi",
+          "specifiers": [
+            "get_wsgi_application"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 6,
+      "hasStructuralAnalysis": true
+    },
+    "manage.py": {
+      "filePath": "manage.py",
+      "contentHash": "4fc1d0d9e1f0da114d17143ef5fb9b7f1de0fdf2a1880b900d78d256387c10f9",
+      "functions": [
+        {
+          "name": "main",
+          "params": [],
+          "exported": true,
+          "lineCount": 11
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        }
+      ],
+      "exports": [
+        "main"
+      ],
+      "totalLines": 21,
+      "hasStructuralAnalysis": true
+    }
+  }
+}

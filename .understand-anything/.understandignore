@@ -1,0 +1,21 @@
+# Scope: core apps only (projects, boq, cost_control, procurement, daily_reports, change_orders) + project config
+# Whitelist pattern: ignore everything, then re-include the wanted subtrees.
+/*
+!/apps/
+!/config/
+!/manage.py
+/apps/*
+!/apps/__init__.py
+!/apps/utils.py
+!/apps/projects/
+!/apps/boq/
+!/apps/cost_control/
+!/apps/procurement/
+!/apps/daily_reports/
+!/apps/change_orders/
+# drop noise inside kept apps
+**/migrations/
+**/__pycache__/
+*.pyc
+# config: keep settings + urls + wsgi/asgi, drop pycache
+/config/__pycache__/
