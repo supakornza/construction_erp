@@ -3,7 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, FormView, View
 from .models import User, UserProfile
 from .forms import UserCreateForm, UserUpdateForm, ProfileForm
@@ -16,7 +16,9 @@ class LoginView(FormView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('dashboard:index')
+            if request.session.get('current_project_id'):
+                return redirect('dashboard:index')
+            return redirect('accounts:select_project')
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -25,7 +27,37 @@ class LoginView(FormView):
             self.request.session.set_expiry(0)
         else:
             self.request.session.set_expiry(1209600)  # 14 days
-        return redirect(self.request.GET.get('next', 'dashboard:index'))
+        next_url = self.request.GET.get('next')
+        if next_url:
+            # Store next URL so we can redirect after project selection
+            self.request.session['login_next'] = next_url
+        return redirect('accounts:select_project')
+
+
+class ProjectSelectView(LoginRequiredMixin, View):
+    template_name = 'accounts/project_select.html'
+
+    def get(self, request):
+        from apps.projects.models import Project
+        from django.shortcuts import render
+        projects = Project.objects.exclude(status='Closed').order_by('status', 'project_name')
+        current_id = request.session.get('current_project_id')
+        return render(request, self.template_name, {
+            'projects': projects,
+            'current_project_id': current_id,
+        })
+
+    def post(self, request):
+        from apps.projects.models import Project
+        project_id = request.POST.get('project_id')
+        if not project_id:
+            messages.error(request, 'กรุณาเลือกโครงการก่อนดำเนินการต่อ')
+            return redirect('accounts:select_project')
+        project = get_object_or_404(Project, pk=project_id)
+        request.session['current_project_id'] = project.pk
+        request.session['current_project_name'] = project.project_name
+        next_url = request.session.pop('login_next', None)
+        return redirect(next_url or 'dashboard:index')
 
 
 class ChangePasswordView(LoginRequiredMixin, FormView):

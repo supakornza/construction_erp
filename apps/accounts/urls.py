@@ -37,4 +37,7 @@ urlpatterns = [
 
     # Role management
     path('roles/', views.RoleListView.as_view(), name='role_list'),
+
+    # Project selection
+    path('select-project/', views.ProjectSelectView.as_view(), name='select_project'),
 ]

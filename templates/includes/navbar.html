@@ -29,6 +29,21 @@
     <!-- Right side -->
     <div class="ms-auto d-flex align-items-center gap-2 flex-shrink-0">
 
+        <!-- Current project switcher -->
+        {% if current_project %}
+        <a href="{% url 'accounts:select_project' %}"
+           class="btn btn-outline-secondary d-inline-flex align-items-center gap-1 no-print flex-shrink-0"
+           style="min-height:44px;max-width:220px"
+           title="คลิกเพื่อเปลี่ยนโครงการ"
+           aria-label="โครงการปัจจุบัน: {{ current_project.project_name }} — คลิกเพื่อเปลี่ยน">
+            <i class="fas fa-building text-primary fa-fw" aria-hidden="true"></i>
+            <span class="d-none d-md-inline text-truncate" style="max-width:130px;font-size:.82rem;font-weight:600;">
+                {{ current_project.project_name }}
+            </span>
+            <i class="fas fa-exchange-alt fa-fw" style="font-size:.7rem;opacity:.6" aria-hidden="true"></i>
+        </a>
+        {% endif %}
+
         <!-- Language switcher -->
         <div class="d-flex gap-1 no-print" id="lang-switcher">
             <form method="post" action="{% url 'set_language' %}" class="d-inline">

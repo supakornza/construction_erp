@@ -1,0 +1,31 @@
+# Construction ERP Project Context
+
+This is a Django-based Construction ERP project.
+
+Important paths:
+- Project root: /var/www/construction_erp
+- Settings: config.settings.production
+- Environment file: .env
+- Docker compose: docker-compose.yml
+- Main app: construction ERP modules
+
+Rules:
+1. Before editing, inspect current file content.
+2. Before running migrations, check current Docker containers.
+3. Never expose SECRET_KEY, DATABASE_URL, API keys, or tokens.
+4. For deployment tasks, follow this sequence:
+   - git status
+   - inspect changed files
+   - backup config if needed
+   - docker compose ps
+   - docker compose logs
+   - apply fix
+   - test endpoint
+   - summarize result
+
+Common commands:
+- docker compose ps
+- docker compose logs --tail=100 web
+- docker compose exec web python manage.py check --settings=config.settings.production
+- docker compose exec web python manage.py migrate --settings=config.settings.production
+- docker compose exec web python manage.py collectstatic --noinput --settings=config.settings.production

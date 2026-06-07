@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: construction_erp_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: construction_erp
+      POSTGRES_USER: construction_erp
+      POSTGRES_PASSWORD: 97430f278d69fc97be42f801f10fc6a0388f343d9b22336d
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U construction_erp -d construction_erp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+construction_erp_app:
+    container_name: construction_erp_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    working_dir: /app
+    env_file:
+      - .env
+    command: >
+      sh -c "python manage.py migrate --settings=config.settings.production &&
+             python manage.py collectstatic --noinput --settings=config.settings.production &&
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+    volumes:
+      - ./media:/app/media
+      - ./staticfiles:/app/staticfiles
+      - ./backup:/app/backup
+    networks:
+      - traefik
+      - internal
+    depends_on:
+      postgres:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.construction-erp.rule=Host(`construction-erp.oatlomo.work`)"
+      - "traefik.http.routers.construction-erp.entrypoints=websecure"
+      - "traefik.http.routers.construction-erp.tls=true"
+      - "traefik.http.services.construction-erp.loadbalancer.server.port=8000"
+      - "traefik.http.routers.construction-erp-http.rule=Host(`construction-erp.oatlomo.work`)"
+      - "traefik.http.routers.construction-erp-http.entrypoints=web"
+      - "traefik.http.routers.construction-erp-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+volumes:
+  postgres_data:
+
+networks:
+  traefik:
+    external: true
+  internal:
+    driver: bridge
