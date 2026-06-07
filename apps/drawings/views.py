@@ -8,7 +8,7 @@ from django.views.generic import (
     ListView, CreateView, DetailView, UpdateView, TemplateView, View
 )
 
-from apps.accounts.mixins import DrawingsViewMixin, DrawingsWriteMixin, DrawingsApproveMixin
+from apps.accounts.mixins import CurrentProjectMixin, DrawingsViewMixin, DrawingsWriteMixin, DrawingsApproveMixin
 from apps.notifications.utils import notify
 from apps.projects.models import Project
 from .models import Drawing, RFI
@@ -46,7 +46,8 @@ class DrawingsDashboardView(DrawingsViewMixin, TemplateView):
 
 # ── Drawings ──────────────────────────────────────────────────────────────────
 
-class DrawingListView(DrawingsViewMixin, ListView):
+class DrawingListView(CurrentProjectMixin, DrawingsViewMixin, ListView):
+
     model               = Drawing
     template_name       = 'drawings/drawing_list.html'
     context_object_name = 'drawings'
@@ -76,7 +77,8 @@ class DrawingListView(DrawingsViewMixin, ListView):
         return ctx
 
 
-class DrawingCreateView(DrawingsWriteMixin, CreateView):
+class DrawingCreateView(CurrentProjectMixin, DrawingsWriteMixin, CreateView):
+
     model         = Drawing
     form_class    = DrawingForm
     template_name = 'drawings/drawing_form.html'
@@ -88,7 +90,8 @@ class DrawingCreateView(DrawingsWriteMixin, CreateView):
         return redirect(reverse('drawings:drawing_detail', kwargs={'pk': self.object.pk}))
 
 
-class DrawingDetailView(DrawingsViewMixin, DetailView):
+class DrawingDetailView(CurrentProjectMixin, DrawingsViewMixin, DetailView):
+
     model               = Drawing
     template_name       = 'drawings/drawing_detail.html'
     context_object_name = 'drawing'
@@ -99,7 +102,8 @@ class DrawingDetailView(DrawingsViewMixin, DetailView):
         ).prefetch_related('rfis', 'supersedes')
 
 
-class DrawingUpdateView(DrawingsWriteMixin, UpdateView):
+class DrawingUpdateView(CurrentProjectMixin, DrawingsWriteMixin, UpdateView):
+
     model         = Drawing
     form_class    = DrawingForm
     template_name = 'drawings/drawing_form.html'
@@ -109,7 +113,8 @@ class DrawingUpdateView(DrawingsWriteMixin, UpdateView):
         return reverse('drawings:drawing_detail', kwargs={'pk': self.object.pk})
 
 
-class DrawingRevisionCreateView(DrawingsWriteMixin, View):
+class DrawingRevisionCreateView(CurrentProjectMixin, DrawingsWriteMixin, View):
+
     template_name = 'drawings/drawing_revision_form.html'
 
     def get(self, request, pk):
@@ -144,7 +149,8 @@ class DrawingRevisionCreateView(DrawingsWriteMixin, View):
 
 # ── RFI ───────────────────────────────────────────────────────────────────────
 
-class RFIListView(DrawingsViewMixin, ListView):
+class RFIListView(CurrentProjectMixin, DrawingsViewMixin, ListView):
+
     model               = RFI
     template_name       = 'drawings/rfi_list.html'
     context_object_name = 'rfis'
@@ -172,7 +178,8 @@ class RFIListView(DrawingsViewMixin, ListView):
         return ctx
 
 
-class RFICreateView(DrawingsWriteMixin, CreateView):
+class RFICreateView(CurrentProjectMixin, DrawingsWriteMixin, CreateView):
+
     model         = RFI
     form_class    = RFIForm
     template_name = 'drawings/rfi_form.html'
@@ -193,7 +200,8 @@ class RFICreateView(DrawingsWriteMixin, CreateView):
         return redirect(reverse('drawings:rfi_detail', kwargs={'pk': self.object.pk}))
 
 
-class RFIDetailView(DrawingsViewMixin, DetailView):
+class RFIDetailView(CurrentProjectMixin, DrawingsViewMixin, DetailView):
+
     model               = RFI
     template_name       = 'drawings/rfi_detail.html'
     context_object_name = 'rfi'
@@ -204,7 +212,8 @@ class RFIDetailView(DrawingsViewMixin, DetailView):
         )
 
 
-class RFIUpdateView(DrawingsWriteMixin, UpdateView):
+class RFIUpdateView(CurrentProjectMixin, DrawingsWriteMixin, UpdateView):
+
     model         = RFI
     form_class    = RFIForm
     template_name = 'drawings/rfi_form.html'
@@ -221,7 +230,8 @@ class RFIUpdateView(DrawingsWriteMixin, UpdateView):
         return reverse('drawings:rfi_detail', kwargs={'pk': self.object.pk})
 
 
-class RFISubmitView(DrawingsWriteMixin, View):
+class RFISubmitView(CurrentProjectMixin, DrawingsWriteMixin, View):
+
     def post(self, request, pk):
         rfi = get_object_or_404(RFI, pk=pk)
         if rfi.status == 'Open':
@@ -232,7 +242,8 @@ class RFISubmitView(DrawingsWriteMixin, View):
         return redirect('drawings:rfi_detail', pk=pk)
 
 
-class RFIReviewView(DrawingsApproveMixin, View):
+class RFIReviewView(CurrentProjectMixin, DrawingsApproveMixin, View):
+
     def post(self, request, pk):
         rfi = get_object_or_404(RFI, pk=pk)
         if rfi.status == 'Submitted':
@@ -242,7 +253,8 @@ class RFIReviewView(DrawingsApproveMixin, View):
         return redirect('drawings:rfi_detail', pk=pk)
 
 
-class RFIAnswerView(DrawingsApproveMixin, View):
+class RFIAnswerView(CurrentProjectMixin, DrawingsApproveMixin, View):
+
     template_name = 'drawings/rfi_answer.html'
 
     def get(self, request, pk):
@@ -271,7 +283,8 @@ class RFIAnswerView(DrawingsApproveMixin, View):
         return render(request, self.template_name, {'rfi': rfi, 'form': form})
 
 
-class RFICloseView(DrawingsApproveMixin, View):
+class RFICloseView(CurrentProjectMixin, DrawingsApproveMixin, View):
+
     def post(self, request, pk):
         rfi = get_object_or_404(RFI, pk=pk)
         if rfi.status == 'Answered':
@@ -281,7 +294,8 @@ class RFICloseView(DrawingsApproveMixin, View):
         return redirect('drawings:rfi_detail', pk=pk)
 
 
-class RFIVoidView(DrawingsWriteMixin, View):
+class RFIVoidView(CurrentProjectMixin, DrawingsWriteMixin, View):
+
     def post(self, request, pk):
         rfi = get_object_or_404(RFI, pk=pk)
         if rfi.status not in ('Closed', 'Void'):

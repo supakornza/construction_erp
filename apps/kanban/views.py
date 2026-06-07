@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DeleteView, TemplateView, UpdateView
 
+from apps.accounts.mixins import CurrentProjectMixin
 from apps.projects.models import Project
 
 from .forms import KanbanTaskForm
@@ -21,7 +22,8 @@ COLUMNS = [
 ]
 
 
-class KanbanBoardView(LoginRequiredMixin, TemplateView):
+class KanbanBoardView(CurrentProjectMixin, LoginRequiredMixin, TemplateView):
+
     template_name = 'kanban/board.html'
 
     def get_context_data(self, **kwargs):
@@ -67,7 +69,8 @@ class KanbanTaskMoveView(LoginRequiredMixin, View):
         return JsonResponse({'ok': True})
 
 
-class KanbanTaskCreateView(LoginRequiredMixin, CreateView):
+class KanbanTaskCreateView(CurrentProjectMixin, LoginRequiredMixin, CreateView):
+
     model = KanbanTask
     form_class = KanbanTaskForm
     template_name = 'kanban/task_form.html'
@@ -88,7 +91,8 @@ class KanbanTaskCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class KanbanTaskUpdateView(LoginRequiredMixin, UpdateView):
+class KanbanTaskUpdateView(CurrentProjectMixin, LoginRequiredMixin, UpdateView):
+
     model = KanbanTask
     form_class = KanbanTaskForm
     template_name = 'kanban/task_form.html'
@@ -99,7 +103,8 @@ class KanbanTaskUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class KanbanTaskDeleteView(LoginRequiredMixin, DeleteView):
+class KanbanTaskDeleteView(CurrentProjectMixin, LoginRequiredMixin, DeleteView):
+
     model = KanbanTask
     template_name = 'kanban/confirm_delete.html'
     success_url = reverse_lazy('kanban:board')

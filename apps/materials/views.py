@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
-from apps.accounts.mixins import MaterialsViewMixin, MaterialsWriteMixin, MaterialsDeleteMixin
+from apps.accounts.mixins import CurrentProjectMixin, MaterialsViewMixin, MaterialsWriteMixin, MaterialsDeleteMixin
 from apps.projects.models import Project
 from .models import Material, MaterialDelivery, MaterialUsage, get_stock_balance
 from .forms import MaterialForm, MaterialDeliveryForm, MaterialUsageForm
@@ -249,7 +249,8 @@ class MaterialUpdateView(MaterialsWriteMixin, UpdateView):
     success_url = reverse_lazy('materials:list')
 
 
-class MaterialDeliveryListView(MaterialsViewMixin, ListView):
+class MaterialDeliveryListView(CurrentProjectMixin, MaterialsViewMixin, ListView):
+
     model = MaterialDelivery
     template_name = 'materials/delivery_list.html'
     context_object_name = 'deliveries'
@@ -323,7 +324,8 @@ def _attach_ocr_metadata(form_instance, request):
     form_instance.ocr_processed_at = timezone.now()
 
 
-class MaterialDeliveryCreateView(MaterialsWriteMixin, CreateView):
+class MaterialDeliveryCreateView(CurrentProjectMixin, MaterialsWriteMixin, CreateView):
+
     model = MaterialDelivery
     form_class = MaterialDeliveryForm
     template_name = 'materials/delivery_form.html'
@@ -335,7 +337,8 @@ class MaterialDeliveryCreateView(MaterialsWriteMixin, CreateView):
         return super().form_valid(form)
 
 
-class MaterialDeliveryUpdateView(MaterialsWriteMixin, UpdateView):
+class MaterialDeliveryUpdateView(CurrentProjectMixin, MaterialsWriteMixin, UpdateView):
+
     model = MaterialDelivery
     form_class = MaterialDeliveryForm
     template_name = 'materials/delivery_form.html'
@@ -346,27 +349,31 @@ class MaterialDeliveryUpdateView(MaterialsWriteMixin, UpdateView):
         return super().form_valid(form)
 
 
-class MaterialDeliveryDeleteView(MaterialsDeleteMixin, DeleteView):
+class MaterialDeliveryDeleteView(CurrentProjectMixin, MaterialsDeleteMixin, DeleteView):
+
     model = MaterialDelivery
     template_name = 'materials/confirm_delete.html'
     success_url = reverse_lazy('materials:delivery_list')
 
 
-class MaterialUsageListView(MaterialsViewMixin, ListView):
+class MaterialUsageListView(CurrentProjectMixin, MaterialsViewMixin, ListView):
+
     model = MaterialUsage
     template_name = 'materials/usage_list.html'
     context_object_name = 'usages'
     paginate_by = 30
 
 
-class MaterialUsageCreateView(MaterialsWriteMixin, CreateView):
+class MaterialUsageCreateView(CurrentProjectMixin, MaterialsWriteMixin, CreateView):
+
     model = MaterialUsage
     form_class = MaterialUsageForm
     template_name = 'materials/usage_form.html'
     success_url = reverse_lazy('materials:usage_list')
 
 
-class StockBalanceView(MaterialsViewMixin, ListView):
+class StockBalanceView(CurrentProjectMixin, MaterialsViewMixin, ListView):
+
     model = Material
     template_name = 'materials/stock.html'
     context_object_name = 'materials'

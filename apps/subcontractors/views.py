@@ -9,7 +9,7 @@ from django.views.generic import (
     ListView, CreateView, DetailView, UpdateView, TemplateView, View
 )
 
-from apps.accounts.mixins import SubcontractorViewMixin, SubcontractorWriteMixin, SubcontractorApproveMixin
+from apps.accounts.mixins import CurrentProjectMixin, SubcontractorViewMixin, SubcontractorWriteMixin, SubcontractorApproveMixin
 from apps.projects.models import Project
 from .models import Subcontractor, SubcontractorContract, PaymentClaim
 from .forms import (
@@ -109,7 +109,8 @@ class SubcontractorUpdateView(SubcontractorWriteMixin, UpdateView):
 
 # ── Contracts ─────────────────────────────────────────────────────────────────
 
-class ContractListView(SubcontractorViewMixin, ListView):
+class ContractListView(CurrentProjectMixin, SubcontractorViewMixin, ListView):
+
     model               = SubcontractorContract
     template_name       = 'subcontractors/contract_list.html'
     context_object_name = 'contracts'
@@ -133,7 +134,8 @@ class ContractListView(SubcontractorViewMixin, ListView):
         return ctx
 
 
-class ContractCreateView(SubcontractorWriteMixin, CreateView):
+class ContractCreateView(CurrentProjectMixin, SubcontractorWriteMixin, CreateView):
+
     model         = SubcontractorContract
     form_class    = SubcontractorContractForm
     template_name = 'subcontractors/contract_form.html'
@@ -168,7 +170,8 @@ class ContractCreateView(SubcontractorWriteMixin, CreateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class ContractDetailView(SubcontractorViewMixin, DetailView):
+class ContractDetailView(CurrentProjectMixin, SubcontractorViewMixin, DetailView):
+
     model               = SubcontractorContract
     template_name       = 'subcontractors/contract_detail.html'
     context_object_name = 'contract'
@@ -187,7 +190,8 @@ class ContractDetailView(SubcontractorViewMixin, DetailView):
         return ctx
 
 
-class ContractUpdateView(SubcontractorWriteMixin, UpdateView):
+class ContractUpdateView(CurrentProjectMixin, SubcontractorWriteMixin, UpdateView):
+
     model         = SubcontractorContract
     form_class    = SubcontractorContractForm
     template_name = 'subcontractors/contract_form.html'
@@ -214,7 +218,8 @@ class ContractUpdateView(SubcontractorWriteMixin, UpdateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class ContractStatusView(SubcontractorApproveMixin, View):
+class ContractStatusView(CurrentProjectMixin, SubcontractorApproveMixin, View):
+
     def post(self, request, pk):
         contract = get_object_or_404(SubcontractorContract, pk=pk)
         action = request.POST.get('action')
@@ -238,7 +243,8 @@ class ContractStatusView(SubcontractorApproveMixin, View):
 
 # ── Payment Claims ─────────────────────────────────────────────────────────────
 
-class PaymentClaimCreateView(SubcontractorWriteMixin, CreateView):
+class PaymentClaimCreateView(CurrentProjectMixin, SubcontractorWriteMixin, CreateView):
+
     model         = PaymentClaim
     form_class    = PaymentClaimForm
     template_name = 'subcontractors/claim_form.html'
@@ -264,7 +270,8 @@ class PaymentClaimCreateView(SubcontractorWriteMixin, CreateView):
         return redirect(reverse('subcontractors:claim_detail', kwargs={'pk': obj.pk}))
 
 
-class PaymentClaimDetailView(SubcontractorViewMixin, DetailView):
+class PaymentClaimDetailView(CurrentProjectMixin, SubcontractorViewMixin, DetailView):
+
     model               = PaymentClaim
     template_name       = 'subcontractors/claim_detail.html'
     context_object_name = 'claim'
@@ -276,7 +283,8 @@ class PaymentClaimDetailView(SubcontractorViewMixin, DetailView):
         )
 
 
-class PaymentClaimSubmitView(SubcontractorWriteMixin, View):
+class PaymentClaimSubmitView(CurrentProjectMixin, SubcontractorWriteMixin, View):
+
     def post(self, request, pk):
         claim = get_object_or_404(PaymentClaim, pk=pk)
         if claim.status == 'Draft':
@@ -286,7 +294,8 @@ class PaymentClaimSubmitView(SubcontractorWriteMixin, View):
         return redirect('subcontractors:claim_detail', pk=pk)
 
 
-class PaymentClaimCertifyView(SubcontractorApproveMixin, View):
+class PaymentClaimCertifyView(CurrentProjectMixin, SubcontractorApproveMixin, View):
+
     template_name = 'subcontractors/claim_certify.html'
 
     def _initial_certify(self, claim):
@@ -319,7 +328,8 @@ class PaymentClaimCertifyView(SubcontractorApproveMixin, View):
         return render(request, self.template_name, {'claim': claim, 'form': form})
 
 
-class PaymentClaimPayView(SubcontractorApproveMixin, View):
+class PaymentClaimPayView(CurrentProjectMixin, SubcontractorApproveMixin, View):
+
     template_name = 'subcontractors/claim_pay.html'
 
     def get(self, request, pk):
@@ -342,7 +352,8 @@ class PaymentClaimPayView(SubcontractorApproveMixin, View):
         return render(request, self.template_name, {'claim': claim, 'form': form})
 
 
-class PaymentClaimRejectView(SubcontractorApproveMixin, View):
+class PaymentClaimRejectView(CurrentProjectMixin, SubcontractorApproveMixin, View):
+
     def post(self, request, pk):
         claim = get_object_or_404(PaymentClaim, pk=pk)
         if claim.status in ('Submitted', 'Certified'):

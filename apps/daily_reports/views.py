@@ -12,7 +12,7 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 
 from apps.utils import image_to_jpeg_bytes
 
-from apps.accounts.mixins import (ApproverRequiredMixin, ManagerRequiredMixin,
+from apps.accounts.mixins import (CurrentProjectMixin, ApproverRequiredMixin, ManagerRequiredMixin,
                                    DailyReportViewMixin, DailyReportCreateMixin, DailyReportUpdateMixin)
 from .models import DailyReport, DailyWorkActivity, DailyLookahead, DailyProblemRemark, DailyPhoto
 from .forms import (DailyReportForm, RejectionForm,
@@ -20,7 +20,8 @@ from .forms import (DailyReportForm, RejectionForm,
                     DailyProblemFormSet, DailyPhotoFormSet)
 
 
-class DailyReportListView(DailyReportViewMixin, ListView):
+class DailyReportListView(CurrentProjectMixin, DailyReportViewMixin, ListView):
+
     model = DailyReport
     template_name = 'daily_reports/list.html'
     context_object_name = 'reports'
@@ -44,7 +45,8 @@ class DailyReportListView(DailyReportViewMixin, ListView):
         return ctx
 
 
-class DailyReportCreateView(DailyReportCreateMixin, CreateView):
+class DailyReportCreateView(CurrentProjectMixin, DailyReportCreateMixin, CreateView):
+
     model = DailyReport
     form_class = DailyReportForm
     template_name = 'daily_reports/form.html'
@@ -84,7 +86,8 @@ class DailyReportCreateView(DailyReportCreateMixin, CreateView):
         return reverse_lazy('daily_reports:detail', kwargs={'pk': self.object.pk})
 
 
-class DailyReportDetailView(DailyReportViewMixin, DetailView):
+class DailyReportDetailView(CurrentProjectMixin, DailyReportViewMixin, DetailView):
+
     model = DailyReport
     template_name = 'daily_reports/detail.html'
     context_object_name = 'report'
@@ -103,7 +106,8 @@ class DailyReportDetailView(DailyReportViewMixin, DetailView):
         return ctx
 
 
-class DailyReportUpdateView(DailyReportUpdateMixin, UpdateView):
+class DailyReportUpdateView(CurrentProjectMixin, DailyReportUpdateMixin, UpdateView):
+
     model = DailyReport
     form_class = DailyReportForm
     template_name = 'daily_reports/form.html'
@@ -145,13 +149,15 @@ class DailyReportUpdateView(DailyReportUpdateMixin, UpdateView):
         return reverse_lazy('daily_reports:detail', kwargs={'pk': self.object.pk})
 
 
-class DailyReportDeleteView(ManagerRequiredMixin, DeleteView):
+class DailyReportDeleteView(CurrentProjectMixin, ManagerRequiredMixin, DeleteView):
+
     model = DailyReport
     template_name = 'daily_reports/confirm_delete.html'
     success_url = reverse_lazy('daily_reports:list')
 
 
-class SubmitReportView(DailyReportCreateMixin, View):
+class SubmitReportView(CurrentProjectMixin, DailyReportCreateMixin, View):
+
     def post(self, request, pk):
         report = get_object_or_404(DailyReport, pk=pk, status='Draft')
         report.status = 'Submitted'
@@ -160,7 +166,8 @@ class SubmitReportView(DailyReportCreateMixin, View):
         return redirect('daily_reports:detail', pk=pk)
 
 
-class ApproveReportView(ApproverRequiredMixin, View):
+class ApproveReportView(CurrentProjectMixin, ApproverRequiredMixin, View):
+
     def post(self, request, pk):
         report = get_object_or_404(DailyReport, pk=pk, status='Submitted')
         report.status = 'Approved'
@@ -171,7 +178,8 @@ class ApproveReportView(ApproverRequiredMixin, View):
         return redirect('daily_reports:detail', pk=pk)
 
 
-class RejectReportView(ApproverRequiredMixin, FormView):
+class RejectReportView(CurrentProjectMixin, ApproverRequiredMixin, FormView):
+
     form_class = RejectionForm
     template_name = 'daily_reports/reject.html'
 
@@ -192,7 +200,8 @@ class RejectReportView(ApproverRequiredMixin, FormView):
         return redirect('daily_reports:detail', pk=report.pk)
 
 
-class ExportPDFView(DailyReportViewMixin, View):
+class ExportPDFView(CurrentProjectMixin, DailyReportViewMixin, View):
+
     def get(self, request, pk):
         from apps.reports.pdf_generator import generate_daily_report_pdf
         report = get_object_or_404(DailyReport, pk=pk)
@@ -203,7 +212,8 @@ class ExportPDFView(DailyReportViewMixin, View):
         return response
 
 
-class PhotoReportPDFView(DailyReportViewMixin, View):
+class PhotoReportPDFView(CurrentProjectMixin, DailyReportViewMixin, View):
+
     def get(self, request, pk):
         from apps.reports.pdf_generator import generate_photo_report_pdf
         report = get_object_or_404(DailyReport, pk=pk)
@@ -214,7 +224,8 @@ class PhotoReportPDFView(DailyReportViewMixin, View):
         return response
 
 
-class PhotoPreviewView(DailyReportViewMixin, View):
+class PhotoPreviewView(CurrentProjectMixin, DailyReportViewMixin, View):
+
     def get(self, request, pk, photo_pk):
         photo = get_object_or_404(DailyPhoto, pk=photo_pk, report_id=pk)
         if not photo.photo:
@@ -230,7 +241,8 @@ class PhotoPreviewView(DailyReportViewMixin, View):
         return response
 
 
-class PhotoUploadView(DailyReportCreateMixin, View):
+class PhotoUploadView(CurrentProjectMixin, DailyReportCreateMixin, View):
+
     def post(self, request, pk):
         report = get_object_or_404(DailyReport, pk=pk)
         photo_file = request.FILES.get('photo')
@@ -258,7 +270,8 @@ class PhotoUploadView(DailyReportCreateMixin, View):
         return redirect('daily_reports:detail', pk=pk)
 
 
-class PhotoDeleteView(DailyReportUpdateMixin, View):
+class PhotoDeleteView(CurrentProjectMixin, DailyReportUpdateMixin, View):
+
     def post(self, request, pk, photo_pk):
         photo = get_object_or_404(DailyPhoto, pk=photo_pk, report_id=pk)
         photo.photo.delete(save=False)

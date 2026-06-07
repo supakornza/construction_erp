@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.utils.dateparse import parse_date
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView, View
-from apps.accounts.mixins import ManagerRequiredMixin, OperationalViewMixin, OperationalUpdateMixin
+from apps.accounts.mixins import CurrentProjectMixin, ManagerRequiredMixin, OperationalViewMixin, OperationalUpdateMixin
 from apps.projects.models import Project
 from .models import DailyManpowerRecord, ManpowerCategory
 from .forms import DailyManpowerRecordForm
@@ -45,7 +45,8 @@ class ManpowerDashboardView(OperationalViewMixin, TemplateView):
         return ctx
 
 
-class DailyManpowerRecordListView(OperationalViewMixin, ListView):
+class DailyManpowerRecordListView(CurrentProjectMixin, OperationalViewMixin, ListView):
+
     model = DailyManpowerRecord
     template_name = 'manpower/list.html'
     context_object_name = 'records'
@@ -67,7 +68,8 @@ class DailyManpowerRecordListView(OperationalViewMixin, ListView):
         return ctx
 
 
-class DailyManpowerRecordCreateView(OperationalViewMixin, CreateView):
+class DailyManpowerRecordCreateView(CurrentProjectMixin, OperationalViewMixin, CreateView):
+
     model = DailyManpowerRecord
     form_class = DailyManpowerRecordForm
     template_name = 'manpower/form.html'
@@ -78,7 +80,8 @@ class DailyManpowerRecordCreateView(OperationalViewMixin, CreateView):
         return super().form_valid(form)
 
 
-class DailyManpowerRecordUpdateView(OperationalUpdateMixin, UpdateView):
+class DailyManpowerRecordUpdateView(CurrentProjectMixin, OperationalUpdateMixin, UpdateView):
+
     model = DailyManpowerRecord
     form_class = DailyManpowerRecordForm
     template_name = 'manpower/form.html'
@@ -89,7 +92,8 @@ class DailyManpowerRecordUpdateView(OperationalUpdateMixin, UpdateView):
         return super().form_valid(form)
 
 
-class DailyManpowerRecordDeleteView(ManagerRequiredMixin, DeleteView):
+class DailyManpowerRecordDeleteView(CurrentProjectMixin, ManagerRequiredMixin, DeleteView):
+
     model = DailyManpowerRecord
     template_name = 'manpower/confirm_delete.html'
     success_url = reverse_lazy('manpower:list')

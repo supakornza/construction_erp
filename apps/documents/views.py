@@ -3,12 +3,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from apps.accounts.mixins import DocumentsMixin, ManagerRequiredMixin
+from apps.accounts.mixins import CurrentProjectMixin, DocumentsMixin, ManagerRequiredMixin
 from .models import Document, DocumentCategory, DocumentRevision
 from .forms import DocumentForm, DocumentRevisionForm
 
 
-class DocumentListView(DocumentsMixin, ListView):
+class DocumentListView(CurrentProjectMixin, DocumentsMixin, ListView):
+
     model = Document
     template_name = 'documents/list.html'
     context_object_name = 'documents'
@@ -35,7 +36,8 @@ class DocumentListView(DocumentsMixin, ListView):
         return ctx
 
 
-class DocumentCreateView(DocumentsMixin, CreateView):
+class DocumentCreateView(CurrentProjectMixin, DocumentsMixin, CreateView):
+
     model = Document
     form_class = DocumentForm
     template_name = 'documents/form.html'
@@ -47,7 +49,8 @@ class DocumentCreateView(DocumentsMixin, CreateView):
         return super().form_valid(form)
 
 
-class DocumentDetailView(DocumentsMixin, DetailView):
+class DocumentDetailView(CurrentProjectMixin, DocumentsMixin, DetailView):
+
     model = Document
     template_name = 'documents/detail.html'
     context_object_name = 'document'
@@ -59,7 +62,8 @@ class DocumentDetailView(DocumentsMixin, DetailView):
         return ctx
 
 
-class DocumentUpdateView(DocumentsMixin, UpdateView):
+class DocumentUpdateView(CurrentProjectMixin, DocumentsMixin, UpdateView):
+
     model = Document
     form_class = DocumentForm
     template_name = 'documents/form.html'
@@ -68,13 +72,15 @@ class DocumentUpdateView(DocumentsMixin, UpdateView):
         return reverse_lazy('documents:detail', kwargs={'pk': self.object.pk})
 
 
-class DocumentDeleteView(ManagerRequiredMixin, DeleteView):
+class DocumentDeleteView(CurrentProjectMixin, ManagerRequiredMixin, DeleteView):
+
     model = Document
     template_name = 'documents/confirm_delete.html'
     success_url = reverse_lazy('documents:list')
 
 
-class AddRevisionView(DocumentsMixin, CreateView):
+class AddRevisionView(CurrentProjectMixin, DocumentsMixin, CreateView):
+
     model = DocumentRevision
     form_class = DocumentRevisionForm
     template_name = 'documents/revision_form.html'

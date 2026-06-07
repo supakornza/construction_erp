@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
 
-from apps.accounts.mixins import QualityViewMixin, QualityInspectorMixin, QualityEngineerMixin
+from apps.accounts.mixins import CurrentProjectMixin, QualityViewMixin, QualityInspectorMixin, QualityEngineerMixin
 
 from .forms import (
     InspectionRequestForm,
@@ -25,7 +25,8 @@ class QualityDashboardView(QualityViewMixin, TemplateView):
         return context
 
 
-class InspectionRequestListView(QualityViewMixin, ListView):
+class InspectionRequestListView(CurrentProjectMixin, QualityViewMixin, ListView):
+
     model = InspectionRequest
     template_name = 'quality/inspection_list.html'
     context_object_name = 'inspections'
@@ -39,7 +40,8 @@ class InspectionRequestListView(QualityViewMixin, ListView):
         return queryset
 
 
-class InspectionRequestCreateView(QualityInspectorMixin, CreateView):
+class InspectionRequestCreateView(CurrentProjectMixin, QualityInspectorMixin, CreateView):
+
     model = InspectionRequest
     form_class = InspectionRequestForm
     template_name = 'quality/form.html'
@@ -51,7 +53,8 @@ class InspectionRequestCreateView(QualityInspectorMixin, CreateView):
         return super().form_valid(form)
 
 
-class InspectionRequestUpdateView(QualityInspectorMixin, UpdateView):
+class InspectionRequestUpdateView(CurrentProjectMixin, QualityInspectorMixin, UpdateView):
+
     model = InspectionRequest
     form_class = InspectionRequestForm
     template_name = 'quality/form.html'
@@ -59,7 +62,8 @@ class InspectionRequestUpdateView(QualityInspectorMixin, UpdateView):
     extra_context = {'title': 'Edit Inspection Request', 'back_url_name': 'quality:inspection_list'}
 
 
-class NonConformanceListView(QualityViewMixin, ListView):
+class NonConformanceListView(CurrentProjectMixin, QualityViewMixin, ListView):
+
     model = NonConformance
     template_name = 'quality/ncr_list.html'
     context_object_name = 'ncrs'
@@ -73,7 +77,8 @@ class NonConformanceListView(QualityViewMixin, ListView):
         return queryset
 
 
-class NonConformanceCreateView(QualityInspectorMixin, CreateView):
+class NonConformanceCreateView(CurrentProjectMixin, QualityInspectorMixin, CreateView):
+
     model = NonConformance
     form_class = NonConformanceForm
     template_name = 'quality/form.html'
@@ -85,7 +90,8 @@ class NonConformanceCreateView(QualityInspectorMixin, CreateView):
         return super().form_valid(form)
 
 
-class NonConformanceUpdateView(QualityInspectorMixin, UpdateView):
+class NonConformanceUpdateView(CurrentProjectMixin, QualityInspectorMixin, UpdateView):
+
     model = NonConformance
     form_class = NonConformanceForm
     template_name = 'quality/form.html'
@@ -93,7 +99,8 @@ class NonConformanceUpdateView(QualityInspectorMixin, UpdateView):
     extra_context = {'title': 'Edit NCR', 'back_url_name': 'quality:ncr_list'}
 
 
-class PunchListView(QualityViewMixin, ListView):
+class PunchListView(CurrentProjectMixin, QualityViewMixin, ListView):
+
     model = PunchList
     template_name = 'quality/punch_list.html'
     context_object_name = 'punch_items'
@@ -107,7 +114,8 @@ class PunchListView(QualityViewMixin, ListView):
         return queryset
 
 
-class PunchListCreateView(QualityInspectorMixin, CreateView):
+class PunchListCreateView(CurrentProjectMixin, QualityInspectorMixin, CreateView):
+
     model = PunchList
     form_class = PunchListForm
     template_name = 'quality/form.html'
@@ -119,7 +127,8 @@ class PunchListCreateView(QualityInspectorMixin, CreateView):
         return super().form_valid(form)
 
 
-class PunchListUpdateView(QualityInspectorMixin, UpdateView):
+class PunchListUpdateView(CurrentProjectMixin, QualityInspectorMixin, UpdateView):
+
     model = PunchList
     form_class = PunchListForm
     template_name = 'quality/form.html'
@@ -127,7 +136,8 @@ class PunchListUpdateView(QualityInspectorMixin, UpdateView):
     extra_context = {'title': 'Edit Punch List Item', 'back_url_name': 'quality:punch_list'}
 
 
-class QualityCheckpointListView(QualityViewMixin, ListView):
+class QualityCheckpointListView(CurrentProjectMixin, QualityViewMixin, ListView):
+
     model = QualityCheckpoint
     template_name = 'quality/checkpoint_list.html'
     context_object_name = 'checkpoints'
@@ -141,7 +151,8 @@ class QualityCheckpointListView(QualityViewMixin, ListView):
         return queryset
 
 
-class QualityCheckpointCreateView(QualityEngineerMixin, CreateView):
+class QualityCheckpointCreateView(CurrentProjectMixin, QualityEngineerMixin, CreateView):
+
     model = QualityCheckpoint
     form_class = QualityCheckpointForm
     template_name = 'quality/form.html'
@@ -153,7 +164,8 @@ class QualityCheckpointCreateView(QualityEngineerMixin, CreateView):
         return super().form_valid(form)
 
 
-class QualityCheckpointUpdateView(QualityEngineerMixin, UpdateView):
+class QualityCheckpointUpdateView(CurrentProjectMixin, QualityEngineerMixin, UpdateView):
+
     model = QualityCheckpoint
     form_class = QualityCheckpointForm
     template_name = 'quality/form.html'
@@ -161,25 +173,29 @@ class QualityCheckpointUpdateView(QualityEngineerMixin, UpdateView):
     extra_context = {'title': 'Edit Quality Checkpoint', 'back_url_name': 'quality:checkpoint_list'}
 
 
-class InspectionRequestDeleteView(QualityEngineerMixin, DeleteView):
+class InspectionRequestDeleteView(CurrentProjectMixin, QualityEngineerMixin, DeleteView):
+
     model = InspectionRequest
     template_name = 'safety/confirm_delete.html'
     success_url = reverse_lazy('quality:inspection_list')
 
 
-class NonConformanceDeleteView(QualityEngineerMixin, DeleteView):
+class NonConformanceDeleteView(CurrentProjectMixin, QualityEngineerMixin, DeleteView):
+
     model = NonConformance
     template_name = 'safety/confirm_delete.html'
     success_url = reverse_lazy('quality:ncr_list')
 
 
-class PunchListDeleteView(QualityEngineerMixin, DeleteView):
+class PunchListDeleteView(CurrentProjectMixin, QualityEngineerMixin, DeleteView):
+
     model = PunchList
     template_name = 'safety/confirm_delete.html'
     success_url = reverse_lazy('quality:punch_list')
 
 
-class QualityCheckpointDeleteView(QualityEngineerMixin, DeleteView):
+class QualityCheckpointDeleteView(CurrentProjectMixin, QualityEngineerMixin, DeleteView):
+
     model = QualityCheckpoint
     template_name = 'safety/confirm_delete.html'
     success_url = reverse_lazy('quality:checkpoint_list')

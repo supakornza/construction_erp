@@ -5,12 +5,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, FormView, View
-from apps.accounts.mixins import BOQViewMixin, FinancialWriteMixin
+from apps.accounts.mixins import CurrentProjectMixin, BOQViewMixin, FinancialWriteMixin
 from .models import BOQItem, DailyProgressRecord, PaymentClaim
 from .forms import BOQItemForm, DailyProgressRecordForm, PaymentClaimForm, BOQImportForm
 
 
-class BOQItemListView(BOQViewMixin, ListView):
+class BOQItemListView(CurrentProjectMixin, BOQViewMixin, ListView):
+
     model = BOQItem
     template_name = 'boq/list.html'
     context_object_name = 'items'
@@ -114,7 +115,8 @@ class BOQImportTemplateView(FinancialWriteMixin, View):
         return response
 
 
-class BOQItemCreateView(FinancialWriteMixin, CreateView):
+class BOQItemCreateView(CurrentProjectMixin, FinancialWriteMixin, CreateView):
+
     model = BOQItem
     form_class = BOQItemForm
     template_name = 'boq/form.html'
@@ -125,20 +127,23 @@ class BOQItemCreateView(FinancialWriteMixin, CreateView):
         return super().form_valid(form)
 
 
-class BOQItemUpdateView(FinancialWriteMixin, UpdateView):
+class BOQItemUpdateView(CurrentProjectMixin, FinancialWriteMixin, UpdateView):
+
     model = BOQItem
     form_class = BOQItemForm
     template_name = 'boq/form.html'
     success_url = reverse_lazy('boq:list')
 
 
-class BOQItemDeleteView(FinancialWriteMixin, DeleteView):
+class BOQItemDeleteView(CurrentProjectMixin, FinancialWriteMixin, DeleteView):
+
     model = BOQItem
     template_name = 'boq/confirm_delete.html'
     success_url = reverse_lazy('boq:list')
 
 
-class DailyProgressRecordListView(BOQViewMixin, ListView):
+class DailyProgressRecordListView(CurrentProjectMixin, BOQViewMixin, ListView):
+
     model = DailyProgressRecord
     template_name = 'boq/progress_list.html'
     context_object_name = 'records'
@@ -152,7 +157,8 @@ class DailyProgressRecordListView(BOQViewMixin, ListView):
         return qs
 
 
-class DailyProgressRecordCreateView(FinancialWriteMixin, CreateView):
+class DailyProgressRecordCreateView(CurrentProjectMixin, FinancialWriteMixin, CreateView):
+
     model = DailyProgressRecord
     form_class = DailyProgressRecordForm
     template_name = 'boq/progress_form.html'
@@ -163,21 +169,24 @@ class DailyProgressRecordCreateView(FinancialWriteMixin, CreateView):
         return super().form_valid(form)
 
 
-class PaymentClaimListView(BOQViewMixin, ListView):
+class PaymentClaimListView(CurrentProjectMixin, BOQViewMixin, ListView):
+
     model = PaymentClaim
     template_name = 'boq/claim_list.html'
     context_object_name = 'claims'
     paginate_by = 20
 
 
-class PaymentClaimCreateView(FinancialWriteMixin, CreateView):
+class PaymentClaimCreateView(CurrentProjectMixin, FinancialWriteMixin, CreateView):
+
     model = PaymentClaim
     form_class = PaymentClaimForm
     template_name = 'boq/claim_form.html'
     success_url = reverse_lazy('boq:claim_list')
 
 
-class PaymentClaimDetailView(BOQViewMixin, DetailView):
+class PaymentClaimDetailView(CurrentProjectMixin, BOQViewMixin, DetailView):
+
     model = PaymentClaim
     template_name = 'boq/claim_detail.html'
     context_object_name = 'claim'

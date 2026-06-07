@@ -346,7 +346,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         ctx['total_project_count'] = total_project_count
         ctx['status_overview'] = status_overview
         selected_project_id = self.request.GET.get('project') or self.request.GET.get('project_id') or ''
-        selected_project = Project.objects.filter(pk=selected_project_id).first() if selected_project_id else None
+        if selected_project_id:
+            selected_project = Project.objects.filter(pk=selected_project_id).first()
+        else:
+            # Default to session-selected project
+            selected_project = getattr(self.request, 'current_project', None)
         dashboard_projects = (
             [selected_project]
             if selected_project

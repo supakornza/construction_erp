@@ -11,7 +11,7 @@ from django.views.generic import (
     ListView, CreateView, DetailView, UpdateView, DeleteView, View, TemplateView
 )
 
-from apps.accounts.mixins import HRViewMixin, HRWriteMixin, HRApproveMixin
+from apps.accounts.mixins import CurrentProjectMixin, HRViewMixin, HRWriteMixin, HRApproveMixin
 from apps.notifications.utils import notify
 from apps.projects.models import Project
 from .models import Employee, AttendanceRecord, LeaveRequest, OvertimeRequest
@@ -53,7 +53,8 @@ class HRDashboardView(HRViewMixin, TemplateView):
 
 # ── Employee ──────────────────────────────────────────────────────────────────
 
-class EmployeeListView(HRViewMixin, ListView):
+class EmployeeListView(CurrentProjectMixin, HRViewMixin, ListView):
+
     model = Employee
     template_name = 'hr/employee_list.html'
     context_object_name = 'employees'
@@ -82,7 +83,8 @@ class EmployeeListView(HRViewMixin, ListView):
         return ctx
 
 
-class EmployeeCreateView(HRWriteMixin, CreateView):
+class EmployeeCreateView(CurrentProjectMixin, HRWriteMixin, CreateView):
+
     model         = Employee
     form_class    = EmployeeForm
     template_name = 'hr/employee_form.html'
@@ -92,7 +94,8 @@ class EmployeeCreateView(HRWriteMixin, CreateView):
         return reverse('hr:employee_detail', kwargs={'pk': self.object.pk})
 
 
-class EmployeeDetailView(HRViewMixin, DetailView):
+class EmployeeDetailView(CurrentProjectMixin, HRViewMixin, DetailView):
+
     model               = Employee
     template_name       = 'hr/employee_detail.html'
     context_object_name = 'employee'
@@ -113,7 +116,8 @@ class EmployeeDetailView(HRViewMixin, DetailView):
         return ctx
 
 
-class EmployeeUpdateView(HRWriteMixin, UpdateView):
+class EmployeeUpdateView(CurrentProjectMixin, HRWriteMixin, UpdateView):
+
     model         = Employee
     form_class    = EmployeeForm
     template_name = 'hr/employee_form.html'
@@ -209,7 +213,8 @@ class AttendanceQuickSaveView(HRWriteMixin, View):
         return redirect(redirect_url)
 
 
-class AttendanceRecordCreateView(HRWriteMixin, CreateView):
+class AttendanceRecordCreateView(CurrentProjectMixin, HRWriteMixin, CreateView):
+
     model         = AttendanceRecord
     form_class    = AttendanceRecordForm
     template_name = 'hr/attendance_form.html'
@@ -223,7 +228,8 @@ class AttendanceRecordCreateView(HRWriteMixin, CreateView):
         return reverse('hr:attendance_dashboard') + f'?date={self.object.record_date}'
 
 
-class AttendanceRecordUpdateView(HRWriteMixin, UpdateView):
+class AttendanceRecordUpdateView(CurrentProjectMixin, HRWriteMixin, UpdateView):
+
     model         = AttendanceRecord
     form_class    = AttendanceRecordForm
     template_name = 'hr/attendance_form.html'
@@ -235,7 +241,8 @@ class AttendanceRecordUpdateView(HRWriteMixin, UpdateView):
 
 # ── Leave Requests ────────────────────────────────────────────────────────────
 
-class LeaveListView(HRViewMixin, ListView):
+class LeaveListView(CurrentProjectMixin, HRViewMixin, ListView):
+
     model               = LeaveRequest
     template_name       = 'hr/leave_list.html'
     context_object_name = 'leaves'
@@ -258,7 +265,8 @@ class LeaveListView(HRViewMixin, ListView):
         return ctx
 
 
-class LeaveRequestCreateView(HRWriteMixin, CreateView):
+class LeaveRequestCreateView(CurrentProjectMixin, HRWriteMixin, CreateView):
+
     model         = LeaveRequest
     form_class    = LeaveRequestForm
     template_name = 'hr/leave_form.html'
@@ -272,7 +280,8 @@ class LeaveRequestCreateView(HRWriteMixin, CreateView):
         return super().form_valid(form)
 
 
-class LeaveRequestDetailView(HRViewMixin, DetailView):
+class LeaveRequestDetailView(CurrentProjectMixin, HRViewMixin, DetailView):
+
     model               = LeaveRequest
     template_name       = 'hr/leave_detail.html'
     context_object_name = 'leave'
@@ -326,7 +335,8 @@ class LeaveRejectView(HRApproveMixin, View):
 
 # ── Overtime Requests ─────────────────────────────────────────────────────────
 
-class OvertimeListView(HRViewMixin, ListView):
+class OvertimeListView(CurrentProjectMixin, HRViewMixin, ListView):
+
     model               = OvertimeRequest
     template_name       = 'hr/ot_list.html'
     context_object_name = 'ot_requests'
@@ -349,7 +359,8 @@ class OvertimeListView(HRViewMixin, ListView):
         return ctx
 
 
-class OvertimeRequestCreateView(HRWriteMixin, CreateView):
+class OvertimeRequestCreateView(CurrentProjectMixin, HRWriteMixin, CreateView):
+
     model         = OvertimeRequest
     form_class    = OvertimeRequestForm
     template_name = 'hr/ot_form.html'

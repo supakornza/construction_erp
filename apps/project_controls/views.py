@@ -12,7 +12,7 @@ from django.utils.dateparse import parse_date
 from django.views.generic import (
     ListView, CreateView, DetailView, UpdateView, DeleteView, TemplateView, View, FormView
 )
-from apps.accounts.mixins import (ApproverRequiredMixin, ManagerRequiredMixin,
+from apps.accounts.mixins import (CurrentProjectMixin, ApproverRequiredMixin, ManagerRequiredMixin,
                                    ProjectControlsViewMixin, ProjectControlsWriteMixin)
 from apps.equipment.models import Equipment
 from apps.projects.models import Project
@@ -178,7 +178,7 @@ class ProjectControlsDashboardView(ProjectControlsViewMixin, TemplateView):
 
 # ── Rock Views ────────────────────────────────────────────────────────────────
 
-class RockListView(ProjectControlsViewMixin, ListView):
+class RockListView(CurrentProjectMixin, ProjectControlsViewMixin, ListView):
     model = RockDailyRecord
     template_name = 'project_controls/rock/list.html'
     context_object_name = 'records'
@@ -203,7 +203,7 @@ class RockListView(ProjectControlsViewMixin, ListView):
         return ctx
 
 
-class RockCreateView(ProjectControlsWriteMixin, CreateView):
+class RockCreateView(CurrentProjectMixin, ProjectControlsWriteMixin, CreateView):
     model = RockDailyRecord
     form_class = RockDailyRecordForm
     template_name = 'project_controls/rock/form.html'
@@ -235,13 +235,13 @@ class RockCreateView(ProjectControlsWriteMixin, CreateView):
         return reverse_lazy('project_controls:rock_detail', kwargs={'pk': self.object.pk})
 
 
-class RockDetailView(ProjectControlsViewMixin, DetailView):
+class RockDetailView(CurrentProjectMixin, ProjectControlsViewMixin, DetailView):
     model = RockDailyRecord
     template_name = 'project_controls/rock/detail.html'
     context_object_name = 'record'
 
 
-class RockUpdateView(ProjectControlsWriteMixin, UpdateView):
+class RockUpdateView(CurrentProjectMixin, ProjectControlsWriteMixin, UpdateView):
     model = RockDailyRecord
     form_class = RockDailyRecordForm
     template_name = 'project_controls/rock/form.html'
@@ -343,7 +343,7 @@ class RockExportPDFView(ProjectControlsViewMixin, View):
 
 # ── Sand Views ────────────────────────────────────────────────────────────────
 
-class SandListView(ProjectControlsViewMixin, ListView):
+class SandListView(CurrentProjectMixin, ProjectControlsViewMixin, ListView):
     model = SandDailyRecord
     template_name = 'project_controls/sand/list.html'
     context_object_name = 'records'
@@ -362,7 +362,7 @@ class SandListView(ProjectControlsViewMixin, ListView):
         return ctx
 
 
-class SandCreateView(ProjectControlsWriteMixin, CreateView):
+class SandCreateView(CurrentProjectMixin, ProjectControlsWriteMixin, CreateView):
     model = SandDailyRecord
     form_class = SandDailyRecordForm
     template_name = 'project_controls/sand/form.html'
@@ -396,13 +396,13 @@ class SandCreateView(ProjectControlsWriteMixin, CreateView):
         return reverse_lazy('project_controls:sand_detail', kwargs={'pk': self.object.pk})
 
 
-class SandDetailView(ProjectControlsViewMixin, DetailView):
+class SandDetailView(CurrentProjectMixin, ProjectControlsViewMixin, DetailView):
     model = SandDailyRecord
     template_name = 'project_controls/sand/detail.html'
     context_object_name = 'record'
 
 
-class SandUpdateView(ProjectControlsWriteMixin, UpdateView):
+class SandUpdateView(CurrentProjectMixin, ProjectControlsWriteMixin, UpdateView):
     model = SandDailyRecord
     form_class = SandDailyRecordForm
     template_name = 'project_controls/sand/form.html'
@@ -521,7 +521,7 @@ class RevetmentDashboardView(ProjectControlsViewMixin, TemplateView):
         return ctx
 
 
-class RevetmentRecordListView(ProjectControlsViewMixin, ListView):
+class RevetmentRecordListView(CurrentProjectMixin, ProjectControlsViewMixin, ListView):
     model = RevetmentDailyRecord
     template_name = 'project_controls/revetment/list.html'
     context_object_name = 'records'
@@ -546,7 +546,7 @@ class RevetmentRecordListView(ProjectControlsViewMixin, ListView):
         return ctx
 
 
-class RevetmentRecordCreateView(ProjectControlsWriteMixin, CreateView):
+class RevetmentRecordCreateView(CurrentProjectMixin, ProjectControlsWriteMixin, CreateView):
     model = RevetmentDailyRecord
     form_class = RevetmentDailyRecordForm
     template_name = 'project_controls/revetment/form.html'
@@ -594,7 +594,7 @@ class RevetmentRecordCreateView(ProjectControlsWriteMixin, CreateView):
         return reverse_lazy('project_controls:revetment_detail', kwargs={'pk': self.object.pk})
 
 
-class RevetmentRecordDetailView(ProjectControlsViewMixin, DetailView):
+class RevetmentRecordDetailView(CurrentProjectMixin, ProjectControlsViewMixin, DetailView):
     model = RevetmentDailyRecord
     template_name = 'project_controls/revetment/detail.html'
     context_object_name = 'record'
@@ -605,7 +605,7 @@ class RevetmentRecordDetailView(ProjectControlsViewMixin, DetailView):
         )
 
 
-class RevetmentRecordUpdateView(ProjectControlsWriteMixin, UpdateView):
+class RevetmentRecordUpdateView(CurrentProjectMixin, ProjectControlsWriteMixin, UpdateView):
     model = RevetmentDailyRecord
     form_class = RevetmentDailyRecordForm
     template_name = 'project_controls/revetment/form.html'
@@ -644,7 +644,7 @@ class RevetmentRecordUpdateView(ProjectControlsWriteMixin, UpdateView):
         return reverse_lazy('project_controls:revetment_detail', kwargs={'pk': self.object.pk})
 
 
-class RevetmentSetupView(ProjectControlsViewMixin, TemplateView):
+class RevetmentSetupView(CurrentProjectMixin, ProjectControlsViewMixin, TemplateView):
     template_name = 'project_controls/revetment/setup.html'
 
     def get_context_data(self, **kwargs):
@@ -661,7 +661,7 @@ class RevetmentSetupView(ProjectControlsViewMixin, TemplateView):
         return ctx
 
 
-class RevetmentStationCreateView(ProjectControlsWriteMixin, CreateView):
+class RevetmentStationCreateView(CurrentProjectMixin, ProjectControlsWriteMixin, CreateView):
     model = RevetmentStation
     form_class = RevetmentStationForm
     template_name = 'project_controls/revetment/station_form.html'
@@ -677,7 +677,7 @@ class RevetmentStationCreateView(ProjectControlsWriteMixin, CreateView):
         return f"{reverse_lazy('project_controls:revetment_setup')}?project={self.object.project_id}"
 
 
-class RevetmentStationUpdateView(ProjectControlsWriteMixin, UpdateView):
+class RevetmentStationUpdateView(CurrentProjectMixin, ProjectControlsWriteMixin, UpdateView):
     model = RevetmentStation
     form_class = RevetmentStationForm
     template_name = 'project_controls/revetment/station_form.html'
@@ -686,7 +686,7 @@ class RevetmentStationUpdateView(ProjectControlsWriteMixin, UpdateView):
         return f"{reverse_lazy('project_controls:revetment_setup')}?project={self.object.project_id}"
 
 
-class RevetmentActivityCreateView(ProjectControlsWriteMixin, CreateView):
+class RevetmentActivityCreateView(CurrentProjectMixin, ProjectControlsWriteMixin, CreateView):
     model = RevetmentActivity
     form_class = RevetmentActivityForm
     template_name = 'project_controls/revetment/activity_form.html'
@@ -702,7 +702,7 @@ class RevetmentActivityCreateView(ProjectControlsWriteMixin, CreateView):
         return f"{reverse_lazy('project_controls:revetment_setup')}?project={self.object.project_id}"
 
 
-class RevetmentActivityUpdateView(ProjectControlsWriteMixin, UpdateView):
+class RevetmentActivityUpdateView(CurrentProjectMixin, ProjectControlsWriteMixin, UpdateView):
     model = RevetmentActivity
     form_class = RevetmentActivityForm
     template_name = 'project_controls/revetment/activity_form.html'
@@ -711,7 +711,7 @@ class RevetmentActivityUpdateView(ProjectControlsWriteMixin, UpdateView):
         return f"{reverse_lazy('project_controls:revetment_setup')}?project={self.object.project_id}"
 
 
-class RevetmentExportExcelView(ProjectControlsViewMixin, View):
+class RevetmentExportExcelView(CurrentProjectMixin, ProjectControlsViewMixin, View):
     def get(self, request, project_id):
         from .exports import export_revetment_excel
         project = get_object_or_404(Project, pk=project_id)
@@ -725,7 +725,7 @@ class RevetmentExportExcelView(ProjectControlsViewMixin, View):
         return response
 
 
-class SandAllocationListView(ProjectControlsViewMixin, ListView):
+class SandAllocationListView(CurrentProjectMixin, ProjectControlsViewMixin, ListView):
     model = SandAllocation
     template_name = 'project_controls/sand/allocation_list.html'
     context_object_name = 'allocations'
@@ -744,7 +744,7 @@ class SandAllocationListView(ProjectControlsViewMixin, ListView):
         return ctx
 
 
-class SandAllocationCreateView(ProjectControlsWriteMixin, CreateView):
+class SandAllocationCreateView(CurrentProjectMixin, ProjectControlsWriteMixin, CreateView):
     model = SandAllocation
     form_class = SandAllocationForm
     template_name = 'project_controls/sand/allocation_form.html'
@@ -757,7 +757,7 @@ class SandAllocationCreateView(ProjectControlsWriteMixin, CreateView):
         return response
 
 
-class SandAllocationDetailView(ProjectControlsViewMixin, DetailView):
+class SandAllocationDetailView(CurrentProjectMixin, ProjectControlsViewMixin, DetailView):
     model = SandAllocation
     template_name = 'project_controls/sand/allocation_detail.html'
     context_object_name = 'allocation'
@@ -765,7 +765,7 @@ class SandAllocationDetailView(ProjectControlsViewMixin, DetailView):
 
 # ── Recovery Plan Views ───────────────────────────────────────────────────────
 
-class RecoveryPlanListView(ProjectControlsViewMixin, ListView):
+class RecoveryPlanListView(CurrentProjectMixin, ProjectControlsViewMixin, ListView):
     model = RecoveryPlan
     template_name = 'project_controls/recovery/plan_list.html'
     context_object_name = 'plans'
@@ -784,7 +784,7 @@ class RecoveryPlanListView(ProjectControlsViewMixin, ListView):
         return ctx
 
 
-class RecoveryPlanCreateView(ProjectControlsWriteMixin, CreateView):
+class RecoveryPlanCreateView(CurrentProjectMixin, ProjectControlsWriteMixin, CreateView):
     model = RecoveryPlan
     form_class = RecoveryPlanForm
     template_name = 'project_controls/recovery/plan_form.html'
@@ -815,7 +815,7 @@ class RecoveryPlanCreateView(ProjectControlsWriteMixin, CreateView):
         return reverse_lazy('project_controls:recovery_plan_detail', kwargs={'pk': self.object.pk})
 
 
-class RecoveryPlanDetailView(ProjectControlsViewMixin, DetailView):
+class RecoveryPlanDetailView(CurrentProjectMixin, ProjectControlsViewMixin, DetailView):
     model = RecoveryPlan
     template_name = 'project_controls/recovery/plan_detail.html'
     context_object_name = 'plan'
@@ -836,7 +836,7 @@ class RecoveryPlanDetailView(ProjectControlsViewMixin, DetailView):
         return ctx
 
 
-class RecoveryPlanUpdateView(ProjectControlsWriteMixin, UpdateView):
+class RecoveryPlanUpdateView(CurrentProjectMixin, ProjectControlsWriteMixin, UpdateView):
     model = RecoveryPlan
     form_class = RecoveryPlanForm
     template_name = 'project_controls/recovery/plan_form.html'
@@ -869,7 +869,7 @@ class RecoveryPlanUpdateView(ProjectControlsWriteMixin, UpdateView):
         return reverse_lazy('project_controls:recovery_plan_detail', kwargs={'pk': self.object.pk})
 
 
-class RecoveryPlanDailyUpdateView(ProjectControlsWriteMixin, View):
+class RecoveryPlanDailyUpdateView(CurrentProjectMixin, ProjectControlsWriteMixin, View):
     """Bulk update daily items for a recovery plan."""
     template_name = 'project_controls/recovery/plan_daily_update.html'
 
@@ -898,7 +898,7 @@ class RecoveryPlanDailyUpdateView(ProjectControlsWriteMixin, View):
 
 # ── Recovery Action Plan Views ────────────────────────────────────────────────
 
-class RecoveryActionPlanListView(ProjectControlsViewMixin, ListView):
+class RecoveryActionPlanListView(CurrentProjectMixin, ProjectControlsViewMixin, ListView):
     model = RecoveryActionPlan
     template_name = 'project_controls/recovery/rap_list.html'
     context_object_name = 'plans'
@@ -921,7 +921,7 @@ class RecoveryActionPlanListView(ProjectControlsViewMixin, ListView):
         return ctx
 
 
-class RecoveryActionPlanCreateView(ProjectControlsWriteMixin, CreateView):
+class RecoveryActionPlanCreateView(CurrentProjectMixin, ProjectControlsWriteMixin, CreateView):
     model = RecoveryActionPlan
     form_class = RecoveryActionPlanForm
     template_name = 'project_controls/recovery/rap_form.html'
@@ -951,7 +951,7 @@ class RecoveryActionPlanCreateView(ProjectControlsWriteMixin, CreateView):
         return reverse_lazy('project_controls:rap_detail', kwargs={'pk': self.object.pk})
 
 
-class RecoveryActionPlanDetailView(ProjectControlsViewMixin, DetailView):
+class RecoveryActionPlanDetailView(CurrentProjectMixin, ProjectControlsViewMixin, DetailView):
     model = RecoveryActionPlan
     template_name = 'project_controls/recovery/rap_detail.html'
     context_object_name = 'plan'
@@ -964,7 +964,7 @@ class RecoveryActionPlanDetailView(ProjectControlsViewMixin, DetailView):
         return ctx
 
 
-class RecoveryActionPlanUpdateView(ProjectControlsWriteMixin, UpdateView):
+class RecoveryActionPlanUpdateView(CurrentProjectMixin, ProjectControlsWriteMixin, UpdateView):
     model = RecoveryActionPlan
     form_class = RecoveryActionPlanForm
     template_name = 'project_controls/recovery/rap_form.html'
@@ -996,7 +996,7 @@ class RecoveryActionPlanUpdateView(ProjectControlsWriteMixin, UpdateView):
         return reverse_lazy('project_controls:rap_detail', kwargs={'pk': self.object.pk})
 
 
-class RAPSubmitView(ProjectControlsWriteMixin, View):
+class RAPSubmitView(CurrentProjectMixin, ProjectControlsWriteMixin, View):
     def post(self, request, pk):
         plan = get_object_or_404(RecoveryActionPlan, pk=pk, status='Draft')
         plan.status = 'Submitted'
@@ -1005,7 +1005,7 @@ class RAPSubmitView(ProjectControlsWriteMixin, View):
         return redirect('project_controls:rap_detail', pk=pk)
 
 
-class RAPApproveView(ApproverRequiredMixin, View):
+class RAPApproveView(CurrentProjectMixin, ApproverRequiredMixin, View):
     def post(self, request, pk):
         plan = get_object_or_404(RecoveryActionPlan, pk=pk, status__in=['Submitted', 'Reviewed'])
         plan.status = 'Approved'
@@ -1015,7 +1015,7 @@ class RAPApproveView(ApproverRequiredMixin, View):
         return redirect('project_controls:rap_detail', pk=pk)
 
 
-class RAPRejectView(ApproverRequiredMixin, View):
+class RAPRejectView(CurrentProjectMixin, ApproverRequiredMixin, View):
     def post(self, request, pk):
         plan = get_object_or_404(RecoveryActionPlan, pk=pk, status__in=['Submitted', 'Reviewed'])
         reason = request.POST.get('rejection_reason', '')
@@ -1026,7 +1026,7 @@ class RAPRejectView(ApproverRequiredMixin, View):
         return redirect('project_controls:rap_detail', pk=pk)
 
 
-class RecoveryActionDailyProgressCreateView(ProjectControlsWriteMixin, CreateView):
+class RecoveryActionDailyProgressCreateView(CurrentProjectMixin, ProjectControlsWriteMixin, CreateView):
     model = RecoveryActionDailyProgress
     form_class = RecoveryActionDailyProgressForm
     template_name = 'project_controls/recovery/progress_form.html'
@@ -1048,7 +1048,7 @@ class RecoveryActionDailyProgressCreateView(ProjectControlsWriteMixin, CreateVie
         return redirect('project_controls:rap_detail', pk=action_item.recovery_plan.pk)
 
 
-class RecoveryDashboardView(ProjectControlsViewMixin, TemplateView):
+class RecoveryDashboardView(CurrentProjectMixin, ProjectControlsViewMixin, TemplateView):
     template_name = 'project_controls/recovery/dashboard.html'
 
     def get_context_data(self, **kwargs):
@@ -1067,7 +1067,7 @@ class RecoveryDashboardView(ProjectControlsViewMixin, TemplateView):
         return ctx
 
 
-class RAPExportExcelView(ProjectControlsViewMixin, View):
+class RAPExportExcelView(CurrentProjectMixin, ProjectControlsViewMixin, View):
     def get(self, request, pk):
         from .exports import export_rap_excel
         plan = get_object_or_404(RecoveryActionPlan, pk=pk)
@@ -1081,7 +1081,7 @@ class RAPExportExcelView(ProjectControlsViewMixin, View):
         return response
 
 
-class RAPExportPDFView(ProjectControlsViewMixin, View):
+class RAPExportPDFView(CurrentProjectMixin, ProjectControlsViewMixin, View):
     def get(self, request, pk):
         from .exports import export_rap_pdf
         plan = get_object_or_404(RecoveryActionPlan, pk=pk)
@@ -1094,7 +1094,7 @@ class RAPExportPDFView(ProjectControlsViewMixin, View):
 
 # ── Logistics Views ───────────────────────────────────────────────────────────
 
-class ProjectActionPlanListView(ProjectControlsViewMixin, ListView):
+class ProjectActionPlanListView(CurrentProjectMixin, ProjectControlsViewMixin, ListView):
     model = ProjectActionPlan
     template_name = 'project_controls/action_plans/list.html'
     context_object_name = 'plans'
@@ -1146,7 +1146,7 @@ class ProjectActionPlanListView(ProjectControlsViewMixin, ListView):
         return ctx
 
 
-class ProjectActionPlanCreateView(ProjectControlsWriteMixin, CreateView):
+class ProjectActionPlanCreateView(CurrentProjectMixin, ProjectControlsWriteMixin, CreateView):
     model = ProjectActionPlan
     form_class = ProjectActionPlanForm
     template_name = 'project_controls/action_plans/form.html'
@@ -1167,13 +1167,13 @@ class ProjectActionPlanCreateView(ProjectControlsWriteMixin, CreateView):
         return reverse_lazy('project_controls:project_action_plan_detail', kwargs={'pk': self.object.pk})
 
 
-class ProjectActionPlanDetailView(ProjectControlsViewMixin, DetailView):
+class ProjectActionPlanDetailView(CurrentProjectMixin, ProjectControlsViewMixin, DetailView):
     model = ProjectActionPlan
     template_name = 'project_controls/action_plans/detail.html'
     context_object_name = 'plan'
 
 
-class ProjectActionPlanUpdateView(ProjectControlsWriteMixin, UpdateView):
+class ProjectActionPlanUpdateView(CurrentProjectMixin, ProjectControlsWriteMixin, UpdateView):
     model = ProjectActionPlan
     form_class = ProjectActionPlanForm
     template_name = 'project_controls/action_plans/form.html'
@@ -1186,7 +1186,7 @@ class ProjectActionPlanUpdateView(ProjectControlsWriteMixin, UpdateView):
         return reverse_lazy('project_controls:project_action_plan_detail', kwargs={'pk': self.object.pk})
 
 
-class ProjectActionPlanDeleteView(ManagerRequiredMixin, View):
+class ProjectActionPlanDeleteView(CurrentProjectMixin, ManagerRequiredMixin, View):
     def post(self, request, pk):
         plan = get_object_or_404(ProjectActionPlan, pk=pk)
         project_id = plan.project_id
@@ -1195,7 +1195,7 @@ class ProjectActionPlanDeleteView(ManagerRequiredMixin, View):
         return redirect(f"{reverse_lazy('project_controls:project_action_plan_list')}?project={project_id}")
 
 
-class LogisticsScenarioListView(ProjectControlsViewMixin, ListView):
+class LogisticsScenarioListView(CurrentProjectMixin, ProjectControlsViewMixin, ListView):
     model = LogisticsScenario
     template_name = 'project_controls/logistics/list.html'
     context_object_name = 'scenarios'
@@ -1214,7 +1214,7 @@ class LogisticsScenarioListView(ProjectControlsViewMixin, ListView):
         return ctx
 
 
-class LogisticsScenarioCreateView(ProjectControlsWriteMixin, CreateView):
+class LogisticsScenarioCreateView(CurrentProjectMixin, ProjectControlsWriteMixin, CreateView):
     model = LogisticsScenario
     form_class = LogisticsScenarioForm
     template_name = 'project_controls/logistics/form.html'
@@ -1226,13 +1226,13 @@ class LogisticsScenarioCreateView(ProjectControlsWriteMixin, CreateView):
         return super().form_valid(form)
 
 
-class LogisticsScenarioDetailView(ProjectControlsViewMixin, DetailView):
+class LogisticsScenarioDetailView(CurrentProjectMixin, ProjectControlsViewMixin, DetailView):
     model = LogisticsScenario
     template_name = 'project_controls/logistics/detail.html'
     context_object_name = 'scenario'
 
 
-class LogisticsScenarioUpdateView(ProjectControlsWriteMixin, UpdateView):
+class LogisticsScenarioUpdateView(CurrentProjectMixin, ProjectControlsWriteMixin, UpdateView):
     model = LogisticsScenario
     form_class = LogisticsScenarioForm
     template_name = 'project_controls/logistics/form.html'
@@ -1241,14 +1241,14 @@ class LogisticsScenarioUpdateView(ProjectControlsWriteMixin, UpdateView):
         return reverse_lazy('project_controls:logistics_detail', kwargs={'pk': self.object.pk})
 
 
-class LogisticsScenarioDeleteView(ManagerRequiredMixin, View):
+class LogisticsScenarioDeleteView(CurrentProjectMixin, ManagerRequiredMixin, View):
     def post(self, request, pk):
         get_object_or_404(LogisticsScenario, pk=pk).delete()
         messages.success(request, 'Logistics scenario deleted.')
         return redirect('project_controls:logistics_list')
 
 
-class LogisticsComparisonView(ProjectControlsViewMixin, TemplateView):
+class LogisticsComparisonView(CurrentProjectMixin, ProjectControlsViewMixin, TemplateView):
     template_name = 'project_controls/logistics/comparison.html'
 
     def get_context_data(self, **kwargs):
@@ -1263,7 +1263,7 @@ class LogisticsComparisonView(ProjectControlsViewMixin, TemplateView):
 
 # ── Import Views ──────────────────────────────────────────────────────────────
 
-class ImportView(ProjectControlsWriteMixin, FormView):
+class ImportView(CurrentProjectMixin, ProjectControlsWriteMixin, FormView):
     template_name = 'project_controls/import.html'
     form_class = ImportForm
 
@@ -1295,14 +1295,14 @@ class ImportView(ProjectControlsWriteMixin, FormView):
         return redirect('project_controls:import_log_detail', pk=log.pk)
 
 
-class ImportLogListView(ProjectControlsViewMixin, ListView):
+class ImportLogListView(CurrentProjectMixin, ProjectControlsViewMixin, ListView):
     model = ImportLog
     template_name = 'project_controls/import_log_list.html'
     context_object_name = 'logs'
     paginate_by = 20
 
 
-class ImportLogDetailView(ProjectControlsViewMixin, DetailView):
+class ImportLogDetailView(CurrentProjectMixin, ProjectControlsViewMixin, DetailView):
     model = ImportLog
     template_name = 'project_controls/import_log_detail.html'
     context_object_name = 'log'
@@ -1310,7 +1310,7 @@ class ImportLogDetailView(ProjectControlsViewMixin, DetailView):
 
 # ── Chart Data API ────────────────────────────────────────────────────────────
 
-class RockChartDataView(ProjectControlsViewMixin, View):
+class RockChartDataView(CurrentProjectMixin, ProjectControlsViewMixin, View):
     def get(self, request):
         project_id = request.GET.get('project_id')
         project = get_object_or_404(Project, pk=project_id) if project_id else None
@@ -1339,7 +1339,7 @@ class RockChartDataView(ProjectControlsViewMixin, View):
         })
 
 
-class SandChartDataView(ProjectControlsViewMixin, View):
+class SandChartDataView(CurrentProjectMixin, ProjectControlsViewMixin, View):
     def get(self, request):
         project_id = request.GET.get('project_id')
         project = get_object_or_404(Project, pk=project_id) if project_id else None

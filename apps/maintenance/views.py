@@ -9,7 +9,7 @@ from django.views.generic import (
     ListView, CreateView, DetailView, UpdateView, TemplateView, View
 )
 
-from apps.accounts.mixins import MaintenanceViewMixin, MaintenanceWriteMixin
+from apps.accounts.mixins import CurrentProjectMixin, MaintenanceViewMixin, MaintenanceWriteMixin
 from apps.equipment.models import Equipment
 from apps.projects.models import Project
 from .models import MaintenanceSchedule, MaintenanceWorkOrder, MaintenancePart
@@ -59,7 +59,8 @@ class MaintenanceDashboardView(MaintenanceViewMixin, TemplateView):
 
 # ── PM Schedule ───────────────────────────────────────────────────────────────
 
-class ScheduleListView(MaintenanceViewMixin, ListView):
+class ScheduleListView(CurrentProjectMixin, MaintenanceViewMixin, ListView):
+
     model               = MaintenanceSchedule
     template_name       = 'maintenance/schedule_list.html'
     context_object_name = 'schedules'
@@ -86,7 +87,8 @@ class ScheduleListView(MaintenanceViewMixin, ListView):
         return ctx
 
 
-class ScheduleCreateView(MaintenanceWriteMixin, CreateView):
+class ScheduleCreateView(CurrentProjectMixin, MaintenanceWriteMixin, CreateView):
+
     model         = MaintenanceSchedule
     form_class    = MaintenanceScheduleForm
     template_name = 'maintenance/schedule_form.html'
@@ -107,7 +109,8 @@ class ScheduleCreateView(MaintenanceWriteMixin, CreateView):
         return redirect(reverse('maintenance:schedule_list'))
 
 
-class ScheduleUpdateView(MaintenanceWriteMixin, UpdateView):
+class ScheduleUpdateView(CurrentProjectMixin, MaintenanceWriteMixin, UpdateView):
+
     model         = MaintenanceSchedule
     form_class    = MaintenanceScheduleForm
     template_name = 'maintenance/schedule_form.html'
@@ -122,7 +125,8 @@ class ScheduleUpdateView(MaintenanceWriteMixin, UpdateView):
 
 # ── Work Orders ───────────────────────────────────────────────────────────────
 
-class WorkOrderListView(MaintenanceViewMixin, ListView):
+class WorkOrderListView(CurrentProjectMixin, MaintenanceViewMixin, ListView):
+
     model               = MaintenanceWorkOrder
     template_name       = 'maintenance/wo_list.html'
     context_object_name = 'work_orders'
@@ -160,7 +164,8 @@ class WorkOrderListView(MaintenanceViewMixin, ListView):
         return ctx
 
 
-class WorkOrderCreateView(MaintenanceWriteMixin, CreateView):
+class WorkOrderCreateView(CurrentProjectMixin, MaintenanceWriteMixin, CreateView):
+
     model         = MaintenanceWorkOrder
     form_class    = MaintenanceWorkOrderForm
     template_name = 'maintenance/wo_form.html'
@@ -189,7 +194,8 @@ class WorkOrderCreateView(MaintenanceWriteMixin, CreateView):
         return redirect(reverse('maintenance:wo_detail', kwargs={'pk': self.object.pk}))
 
 
-class WorkOrderDetailView(MaintenanceViewMixin, DetailView):
+class WorkOrderDetailView(CurrentProjectMixin, MaintenanceViewMixin, DetailView):
+
     model               = MaintenanceWorkOrder
     template_name       = 'maintenance/wo_detail.html'
     context_object_name = 'wo'
@@ -206,7 +212,8 @@ class WorkOrderDetailView(MaintenanceViewMixin, DetailView):
         return ctx
 
 
-class WorkOrderUpdateView(MaintenanceWriteMixin, UpdateView):
+class WorkOrderUpdateView(CurrentProjectMixin, MaintenanceWriteMixin, UpdateView):
+
     model         = MaintenanceWorkOrder
     form_class    = MaintenanceWorkOrderForm
     template_name = 'maintenance/wo_form.html'

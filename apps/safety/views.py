@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from apps.accounts.mixins import SafetyViewMixin, SafetyWriteMixin, SafetyDeleteMixin
+from apps.accounts.mixins import CurrentProjectMixin, SafetyViewMixin, SafetyWriteMixin, SafetyDeleteMixin
 from .models import ToolboxMeeting, SafetyInspection, IncidentReport, JSEARecord
 from .forms import ToolboxMeetingForm, SafetyInspectionForm, IncidentReportForm, JSEARecordForm
 
@@ -14,14 +14,16 @@ class SafetyIndexView(View):
         return redirect('safety:inspection_list')
 
 
-class ToolboxMeetingListView(SafetyViewMixin, ListView):
+class ToolboxMeetingListView(CurrentProjectMixin, SafetyViewMixin, ListView):
+
     model = ToolboxMeeting
     template_name = 'safety/toolbox_list.html'
     context_object_name = 'meetings'
     paginate_by = 20
 
 
-class ToolboxMeetingCreateView(SafetyWriteMixin, CreateView):
+class ToolboxMeetingCreateView(CurrentProjectMixin, SafetyWriteMixin, CreateView):
+
     model = ToolboxMeeting
     form_class = ToolboxMeetingForm
     template_name = 'safety/toolbox_form.html'
@@ -32,14 +34,16 @@ class ToolboxMeetingCreateView(SafetyWriteMixin, CreateView):
         return super().form_valid(form)
 
 
-class ToolboxMeetingUpdateView(SafetyWriteMixin, UpdateView):
+class ToolboxMeetingUpdateView(CurrentProjectMixin, SafetyWriteMixin, UpdateView):
+
     model = ToolboxMeeting
     form_class = ToolboxMeetingForm
     template_name = 'safety/toolbox_form.html'
     success_url = reverse_lazy('safety:toolbox_list')
 
 
-class SafetyInspectionListView(SafetyViewMixin, ListView):
+class SafetyInspectionListView(CurrentProjectMixin, SafetyViewMixin, ListView):
+
     model = SafetyInspection
     template_name = 'safety/inspection_list.html'
     context_object_name = 'inspections'
@@ -53,7 +57,8 @@ class SafetyInspectionListView(SafetyViewMixin, ListView):
         return qs
 
 
-class SafetyInspectionCreateView(SafetyWriteMixin, CreateView):
+class SafetyInspectionCreateView(CurrentProjectMixin, SafetyWriteMixin, CreateView):
+
     model = SafetyInspection
     form_class = SafetyInspectionForm
     template_name = 'safety/inspection_form.html'
@@ -64,79 +69,91 @@ class SafetyInspectionCreateView(SafetyWriteMixin, CreateView):
         return super().form_valid(form)
 
 
-class SafetyInspectionDetailView(SafetyViewMixin, DetailView):
+class SafetyInspectionDetailView(CurrentProjectMixin, SafetyViewMixin, DetailView):
+
     model = SafetyInspection
     template_name = 'safety/inspection_detail.html'
     context_object_name = 'inspection'
 
 
-class SafetyInspectionUpdateView(SafetyWriteMixin, UpdateView):
+class SafetyInspectionUpdateView(CurrentProjectMixin, SafetyWriteMixin, UpdateView):
+
     model = SafetyInspection
     form_class = SafetyInspectionForm
     template_name = 'safety/inspection_form.html'
     success_url = reverse_lazy('safety:inspection_list')
 
 
-class IncidentReportListView(SafetyViewMixin, ListView):
+class IncidentReportListView(CurrentProjectMixin, SafetyViewMixin, ListView):
+
     model = IncidentReport
     template_name = 'safety/incident_list.html'
     context_object_name = 'incidents'
     paginate_by = 20
 
 
-class IncidentReportCreateView(SafetyWriteMixin, CreateView):
+class IncidentReportCreateView(CurrentProjectMixin, SafetyWriteMixin, CreateView):
+
     model = IncidentReport
     form_class = IncidentReportForm
     template_name = 'safety/incident_form.html'
     success_url = reverse_lazy('safety:incident_list')
 
 
-class IncidentReportDetailView(SafetyViewMixin, DetailView):
+class IncidentReportDetailView(CurrentProjectMixin, SafetyViewMixin, DetailView):
+
     model = IncidentReport
     template_name = 'safety/incident_detail.html'
     context_object_name = 'incident'
 
 
-class IncidentReportUpdateView(SafetyWriteMixin, UpdateView):
+class IncidentReportUpdateView(CurrentProjectMixin, SafetyWriteMixin, UpdateView):
+
     model = IncidentReport
     form_class = IncidentReportForm
     template_name = 'safety/incident_form.html'
     success_url = reverse_lazy('safety:incident_list')
 
 
-class JSEARecordListView(SafetyViewMixin, ListView):
+class JSEARecordListView(CurrentProjectMixin, SafetyViewMixin, ListView):
+
     model = JSEARecord
     template_name = 'safety/jsea_list.html'
     context_object_name = 'jsea_records'
     paginate_by = 20
 
 
-class JSEARecordCreateView(SafetyWriteMixin, CreateView):
+class JSEARecordCreateView(CurrentProjectMixin, SafetyWriteMixin, CreateView):
+
     model = JSEARecord
     form_class = JSEARecordForm
     template_name = 'safety/jsea_form.html'
     success_url = reverse_lazy('safety:jsea_list')
 
 
-class ToolboxMeetingDeleteView(SafetyDeleteMixin, DeleteView):
+class ToolboxMeetingDeleteView(CurrentProjectMixin, SafetyDeleteMixin, DeleteView):
+
     model = ToolboxMeeting
     template_name = 'safety/confirm_delete.html'
     success_url = reverse_lazy('safety:toolbox_list')
 
 
-class SafetyInspectionDeleteView(SafetyDeleteMixin, DeleteView):
+class SafetyInspectionDeleteView(CurrentProjectMixin, SafetyDeleteMixin, DeleteView):
+
     model = SafetyInspection
     template_name = 'safety/confirm_delete.html'
     success_url = reverse_lazy('safety:inspection_list')
 
 
-class IncidentReportDeleteView(SafetyDeleteMixin, DeleteView):
+class IncidentReportDeleteView(CurrentProjectMixin, SafetyDeleteMixin, DeleteView):
+
     model = IncidentReport
     template_name = 'safety/confirm_delete.html'
     success_url = reverse_lazy('safety:incident_list')
 
 
-class JSEARecordDeleteView(SafetyDeleteMixin, DeleteView):
+class JSEARecordDeleteView(CurrentProjectMixin, SafetyDeleteMixin, DeleteView):
+
     model = JSEARecord
     template_name = 'safety/confirm_delete.html'
     success_url = reverse_lazy('safety:jsea_list')

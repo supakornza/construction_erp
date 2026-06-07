@@ -2,6 +2,28 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 
 
+class CurrentProjectMixin:
+    """Filters all querysets to the session-selected project and auto-assigns
+    project on create. Add as the FIRST parent class on any view that owns
+    project-scoped data."""
+
+    @property
+    def current_project(self):
+        return getattr(self.request, 'current_project', None)
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if self.current_project:
+            qs = qs.filter(project=self.current_project)
+        return qs
+
+    def form_valid(self, form):
+        if hasattr(form.instance, 'project_id') and not form.instance.project_id:
+            if self.current_project:
+                form.instance.project = self.current_project
+        return super().form_valid(form)
+
+
 class RoleRequiredMixin(LoginRequiredMixin):
     allowed_roles = []
 

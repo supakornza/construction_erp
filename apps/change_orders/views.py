@@ -7,13 +7,14 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, View
 
-from apps.accounts.mixins import ChangeOrderViewMixin, ChangeOrderWriteMixin, ChangeOrderApproveMixin
+from apps.accounts.mixins import CurrentProjectMixin, ChangeOrderViewMixin, ChangeOrderWriteMixin, ChangeOrderApproveMixin
 from apps.projects.models import Project
 from .models import ChangeOrder, ChangeOrderItem
 from .forms import ChangeOrderForm, ChangeOrderItemFormSet, RejectionForm
 
 
-class ChangeOrderListView(ChangeOrderViewMixin, ListView):
+class ChangeOrderListView(CurrentProjectMixin, ChangeOrderViewMixin, ListView):
+
     model = ChangeOrder
     template_name = 'change_orders/list.html'
     context_object_name = 'change_orders'
@@ -40,7 +41,8 @@ class ChangeOrderListView(ChangeOrderViewMixin, ListView):
         return ctx
 
 
-class ChangeOrderCreateView(ChangeOrderWriteMixin, CreateView):
+class ChangeOrderCreateView(CurrentProjectMixin, ChangeOrderWriteMixin, CreateView):
+
     model         = ChangeOrder
     form_class    = ChangeOrderForm
     template_name = 'change_orders/form.html'
@@ -77,7 +79,8 @@ class ChangeOrderCreateView(ChangeOrderWriteMixin, CreateView):
         return redirect(reverse('change_orders:detail', kwargs={'pk': self.object.pk}))
 
 
-class ChangeOrderDetailView(ChangeOrderViewMixin, DetailView):
+class ChangeOrderDetailView(CurrentProjectMixin, ChangeOrderViewMixin, DetailView):
+
     model             = ChangeOrder
     template_name     = 'change_orders/detail.html'
     context_object_name = 'co'
@@ -93,7 +96,8 @@ class ChangeOrderDetailView(ChangeOrderViewMixin, DetailView):
         return ctx
 
 
-class ChangeOrderUpdateView(ChangeOrderWriteMixin, UpdateView):
+class ChangeOrderUpdateView(CurrentProjectMixin, ChangeOrderWriteMixin, UpdateView):
+
     model         = ChangeOrder
     form_class    = ChangeOrderForm
     template_name = 'change_orders/form.html'
@@ -130,7 +134,8 @@ class ChangeOrderUpdateView(ChangeOrderWriteMixin, UpdateView):
         return reverse('change_orders:detail', kwargs={'pk': self.object.pk})
 
 
-class ChangeOrderDeleteView(ChangeOrderWriteMixin, DeleteView):
+class ChangeOrderDeleteView(CurrentProjectMixin, ChangeOrderWriteMixin, DeleteView):
+
     model         = ChangeOrder
     template_name = 'change_orders/confirm_delete.html'
     success_url   = reverse_lazy('change_orders:list')
@@ -150,7 +155,8 @@ class ChangeOrderDeleteView(ChangeOrderWriteMixin, DeleteView):
 
 # ── Workflow Actions ──────────────────────────────────────────────────────────
 
-class ChangeOrderSubmitView(ChangeOrderWriteMixin, View):
+class ChangeOrderSubmitView(CurrentProjectMixin, ChangeOrderWriteMixin, View):
+
     def post(self, request, pk):
         co = get_object_or_404(ChangeOrder, pk=pk)
         if co.status != 'Draft':
@@ -163,7 +169,8 @@ class ChangeOrderSubmitView(ChangeOrderWriteMixin, View):
         return redirect('change_orders:detail', pk=pk)
 
 
-class ChangeOrderReviewView(ChangeOrderApproveMixin, View):
+class ChangeOrderReviewView(CurrentProjectMixin, ChangeOrderApproveMixin, View):
+
     def post(self, request, pk):
         co = get_object_or_404(ChangeOrder, pk=pk)
         if co.status != 'Submitted':
@@ -176,7 +183,8 @@ class ChangeOrderReviewView(ChangeOrderApproveMixin, View):
         return redirect('change_orders:detail', pk=pk)
 
 
-class ChangeOrderApproveView(ChangeOrderApproveMixin, View):
+class ChangeOrderApproveView(CurrentProjectMixin, ChangeOrderApproveMixin, View):
+
     def post(self, request, pk):
         co = get_object_or_404(ChangeOrder, pk=pk)
         if co.status not in ('Submitted', 'UnderReview'):
@@ -190,7 +198,8 @@ class ChangeOrderApproveView(ChangeOrderApproveMixin, View):
         return redirect('change_orders:detail', pk=pk)
 
 
-class ChangeOrderRejectView(ChangeOrderApproveMixin, View):
+class ChangeOrderRejectView(CurrentProjectMixin, ChangeOrderApproveMixin, View):
+
     def get(self, request, pk):
         co   = get_object_or_404(ChangeOrder, pk=pk)
         form = RejectionForm()
@@ -212,7 +221,8 @@ class ChangeOrderRejectView(ChangeOrderApproveMixin, View):
         return redirect('change_orders:detail', pk=pk)
 
 
-class ChangeOrderCancelView(ChangeOrderWriteMixin, View):
+class ChangeOrderCancelView(CurrentProjectMixin, ChangeOrderWriteMixin, View):
+
     def post(self, request, pk):
         co = get_object_or_404(ChangeOrder, pk=pk)
         if co.status == 'Approved':
