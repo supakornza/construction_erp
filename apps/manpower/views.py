@@ -4,13 +4,14 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
 from django.http import JsonResponse
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.dateparse import parse_date
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView, View
 from apps.accounts.mixins import CurrentProjectMixin, ManagerRequiredMixin, OperationalViewMixin, OperationalUpdateMixin
 from apps.projects.models import Project
 from .models import DailyManpowerRecord, ManpowerCategory
-from .forms import DailyManpowerRecordForm
+from .forms import DailyManpowerRecordForm, BulkManpowerHeaderForm
 from .services import get_default_manpower_period, get_manpower_dashboard_metrics
 
 
@@ -46,11 +47,10 @@ class ManpowerDashboardView(OperationalViewMixin, TemplateView):
 
 
 class DailyManpowerRecordListView(CurrentProjectMixin, OperationalViewMixin, ListView):
-
     model = DailyManpowerRecord
     template_name = 'manpower/list.html'
     context_object_name = 'records'
-    paginate_by = 30
+    paginate_by = 50
 
     def get_queryset(self):
         qs = super().get_queryset().select_related('project', 'category')
@@ -65,23 +65,90 @@ class DailyManpowerRecordListView(CurrentProjectMixin, OperationalViewMixin, Lis
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['projects'] = Project.objects.filter(status='Active')
+        ctx['categories'] = ManpowerCategory.objects.all()
         return ctx
 
 
-class DailyManpowerRecordCreateView(CurrentProjectMixin, OperationalViewMixin, CreateView):
-
-    model = DailyManpowerRecord
-    form_class = DailyManpowerRecordForm
+class BulkManpowerCreateView(CurrentProjectMixin, OperationalViewMixin, View):
     template_name = 'manpower/form.html'
-    success_url = reverse_lazy('manpower:list')
 
-    def form_valid(self, form):
-        messages.success(self.request, 'Manpower record added.')
-        return super().form_valid(form)
+    def _get_categories(self):
+        return ManpowerCategory.objects.all()
+
+    def _build_rows(self, categories, post_data=None):
+        rows = []
+        for cat in categories:
+            qty_val = ''
+            remarks_val = ''
+            if post_data:
+                qty_val = post_data.get(f'qty_{cat.pk}', '')
+                remarks_val = post_data.get(f'remarks_{cat.pk}', '')
+            rows.append({'category': cat, 'qty': qty_val, 'remarks': remarks_val})
+        return rows
+
+    def get(self, request):
+        categories = self._get_categories()
+        form = BulkManpowerHeaderForm()
+        rows = self._build_rows(categories)
+        return render(request, self.template_name, {
+            'form': form,
+            'rows': rows,
+            'is_bulk': True,
+        })
+
+    def post(self, request):
+        categories = self._get_categories()
+        form = BulkManpowerHeaderForm(request.POST)
+        rows = self._build_rows(categories, request.POST)
+
+        if not form.is_valid():
+            return render(request, self.template_name, {
+                'form': form,
+                'rows': rows,
+                'is_bulk': True,
+            })
+
+        project = form.cleaned_data['project']
+        report_date = form.cleaned_data['report_date']
+        company = form.cleaned_data['company']
+
+        created_count = 0
+        for cat in categories:
+            qty_str = request.POST.get(f'qty_{cat.pk}', '').strip()
+            if not qty_str or qty_str == '0':
+                continue
+            try:
+                qty = int(qty_str)
+                if qty <= 0:
+                    continue
+            except ValueError:
+                continue
+
+            remarks = request.POST.get(f'remarks_{cat.pk}', '').strip()
+            DailyManpowerRecord.objects.create(
+                project=project,
+                report_date=report_date,
+                category=cat,
+                company=company,
+                quantity=qty,
+                remarks=remarks,
+            )
+            created_count += 1
+
+        if created_count:
+            messages.success(request, f'บันทึก Manpower {created_count} รายการเรียบร้อย')
+        else:
+            messages.warning(request, 'ไม่มีข้อมูลที่บันทึก กรุณากรอกจำนวนอย่างน้อย 1 ประเภท')
+            return render(request, self.template_name, {
+                'form': form,
+                'rows': rows,
+                'is_bulk': True,
+            })
+
+        return redirect('manpower:list')
 
 
 class DailyManpowerRecordUpdateView(CurrentProjectMixin, OperationalUpdateMixin, UpdateView):
-
     model = DailyManpowerRecord
     form_class = DailyManpowerRecordForm
     template_name = 'manpower/form.html'
@@ -91,9 +158,13 @@ class DailyManpowerRecordUpdateView(CurrentProjectMixin, OperationalUpdateMixin,
         messages.success(self.request, 'Record updated.')
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['is_bulk'] = False
+        return ctx
+
 
 class DailyManpowerRecordDeleteView(CurrentProjectMixin, ManagerRequiredMixin, DeleteView):
-
     model = DailyManpowerRecord
     template_name = 'manpower/confirm_delete.html'
     success_url = reverse_lazy('manpower:list')

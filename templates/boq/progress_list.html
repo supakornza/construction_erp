@@ -4,7 +4,10 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="mb-0">Daily Progress Records</h4>
-    <a href="{% url 'boq:progress_create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Record Progress</a>
+    <div class="d-flex gap-2">
+        <a href="{% url 'boq:progress_create' %}" class="btn btn-outline-primary btn-sm"><i class="fas fa-plus me-1"></i>Single Record</a>
+        <a href="{% url 'boq:progress_bulk' %}" class="btn btn-primary"><i class="fas fa-table me-1"></i>บันทึก Bulk Progress</a>
+    </div>
 </div>
 <div class="card"><div class="table-responsive">
     <table class="table table-hover mb-0">

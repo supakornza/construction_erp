@@ -1,11 +1,16 @@
 import csv
+from datetime import date
+from decimal import Decimal
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum
 from django.http import HttpResponse
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, FormView, View
 from apps.accounts.mixins import CurrentProjectMixin, BOQViewMixin, FinancialWriteMixin
+from apps.projects.models import Project
 from .models import BOQItem, DailyProgressRecord, PaymentClaim
 from .forms import BOQItemForm, DailyProgressRecordForm, PaymentClaimForm, BOQImportForm
 
@@ -167,6 +172,144 @@ class DailyProgressRecordCreateView(CurrentProjectMixin, FinancialWriteMixin, Cr
     def form_valid(self, form):
         messages.success(self.request, 'Progress recorded.')
         return super().form_valid(form)
+
+
+class BulkProgressCreateView(CurrentProjectMixin, FinancialWriteMixin, View):
+    """Bulk daily-progress entry: one form for all BOQ line items on a given date."""
+    template_name = 'boq/bulk_progress_form.html'
+
+    def _build_sections(self, project, post_data=None):
+        """Return section list with line items annotated for the form."""
+        all_items = list(
+            BOQItem.objects.filter(project=project)
+            .select_related('parent')
+            .order_by('sort_key')
+        )
+        # Build cumulative quantities in one query
+        cum_map = {
+            row['boq_item_id']: row['total']
+            for row in DailyProgressRecord.objects
+                .filter(project=project)
+                .values('boq_item_id')
+                .annotate(total=Sum('daily_quantity'))
+        }
+
+        sections = []
+        current_section = None
+        for item in all_items:
+            if item.item_type == 'header':
+                current_section = {'header': item, 'rows': []}
+                sections.append(current_section)
+            else:
+                cum = float(cum_map.get(item.pk) or 0)
+                contract = float(item.contract_quantity or 0)
+                pct = round(cum / contract * 100, 1) if contract else 0
+                remaining = max(contract - cum, 0)
+                row = {
+                    'item': item,
+                    'cum': cum,
+                    'pct': pct,
+                    'remaining': remaining,
+                    'qty_input': post_data.get(f'qty_{item.pk}', '') if post_data else '',
+                    'remarks_input': post_data.get(f'remarks_{item.pk}', '') if post_data else '',
+                }
+                if current_section:
+                    current_section['rows'].append(row)
+                else:
+                    # Items without a header section
+                    orphan = next((s for s in sections if s['header'] is None), None)
+                    if not orphan:
+                        orphan = {'header': None, 'rows': []}
+                        sections.insert(0, orphan)
+                    orphan['rows'].append(row)
+        return sections
+
+    def get(self, request):
+        project = self.current_project
+        if not project:
+            messages.warning(request, 'กรุณาเลือกโครงการก่อน')
+            return redirect('boq:progress_list')
+        sections = self._build_sections(project)
+        return render(request, self.template_name, {
+            'project': project,
+            'sections': sections,
+            'today': date.today().isoformat(),
+        })
+
+    def post(self, request):
+        project_id = request.POST.get('project_id')
+        if project_id:
+            project = Project.objects.filter(pk=project_id).first()
+        else:
+            project = self.current_project
+        if not project:
+            return redirect('boq:progress_list')
+
+        record_date_str = request.POST.get('record_date', '').strip()
+        if not record_date_str:
+            messages.error(request, 'กรุณาระบุวันที่')
+            sections = self._build_sections(project, request.POST)
+            return render(request, self.template_name, {
+                'project': project, 'sections': sections,
+                'today': date.today().isoformat(), 'post_date': record_date_str,
+            })
+
+        try:
+            from datetime import datetime
+            record_date = datetime.strptime(record_date_str, '%Y-%m-%d').date()
+        except ValueError:
+            messages.error(request, 'รูปแบบวันที่ไม่ถูกต้อง')
+            sections = self._build_sections(project, request.POST)
+            return render(request, self.template_name, {
+                'project': project, 'sections': sections,
+                'today': date.today().isoformat(),
+            })
+
+        created, skipped = 0, 0
+        line_items = BOQItem.objects.filter(project=project, item_type='item')
+        for item in line_items:
+            qty_str = request.POST.get(f'qty_{item.pk}', '').strip()
+            if not qty_str or qty_str == '0':
+                continue
+            try:
+                qty = Decimal(qty_str)
+                if qty <= 0:
+                    continue
+            except Exception:
+                continue
+
+            remarks = request.POST.get(f'remarks_{item.pk}', '').strip()
+            allow_overrun = request.POST.get(f'overrun_{item.pk}') == '1'
+            rec = DailyProgressRecord(
+                project=project,
+                boq_item=item,
+                record_date=record_date,
+                daily_quantity=qty,
+                remarks=remarks,
+                allow_overrun=allow_overrun,
+            )
+            try:
+                rec.full_clean()
+                rec.save()
+                created += 1
+            except Exception as e:
+                skipped += 1
+                import logging
+                logging.getLogger(__name__).warning('DailyProgressRecord save failed pk=%s: %s', item.pk, e)
+
+        if created:
+            messages.success(request, f'บันทึก Progress {created} รายการ สำหรับวันที่ {record_date_str}')
+        if skipped:
+            messages.warning(request, f'ข้าม {skipped} รายการ (เกิน Contract Qty — ติ๊ก Allow Overrun เพื่อบันทึก)')
+        if not created and not skipped:
+            messages.warning(request, 'ไม่มีข้อมูลที่บันทึก กรุณากรอกปริมาณอย่างน้อย 1 รายการ')
+            sections = self._build_sections(project, request.POST)
+            return render(request, self.template_name, {
+                'project': project, 'sections': sections,
+                'today': date.today().isoformat(), 'post_date': record_date_str,
+            })
+
+        return redirect('boq:progress_list')
 
 
 class PaymentClaimListView(CurrentProjectMixin, BOQViewMixin, ListView):

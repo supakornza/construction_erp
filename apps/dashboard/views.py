@@ -620,7 +620,8 @@ class SCurveDataView(LoginRequiredMixin, View):
         start = project.start_date
         contract_end = project.finish_date
 
-        # Build weekly tick dates from project start to max(today, contract_end)
+        # Build weekly tick dates from project start to max(today, contract_end).
+        # Always insert today so the current-day EV is always visible in the chart.
         timeline_end = max(contract_end, today)
         ticks = []
         d = start
@@ -629,6 +630,10 @@ class SCurveDataView(LoginRequiredMixin, View):
             d += timedelta(days=7)
         if not ticks or ticks[-1] < timeline_end:
             ticks.append(timeline_end)
+        # Ensure today is a tick so actual EV recorded today is plotted
+        if today not in ticks:
+            ticks.append(today)
+            ticks.sort()
 
         # Contract value (BAC)
         items = list(BOQItem.objects.filter(project=project))
@@ -661,10 +666,9 @@ class SCurveDataView(LoginRequiredMixin, View):
                 date_idx += 1
             cum_at_tick[tick_str] = cum_ev
 
-        # Today's actual % and daily rate for forecast
-        today_actual_pct = min((cum_at_tick.get(
-            max((t for t in cum_at_tick if t <= today.isoformat()), default=start.isoformat()),
-            0) / bac * 100), 100)
+        # Today's actual % — sum all EV up to and including today (tick-independent)
+        today_ev = sum(v for k, v in daily_ev.items() if k <= today.isoformat())
+        today_actual_pct = min(today_ev / bac * 100, 100)
         today_planned_pct = _planned_pct(project, today)
         elapsed_days = max((today - start).days, 1)
         daily_rate = today_actual_pct / elapsed_days  # % per calendar day

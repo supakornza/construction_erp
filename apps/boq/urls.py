@@ -12,6 +12,7 @@ urlpatterns = [
     path('<int:pk>/delete/', views.BOQItemDeleteView.as_view(), name='delete'),
     path('progress/', views.DailyProgressRecordListView.as_view(), name='progress_list'),
     path('progress/create/', views.DailyProgressRecordCreateView.as_view(), name='progress_create'),
+    path('progress/bulk/', views.BulkProgressCreateView.as_view(), name='progress_bulk'),
     path('claims/', views.PaymentClaimListView.as_view(), name='claim_list'),
     path('claims/create/', views.PaymentClaimCreateView.as_view(), name='claim_create'),
     path('claims/<int:pk>/', views.PaymentClaimDetailView.as_view(), name='claim_detail'),

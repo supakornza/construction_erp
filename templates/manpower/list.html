@@ -1,51 +1,220 @@
 {% extends "base.html" %}
+{% load humanize %}
+{% load project_control_tags %}
 {% block title %}Manpower – Construction ERP{% endblock %}
-{% block page_title %}Daily Manpower Records{% endblock %}
+{% block page_title %}ข้อมูล Manpower รายวัน{% endblock %}
+
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="mb-0"><i class="fas fa-users me-2 text-primary"></i>Manpower Records</h4>
+    <div>
+        <h4 class="mb-0"><i class="fas fa-users me-2 text-primary"></i>Manpower Records</h4>
+        <small class="text-muted">บันทึกกำลังคนรายวัน</small>
+    </div>
     <div class="d-flex gap-2">
-        <a href="{% url 'manpower:dashboard' %}" class="btn btn-outline-secondary"><i class="fas fa-chart-column me-1"></i>Dashboard</a>
-        <a href="{% url 'manpower:create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Add Record</a>
+        <a href="{% url 'manpower:dashboard' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-chart-column me-1"></i>Dashboard
+        </a>
+        <a href="{% url 'manpower:create' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i>บันทึก Manpower
+        </a>
     </div>
 </div>
+
+{# Filter bar #}
 <div class="card mb-3">
     <div class="card-body py-2">
-        <form method="get" class="d-flex gap-2">
+        <form method="get" class="d-flex gap-2 flex-wrap align-items-center">
             <select name="project" class="form-select form-select-sm" style="width:auto;">
-                <option value="">All Projects</option>
-                {% for p in projects %}<option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.contract_no }}</option>{% endfor %}
+                <option value="">ทุกโครงการ</option>
+                {% for p in projects %}
+                    <option value="{{ p.pk }}" {% if request.GET.project == p.pk|stringformat:"s" %}selected{% endif %}>
+                        {{ p.contract_no }}
+                    </option>
+                {% endfor %}
             </select>
-            <input type="date" name="date" value="{{ request.GET.date }}" class="form-control form-control-sm" style="width:auto;">
-            <button class="btn btn-sm btn-outline-secondary" type="submit">Filter</button>
+            <input type="date" name="date" value="{{ request.GET.date }}"
+                   class="form-control form-control-sm" style="width:auto;">
+            <select name="category" class="form-select form-select-sm" style="width:auto;">
+                <option value="">ทุกประเภทแรงงาน</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.pk }}" {% if request.GET.category == cat.pk|stringformat:"s" %}selected{% endif %}>
+                        {{ cat.display_th }} — {{ cat.get_name_display }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-sm btn-primary" type="submit">
+                <i class="fas fa-filter me-1"></i>กรอง
+            </button>
+            {% if request.GET.date or request.GET.project or request.GET.category %}
+            <a href="{% url 'manpower:list' %}" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-times me-1"></i>ล้าง
+            </a>
+            {% endif %}
         </form>
     </div>
 </div>
-<div class="card"><div class="table-responsive">
-    <table class="table table-hover mb-0">
-        <thead class="table-light"><tr><th>Date</th><th>Project</th><th>Category</th><th>Company</th><th>Qty</th><th>Actions</th></tr></thead>
-        <tbody>
-        {% for r in records %}
-        <tr>
-            <td>{{ r.report_date|thai_be_date }}</td>
-            <td>{{ r.project.contract_no }}</td>
-            <td>{{ r.category }}</td>
-            <td>{{ r.company }}</td>
-            <td class="fw-bold">{{ r.quantity|intcomma }}</td>
-            <td>
-                <a href="{% url 'manpower:update' r.pk %}" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fas fa-edit"></i></a>
-                {% if request.user.is_superuser or request.user.role == 'admin' %}
-                <form method="post" action="{% url 'manpower:delete' r.pk %}" class="d-inline" onsubmit="return confirm('Delete this manpower record?')">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
-                </form>
+
+{# Category Summary Panel #}
+<div class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center py-2"
+         style="cursor:pointer;" data-bs-toggle="collapse" data-bs-target="#categorySummary">
+        <span>
+            <i class="fas fa-chart-bar me-1 text-primary"></i>
+            สรุปกำลังคนตามประเภท
+            {% if request.GET.date %}<span class="text-muted small ms-1">({{ request.GET.date }})</span>{% endif %}
+        </span>
+        <div class="d-flex align-items-center gap-3">
+            <span class="fw-bold text-primary">รวม {{ summary_grand_total|intcomma }} คน</span>
+            <i class="fas fa-chevron-down small text-muted"></i>
+        </div>
+    </div>
+    <div class="collapse show" id="categorySummary">
+        <div class="card-body p-2">
+            <div class="row g-1">
+                {% for row in category_summary %}
+                {% if row.total > 0 %}
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="?{% if request.GET.project %}project={{ request.GET.project }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}category={{ row.category.pk }}"
+                       class="text-decoration-none">
+                        <div class="d-flex align-items-center gap-2 p-2 rounded {% if request.GET.category == row.category.pk|stringformat:'s' %}bg-primary text-white{% else %}bg-light hover-primary{% endif %}">
+                            <div class="flex-grow-1 min-w-0">
+                                <div class="fw-semibold small text-truncate
+                                    {% if request.GET.category == row.category.pk|stringformat:'s' %}text-white{% endif %}">
+                                    {{ row.category.display_th }}
+                                </div>
+                                <div class="small text-truncate
+                                    {% if request.GET.category == row.category.pk|stringformat:'s' %}text-white opacity-75{% else %}text-muted{% endif %}">
+                                    {{ row.category.get_name_display }}
+                                </div>
+                            </div>
+                            <div class="text-end flex-shrink-0">
+                                <div class="fw-bold
+                                    {% if request.GET.category == row.category.pk|stringformat:'s' %}text-white{% else %}text-primary{% endif %}">
+                                    {{ row.total|intcomma }}
+                                </div>
+                                <div class="small
+                                    {% if request.GET.category == row.category.pk|stringformat:'s' %}text-white opacity-75{% else %}text-muted{% endif %}">
+                                    {{ row.pct }}%
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
                 {% endif %}
-            </td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="6" class="text-center text-muted py-4">No records found.</td></tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div></div>
+                {% empty %}{% endfor %}
+            </div>
+            {% if summary_grand_total == 0 %}
+            <div class="text-center text-muted py-3 small">ไม่มีข้อมูลสำหรับช่วงที่เลือก</div>
+            {% endif %}
+        </div>
+
+        {# Zero-count categories (collapsed) #}
+        {% with zero_cats=category_summary %}
+        {% if summary_grand_total > 0 %}
+        <div class="card-footer py-1 px-2 bg-light">
+            <div class="d-flex flex-wrap gap-1">
+                {% for row in category_summary %}
+                {% if row.total == 0 %}
+                <span class="badge bg-secondary-subtle text-secondary fw-normal small">
+                    {{ row.category.display_th }}
+                    <span class="ms-1 opacity-50">0</span>
+                </span>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+</div>
+
+{# Records table #}
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover table-sm align-middle mb-0">
+            <thead class="table-primary">
+                <tr>
+                    <th>วันที่</th>
+                    <th>โครงการ</th>
+                    <th>ประเภทแรงงาน</th>
+                    <th class="text-muted small" style="font-weight:normal;">Position</th>
+                    <th>บริษัท/ผู้รับเหมา</th>
+                    <th class="text-center">จำนวน<br><small class="fw-normal">(คน)</small></th>
+                    <th>หมายเหตุ</th>
+                    <th class="text-center" style="width:80px;">จัดการ</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for r in records %}
+            <tr>
+                <td class="text-nowrap">{{ r.report_date|thai_be_date }}</td>
+                <td>
+                    <span class="badge bg-primary-subtle text-primary-emphasis fw-semibold">
+                        {{ r.project.contract_no }}
+                    </span>
+                </td>
+                <td class="fw-semibold">{{ r.category.display_th }}</td>
+                <td class="text-muted small">{{ r.category.get_name_display }}</td>
+                <td>{{ r.company }}</td>
+                <td class="text-center fw-bold">{{ r.quantity|intcomma }}</td>
+                <td class="text-muted small">{{ r.remarks|default:"–" }}</td>
+                <td class="text-center">
+                    <a href="{% url 'manpower:update' r.pk %}"
+                       class="btn btn-xs btn-outline-primary" title="แก้ไข">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    {% if request.user.is_superuser or request.user.role == 'admin' %}
+                    <form method="post" action="{% url 'manpower:delete' r.pk %}"
+                          class="d-inline"
+                          onsubmit="return confirm('ลบรายการนี้?')">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-xs btn-outline-danger" title="ลบ">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center text-muted py-5">
+                    <i class="fas fa-users fa-2x mb-2 d-block opacity-25"></i>
+                    ไม่พบข้อมูล Manpower
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <div class="card-footer d-flex justify-content-between align-items-center py-2">
+        <small class="text-muted">
+            แสดง {{ page_obj.start_index }}–{{ page_obj.end_index }}
+            จาก {{ page_obj.paginator.count }} รายการ
+        </small>
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if request.GET.project %}project={{ request.GET.project }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}page={{ page_obj.previous_page_number }}">
+                        &laquo;
+                    </a>
+                </li>
+                {% endif %}
+                <li class="page-item disabled">
+                    <span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+                </li>
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if request.GET.project %}project={{ request.GET.project }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}page={{ page_obj.next_page_number }}">
+                        &raquo;
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

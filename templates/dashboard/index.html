@@ -716,21 +716,200 @@
     <section class="exec-card exec-chart-card span-8">
       <div class="exec-card-head">
         <h2 class="exec-section-title">Cumulative Progress: Planned vs Actual</h2>
-        <div class="exec-legend">
-          <span class="exec-legend-item"><i class="exec-dot" style="background:var(--exec-outline-variant)"></i>Planned</span>
-          <span class="exec-legend-item"><i class="exec-dot" style="background:var(--exec-primary)"></i>Actual</span>
+        <div class="d-flex align-items-center gap-3">
+          <select id="scurve-project-select" class="exec-btn" style="font-size:12px;padding:4px 8px;">
+            {% for project in boq_projects %}
+            <option value="{{ project.pk }}" {% if project.pk|stringformat:"s" == default_scurve_project_id|stringformat:"s" %}selected{% endif %}>
+              {{ project.contract_no }} – {{ project.project_name|truncatechars:24 }}
+            </option>
+            {% empty %}
+            <option value="">No BOQ data</option>
+            {% endfor %}
+          </select>
+          <div class="exec-legend">
+            <span class="exec-legend-item"><i class="exec-dot" style="background:var(--exec-outline-variant)"></i>Planned</span>
+            <span class="exec-legend-item"><i class="exec-dot" style="background:var(--exec-primary)"></i>Actual</span>
+            <span class="exec-legend-item"><i class="exec-dot" style="background:#f59e0b;border-radius:0;height:2px;width:16px;"></i>Forecast</span>
+          </div>
         </div>
       </div>
-      <div class="exec-line-chart" aria-label="Cumulative planned versus actual progress chart">
-        <div class="exec-y-axis"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div>
-        <div class="exec-grid-lines"><span></span><span></span><span></span><span></span><span></span></div>
-        <svg aria-hidden="true" class="position-absolute top-0 start-0 w-100 h-100" preserveAspectRatio="none" viewBox="0 0 100 100">
-          <path d="M0,100 L20,80 L40,60 L60,40 L80,20 L100,0" fill="none" stroke="#c2c6d4" stroke-dasharray="4" stroke-width="2"></path>
-          <path d="M0,100 L20,78 L40,62 L60,35 L80,31" fill="none" stroke="#003f87" stroke-width="3"></path>
-        </svg>
-        <div class="exec-x-axis"><span>Wk 1</span><span>Wk 2</span><span>Wk 3</span><span>Wk 4</span><span>Wk 5</span><span>Wk 6</span></div>
+
+      {# KPI strip #}
+      <div class="d-flex gap-4 mb-3 px-1" id="scurve-kpis" style="font-size:13px;">
+        <div>
+          <span class="text-muted">Planned</span>
+          <span class="fw-bold ms-1" id="kpi-planned">–</span>
+        </div>
+        <div>
+          <span class="text-muted">Actual</span>
+          <span class="fw-bold ms-1" id="kpi-actual">–</span>
+        </div>
+        <div>
+          <span class="text-muted">Variance</span>
+          <span class="fw-bold ms-1" id="kpi-variance">–</span>
+        </div>
+        <div>
+          <span class="text-muted">SPI</span>
+          <span class="fw-bold ms-1" id="kpi-spi">–</span>
+        </div>
+        <div id="kpi-status-wrap" class="ms-auto"></div>
+      </div>
+
+      <div style="position:relative;height:260px;">
+        <canvas id="scurveChart"></canvas>
+        <div id="scurve-loading" class="position-absolute top-50 start-50 translate-middle text-muted small" style="display:none;">
+          <span class="spinner-border spinner-border-sm me-1"></span>กำลังโหลด…
+        </div>
+        <div id="scurve-nodata" class="position-absolute top-50 start-50 translate-middle text-muted small text-center" style="display:none;">
+          <i class="fas fa-chart-line fa-2x mb-2 d-block opacity-25"></i>ไม่มีข้อมูล BOQ สำหรับโครงการนี้
+        </div>
       </div>
     </section>
+
+    <script>
+    (function () {
+      const SCURVE_URL = "{% url 'dashboard:scurve_data' %}";
+      const select    = document.getElementById('scurve-project-select');
+      const loadingEl = document.getElementById('scurve-loading');
+      const nodataEl  = document.getElementById('scurve-nodata');
+      let chart       = null;
+
+      function kpi(id, value, suffix) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value !== null && value !== undefined ? value + suffix : '–';
+      }
+
+      function statusBadge(spi) {
+        const wrap = document.getElementById('kpi-status-wrap');
+        if (!wrap || spi === null) return;
+        let cls, label;
+        if      (spi >= 0.95) { cls = 'bg-success'; label = 'On Track'; }
+        else if (spi >= 0.80) { cls = 'bg-warning text-dark'; label = 'Slight Delay'; }
+        else                  { cls = 'bg-danger';  label = 'Critical Delay'; }
+        wrap.innerHTML = `<span class="badge ${cls}">${label} (SPI ${spi})</span>`;
+      }
+
+      function load(projectId) {
+        if (!projectId) { nodataEl.style.display = 'block'; return; }
+        loadingEl.style.display = 'block';
+        nodataEl.style.display  = 'none';
+
+        fetch(`${SCURVE_URL}?project_id=${projectId}`)
+          .then(r => r.json())
+          .then(data => {
+            loadingEl.style.display = 'none';
+            if (!data.planned || !data.planned.length) {
+              nodataEl.style.display = 'block';
+              return;
+            }
+
+            // KPI strip
+            kpi('kpi-planned',  data.planned_today,  '%');
+            kpi('kpi-actual',   data.actual_today,   '%');
+            const variance = data.actual_today !== undefined && data.planned_today !== undefined
+              ? (data.actual_today - data.planned_today).toFixed(1) : null;
+            if (variance !== null) {
+              const el = document.getElementById('kpi-variance');
+              el.textContent = (variance >= 0 ? '+' : '') + variance + '%';
+              el.style.color = variance >= 0 ? 'var(--exec-primary)' : '#dc3545';
+            }
+            kpi('kpi-spi', data.spi, '');
+            statusBadge(data.spi);
+
+            // Build labels: show every ~4th week label to avoid clutter
+            const labels = data.labels.map((d, i) => {
+              if (i === 0 || i === data.labels.length - 1) return d;
+              if (i % 4 === 0) return d;
+              return '';
+            });
+
+            const datasets = [
+              {
+                label: 'Planned',
+                data: data.planned,
+                borderColor: '#c2c6d4',
+                borderDash: [6, 4],
+                borderWidth: 2,
+                pointRadius: 0,
+                tension: 0.3,
+                fill: false,
+              },
+              {
+                label: 'Actual',
+                data: data.actual,
+                borderColor: '#003f87',
+                backgroundColor: 'rgba(0,63,135,0.08)',
+                borderWidth: 2.5,
+                pointRadius: 0,
+                tension: 0.3,
+                fill: true,
+              },
+              {
+                label: 'Forecast',
+                data: data.forecast,
+                borderColor: '#f59e0b',
+                borderDash: [4, 4],
+                borderWidth: 2,
+                pointRadius: 0,
+                tension: 0.3,
+                fill: false,
+              },
+            ];
+
+            if (chart) {
+              chart.data.labels   = labels;
+              chart.data.datasets = datasets;
+              chart.update('none');
+            } else {
+              chart = new Chart(document.getElementById('scurveChart'), {
+                type: 'line',
+                data: { labels, datasets },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  interaction: { mode: 'index', intersect: false },
+                  plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                      callbacks: {
+                        title: items => items[0].label,
+                        label: item => `${item.dataset.label}: ${item.raw !== null ? item.raw + '%' : '–'}`,
+                      }
+                    },
+                  },
+                  scales: {
+                    x: {
+                      grid: { color: '#f0f0f0' },
+                      ticks: { font: { size: 11 }, maxRotation: 0, color: '#727784' },
+                    },
+                    y: {
+                      min: 0, max: 100,
+                      grid: { color: '#f0f0f0' },
+                      ticks: {
+                        font: { size: 11 }, color: '#727784',
+                        callback: v => v + '%',
+                        stepSize: 25,
+                      },
+                    },
+                  },
+                },
+              });
+            }
+          })
+          .catch(() => {
+            loadingEl.style.display = 'none';
+            nodataEl.style.display  = 'block';
+          });
+      }
+
+      if (select) {
+        select.addEventListener('change', () => load(select.value));
+        load(select.value);
+      } else {
+        nodataEl.style.display = 'block';
+      }
+    })();
+    </script>
 
     <section class="exec-card exec-chart-card span-4">
       <div class="exec-card-head">

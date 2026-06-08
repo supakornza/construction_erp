@@ -1,11 +1,168 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-{% block title %}Manpower Record – Construction ERP{% endblock %}
-{% block page_title %}Manpower Record{% endblock %}
+{% block title %}บันทึก Manpower – Construction ERP{% endblock %}
+{% block page_title %}บันทึกข้อมูล Manpower{% endblock %}
+
 {% block content %}
 <div class="d-flex align-items-center mb-4">
-    <a href="{% url 'manpower:list' %}" class="btn btn-sm btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
-    <h4 class="mb-0">{% if form.instance.pk %}Edit{% else %}Add{% endif %} Manpower Record</h4>
+    <a href="{% url 'manpower:list' %}" class="btn btn-sm btn-outline-secondary me-3">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <div>
+        <h4 class="mb-0">
+            {% if is_bulk %}
+                <i class="fas fa-users me-2 text-primary"></i>บันทึกข้อมูล Manpower รายวัน
+            {% else %}
+                <i class="fas fa-edit me-2 text-primary"></i>แก้ไขข้อมูล Manpower
+            {% endif %}
+        </h4>
+        {% if is_bulk %}<small class="text-muted">กรอกจำนวนแรงงานแต่ละประเภทสำหรับวันที่เลือก</small>{% endif %}
+    </div>
 </div>
-<div class="card" style="max-width:700px;"><div class="card-body">{% crispy form %}</div></div>
+
+{% if is_bulk %}
+{# ── BULK ENTRY FORM ── #}
+<form method="post" id="bulk-manpower-form">
+    {% csrf_token %}
+
+    {# Header card: Project / Date / Company #}
+    <div class="card mb-3 border-primary">
+        <div class="card-header bg-primary text-white py-2">
+            <i class="fas fa-info-circle me-1"></i> ข้อมูลทั่วไป
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">โครงการ <span class="text-danger">*</span></label>
+                    {{ form.project }}
+                    {% if form.project.errors %}
+                        <div class="text-danger small">{{ form.project.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">วันที่ <span class="text-danger">*</span></label>
+                    {{ form.report_date }}
+                    {% if form.report_date.errors %}
+                        <div class="text-danger small">{{ form.report_date.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">บริษัท/ผู้รับเหมา <span class="text-danger">*</span></label>
+                    {{ form.company }}
+                    {% if form.company.errors %}
+                        <div class="text-danger small">{{ form.company.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Manpower table #}
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center py-2">
+            <span><i class="fas fa-table me-1 text-primary"></i> ตารางกำลังคน (Manpower)</span>
+            <span class="badge bg-secondary" id="total-badge">รวม: 0 คน</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-sm align-middle mb-0">
+                <thead class="table-primary">
+                    <tr>
+                        <th class="text-center" style="width:40px;">#</th>
+                        <th style="min-width:160px;">ประเภทแรงงาน (ไทย)</th>
+                        <th style="min-width:180px;">Position (English)</th>
+                        <th class="text-center" style="width:110px;">จำนวน<br><small class="fw-normal">(คน)</small></th>
+                        <th style="min-width:180px;">หมายเหตุ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                    <tr class="manpower-row">
+                        <td class="text-center text-muted small">{{ forloop.counter }}</td>
+                        <td class="fw-semibold">{{ row.category.display_th }}</td>
+                        <td class="text-muted small">{{ row.category.get_name_display }}</td>
+                        <td class="text-center">
+                            <input type="number"
+                                   name="qty_{{ row.category.pk }}"
+                                   value="{{ row.qty }}"
+                                   min="0"
+                                   max="9999"
+                                   class="form-control form-control-sm text-center qty-input"
+                                   placeholder="0"
+                                   style="width:80px; margin:auto;">
+                        </td>
+                        <td>
+                            <input type="text"
+                                   name="remarks_{{ row.category.pk }}"
+                                   value="{{ row.remarks }}"
+                                   class="form-control form-control-sm"
+                                   placeholder="-"
+                                   maxlength="300">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="table-light fw-bold">
+                    <tr>
+                        <td colspan="3" class="text-end">รวมทั้งหมด</td>
+                        <td class="text-center" id="grand-total">0</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <button type="button" class="btn btn-sm btn-outline-secondary" id="clear-all-btn">
+                <i class="fas fa-eraser me-1"></i>ล้างทั้งหมด
+            </button>
+            <div class="d-flex gap-2">
+                <a href="{% url 'manpower:list' %}" class="btn btn-outline-secondary">ยกเลิก</a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i>บันทึกข้อมูล
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+(function () {
+    const inputs = document.querySelectorAll('.qty-input');
+    const grandTotal = document.getElementById('grand-total');
+    const badge = document.getElementById('total-badge');
+
+    function recalc() {
+        let total = 0;
+        inputs.forEach(inp => {
+            const v = parseInt(inp.value, 10);
+            if (!isNaN(v) && v > 0) {
+                total += v;
+                inp.closest('tr').classList.add('table-success');
+            } else {
+                inp.closest('tr').classList.remove('table-success');
+            }
+        });
+        grandTotal.textContent = total.toLocaleString();
+        badge.textContent = 'รวม: ' + total.toLocaleString() + ' คน';
+        badge.className = total > 0 ? 'badge bg-primary' : 'badge bg-secondary';
+    }
+
+    inputs.forEach(inp => inp.addEventListener('input', recalc));
+    recalc();
+
+    document.getElementById('clear-all-btn').addEventListener('click', () => {
+        inputs.forEach(inp => { inp.value = ''; });
+        document.querySelectorAll('.form-control[name^="remarks_"]').forEach(el => { el.value = ''; });
+        recalc();
+    });
+})();
+</script>
+
+{% else %}
+{# ── SINGLE RECORD EDIT FORM ── #}
+<div class="card" style="max-width:700px;">
+    <div class="card-body">
+        {% crispy form %}
+    </div>
+</div>
+{% endif %}
 {% endblock %}

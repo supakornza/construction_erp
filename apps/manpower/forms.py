@@ -1,7 +1,29 @@
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
-from .models import DailyManpowerRecord
+from .models import DailyManpowerRecord, ManpowerCategory
+
+
+class BulkManpowerHeaderForm(forms.Form):
+    project = forms.ModelChoiceField(
+        queryset=None,
+        label='โครงการ / Project',
+        widget=forms.Select(attrs={'class': 'form-select'}),
+    )
+    report_date = forms.DateField(
+        label='วันที่ / Date',
+        widget=forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date', 'class': 'form-control'}),
+    )
+    company = forms.CharField(
+        max_length=200,
+        label='บริษัท/ผู้รับเหมา / Company',
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+
+    def __init__(self, *args, project_queryset=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        from apps.projects.models import Project
+        self.fields['project'].queryset = project_queryset or Project.objects.filter(status='Active').order_by('contract_no')
 
 
 class DailyManpowerRecordForm(forms.ModelForm):

@@ -4,7 +4,7 @@ from .models import ManpowerCategory, DailyManpowerRecord
 
 @admin.register(ManpowerCategory)
 class ManpowerCategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'description']
+    list_display = ['name', 'name_th', 'sort_order']
     search_fields = ['name']
 
 

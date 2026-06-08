@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}บันทึก Daily Progress – Construction ERP{% endblock %}
+{% block page_title %}บันทึก Daily Progress{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-3">
+    <a href="{% url 'boq:progress_list' %}" class="btn btn-sm btn-outline-secondary me-3">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <div>
+        <h4 class="mb-0"><i class="fas fa-chart-line me-2 text-primary"></i>บันทึก Daily Progress</h4>
+        <small class="text-muted">{{ project.contract_no }} — {{ project.project_name }}</small>
+    </div>
+</div>
+
+<form method="post" id="bulk-progress-form">
+    {% csrf_token %}
+    <input type="hidden" name="project_id" value="{{ project.pk }}">
+
+    {# Header #}
+    <div class="card mb-3 border-primary">
+        <div class="card-header bg-primary text-white py-2">
+            <i class="fas fa-calendar-day me-1"></i> วันที่บันทึก
+        </div>
+        <div class="card-body py-2">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold mb-1">วันที่ <span class="text-danger">*</span></label>
+                    <input type="date" name="record_date" id="record_date"
+                           value="{{ post_date|default:today }}"
+                           class="form-control" required>
+                </div>
+                <div class="col-md-5">
+                    <div class="d-flex gap-3">
+                        <div class="text-muted small">
+                            <span class="fw-semibold text-dark" id="entry-count">0</span> รายการที่กรอก
+                        </div>
+                        <div class="text-muted small">
+                            รวมมูลค่า EV วันนี้ ≈
+                            <span class="fw-semibold text-primary" id="today-ev">0</span> บาท
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# BOQ sections #}
+    {% for section in sections %}
+    <div class="card mb-2">
+        {% if section.header %}
+        <div class="card-header py-2 bg-light d-flex justify-content-between align-items-center">
+            <span class="fw-bold">
+                {{ section.header.item_no }}. {{ section.header.description }}
+            </span>
+            <span class="text-muted small">{{ section.rows|length }} รายการ</span>
+        </div>
+        {% endif %}
+        <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0">
+                <thead class="table-primary" style="font-size:12px;">
+                    <tr>
+                        <th style="width:70px;">รหัส</th>
+                        <th>รายการ</th>
+                        <th class="text-center" style="width:60px;">หน่วย</th>
+                        <th class="text-end" style="width:90px;">สัญญา</th>
+                        <th class="text-end" style="width:80px;">สะสม</th>
+                        <th class="text-center" style="width:60px;">%</th>
+                        <th class="text-center" style="width:100px;">วันนี้ <span class="text-danger">↓</span></th>
+                        <th style="min-width:130px;">หมายเหตุ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for row in section.rows %}
+                <tr class="progress-row {% if row.pct >= 100 %}table-success{% elif row.pct >= 80 %}table-warning{% endif %}"
+                    data-rate="{{ row.item.unit_rate|default:0 }}">
+                    <td class="text-muted small">{{ row.item.item_no }}</td>
+                    <td style="font-size:13px;">{{ row.item.description|truncatechars:70 }}</td>
+                    <td class="text-center text-muted small">{{ row.item.unit }}</td>
+                    <td class="text-end text-muted small">
+                        {{ row.item.contract_quantity|floatformat:0|intcomma }}
+                    </td>
+                    <td class="text-end small">{{ row.cum|floatformat:0|intcomma }}</td>
+                    <td class="text-center">
+                        <div class="d-flex flex-column align-items-center">
+                            <span class="small fw-semibold {% if row.pct >= 100 %}text-success{% elif row.pct >= 80 %}text-warning{% endif %}">
+                                {{ row.pct }}%
+                            </span>
+                            <div class="progress w-100" style="height:4px;">
+                                <div class="progress-bar {% if row.pct >= 100 %}bg-success{% elif row.pct >= 80 %}bg-warning{% else %}bg-primary{% endif %}"
+                                     style="width:{{ row.pct|floatformat:0 }}%"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <input type="number"
+                               name="qty_{{ row.item.pk }}"
+                               value="{{ row.qty_input }}"
+                               min="0"
+                               step="any"
+                               class="form-control form-control-sm text-center qty-input"
+                               placeholder="0"
+                               style="width:90px;margin:auto;"
+                               {% if row.pct >= 100 %}disabled title="ครบ 100% แล้ว"{% endif %}>
+                        {% if row.remaining > 0 %}
+                        <div class="text-muted" style="font-size:10px;">คงเหลือ {{ row.remaining|floatformat:0|intcomma }}</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1 align-items-center">
+                            <input type="text"
+                                   name="remarks_{{ row.item.pk }}"
+                                   value="{{ row.remarks_input }}"
+                                   class="form-control form-control-sm"
+                                   placeholder="-" maxlength="300"
+                                   style="font-size:12px;">
+                            <div class="form-check form-check-inline mb-0" title="Allow Overrun">
+                                <input class="form-check-input" type="checkbox"
+                                       name="overrun_{{ row.item.pk }}" value="1"
+                                       id="ovr_{{ row.item.pk }}">
+                                <label class="form-check-label text-muted" style="font-size:10px;"
+                                       for="ovr_{{ row.item.pk }}">OVR</label>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="8" class="text-muted text-center py-2 small">ไม่มีรายการ</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="d-flex justify-content-between align-items-center mt-3 mb-5">
+        <a href="{% url 'boq:progress_list' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-times me-1"></i>ยกเลิก
+        </a>
+        <button type="submit" class="btn btn-primary btn-lg">
+            <i class="fas fa-save me-1"></i>บันทึก Daily Progress
+        </button>
+    </div>
+</form>
+
+<script>
+(function () {
+    const qtyInputs = document.querySelectorAll('.qty-input:not([disabled])');
+    const entryCount = document.getElementById('entry-count');
+    const todayEV   = document.getElementById('today-ev');
+
+    function recalc() {
+        let count = 0, ev = 0;
+        qtyInputs.forEach(inp => {
+            const qty = parseFloat(inp.value) || 0;
+            const row = inp.closest('tr');
+            const rate = parseFloat(row.dataset.rate) || 0;
+            if (qty > 0) {
+                count++;
+                ev += qty * rate;
+                row.classList.add('table-info');
+            } else {
+                row.classList.remove('table-info');
+            }
+        });
+        entryCount.textContent = count;
+        todayEV.textContent = ev.toLocaleString('th-TH', {maximumFractionDigits: 0});
+    }
+
+    qtyInputs.forEach(inp => inp.addEventListener('input', recalc));
+    recalc();
+})();
+</script>
+{% endblock %}
