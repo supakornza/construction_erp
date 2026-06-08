@@ -56,16 +56,46 @@ class DailyManpowerRecordListView(CurrentProjectMixin, OperationalViewMixin, Lis
         qs = super().get_queryset().select_related('project', 'category')
         project_id = self.request.GET.get('project')
         date_str = self.request.GET.get('date')
+        category_id = self.request.GET.get('category')
         if project_id:
             qs = qs.filter(project_id=project_id)
         if date_str:
             qs = qs.filter(report_date=date_str)
+        if category_id:
+            qs = qs.filter(category_id=category_id)
         return qs
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['projects'] = Project.objects.filter(status='Active')
         ctx['categories'] = ManpowerCategory.objects.all()
+
+        # Category summary: totals across all records matching project/date filters (not category filter)
+        summary_qs = DailyManpowerRecord.objects.all()
+        if self.current_project:
+            summary_qs = summary_qs.filter(project=self.current_project)
+        project_id = self.request.GET.get('project')
+        date_str = self.request.GET.get('date')
+        if project_id:
+            summary_qs = summary_qs.filter(project_id=project_id)
+        if date_str:
+            summary_qs = summary_qs.filter(report_date=date_str)
+
+        totals_map = {
+            row['category_id']: row['total']
+            for row in summary_qs.values('category_id').annotate(total=Sum('quantity'))
+        }
+        grand_total = sum(totals_map.values())
+        category_summary = []
+        for cat in ManpowerCategory.objects.all():
+            total = totals_map.get(cat.pk, 0)
+            category_summary.append({
+                'category': cat,
+                'total': total,
+                'pct': round(total / grand_total * 100) if grand_total else 0,
+            })
+        ctx['category_summary'] = category_summary
+        ctx['summary_grand_total'] = grand_total
         return ctx
 
 
