@@ -426,11 +426,19 @@ h6.mb-0 { font-size: .875rem; font-weight: 700; }
 .table > tbody > tr:last-child > td { border-bottom: none; }
 .table-hover tbody tr { transition: background var(--tr-fast); }
 
-/* Horizontal scroll with fade hint on mobile */
+/* Horizontal scroll with fade shadow hint */
 .table-responsive {
   -webkit-overflow-scrolling: touch;
   overflow-x: auto;
-  /* subtle right-fade when overflow */
+  background-image:
+    linear-gradient(to right, var(--bg-surface, #fff) 30%, transparent),
+    linear-gradient(to left,  var(--bg-surface, #fff) 30%, transparent),
+    linear-gradient(to right, rgba(0,0,0,.09), transparent),
+    linear-gradient(to left,  rgba(0,0,0,.09), transparent);
+  background-position: left, right, left, right;
+  background-size: 20px 100%, 20px 100%, 12px 100%, 12px 100%;
+  background-repeat: no-repeat;
+  background-attachment: local, local, scroll, scroll;
 }
 .table-responsive:has(.table) { border-radius: 0 0 var(--r-md) var(--r-md); }
 
@@ -674,7 +682,8 @@ tr.formset-row-deleted td {
   .page-content { padding: 1rem .875rem; }
 
   /* Page headers stack on mobile */
-  .d-flex.justify-content-between.align-items-center.mb-4 {
+  .d-flex.justify-content-between.align-items-center.mb-4,
+  .d-flex.justify-content-between.align-items-center.mb-3 {
     flex-wrap: wrap;
     gap: .5rem;
   }

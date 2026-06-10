@@ -83,6 +83,15 @@
     overflow-x: auto;
     overflow-y: hidden;
     min-height: 0;
+    background-image:
+      linear-gradient(to right, #f0f4f9 40%, transparent),
+      linear-gradient(to left,  #f0f4f9 40%, transparent),
+      linear-gradient(to right, rgba(0,0,0,.10), transparent),
+      linear-gradient(to left,  rgba(0,0,0,.10), transparent);
+    background-position: left, right, left, right;
+    background-size: 24px 100%, 24px 100%, 14px 100%, 14px 100%;
+    background-repeat: no-repeat;
+    background-attachment: local, local, scroll, scroll;
   }
 
   /* ── Column ── */

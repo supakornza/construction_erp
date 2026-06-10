@@ -85,12 +85,18 @@ class PurchaseRequestDetailView(CurrentProjectMixin, FinancialWriteMixin, Detail
     context_object_name = 'pr'
 
 
-class PurchaseOrderListView(CurrentProjectMixin, FinancialWriteMixin, ListView):
+class PurchaseOrderListView(FinancialWriteMixin, ListView):
 
     model = PurchaseOrder
     template_name = 'procurement/po_list.html'
     context_object_name = 'pos'
     paginate_by = 20
+
+    def get_queryset(self):
+        qs = super().get_queryset().select_related('pr__project', 'supplier')
+        if getattr(self.request, 'current_project', None):
+            qs = qs.filter(pr__project=self.request.current_project)
+        return qs
 
 
 class PurchaseOrderCreateView(CurrentProjectMixin, FinancialWriteMixin, CreateView):
