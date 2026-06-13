@@ -1,8 +1,9 @@
 import json
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum, Count, F, ExpressionWrapper, DecimalField, Subquery, OuterRef, Q
 from django.http import JsonResponse
+from django.urls import reverse
 from django.views.generic import TemplateView, View
 
 from apps.projects.models import Project
@@ -35,6 +36,76 @@ def _project_boq_stats(project):
     total_contract = sum(float(i.contract_amount) for i in items)
     total_earned = sum(float(i.earned_value) for i in items)
     return total_contract, total_earned
+
+
+def _recent_activity(projects, limit=7):
+    """Aggregate a real cross-module activity feed for the dashboard.
+
+    Pulls the most recent records from several sources, normalises each to a
+    common shape, and merges them. Every event sorts on a *naive* datetime
+    built from its business date (plus a time when the source has one), so
+    date-only and datetime sources compare without offset-aware/naive errors.
+    Never sort on auto_now_add (tz-aware) fields — mixing those with the
+    naive combine() keys raises TypeError.
+    """
+    events = []
+
+    def add(d, t, icon, color, title, text, url=''):
+        if not d:
+            return
+        events.append({
+            'sort_dt': datetime.combine(d, t or time.min),
+            'date_label': d.strftime('%b %d, %Y') + (t.strftime(' · %H:%M') if t else ''),
+            'icon': icon, 'color': color,
+            'title': title, 'text': text, 'url': url,
+        })
+
+    report_color = {'Approved': 'success', 'Submitted': 'info',
+                    'Rejected': 'danger', 'Draft': 'secondary'}
+    for r in (DailyReport.objects.select_related('project', 'prepared_by')
+              .filter(project__in=projects).order_by('-report_date')[:limit]):
+        who = (r.prepared_by.get_full_name() or r.prepared_by.username) if r.prepared_by else '—'
+        add(r.report_date, None, 'fas fa-clipboard-list',
+            report_color.get(r.status, 'secondary'),
+            f'{r.project.project_name} — daily report {r.status.lower()}',
+            f'Prepared by {who}.',
+            reverse('daily_reports:detail', args=[r.pk]))
+
+    for d in (MaterialDelivery.objects.select_related('project', 'material', 'source_area')
+              .filter(project__in=projects).order_by('-delivery_date', '-delivery_time')[:limit]):
+        unit = getattr(d.material, 'unit', '') or ''
+        src = d.source_area.name if d.source_area_id else (d.source or '')
+        add(d.delivery_date, d.delivery_time, 'fas fa-truck', 'primary',
+            f'Received {d.quantity:,.0f} {unit} {d.material.name}'.strip(),
+            f'From {src}.' if src else 'Material delivery recorded.',
+            reverse('materials:delivery_list'))
+
+    for i in (IncidentReport.objects.select_related('project')
+              .filter(project__in=projects).order_by('-incident_date')[:limit]):
+        desc = i.description or ''
+        add(i.incident_date, i.incident_time, 'fas fa-triangle-exclamation', 'danger',
+            f'{i.get_type_display()} reported — {i.project.project_name}',
+            (desc[:90] + '…') if len(desc) > 90 else (desc or 'Incident reported.'),
+            reverse('safety:incident_detail', args=[i.pk]))
+
+    for p in (DailyProgressRecord.objects.select_related('project', 'boq_item')
+              .filter(project__in=projects).order_by('-record_date')[:limit]):
+        add(p.record_date, None, 'fas fa-chart-line', 'success',
+            f'Progress recorded — {p.boq_item.description[:50]}',
+            f'{p.daily_quantity:,.2f} logged for {p.project.project_name}.',
+            reverse('boq:progress_list'))
+
+    plan_color = {'Critical': 'danger', 'High': 'danger', 'Medium': 'warning', 'Low': 'secondary'}
+    for a in (ProjectActionPlan.objects.select_related('project')
+              .filter(project__in=projects).order_by('-date_raised')[:limit]):
+        add(a.date_raised, None, 'fas fa-clipboard-check',
+            plan_color.get(a.priority, 'info'),
+            f'Action plan {a.action_id}: {a.get_category_display()}'.strip().rstrip(':'),
+            (a.description_th[:90] if a.description_th else 'Project action item.'),
+            reverse('project_controls:project_action_plan_detail', args=[a.pk]))
+
+    events.sort(key=lambda e: e['sort_dt'], reverse=True)
+    return events[:limit]
 
 
 def _evm_metrics(today, boq_progress):
@@ -385,6 +456,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                                  .select_related('project', 'prepared_by')
                                  .filter(project__in=dashboard_projects)
                                  .order_by('-report_date')[:8])
+
+        # ── Recent Activity Log (real cross-module feed) ──
+        ctx['recent_activity'] = _recent_activity(dashboard_projects, limit=7)
 
         # ── Material deliveries (last 7 days) ─────────────
         week_ago = today - timedelta(days=7)

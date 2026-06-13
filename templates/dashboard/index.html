@@ -956,15 +956,17 @@
         <a class="exec-muted" style="color:var(--exec-primary)" href="{% url 'daily_reports:list' %}">View All</a>
       </div>
       <div class="exec-timeline">
-        {% for r in latest_reports|slice:":3" %}
+        {% for ev in recent_activity %}
         <div class="exec-log-item">
           <span class="exec-log-dot"></span>
           <div class="exec-log-body">
             <div class="exec-log-head">
-              <span class="exec-log-title">{{ r.project.project_name }} daily report {{ r.status|lower }}</span>
-              <span class="exec-log-time">{{ r.report_date|date:"M j, Y" }}</span>
+              <span class="exec-log-title">
+                {% if ev.url %}<a href="{{ ev.url }}" class="text-reset text-decoration-none"><i class="{{ ev.icon }} me-2 text-{{ ev.color }}" aria-hidden="true"></i>{{ ev.title }}</a>{% else %}<i class="{{ ev.icon }} me-2 text-{{ ev.color }}" aria-hidden="true"></i>{{ ev.title }}{% endif %}
+              </span>
+              <span class="exec-log-time">{{ ev.date_label }}</span>
             </div>
-            <p class="exec-log-text">Prepared by {{ r.prepared_by.get_full_name|default:r.prepared_by.username }} for current project control review.</p>
+            <p class="exec-log-text">{{ ev.text }}</p>
           </div>
         </div>
         {% empty %}
@@ -972,30 +974,9 @@
           <span class="exec-log-dot"></span>
           <div class="exec-log-body">
             <div class="exec-log-head">
-              <span class="exec-log-title">Sand delivery received at Zone B</span>
-              <span class="exec-log-time">10:42 AM</span>
+              <span class="exec-log-title text-muted">ยังไม่มีกิจกรรมล่าสุด</span>
             </div>
-            <p class="exec-log-text">Confirmed 1,200m³ delivery via barge Alpha-1. Quality check passed.</p>
-          </div>
-        </div>
-        <div class="exec-log-item">
-          <span class="exec-log-dot"></span>
-          <div class="exec-log-body">
-            <div class="exec-log-head">
-              <span class="exec-log-title">Excavator EX-04 returned to service</span>
-              <span class="exec-log-time">08:15 AM</span>
-            </div>
-            <p class="exec-log-text">Routine maintenance completed. Equipment active in Northern sector.</p>
-          </div>
-        </div>
-        <div class="exec-log-item">
-          <span class="exec-log-dot"></span>
-          <div class="exec-log-body">
-            <div class="exec-log-head">
-              <span class="exec-log-title">Shift Handover Completed</span>
-              <span class="exec-log-time">06:00 AM</span>
-            </div>
-            <p class="exec-log-text">Day shift commenced with {{ today_manpower|intcomma|default:0 }} personnel.</p>
+            <p class="exec-log-text">กิจกรรมจะแสดงเมื่อมีการบันทึกรายงานประจำวัน การรับวัสดุ ความก้าวหน้างาน หรือเหตุการณ์อื่นในโครงการ</p>
           </div>
         </div>
         {% endfor %}
