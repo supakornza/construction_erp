@@ -1,0 +1,332 @@
+- generic [active] [ref=e1]:
+  - link "ข้ามไปยังเนื้อหาหลัก" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - navigation "Main navigation" [ref=e3]:
+    - generic [ref=e4]:
+      - link "Construction ERP Construction ERP" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - text: 
+        - generic [ref=e6]: Construction ERP
+        - text: Construction ERP
+      - text: 
+    - generic [ref=e7]:
+      - generic [ref=e8]: Dashboard
+      - link "Dashboard" [ref=e9] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e10]: 
+        - generic [ref=e11]: Dashboard
+      - link "Tide Monitor" [ref=e12] [cursor=pointer]:
+        - /url: /tide-monitor/
+        - generic [ref=e13]: 
+        - generic [ref=e14]: Tide Monitor
+      - link "Turbidity Monitor" [ref=e15] [cursor=pointer]:
+        - /url: /turbidity-monitor/
+        - generic [ref=e16]: 
+        - generic [ref=e17]: Turbidity Monitor
+      - link "Rock Progress" [ref=e18] [cursor=pointer]:
+        - /url: /project-controls/rock/dashboard/
+        - generic [ref=e19]: 
+        - generic [ref=e20]: Rock Progress
+      - link "Sand Progress" [ref=e21] [cursor=pointer]:
+        - /url: /project-controls/sand/dashboard/
+        - generic [ref=e22]: 
+        - generic [ref=e23]: Sand Progress
+      - generic [ref=e24]: Projects
+      - link "Projects" [ref=e25] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e26]: 
+        - generic [ref=e27]: Projects
+      - link "Kanban" [ref=e28] [cursor=pointer]:
+        - /url: /kanban/
+        - generic [ref=e29]: 
+        - generic [ref=e30]: Kanban
+      - generic [ref=e31]: Daily Reports
+      - link "Daily Reports" [ref=e32] [cursor=pointer]:
+        - /url: /daily-reports/
+        - generic [ref=e33]: 
+        - generic [ref=e34]: Daily Reports
+      - link "Contractor Imports" [ref=e35] [cursor=pointer]:
+        - /url: /daily-reports/import/
+        - generic [ref=e36]: 
+        - generic [ref=e37]: Contractor Imports
+      - generic [ref=e38]: Resources
+      - link "Manpower" [ref=e39] [cursor=pointer]:
+        - /url: /manpower/dashboard/
+        - generic [ref=e40]: 
+        - generic [ref=e41]: Manpower
+      - link "Equipment" [ref=e42] [cursor=pointer]:
+        - /url: /equipment/
+        - generic [ref=e43]: 
+        - generic [ref=e44]: Equipment
+      - link "Materials" [ref=e45] [cursor=pointer]:
+        - /url: /materials/dashboard/
+        - generic [ref=e46]: 
+        - generic [ref=e47]: Materials
+      - generic [ref=e48]: Procurement
+      - link "Procurement" [ref=e49] [cursor=pointer]:
+        - /url: /procurement/pr/
+        - generic [ref=e50]: 
+        - generic [ref=e51]: Procurement
+      - generic [ref=e52]: BOQ & Progress
+      - link "BOQ & Progress" [ref=e53] [cursor=pointer]:
+        - /url: /boq/
+        - generic [ref=e54]: 
+        - generic [ref=e55]: BOQ & Progress
+      - generic [ref=e56]: Project Controls
+      - link "Rock & Sand Control" [ref=e57] [cursor=pointer]:
+        - /url: /project-controls/
+        - generic [ref=e58]: 
+        - generic [ref=e59]: Rock & Sand Control
+      - link "Revetment Progress" [ref=e60] [cursor=pointer]:
+        - /url: /project-controls/revetment/dashboard/
+        - generic [ref=e61]: 
+        - generic [ref=e62]: Revetment Progress
+      - link "Recovery Plans" [ref=e63] [cursor=pointer]:
+        - /url: /project-controls/recovery/plans/
+        - generic [ref=e64]: 
+        - generic [ref=e65]: Recovery Plans
+      - link "Project Action Plans" [ref=e66] [cursor=pointer]:
+        - /url: /project-controls/action-plans/
+        - generic [ref=e67]: 
+        - generic [ref=e68]: Project Action Plans
+      - link "Recovery Action Plans" [ref=e69] [cursor=pointer]:
+        - /url: /project-controls/recovery/rap/
+        - generic [ref=e70]: 
+        - generic [ref=e71]: Recovery Action Plans
+      - link "Logistics" [ref=e72] [cursor=pointer]:
+        - /url: /project-controls/logistics/
+        - generic [ref=e73]: 
+        - generic [ref=e74]: Logistics
+      - generic [ref=e75]: HR & Attendance
+      - link "HR & Attendance" [ref=e76] [cursor=pointer]:
+        - /url: /hr/
+        - generic [ref=e77]: 
+        - generic [ref=e78]: HR & Attendance
+      - generic [ref=e79]: Drawings & RFI
+      - link "Drawings & RFI" [ref=e80] [cursor=pointer]:
+        - /url: /drawings/
+        - generic [ref=e81]: 
+        - generic [ref=e82]: Drawings & RFI
+      - generic [ref=e83]: Subcontractors
+      - link "Subcontractors" [ref=e84] [cursor=pointer]:
+        - /url: /subcontractors/
+        - generic [ref=e85]: 
+        - generic [ref=e86]: Subcontractors
+      - generic [ref=e87]: Maintenance
+      - link "Maintenance" [ref=e88] [cursor=pointer]:
+        - /url: /maintenance/
+        - generic [ref=e89]: 
+        - generic [ref=e90]: Maintenance
+      - generic [ref=e91]: Change Orders
+      - link "Change Orders" [ref=e92] [cursor=pointer]:
+        - /url: /change-orders/
+        - generic [ref=e93]: 
+        - generic [ref=e94]: Change Orders
+      - generic [ref=e95]: Cost Control
+      - link "Cost Control" [ref=e96] [cursor=pointer]:
+        - /url: /cost-control/
+        - generic [ref=e97]: 
+        - generic [ref=e98]: Cost Control
+      - generic [ref=e99]: Safety
+      - link "Safety" [ref=e100] [cursor=pointer]:
+        - /url: /safety/toolbox/
+        - generic [ref=e101]: 
+        - generic [ref=e102]: Safety
+      - generic [ref=e103]: Quality
+      - link "Quality Control" [ref=e104] [cursor=pointer]:
+        - /url: /quality/
+        - generic [ref=e105]: 
+        - generic [ref=e106]: Quality Control
+      - generic [ref=e107]: Documents
+      - link "Documents" [ref=e108] [cursor=pointer]:
+        - /url: /documents/
+        - generic [ref=e109]: 
+        - generic [ref=e110]: Documents
+      - generic [ref=e111]: Admin
+      - link "Users" [ref=e112] [cursor=pointer]:
+        - /url: /accounts/users/
+        - generic [ref=e113]: 
+        - generic [ref=e114]: Users
+      - link "Roles" [ref=e115] [cursor=pointer]:
+        - /url: /accounts/roles/
+        - generic [ref=e116]: 
+        - generic [ref=e117]: Roles
+      - link "Django Admin" [ref=e118] [cursor=pointer]:
+        - /url: /admin/
+        - generic [ref=e119]: 
+        - generic [ref=e120]: Django Admin
+  - main [ref=e121]:
+    - navigation "Top toolbar" [ref=e122]:
+      - button "Toggle menu" [ref=e123] [cursor=pointer]:
+        - generic [ref=e124]: 
+      - button "Go back" [ref=e125] [cursor=pointer]:
+        - generic [ref=e126]: 
+      - generic [ref=e127]:
+        - 'link "โครงการปัจจุบัน: Thai Tank Land Reclamation Chang Project — คลิกเพื่อเปลี่ยน" [ref=e128] [cursor=pointer]':
+          - /url: /accounts/select-project/
+          - generic [ref=e129]: 
+          - generic [ref=e130]: 
+        - generic [ref=e131]:
+          - button "เปลี่ยนภาษาเป็นไทย" [ref=e133] [cursor=pointer]: TH
+          - button "Switch language to English" [pressed] [ref=e135] [cursor=pointer]: EN
+        - generic [ref=e136]:
+          - button "การแจ้งเตือน, ยังไม่อ่าน 0 รายการ" [ref=e137] [cursor=pointer]:
+            - generic [ref=e138]: 
+          - text: 
+        - generic [ref=e139]:
+          - 'button "เมนูผู้ใช้ admin (บทบาท: Admin)" [ref=e140] [cursor=pointer]':
+            - generic [ref=e141]: A
+          - text:   
+    - generic [ref=e142]:
+      - generic [ref=e143]:
+        - heading " Cost Control Dashboard" [level=4] [ref=e144]:
+          - generic [ref=e145]: 
+          - text: Cost Control Dashboard
+        - generic [ref=e146]:
+          - link "+ Record Cost" [ref=e147] [cursor=pointer]:
+            - /url: /cost-control/actuals/new/
+            - generic [ref=e148]: +
+            - text: Record Cost
+          - link "+ Add Budget" [ref=e149] [cursor=pointer]:
+            - /url: /cost-control/budget/new/
+            - generic [ref=e150]: +
+            - text: Add Budget
+          - link " Cost Codes" [ref=e151] [cursor=pointer]:
+            - /url: /cost-control/codes/
+            - generic [ref=e152]: 
+            - text: Cost Codes
+      - generic [ref=e155]:
+        - generic [ref=e156]: "Project:"
+        - combobox [ref=e157]:
+          - option "All Active Projects" [selected]
+          - option "Thai Tank Land Reclamation Chang Project"
+          - option "โครงการป้องกันและแก้ไขปัญหาการกัดเซาะชายฝั่งทะเล บางขุนเทียน กรุงเทพมหานคร"
+      - generic [ref=e158]:
+        - generic [ref=e161]:
+          - generic [ref=e163]: 
+          - generic [ref=e164]: ฿2,120,000,000
+          - generic [ref=e165]: Total Contract Value
+          - generic [ref=e166]: All Active Projects
+        - generic [ref=e169]:
+          - generic [ref=e171]: 
+          - generic [ref=e172]: ฿0
+          - generic [ref=e173]: Total Earned Value
+          - generic [ref=e174]: Certified by BOQ progress
+        - generic [ref=e177]:
+          - generic [ref=e179]: 
+          - generic [ref=e180]: ฿2,120,000,000
+          - generic [ref=e181]: Remaining Value
+          - generic [ref=e182]: Contract − Earned
+      - generic [ref=e183]:
+        - generic [ref=e186]:
+          - generic [ref=e187]: ฿0
+          - generic [ref=e188]: Total Budget
+          - generic [ref=e189]: "Committed: ฿0"
+        - generic [ref=e192]:
+          - generic [ref=e193]: ฿0
+          - generic [ref=e194]: Actual Cost
+          - generic [ref=e195]: "EV: ฿0"
+        - generic [ref=e198]:
+          - generic [ref=e199]: +฿0
+          - generic [ref=e200]: Cost Variance
+          - generic [ref=e201]: EV − Actual
+        - generic [ref=e204]:
+          - generic [ref=e205]: N/A
+          - generic [ref=e206]: CPI
+          - generic [ref=e207]: Cost Performance Index
+        - generic [ref=e210]:
+          - generic [ref=e211]: –
+          - generic [ref=e212]: EAC
+          - generic [ref=e213]: Estimate at Completion
+        - generic [ref=e216]:
+          - generic [ref=e217]: N/A
+          - generic [ref=e218]: Cost Status
+          - generic [ref=e219]: "BOQ Progress: %"
+      - generic [ref=e220]:
+        - generic [ref=e223]:
+          - generic [ref=e224]: 
+          - text: Budget vs Actual by Project
+        - generic [ref=e228]:
+          - generic [ref=e229]:
+            - generic [ref=e230]: 
+            - text: Cost by Source Type
+          - paragraph [ref=e232]: No cost data for selected filter.
+      - generic [ref=e233]:
+        - generic [ref=e234]:
+          - generic [ref=e235]:
+            - generic [ref=e236]: 
+            - text: Project Financial Overview
+          - generic [ref=e237]: Contract Value vs Cost Performance
+        - table [ref=e239]:
+          - rowgroup [ref=e240]:
+            - row "Project Contract (฿) Budget (฿) Actual Cost (฿) Earned Value (฿) Cost Variance (฿) CPI EAC (฿) BOQ % Status" [ref=e241]:
+              - columnheader "Project" [ref=e242]
+              - columnheader "Contract (฿)" [ref=e243]
+              - columnheader "Budget (฿)" [ref=e244]
+              - columnheader "Actual Cost (฿)" [ref=e245]
+              - columnheader "Earned Value (฿)" [ref=e246]
+              - columnheader "Cost Variance (฿)" [ref=e247]
+              - columnheader "CPI" [ref=e248]
+              - columnheader "EAC (฿)" [ref=e249]
+              - columnheader "BOQ %" [ref=e250]
+              - columnheader "Status" [ref=e251]
+          - rowgroup [ref=e252]:
+            - row "โครงการป้องกันและแก้ไขปัญหาการกัดเซาะชายฝั่งทะเล บางขุนเทียน กรุงเทพมหานคร P06691 1,620,000,000 0 0 0 +0 N/A – 0.9% N/A" [ref=e253]:
+              - cell "โครงการป้องกันและแก้ไขปัญหาการกัดเซาะชายฝั่งทะเล บางขุนเทียน กรุงเทพมหานคร P06691" [ref=e254]:
+                - generic [ref=e255]: โครงการป้องกันและแก้ไขปัญหาการกัดเซาะชายฝั่งทะเล บางขุนเทียน กรุงเทพมหานคร
+                - generic [ref=e256]: P06691
+              - cell "1,620,000,000" [ref=e257]
+              - cell "0" [ref=e258]
+              - cell "0" [ref=e259]
+              - cell "0" [ref=e260]
+              - cell "+0" [ref=e261]
+              - cell "N/A" [ref=e262]
+              - cell "–" [ref=e263]
+              - cell "0.9%" [ref=e264]:
+                - generic [ref=e267]: 0.9%
+              - cell "N/A" [ref=e268]:
+                - generic [ref=e269]: N/A
+            - row "Thai Tank Land Reclamation Chang Project P06643 500,000,000 0 0 0 +0 N/A – 0.0% N/A" [ref=e270]:
+              - cell "Thai Tank Land Reclamation Chang Project P06643" [ref=e271]:
+                - generic [ref=e272]: Thai Tank Land Reclamation Chang Project
+                - generic [ref=e273]: P06643
+              - cell "500,000,000" [ref=e274]
+              - cell "0" [ref=e275]
+              - cell "0" [ref=e276]
+              - cell "0" [ref=e277]
+              - cell "+0" [ref=e278]
+              - cell "N/A" [ref=e279]
+              - cell "–" [ref=e280]
+              - cell "0.0%" [ref=e281]:
+                - generic [ref=e283]: 0.0%
+              - cell "N/A" [ref=e284]:
+                - generic [ref=e285]: N/A
+          - rowgroup [ref=e286]:
+            - row "Total 2,120,000,000 0 0 0 +0 N/A – N/A" [ref=e287]:
+              - cell "Total" [ref=e288]
+              - cell "2,120,000,000" [ref=e289]
+              - cell "0" [ref=e290]
+              - cell "0" [ref=e291]
+              - cell "0" [ref=e292]
+              - cell "+0" [ref=e293]
+              - cell "N/A" [ref=e294]
+              - cell "–" [ref=e295]
+              - cell [ref=e296]
+              - cell "N/A" [ref=e297]:
+                - generic [ref=e298]: N/A
+      - generic [ref=e299]:
+        - link " Cost Codes Manage project cost codes" [ref=e301] [cursor=pointer]:
+          - /url: /cost-control/codes/
+          - generic [ref=e302]: 
+          - generic [ref=e303]: Cost Codes
+          - generic [ref=e304]: Manage project cost codes
+        - link " Budget Items Define and manage budgets" [ref=e306] [cursor=pointer]:
+          - /url: /cost-control/budget/
+          - generic [ref=e307]: 
+          - generic [ref=e308]: Budget Items
+          - generic [ref=e309]: Define and manage budgets
+        - link " Actual Costs Record and review actual expenditure" [ref=e311] [cursor=pointer]:
+          - /url: /cost-control/actuals/
+          - generic [ref=e312]: 
+          - generic [ref=e313]: Actual Costs
+          - generic [ref=e314]: Record and review actual expenditure

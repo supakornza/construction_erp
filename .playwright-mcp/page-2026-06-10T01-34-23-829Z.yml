@@ -1,0 +1,298 @@
+- generic [active] [ref=e1]:
+  - link "ข้ามไปยังเนื้อหาหลัก" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - navigation "Main navigation" [ref=e3]:
+    - generic [ref=e4]:
+      - link "Construction ERP Construction ERP" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - text: 
+        - generic [ref=e6]: Construction ERP
+        - text: Construction ERP
+      - text: 
+    - generic [ref=e7]:
+      - generic [ref=e8]: Dashboard
+      - link "Dashboard" [ref=e9] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e10]: 
+        - generic [ref=e11]: Dashboard
+      - link "Tide Monitor" [ref=e12] [cursor=pointer]:
+        - /url: /tide-monitor/
+        - generic [ref=e13]: 
+        - generic [ref=e14]: Tide Monitor
+      - link "Turbidity Monitor" [ref=e15] [cursor=pointer]:
+        - /url: /turbidity-monitor/
+        - generic [ref=e16]: 
+        - generic [ref=e17]: Turbidity Monitor
+      - link "Rock Progress" [ref=e18] [cursor=pointer]:
+        - /url: /project-controls/rock/dashboard/
+        - generic [ref=e19]: 
+        - generic [ref=e20]: Rock Progress
+      - link "Sand Progress" [ref=e21] [cursor=pointer]:
+        - /url: /project-controls/sand/dashboard/
+        - generic [ref=e22]: 
+        - generic [ref=e23]: Sand Progress
+      - generic [ref=e24]: Projects
+      - link "Projects" [ref=e25] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e26]: 
+        - generic [ref=e27]: Projects
+      - link "Kanban" [ref=e28] [cursor=pointer]:
+        - /url: /kanban/
+        - generic [ref=e29]: 
+        - generic [ref=e30]: Kanban
+      - generic [ref=e31]: Daily Reports
+      - link "Daily Reports" [ref=e32] [cursor=pointer]:
+        - /url: /daily-reports/
+        - generic [ref=e33]: 
+        - generic [ref=e34]: Daily Reports
+      - link "Contractor Imports" [ref=e35] [cursor=pointer]:
+        - /url: /daily-reports/import/
+        - generic [ref=e36]: 
+        - generic [ref=e37]: Contractor Imports
+      - generic [ref=e38]: Resources
+      - link "Manpower" [ref=e39] [cursor=pointer]:
+        - /url: /manpower/dashboard/
+        - generic [ref=e40]: 
+        - generic [ref=e41]: Manpower
+      - link "Equipment" [ref=e42] [cursor=pointer]:
+        - /url: /equipment/
+        - generic [ref=e43]: 
+        - generic [ref=e44]: Equipment
+      - link "Materials" [ref=e45] [cursor=pointer]:
+        - /url: /materials/dashboard/
+        - generic [ref=e46]: 
+        - generic [ref=e47]: Materials
+      - generic [ref=e48]: Procurement
+      - link "Procurement" [ref=e49] [cursor=pointer]:
+        - /url: /procurement/pr/
+        - generic [ref=e50]: 
+        - generic [ref=e51]: Procurement
+      - generic [ref=e52]: BOQ & Progress
+      - link "BOQ & Progress" [ref=e53] [cursor=pointer]:
+        - /url: /boq/
+        - generic [ref=e54]: 
+        - generic [ref=e55]: BOQ & Progress
+      - generic [ref=e56]: Project Controls
+      - link "Rock & Sand Control" [ref=e57] [cursor=pointer]:
+        - /url: /project-controls/
+        - generic [ref=e58]: 
+        - generic [ref=e59]: Rock & Sand Control
+      - link "Revetment Progress" [ref=e60] [cursor=pointer]:
+        - /url: /project-controls/revetment/dashboard/
+        - generic [ref=e61]: 
+        - generic [ref=e62]: Revetment Progress
+      - link "Recovery Plans" [ref=e63] [cursor=pointer]:
+        - /url: /project-controls/recovery/plans/
+        - generic [ref=e64]: 
+        - generic [ref=e65]: Recovery Plans
+      - link "Project Action Plans" [ref=e66] [cursor=pointer]:
+        - /url: /project-controls/action-plans/
+        - generic [ref=e67]: 
+        - generic [ref=e68]: Project Action Plans
+      - link "Recovery Action Plans" [ref=e69] [cursor=pointer]:
+        - /url: /project-controls/recovery/rap/
+        - generic [ref=e70]: 
+        - generic [ref=e71]: Recovery Action Plans
+      - link "Logistics" [ref=e72] [cursor=pointer]:
+        - /url: /project-controls/logistics/
+        - generic [ref=e73]: 
+        - generic [ref=e74]: Logistics
+      - generic [ref=e75]: HR & Attendance
+      - link "HR & Attendance" [ref=e76] [cursor=pointer]:
+        - /url: /hr/
+        - generic [ref=e77]: 
+        - generic [ref=e78]: HR & Attendance
+      - generic [ref=e79]: Drawings & RFI
+      - link "Drawings & RFI" [ref=e80] [cursor=pointer]:
+        - /url: /drawings/
+        - generic [ref=e81]: 
+        - generic [ref=e82]: Drawings & RFI
+      - generic [ref=e83]: Subcontractors
+      - link "Subcontractors" [ref=e84] [cursor=pointer]:
+        - /url: /subcontractors/
+        - generic [ref=e85]: 
+        - generic [ref=e86]: Subcontractors
+      - generic [ref=e87]: Maintenance
+      - link "Maintenance" [ref=e88] [cursor=pointer]:
+        - /url: /maintenance/
+        - generic [ref=e89]: 
+        - generic [ref=e90]: Maintenance
+      - generic [ref=e91]: Change Orders
+      - link "Change Orders" [ref=e92] [cursor=pointer]:
+        - /url: /change-orders/
+        - generic [ref=e93]: 
+        - generic [ref=e94]: Change Orders
+      - generic [ref=e95]: Cost Control
+      - link "Cost Control" [ref=e96] [cursor=pointer]:
+        - /url: /cost-control/
+        - generic [ref=e97]: 
+        - generic [ref=e98]: Cost Control
+      - generic [ref=e99]: Safety
+      - link "Safety" [ref=e100] [cursor=pointer]:
+        - /url: /safety/toolbox/
+        - generic [ref=e101]: 
+        - generic [ref=e102]: Safety
+      - generic [ref=e103]: Quality
+      - link "Quality Control" [ref=e104] [cursor=pointer]:
+        - /url: /quality/
+        - generic [ref=e105]: 
+        - generic [ref=e106]: Quality Control
+      - generic [ref=e107]: Documents
+      - link "Documents" [ref=e108] [cursor=pointer]:
+        - /url: /documents/
+        - generic [ref=e109]: 
+        - generic [ref=e110]: Documents
+      - generic [ref=e111]: Admin
+      - link "Users" [ref=e112] [cursor=pointer]:
+        - /url: /accounts/users/
+        - generic [ref=e113]: 
+        - generic [ref=e114]: Users
+      - link "Roles" [ref=e115] [cursor=pointer]:
+        - /url: /accounts/roles/
+        - generic [ref=e116]: 
+        - generic [ref=e117]: Roles
+      - link "Django Admin" [ref=e118] [cursor=pointer]:
+        - /url: /admin/
+        - generic [ref=e119]: 
+        - generic [ref=e120]: Django Admin
+  - main [ref=e121]:
+    - navigation "Top toolbar" [ref=e122]:
+      - button "Toggle menu" [ref=e123] [cursor=pointer]:
+        - generic [ref=e124]: 
+      - button "Go back" [ref=e125] [cursor=pointer]:
+        - generic [ref=e126]: 
+      - generic [ref=e127]:
+        - 'link "โครงการปัจจุบัน: โครงการป้องกันและแก้ไขปัญหาการกัดเซาะชายฝั่งทะเล บางขุนเทียน กรุงเทพมหานคร — คลิกเพื่อเปลี่ยน" [ref=e128] [cursor=pointer]':
+          - /url: /accounts/select-project/
+          - generic [ref=e129]: 
+          - generic [ref=e130]: 
+        - generic [ref=e131]:
+          - button "เปลี่ยนภาษาเป็นไทย" [ref=e133] [cursor=pointer]: TH
+          - button "Switch language to English" [pressed] [ref=e135] [cursor=pointer]: EN
+        - generic [ref=e136]:
+          - button "การแจ้งเตือน, ยังไม่อ่าน 0 รายการ" [ref=e137] [cursor=pointer]:
+            - generic [ref=e138]: 
+          - text: 
+        - generic [ref=e139]:
+          - 'button "เมนูผู้ใช้ admin (บทบาท: Admin)" [ref=e140] [cursor=pointer]':
+            - generic [ref=e141]: A
+          - text:   
+    - generic [ref=e143]:
+      - generic [ref=e144]:
+        - generic [ref=e145]:
+          - heading "Executive Overview" [level=1] [ref=e146]
+          - paragraph [ref=e147]: Real-time performance metrics for โครงการป้องกันและแก้ไขปัญหาการกัดเซาะชายฝั่งทะเล บางขุนเทียน กรุงเทพมหานคร.
+        - generic [ref=e148]:
+          - combobox "Filter by zone or project" [ref=e150]:
+            - option "All Active Projects"
+            - option "Thai Tank Land Reclamation Chang Project"
+            - option "โครงการป้องกันและแก้ไขปัญหาการกัดเซาะชายฝั่งทะเล บางขุนเทียน กรุงเทพมหานคร" [selected]
+          - button "download Export PDF" [ref=e151] [cursor=pointer]:
+            - generic [ref=e152]: download
+            - text: Export PDF
+          - link "add New Report" [ref=e153] [cursor=pointer]:
+            - /url: /daily-reports/create/
+            - generic [ref=e154]: add
+            - text: New Report
+      - generic [ref=e155]:
+        - generic [ref=e157]:
+          - generic [ref=e158]:
+            - generic [ref=e159]: Overall Progress
+            - generic [ref=e160]: timeline
+          - generic [ref=e161]: 0.8%
+          - generic [ref=e162]:
+            - generic [ref=e163]: trending_up
+            - generic [ref=e164]: "-34.3% Schedule Variance"
+        - generic [ref=e167]:
+          - generic [ref=e168]:
+            - generic [ref=e169]: Total Contract Value
+            - generic [ref=e171]: account_balance
+          - generic [ref=e172]: ฿ 1,620,000,000
+          - generic [ref=e173]:
+            - generic [ref=e174]: 1 active project
+            - generic [ref=e175]: Contract
+        - generic [ref=e176]:
+          - generic [ref=e177]:
+            - generic [ref=e178]: Pending Actions
+            - generic [ref=e180]: fact_check
+          - generic [ref=e181]: "0"
+          - generic [ref=e182]:
+            - generic [ref=e183]: 0 reports · 0 safety
+            - generic [ref=e184]: Needs Review
+        - generic [ref=e185]:
+          - generic [ref=e186]:
+            - generic [ref=e187]: Active Resources
+            - generic [ref=e188]: group
+          - generic [ref=e189]:
+            - generic [ref=e191]:
+              - generic [ref=e192]: Equipment
+              - generic [ref=e193]: 0 Working
+            - generic [ref=e197]:
+              - generic [ref=e198]: Manpower Total
+              - generic [ref=e199]: 0 On-site
+        - generic [ref=e202]:
+          - generic [ref=e203]:
+            - 'heading "Cumulative Progress: Planned vs Actual" [level=2] [ref=e204]'
+            - generic [ref=e205]:
+              - combobox [ref=e206]:
+                - option "P06691 – โครงการป้องกันและแก้ไขปัญ…" [selected]
+              - generic [ref=e207]:
+                - generic [ref=e208]: Planned
+                - generic [ref=e210]: Actual
+                - generic [ref=e212]: Forecast
+          - generic [ref=e214]:
+            - generic [ref=e215]: Planned –
+            - generic [ref=e216]: Actual –
+            - generic [ref=e217]: Variance –
+            - generic [ref=e218]: SPI –
+          - generic [ref=e219]:
+            - generic [ref=e221]: กำลังโหลด…
+            - text: 
+        - generic [ref=e223]:
+          - generic [ref=e224]:
+            - heading "Daily Volume" [level=2] [ref=e225]
+            - generic [ref=e226]: more_vert
+          - generic "Daily production bar chart" [ref=e227]:
+            - generic [ref=e230]: M
+            - generic [ref=e233]: T
+            - generic [ref=e236]: W
+            - generic [ref=e239]: T
+            - generic [ref=e242]: F
+          - generic [ref=e243]:
+            - generic [ref=e244]: Sand
+            - generic [ref=e246]: Rock
+        - generic [ref=e248]:
+          - heading "Safety Status" [level=2] [ref=e249]
+          - generic [ref=e250]:
+            - generic [ref=e251]:
+              - generic [ref=e252]: "0"
+              - generic [ref=e253]: Lost Time Incidents
+            - generic [ref=e254]:
+              - generic [ref=e255]: "0"
+              - generic [ref=e256]: Near Misses
+          - generic [ref=e257]:
+            - generic [ref=e258]: verified_user
+            - generic [ref=e259]:
+              - generic [ref=e260]: Site Safety Secure
+              - generic [ref=e261]: All daily inductions completed.
+        - generic [ref=e262]:
+          - generic [ref=e263]:
+            - heading "Recent Activity Log" [level=2] [ref=e264]
+            - link "View All" [ref=e265] [cursor=pointer]:
+              - /url: /daily-reports/
+          - generic [ref=e266]:
+            - generic [ref=e269]:
+              - generic [ref=e270]:
+                - generic [ref=e271]: Sand delivery received at Zone B
+                - generic [ref=e272]: 10:42 AM
+              - paragraph [ref=e273]: Confirmed 1,200m³ delivery via barge Alpha-1. Quality check passed.
+            - generic [ref=e276]:
+              - generic [ref=e277]:
+                - generic [ref=e278]: Excavator EX-04 returned to service
+                - generic [ref=e279]: 08:15 AM
+              - paragraph [ref=e280]: Routine maintenance completed. Equipment active in Northern sector.
+            - generic [ref=e283]:
+              - generic [ref=e284]:
+                - generic [ref=e285]: Shift Handover Completed
+                - generic [ref=e286]: 06:00 AM
+              - paragraph [ref=e287]: Day shift commenced with 0 personnel.

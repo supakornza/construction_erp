@@ -281,6 +281,8 @@ body.sidebar-collapsed .sidebar-collapse-btn { margin-left: auto; margin-right: 
   align-items: center;
   padding: 0 1rem;
   gap: .75rem;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 .topbar-page-title {

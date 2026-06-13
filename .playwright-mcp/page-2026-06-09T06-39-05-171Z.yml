@@ -1,0 +1,330 @@
+- generic [active] [ref=e1]:
+  - link "ข้ามไปยังเนื้อหาหลัก" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - navigation "Main navigation" [ref=e3]:
+    - generic [ref=e4]:
+      - link "Construction ERP Construction ERP" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - text: 
+        - generic [ref=e6]: Construction ERP
+        - text: Construction ERP
+      - text: 
+    - generic [ref=e7]:
+      - generic [ref=e8]: Dashboard
+      - link "Dashboard" [ref=e9] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e10]: 
+        - generic [ref=e11]: Dashboard
+      - link "Tide Monitor" [ref=e12] [cursor=pointer]:
+        - /url: /tide-monitor/
+        - generic [ref=e13]: 
+        - generic [ref=e14]: Tide Monitor
+      - link "Turbidity Monitor" [ref=e15] [cursor=pointer]:
+        - /url: /turbidity-monitor/
+        - generic [ref=e16]: 
+        - generic [ref=e17]: Turbidity Monitor
+      - link "Rock Progress" [ref=e18] [cursor=pointer]:
+        - /url: /project-controls/rock/dashboard/
+        - generic [ref=e19]: 
+        - generic [ref=e20]: Rock Progress
+      - link "Sand Progress" [ref=e21] [cursor=pointer]:
+        - /url: /project-controls/sand/dashboard/
+        - generic [ref=e22]: 
+        - generic [ref=e23]: Sand Progress
+      - generic [ref=e24]: Projects
+      - link "Projects" [ref=e25] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e26]: 
+        - generic [ref=e27]: Projects
+      - link "Kanban" [ref=e28] [cursor=pointer]:
+        - /url: /kanban/
+        - generic [ref=e29]: 
+        - generic [ref=e30]: Kanban
+      - generic [ref=e31]: Daily Reports
+      - link "Daily Reports" [ref=e32] [cursor=pointer]:
+        - /url: /daily-reports/
+        - generic [ref=e33]: 
+        - generic [ref=e34]: Daily Reports
+      - link "Contractor Imports" [ref=e35] [cursor=pointer]:
+        - /url: /daily-reports/import/
+        - generic [ref=e36]: 
+        - generic [ref=e37]: Contractor Imports
+      - generic [ref=e38]: Resources
+      - link "Manpower" [ref=e39] [cursor=pointer]:
+        - /url: /manpower/dashboard/
+        - generic [ref=e40]: 
+        - generic [ref=e41]: Manpower
+      - link "Equipment" [ref=e42] [cursor=pointer]:
+        - /url: /equipment/
+        - generic [ref=e43]: 
+        - generic [ref=e44]: Equipment
+      - link "Materials" [ref=e45] [cursor=pointer]:
+        - /url: /materials/dashboard/
+        - generic [ref=e46]: 
+        - generic [ref=e47]: Materials
+      - generic [ref=e48]: Procurement
+      - link "Procurement" [ref=e49] [cursor=pointer]:
+        - /url: /procurement/pr/
+        - generic [ref=e50]: 
+        - generic [ref=e51]: Procurement
+      - generic [ref=e52]: BOQ & Progress
+      - link "BOQ & Progress" [ref=e53] [cursor=pointer]:
+        - /url: /boq/
+        - generic [ref=e54]: 
+        - generic [ref=e55]: BOQ & Progress
+      - generic [ref=e56]: Project Controls
+      - link "Rock & Sand Control" [ref=e57] [cursor=pointer]:
+        - /url: /project-controls/
+        - generic [ref=e58]: 
+        - generic [ref=e59]: Rock & Sand Control
+      - link "Revetment Progress" [ref=e60] [cursor=pointer]:
+        - /url: /project-controls/revetment/dashboard/
+        - generic [ref=e61]: 
+        - generic [ref=e62]: Revetment Progress
+      - link "Recovery Plans" [ref=e63] [cursor=pointer]:
+        - /url: /project-controls/recovery/plans/
+        - generic [ref=e64]: 
+        - generic [ref=e65]: Recovery Plans
+      - link "Project Action Plans" [ref=e66] [cursor=pointer]:
+        - /url: /project-controls/action-plans/
+        - generic [ref=e67]: 
+        - generic [ref=e68]: Project Action Plans
+      - link "Recovery Action Plans" [ref=e69] [cursor=pointer]:
+        - /url: /project-controls/recovery/rap/
+        - generic [ref=e70]: 
+        - generic [ref=e71]: Recovery Action Plans
+      - link "Logistics" [ref=e72] [cursor=pointer]:
+        - /url: /project-controls/logistics/
+        - generic [ref=e73]: 
+        - generic [ref=e74]: Logistics
+      - generic [ref=e75]: HR & Attendance
+      - link "HR & Attendance" [ref=e76] [cursor=pointer]:
+        - /url: /hr/
+        - generic [ref=e77]: 
+        - generic [ref=e78]: HR & Attendance
+      - generic [ref=e79]: Drawings & RFI
+      - link "Drawings & RFI" [ref=e80] [cursor=pointer]:
+        - /url: /drawings/
+        - generic [ref=e81]: 
+        - generic [ref=e82]: Drawings & RFI
+      - generic [ref=e83]: Subcontractors
+      - link "Subcontractors" [ref=e84] [cursor=pointer]:
+        - /url: /subcontractors/
+        - generic [ref=e85]: 
+        - generic [ref=e86]: Subcontractors
+      - generic [ref=e87]: Maintenance
+      - link "Maintenance" [ref=e88] [cursor=pointer]:
+        - /url: /maintenance/
+        - generic [ref=e89]: 
+        - generic [ref=e90]: Maintenance
+      - generic [ref=e91]: Change Orders
+      - link "Change Orders" [ref=e92] [cursor=pointer]:
+        - /url: /change-orders/
+        - generic [ref=e93]: 
+        - generic [ref=e94]: Change Orders
+      - generic [ref=e95]: Cost Control
+      - link "Cost Control" [ref=e96] [cursor=pointer]:
+        - /url: /cost-control/
+        - generic [ref=e97]: 
+        - generic [ref=e98]: Cost Control
+      - generic [ref=e99]: Safety
+      - link "Safety" [ref=e100] [cursor=pointer]:
+        - /url: /safety/toolbox/
+        - generic [ref=e101]: 
+        - generic [ref=e102]: Safety
+      - generic [ref=e103]: Quality
+      - link "Quality Control" [ref=e104] [cursor=pointer]:
+        - /url: /quality/
+        - generic [ref=e105]: 
+        - generic [ref=e106]: Quality Control
+      - generic [ref=e107]: Documents
+      - link "Documents" [ref=e108] [cursor=pointer]:
+        - /url: /documents/
+        - generic [ref=e109]: 
+        - generic [ref=e110]: Documents
+      - generic [ref=e111]: Admin
+      - link "Users" [ref=e112] [cursor=pointer]:
+        - /url: /accounts/users/
+        - generic [ref=e113]: 
+        - generic [ref=e114]: Users
+      - link "Roles" [ref=e115] [cursor=pointer]:
+        - /url: /accounts/roles/
+        - generic [ref=e116]: 
+        - generic [ref=e117]: Roles
+      - link "Django Admin" [ref=e118] [cursor=pointer]:
+        - /url: /admin/
+        - generic [ref=e119]: 
+        - generic [ref=e120]: Django Admin
+  - main [ref=e121]:
+    - navigation "Top toolbar" [ref=e122]:
+      - button "Toggle menu" [ref=e123] [cursor=pointer]:
+        - generic [ref=e124]: 
+      - button "Go back" [ref=e125] [cursor=pointer]:
+        - generic [ref=e126]: 
+      - generic [ref=e127]:
+        - 'link "โครงการปัจจุบัน: Thai Tank Land Reclamation Chang Project — คลิกเพื่อเปลี่ยน" [ref=e128] [cursor=pointer]':
+          - /url: /accounts/select-project/
+          - generic [ref=e129]: 
+          - generic [ref=e130]: 
+        - generic [ref=e131]:
+          - button "เปลี่ยนภาษาเป็นไทย" [ref=e133] [cursor=pointer]: TH
+          - button "Switch language to English" [pressed] [ref=e135] [cursor=pointer]: EN
+        - generic [ref=e136]:
+          - button "การแจ้งเตือน, ยังไม่อ่าน 0 รายการ" [ref=e137] [cursor=pointer]:
+            - generic [ref=e138]: 
+          - text: 
+        - generic [ref=e139]:
+          - 'button "เมนูผู้ใช้ admin (บทบาท: Admin)" [ref=e140] [cursor=pointer]':
+            - generic [ref=e141]: A
+          - text:   
+    - generic [ref=e143]:
+      - generic [ref=e144]:
+        - generic [ref=e145]:
+          - heading " Manpower Dashboard" [level=4] [ref=e146]:
+            - generic [ref=e147]: 
+            - text: Manpower Dashboard
+          - generic [ref=e148]: Role breakdown from daily manpower records
+        - generic [ref=e149]:
+          - link " Records" [ref=e150] [cursor=pointer]:
+            - /url: /manpower/
+            - generic [ref=e151]: 
+            - text: Records
+          - link "+ Add Record" [ref=e152] [cursor=pointer]:
+            - /url: /manpower/create/
+            - generic [ref=e153]: +
+            - text: Add Record
+      - generic [ref=e155]:
+        - generic [ref=e156]:
+          - generic [ref=e157]: โครงการ
+          - combobox [ref=e158]:
+            - option "— ทุกโครงการ —" [selected]
+            - option "P06643 – Thai Tank Land Reclamation Chang Project"
+            - option "P06691 – โครงการป้องกันและแก้ไขปัญหาการกัดเซาะชายฝั่งทะเล บางขุนเทียน กรุงเทพมหานคร"
+        - generic [ref=e159]:
+          - generic [ref=e160]: วันที่เริ่ม
+          - textbox [ref=e161]: 2026-05-11
+        - generic [ref=e162]:
+          - generic [ref=e163]: วันที่สิ้นสุด
+          - textbox [ref=e164]: 2026-06-09
+        - button " กรอง" [ref=e165] [cursor=pointer]:
+          - generic [ref=e166]: 
+          - text: กรอง
+      - generic [ref=e167]:
+        - generic [ref=e169]:
+          - generic [ref=e170]: แรงงานทั้งหมด
+          - generic [ref=e171]: "0"
+          - generic [ref=e172]: 11/05/2569 – 09/06/2569
+        - generic [ref=e174]:
+          - generic [ref=e175]: เฉลี่ย/วันทำงาน
+          - generic [ref=e176]: "0.0"
+          - generic [ref=e177]: 0 วันทำงาน
+        - generic [ref=e179]:
+          - generic [ref=e180]: ตำแหน่งสูงสุด
+          - generic [ref=e181]: "-"
+          - generic [ref=e182]: ยังไม่มีข้อมูล
+        - generic [ref=e184]:
+          - generic [ref=e185]: ตำแหน่งที่ใช้งาน
+          - generic [ref=e186]: "0"
+          - generic [ref=e187]: ตำแหน่งที่มีการบันทึก
+      - generic [ref=e188]:
+        - generic [ref=e191]:
+          - heading "แรงงานตามตำแหน่ง" [level=5] [ref=e192]
+          - generic [ref=e193]: รวมในช่วงที่เลือก
+        - generic [ref=e198]:
+          - heading "แนวโน้มรายวัน" [level=5] [ref=e199]
+          - generic [ref=e200]: จำนวนคนต่อวัน
+      - generic [ref=e203]:
+        - generic [ref=e205]:
+          - generic [ref=e206]:
+            - heading "สรุปตามตำแหน่ง" [level=5] [ref=e207]
+            - generic [ref=e208]: 18 ตำแหน่ง
+          - table [ref=e210]:
+            - rowgroup [ref=e211]:
+              - row "ตำแหน่ง รวม" [ref=e212]:
+                - columnheader "ตำแหน่ง" [ref=e213]
+                - columnheader "รวม" [ref=e214]
+            - rowgroup [ref=e215]:
+              - row "Carpenter 0" [ref=e216]:
+                - cell "Carpenter" [ref=e217]:
+                  - generic [ref=e218]: Carpenter
+                - cell "0" [ref=e219]
+              - row "Civil Engineer (CE) 0" [ref=e220]:
+                - cell "Civil Engineer (CE)" [ref=e221]:
+                  - generic [ref=e222]: Civil Engineer (CE)
+                - cell "0" [ref=e223]
+              - row "Driver 0" [ref=e224]:
+                - cell "Driver" [ref=e225]:
+                  - generic [ref=e226]: Driver
+                - cell "0" [ref=e227]
+              - row "Electrical Engineer (EE) 0" [ref=e228]:
+                - cell "Electrical Engineer (EE)" [ref=e229]:
+                  - generic [ref=e230]: Electrical Engineer (EE)
+                - cell "0" [ref=e231]
+              - row "Electrician 0" [ref=e232]:
+                - cell "Electrician" [ref=e233]:
+                  - generic [ref=e234]: Electrician
+                - cell "0" [ref=e235]
+              - row "Equipment Operator 0" [ref=e236]:
+                - cell "Equipment Operator" [ref=e237]:
+                  - generic [ref=e238]: Equipment Operator
+                - cell "0" [ref=e239]
+              - row "Fitter / Assistant 0" [ref=e240]:
+                - cell "Fitter / Assistant" [ref=e241]:
+                  - generic [ref=e242]: Fitter / Assistant
+                - cell "0" [ref=e243]
+              - row "Foreman / Supervisor 0" [ref=e244]:
+                - cell "Foreman / Supervisor" [ref=e245]:
+                  - generic [ref=e246]: Foreman / Supervisor
+                - cell "0" [ref=e247]
+              - row "General Worker / Laborer 0" [ref=e248]:
+                - cell "General Worker / Laborer" [ref=e249]:
+                  - generic [ref=e250]: General Worker / Laborer
+                - cell "0" [ref=e251]
+              - row "Headman / Gang Leader 0" [ref=e252]:
+                - cell "Headman / Gang Leader" [ref=e253]:
+                  - generic [ref=e254]: Headman / Gang Leader
+                - cell "0" [ref=e255]
+              - row "Mason 0" [ref=e256]:
+                - cell "Mason" [ref=e257]:
+                  - generic [ref=e258]: Mason
+                - cell "0" [ref=e259]
+              - row "Mechanic (MC) 0" [ref=e260]:
+                - cell "Mechanic (MC)" [ref=e261]:
+                  - generic [ref=e262]: Mechanic (MC)
+                - cell "0" [ref=e263]
+              - row "Mechanical Engineer (ME) 0" [ref=e264]:
+                - cell "Mechanical Engineer (ME)" [ref=e265]:
+                  - generic [ref=e266]: Mechanical Engineer (ME)
+                - cell "0" [ref=e267]
+              - row "Safety Officer (จ.ป.) 0" [ref=e268]:
+                - cell "Safety Officer (จ.ป.)" [ref=e269]:
+                  - generic [ref=e270]: Safety Officer (จ.ป.)
+                - cell "0" [ref=e271]
+              - row "Steel Worker 0" [ref=e272]:
+                - cell "Steel Worker" [ref=e273]:
+                  - generic [ref=e274]: Steel Worker
+                - cell "0" [ref=e275]
+              - row "Surveyor 0" [ref=e276]:
+                - cell "Surveyor" [ref=e277]:
+                  - generic [ref=e278]: Surveyor
+                - cell "0" [ref=e279]
+              - row "Technician / QC Inspector 0" [ref=e280]:
+                - cell "Technician / QC Inspector" [ref=e281]:
+                  - generic [ref=e282]: Technician / QC Inspector
+                - cell "0" [ref=e283]
+              - row "Welder 0" [ref=e284]:
+                - cell "Welder" [ref=e285]:
+                  - generic [ref=e286]: Welder
+                - cell "0" [ref=e287]
+        - generic [ref=e289]:
+          - generic [ref=e290]:
+            - heading "บริษัทยอดนิยม" [level=5] [ref=e291]
+            - generic [ref=e292]: จัดตามจำนวนแรงงาน
+          - table [ref=e294]:
+            - rowgroup [ref=e295]:
+              - row "บริษัท รวม" [ref=e296]:
+                - columnheader "บริษัท" [ref=e297]
+                - columnheader "รวม" [ref=e298]
+            - rowgroup [ref=e299]:
+              - row "ไม่มีข้อมูล" [ref=e300]:
+                - cell "ไม่มีข้อมูล" [ref=e301]

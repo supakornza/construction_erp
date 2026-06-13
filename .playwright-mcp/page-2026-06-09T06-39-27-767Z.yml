@@ -1,0 +1,291 @@
+- generic [active] [ref=e1]:
+  - link "ข้ามไปยังเนื้อหาหลัก" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - navigation "Main navigation" [ref=e3]:
+    - generic [ref=e4]:
+      - link "Construction ERP Construction ERP" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - text: 
+        - generic [ref=e6]: Construction ERP
+        - text: Construction ERP
+      - text: 
+    - generic [ref=e7]:
+      - generic [ref=e8]: Dashboard
+      - link "Dashboard" [ref=e9] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e10]: 
+        - generic [ref=e11]: Dashboard
+      - link "Tide Monitor" [ref=e12] [cursor=pointer]:
+        - /url: /tide-monitor/
+        - generic [ref=e13]: 
+        - generic [ref=e14]: Tide Monitor
+      - link "Turbidity Monitor" [ref=e15] [cursor=pointer]:
+        - /url: /turbidity-monitor/
+        - generic [ref=e16]: 
+        - generic [ref=e17]: Turbidity Monitor
+      - link "Rock Progress" [ref=e18] [cursor=pointer]:
+        - /url: /project-controls/rock/dashboard/
+        - generic [ref=e19]: 
+        - generic [ref=e20]: Rock Progress
+      - link "Sand Progress" [ref=e21] [cursor=pointer]:
+        - /url: /project-controls/sand/dashboard/
+        - generic [ref=e22]: 
+        - generic [ref=e23]: Sand Progress
+      - generic [ref=e24]: Projects
+      - link "Projects" [ref=e25] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e26]: 
+        - generic [ref=e27]: Projects
+      - link "Kanban" [ref=e28] [cursor=pointer]:
+        - /url: /kanban/
+        - generic [ref=e29]: 
+        - generic [ref=e30]: Kanban
+      - generic [ref=e31]: Daily Reports
+      - link "Daily Reports" [ref=e32] [cursor=pointer]:
+        - /url: /daily-reports/
+        - generic [ref=e33]: 
+        - generic [ref=e34]: Daily Reports
+      - link "Contractor Imports" [ref=e35] [cursor=pointer]:
+        - /url: /daily-reports/import/
+        - generic [ref=e36]: 
+        - generic [ref=e37]: Contractor Imports
+      - generic [ref=e38]: Resources
+      - link "Manpower" [ref=e39] [cursor=pointer]:
+        - /url: /manpower/dashboard/
+        - generic [ref=e40]: 
+        - generic [ref=e41]: Manpower
+      - link "Equipment" [ref=e42] [cursor=pointer]:
+        - /url: /equipment/
+        - generic [ref=e43]: 
+        - generic [ref=e44]: Equipment
+      - link "Materials" [ref=e45] [cursor=pointer]:
+        - /url: /materials/dashboard/
+        - generic [ref=e46]: 
+        - generic [ref=e47]: Materials
+      - generic [ref=e48]: Procurement
+      - link "Procurement" [ref=e49] [cursor=pointer]:
+        - /url: /procurement/pr/
+        - generic [ref=e50]: 
+        - generic [ref=e51]: Procurement
+      - generic [ref=e52]: BOQ & Progress
+      - link "BOQ & Progress" [ref=e53] [cursor=pointer]:
+        - /url: /boq/
+        - generic [ref=e54]: 
+        - generic [ref=e55]: BOQ & Progress
+      - generic [ref=e56]: Project Controls
+      - link "Rock & Sand Control" [ref=e57] [cursor=pointer]:
+        - /url: /project-controls/
+        - generic [ref=e58]: 
+        - generic [ref=e59]: Rock & Sand Control
+      - link "Revetment Progress" [ref=e60] [cursor=pointer]:
+        - /url: /project-controls/revetment/dashboard/
+        - generic [ref=e61]: 
+        - generic [ref=e62]: Revetment Progress
+      - link "Recovery Plans" [ref=e63] [cursor=pointer]:
+        - /url: /project-controls/recovery/plans/
+        - generic [ref=e64]: 
+        - generic [ref=e65]: Recovery Plans
+      - link "Project Action Plans" [ref=e66] [cursor=pointer]:
+        - /url: /project-controls/action-plans/
+        - generic [ref=e67]: 
+        - generic [ref=e68]: Project Action Plans
+      - link "Recovery Action Plans" [ref=e69] [cursor=pointer]:
+        - /url: /project-controls/recovery/rap/
+        - generic [ref=e70]: 
+        - generic [ref=e71]: Recovery Action Plans
+      - link "Logistics" [ref=e72] [cursor=pointer]:
+        - /url: /project-controls/logistics/
+        - generic [ref=e73]: 
+        - generic [ref=e74]: Logistics
+      - generic [ref=e75]: HR & Attendance
+      - link "HR & Attendance" [ref=e76] [cursor=pointer]:
+        - /url: /hr/
+        - generic [ref=e77]: 
+        - generic [ref=e78]: HR & Attendance
+      - generic [ref=e79]: Drawings & RFI
+      - link "Drawings & RFI" [ref=e80] [cursor=pointer]:
+        - /url: /drawings/
+        - generic [ref=e81]: 
+        - generic [ref=e82]: Drawings & RFI
+      - generic [ref=e83]: Subcontractors
+      - link "Subcontractors" [ref=e84] [cursor=pointer]:
+        - /url: /subcontractors/
+        - generic [ref=e85]: 
+        - generic [ref=e86]: Subcontractors
+      - generic [ref=e87]: Maintenance
+      - link "Maintenance" [ref=e88] [cursor=pointer]:
+        - /url: /maintenance/
+        - generic [ref=e89]: 
+        - generic [ref=e90]: Maintenance
+      - generic [ref=e91]: Change Orders
+      - link "Change Orders" [ref=e92] [cursor=pointer]:
+        - /url: /change-orders/
+        - generic [ref=e93]: 
+        - generic [ref=e94]: Change Orders
+      - generic [ref=e95]: Cost Control
+      - link "Cost Control" [ref=e96] [cursor=pointer]:
+        - /url: /cost-control/
+        - generic [ref=e97]: 
+        - generic [ref=e98]: Cost Control
+      - generic [ref=e99]: Safety
+      - link "Safety" [ref=e100] [cursor=pointer]:
+        - /url: /safety/toolbox/
+        - generic [ref=e101]: 
+        - generic [ref=e102]: Safety
+      - generic [ref=e103]: Quality
+      - link "Quality Control" [ref=e104] [cursor=pointer]:
+        - /url: /quality/
+        - generic [ref=e105]: 
+        - generic [ref=e106]: Quality Control
+      - generic [ref=e107]: Documents
+      - link "Documents" [ref=e108] [cursor=pointer]:
+        - /url: /documents/
+        - generic [ref=e109]: 
+        - generic [ref=e110]: Documents
+      - generic [ref=e111]: Admin
+      - link "Users" [ref=e112] [cursor=pointer]:
+        - /url: /accounts/users/
+        - generic [ref=e113]: 
+        - generic [ref=e114]: Users
+      - link "Roles" [ref=e115] [cursor=pointer]:
+        - /url: /accounts/roles/
+        - generic [ref=e116]: 
+        - generic [ref=e117]: Roles
+      - link "Django Admin" [ref=e118] [cursor=pointer]:
+        - /url: /admin/
+        - generic [ref=e119]: 
+        - generic [ref=e120]: Django Admin
+  - main [ref=e121]:
+    - navigation "Top toolbar" [ref=e122]:
+      - button "Toggle menu" [ref=e123] [cursor=pointer]:
+        - generic [ref=e124]: 
+      - button "Go back" [ref=e125] [cursor=pointer]:
+        - generic [ref=e126]: 
+      - generic [ref=e127]:
+        - 'link "โครงการปัจจุบัน: Thai Tank Land Reclamation Chang Project — คลิกเพื่อเปลี่ยน" [ref=e128] [cursor=pointer]':
+          - /url: /accounts/select-project/
+          - generic [ref=e129]: 
+          - generic [ref=e130]: 
+        - generic [ref=e131]:
+          - button "เปลี่ยนภาษาเป็นไทย" [ref=e133] [cursor=pointer]: TH
+          - button "Switch language to English" [pressed] [ref=e135] [cursor=pointer]: EN
+        - generic [ref=e136]:
+          - button "การแจ้งเตือน, ยังไม่อ่าน 0 รายการ" [ref=e137] [cursor=pointer]:
+            - generic [ref=e138]: 
+          - text: 
+        - generic [ref=e139]:
+          - 'button "เมนูผู้ใช้ admin (บทบาท: Admin)" [ref=e140] [cursor=pointer]':
+            - generic [ref=e141]: A
+          - text:   
+    - generic [ref=e142]:
+      - generic [ref=e143]:
+        - heading " Equipment" [level=4] [ref=e144]:
+          - generic [ref=e145]: 
+          - text: Equipment
+        - generic [ref=e146]:
+          - link "Daily Records" [ref=e147] [cursor=pointer]:
+            - /url: /equipment/records/
+          - link "+ Add Equipment" [ref=e148] [cursor=pointer]:
+            - /url: /equipment/create/
+            - generic [ref=e149]: +
+            - text: Add Equipment
+      - table [ref=e152]:
+        - rowgroup [ref=e153]:
+          - row "Name Category Reg. No Project Status Actions" [ref=e154]:
+            - columnheader "Name" [ref=e155]
+            - columnheader "Category" [ref=e156]
+            - columnheader "Reg. No" [ref=e157]
+            - columnheader "Project" [ref=e158]
+            - columnheader "Status" [ref=e159]
+            - columnheader "Actions" [ref=e160]
+        - rowgroup [ref=e161]:
+          - row "BANGSAPAN 2 Barge 94-FB0002 P06643 Active   " [ref=e162]:
+            - cell "BANGSAPAN 2" [ref=e163]:
+              - link "BANGSAPAN 2" [ref=e164] [cursor=pointer]:
+                - /url: /equipment/12/
+            - cell "Barge" [ref=e165]
+            - cell "94-FB0002" [ref=e166]
+            - cell "P06643" [ref=e167]
+            - cell "Active" [ref=e168]:
+              - generic [ref=e169]: Active
+            - cell "  " [ref=e170]:
+              - link "" [ref=e171] [cursor=pointer]:
+                - /url: /equipment/12/
+                - generic [ref=e172]: 
+              - link "" [ref=e173] [cursor=pointer]:
+                - /url: /equipment/12/edit/
+                - generic [ref=e174]: 
+              - button "" [ref=e176] [cursor=pointer]:
+                - generic [ref=e177]: 
+          - row "J.Yuttachai 1 Barge 94-FB0018 P06643 Active   " [ref=e178]:
+            - cell "J.Yuttachai 1" [ref=e179]:
+              - link "J.Yuttachai 1" [ref=e180] [cursor=pointer]:
+                - /url: /equipment/11/
+            - cell "Barge" [ref=e181]
+            - cell "94-FB0018" [ref=e182]
+            - cell "P06643" [ref=e183]
+            - cell "Active" [ref=e184]:
+              - generic [ref=e185]: Active
+            - cell "  " [ref=e186]:
+              - link "" [ref=e187] [cursor=pointer]:
+                - /url: /equipment/11/
+                - generic [ref=e188]: 
+              - link "" [ref=e189] [cursor=pointer]:
+                - /url: /equipment/11/edit/
+                - generic [ref=e190]: 
+              - button "" [ref=e192] [cursor=pointer]:
+                - generic [ref=e193]: 
+          - row "Map Ta Put 10 Barge - P06643 Active   " [ref=e194]:
+            - cell "Map Ta Put 10" [ref=e195]:
+              - link "Map Ta Put 10" [ref=e196] [cursor=pointer]:
+                - /url: /equipment/10/
+            - cell "Barge" [ref=e197]
+            - cell "-" [ref=e198]
+            - cell "P06643" [ref=e199]
+            - cell "Active" [ref=e200]:
+              - generic [ref=e201]: Active
+            - cell "  " [ref=e202]:
+              - link "" [ref=e203] [cursor=pointer]:
+                - /url: /equipment/10/
+                - generic [ref=e204]: 
+              - link "" [ref=e205] [cursor=pointer]:
+                - /url: /equipment/10/edit/
+                - generic [ref=e206]: 
+              - button "" [ref=e208] [cursor=pointer]:
+                - generic [ref=e209]: 
+          - row "Map Ta put 8 Barge - P06643 Active   " [ref=e210]:
+            - cell "Map Ta put 8" [ref=e211]:
+              - link "Map Ta put 8" [ref=e212] [cursor=pointer]:
+                - /url: /equipment/8/
+            - cell "Barge" [ref=e213]
+            - cell "-" [ref=e214]
+            - cell "P06643" [ref=e215]
+            - cell "Active" [ref=e216]:
+              - generic [ref=e217]: Active
+            - cell "  " [ref=e218]:
+              - link "" [ref=e219] [cursor=pointer]:
+                - /url: /equipment/8/
+                - generic [ref=e220]: 
+              - link "" [ref=e221] [cursor=pointer]:
+                - /url: /equipment/8/edit/
+                - generic [ref=e222]: 
+              - button "" [ref=e224] [cursor=pointer]:
+                - generic [ref=e225]: 
+          - row "Map Ta Put 9 Barge - P06643 Active   " [ref=e226]:
+            - cell "Map Ta Put 9" [ref=e227]:
+              - link "Map Ta Put 9" [ref=e228] [cursor=pointer]:
+                - /url: /equipment/9/
+            - cell "Barge" [ref=e229]
+            - cell "-" [ref=e230]
+            - cell "P06643" [ref=e231]
+            - cell "Active" [ref=e232]:
+              - generic [ref=e233]: Active
+            - cell "  " [ref=e234]:
+              - link "" [ref=e235] [cursor=pointer]:
+                - /url: /equipment/9/
+                - generic [ref=e236]: 
+              - link "" [ref=e237] [cursor=pointer]:
+                - /url: /equipment/9/edit/
+                - generic [ref=e238]: 
+              - button "" [ref=e240] [cursor=pointer]:
+                - generic [ref=e241]: 

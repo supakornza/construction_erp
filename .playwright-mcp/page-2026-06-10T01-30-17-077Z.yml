@@ -1,0 +1,35 @@
+- main [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e5]: 
+    - heading "เลือกโครงการ" [level=1] [ref=e6]
+    - paragraph [ref=e7]: Construction ERP – เลือกโครงการที่ต้องการทำงาน
+  - generic [ref=e8]:
+    - generic [ref=e9]: A
+    - generic [ref=e10]: admin
+    - generic [ref=e11]: Admin
+    - button " ออกจากระบบ" [ref=e13] [cursor=pointer]:
+      - generic [ref=e14]: 
+      - text: ออกจากระบบ
+  - list "รายการโครงการ" [ref=e15]:
+    - listitem [ref=e16]:
+      - button "เลือกโครงการ Thai Tank Land Reclamation Chang Project" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: Thai Tank Land Reclamation Chang Project
+        - generic [ref=e19]:
+          - generic [ref=e20]: 
+          - text: P06643
+        - generic [ref=e21]:
+          - generic [ref=e22]: Active
+          - generic [ref=e23]:
+            - generic [ref=e24]: 
+            - text: 500000000 บาท
+    - listitem [ref=e25]:
+      - button "เลือกโครงการ โครงการป้องกันและแก้ไขปัญหาการกัดเซาะชายฝั่งทะเล บางขุนเทียน กรุงเทพมหานคร" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: โครงการป้องกันและแก้ไขปัญหาการกัดเซาะชายฝั่งทะเล บางขุนเทียน กรุงเทพมหานคร
+        - generic [ref=e28]:
+          - generic [ref=e29]: 
+          - text: P06691
+        - generic [ref=e30]:
+          - generic [ref=e31]: Active
+          - generic [ref=e32]:
+            - generic [ref=e33]: 
+            - text: 1620000000 บาท

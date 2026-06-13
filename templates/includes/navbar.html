@@ -44,8 +44,8 @@
         </a>
         {% endif %}
 
-        <!-- Language switcher -->
-        <div class="d-flex gap-1 no-print" id="lang-switcher">
+        <!-- Language switcher (hidden on xs — accessible via user dropdown on mobile) -->
+        <div class="d-none d-sm-flex gap-1 no-print" id="lang-switcher">
             <form method="post" action="{% url 'set_language' %}" class="d-inline">
                 {% csrf_token %}
                 <input type="hidden" name="language" value="th">
@@ -159,6 +159,28 @@
                 <li class="px-3 py-2 d-sm-none">
                     <div class="fw-semibold" style="font-size:.82rem;">{{ user.get_full_name_or_username }}</div>
                     <div class="text-muted" style="font-size:.72rem;">{{ user.get_role_display }}</div>
+                </li>
+                <li class="d-sm-none"><hr class="dropdown-divider"></li>
+                <!-- Language toggle (mobile only — replaces topbar TH/EN buttons) -->
+                <li class="d-sm-none">
+                    <div class="d-flex px-3 py-1 gap-2">
+                        <form method="post" action="{% url 'set_language' %}" class="flex-fill">
+                            {% csrf_token %}
+                            <input type="hidden" name="language" value="th">
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <button type="submit"
+                                    class="btn btn-sm w-100 {% if request.LANGUAGE_CODE == 'th' %}btn-primary{% else %}btn-outline-secondary{% endif %}"
+                                    aria-pressed="{% if request.LANGUAGE_CODE == 'th' %}true{% else %}false{% endif %}">TH</button>
+                        </form>
+                        <form method="post" action="{% url 'set_language' %}" class="flex-fill">
+                            {% csrf_token %}
+                            <input type="hidden" name="language" value="en">
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <button type="submit"
+                                    class="btn btn-sm w-100 {% if request.LANGUAGE_CODE == 'en' %}btn-primary{% else %}btn-outline-secondary{% endif %}"
+                                    aria-pressed="{% if request.LANGUAGE_CODE == 'en' %}true{% else %}false{% endif %}">EN</button>
+                        </form>
+                    </div>
                 </li>
                 <li class="d-sm-none"><hr class="dropdown-divider"></li>
                 <li>

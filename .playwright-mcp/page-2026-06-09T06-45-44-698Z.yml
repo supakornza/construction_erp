@@ -1,0 +1,250 @@
+- generic [active] [ref=e1]:
+  - link "ข้ามไปยังเนื้อหาหลัก" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - navigation "Main navigation" [ref=e3]:
+    - generic [ref=e4]:
+      - link "Construction ERP Construction ERP" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - text: 
+        - generic [ref=e6]: Construction ERP
+        - text: Construction ERP
+      - text: 
+    - generic [ref=e7]:
+      - generic [ref=e8]: Dashboard
+      - link "Dashboard" [ref=e9] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e10]: 
+        - generic [ref=e11]: Dashboard
+      - link "Tide Monitor" [ref=e12] [cursor=pointer]:
+        - /url: /tide-monitor/
+        - generic [ref=e13]: 
+        - generic [ref=e14]: Tide Monitor
+      - link "Turbidity Monitor" [ref=e15] [cursor=pointer]:
+        - /url: /turbidity-monitor/
+        - generic [ref=e16]: 
+        - generic [ref=e17]: Turbidity Monitor
+      - link "Rock Progress" [ref=e18] [cursor=pointer]:
+        - /url: /project-controls/rock/dashboard/
+        - generic [ref=e19]: 
+        - generic [ref=e20]: Rock Progress
+      - link "Sand Progress" [ref=e21] [cursor=pointer]:
+        - /url: /project-controls/sand/dashboard/
+        - generic [ref=e22]: 
+        - generic [ref=e23]: Sand Progress
+      - generic [ref=e24]: Projects
+      - link "Projects" [ref=e25] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e26]: 
+        - generic [ref=e27]: Projects
+      - link "Kanban" [ref=e28] [cursor=pointer]:
+        - /url: /kanban/
+        - generic [ref=e29]: 
+        - generic [ref=e30]: Kanban
+      - generic [ref=e31]: Daily Reports
+      - link "Daily Reports" [ref=e32] [cursor=pointer]:
+        - /url: /daily-reports/
+        - generic [ref=e33]: 
+        - generic [ref=e34]: Daily Reports
+      - link "Contractor Imports" [ref=e35] [cursor=pointer]:
+        - /url: /daily-reports/import/
+        - generic [ref=e36]: 
+        - generic [ref=e37]: Contractor Imports
+      - generic [ref=e38]: Resources
+      - link "Manpower" [ref=e39] [cursor=pointer]:
+        - /url: /manpower/dashboard/
+        - generic [ref=e40]: 
+        - generic [ref=e41]: Manpower
+      - link "Equipment" [ref=e42] [cursor=pointer]:
+        - /url: /equipment/
+        - generic [ref=e43]: 
+        - generic [ref=e44]: Equipment
+      - link "Materials" [ref=e45] [cursor=pointer]:
+        - /url: /materials/dashboard/
+        - generic [ref=e46]: 
+        - generic [ref=e47]: Materials
+      - generic [ref=e48]: Procurement
+      - link "Procurement" [ref=e49] [cursor=pointer]:
+        - /url: /procurement/pr/
+        - generic [ref=e50]: 
+        - generic [ref=e51]: Procurement
+      - generic [ref=e52]: BOQ & Progress
+      - link "BOQ & Progress" [ref=e53] [cursor=pointer]:
+        - /url: /boq/
+        - generic [ref=e54]: 
+        - generic [ref=e55]: BOQ & Progress
+      - generic [ref=e56]: Project Controls
+      - link "Rock & Sand Control" [ref=e57] [cursor=pointer]:
+        - /url: /project-controls/
+        - generic [ref=e58]: 
+        - generic [ref=e59]: Rock & Sand Control
+      - link "Revetment Progress" [ref=e60] [cursor=pointer]:
+        - /url: /project-controls/revetment/dashboard/
+        - generic [ref=e61]: 
+        - generic [ref=e62]: Revetment Progress
+      - link "Recovery Plans" [ref=e63] [cursor=pointer]:
+        - /url: /project-controls/recovery/plans/
+        - generic [ref=e64]: 
+        - generic [ref=e65]: Recovery Plans
+      - link "Project Action Plans" [ref=e66] [cursor=pointer]:
+        - /url: /project-controls/action-plans/
+        - generic [ref=e67]: 
+        - generic [ref=e68]: Project Action Plans
+      - link "Recovery Action Plans" [ref=e69] [cursor=pointer]:
+        - /url: /project-controls/recovery/rap/
+        - generic [ref=e70]: 
+        - generic [ref=e71]: Recovery Action Plans
+      - link "Logistics" [ref=e72] [cursor=pointer]:
+        - /url: /project-controls/logistics/
+        - generic [ref=e73]: 
+        - generic [ref=e74]: Logistics
+      - generic [ref=e75]: HR & Attendance
+      - link "HR & Attendance" [ref=e76] [cursor=pointer]:
+        - /url: /hr/
+        - generic [ref=e77]: 
+        - generic [ref=e78]: HR & Attendance
+      - generic [ref=e79]: Drawings & RFI
+      - link "Drawings & RFI" [ref=e80] [cursor=pointer]:
+        - /url: /drawings/
+        - generic [ref=e81]: 
+        - generic [ref=e82]: Drawings & RFI
+      - generic [ref=e83]: Subcontractors
+      - link "Subcontractors" [ref=e84] [cursor=pointer]:
+        - /url: /subcontractors/
+        - generic [ref=e85]: 
+        - generic [ref=e86]: Subcontractors
+      - generic [ref=e87]: Maintenance
+      - link "Maintenance" [ref=e88] [cursor=pointer]:
+        - /url: /maintenance/
+        - generic [ref=e89]: 
+        - generic [ref=e90]: Maintenance
+      - generic [ref=e91]: Change Orders
+      - link "Change Orders" [ref=e92] [cursor=pointer]:
+        - /url: /change-orders/
+        - generic [ref=e93]: 
+        - generic [ref=e94]: Change Orders
+      - generic [ref=e95]: Cost Control
+      - link "Cost Control" [ref=e96] [cursor=pointer]:
+        - /url: /cost-control/
+        - generic [ref=e97]: 
+        - generic [ref=e98]: Cost Control
+      - generic [ref=e99]: Safety
+      - link "Safety" [ref=e100] [cursor=pointer]:
+        - /url: /safety/toolbox/
+        - generic [ref=e101]: 
+        - generic [ref=e102]: Safety
+      - generic [ref=e103]: Quality
+      - link "Quality Control" [ref=e104] [cursor=pointer]:
+        - /url: /quality/
+        - generic [ref=e105]: 
+        - generic [ref=e106]: Quality Control
+      - generic [ref=e107]: Documents
+      - link "Documents" [ref=e108] [cursor=pointer]:
+        - /url: /documents/
+        - generic [ref=e109]: 
+        - generic [ref=e110]: Documents
+      - generic [ref=e111]: Admin
+      - link "Users" [ref=e112] [cursor=pointer]:
+        - /url: /accounts/users/
+        - generic [ref=e113]: 
+        - generic [ref=e114]: Users
+      - link "Roles" [ref=e115] [cursor=pointer]:
+        - /url: /accounts/roles/
+        - generic [ref=e116]: 
+        - generic [ref=e117]: Roles
+      - link "Django Admin" [ref=e118] [cursor=pointer]:
+        - /url: /admin/
+        - generic [ref=e119]: 
+        - generic [ref=e120]: Django Admin
+  - main [ref=e121]:
+    - navigation "Top toolbar" [ref=e122]:
+      - button "Toggle menu" [ref=e123] [cursor=pointer]:
+        - generic [ref=e124]: 
+      - button "Go back" [ref=e125] [cursor=pointer]:
+        - generic [ref=e126]: 
+      - generic [ref=e127]:
+        - 'link "โครงการปัจจุบัน: Thai Tank Land Reclamation Chang Project — คลิกเพื่อเปลี่ยน" [ref=e128] [cursor=pointer]':
+          - /url: /accounts/select-project/
+          - generic [ref=e129]: 
+          - generic [ref=e130]: 
+        - generic [ref=e131]:
+          - button "เปลี่ยนภาษาเป็นไทย" [ref=e133] [cursor=pointer]: TH
+          - button "Switch language to English" [pressed] [ref=e135] [cursor=pointer]: EN
+        - generic [ref=e136]:
+          - button "การแจ้งเตือน, ยังไม่อ่าน 0 รายการ" [ref=e137] [cursor=pointer]:
+            - generic [ref=e138]: 
+          - text: 
+        - generic [ref=e139]:
+          - 'button "เมนูผู้ใช้ admin (บทบาท: Admin)" [ref=e140] [cursor=pointer]':
+            - generic [ref=e141]: A
+          - text:   
+    - generic [ref=e142]:
+      - generic [ref=e143]:
+        - heading " Projects" [level=4] [ref=e144]:
+          - generic [ref=e145]: 
+          - text: Projects
+        - link "+ New Project" [ref=e146] [cursor=pointer]:
+          - /url: /projects/create/
+          - generic [ref=e147]: +
+          - text: New Project
+      - generic [ref=e148]:
+        - link "All" [ref=e149] [cursor=pointer]:
+          - /url: "?"
+        - link "Planning" [ref=e150] [cursor=pointer]:
+          - /url: "?status=Planning"
+        - link "Active" [ref=e151] [cursor=pointer]:
+          - /url: "?status=Active"
+        - link "Suspended" [ref=e152] [cursor=pointer]:
+          - /url: "?status=Suspended"
+        - link "Completed" [ref=e153] [cursor=pointer]:
+          - /url: "?status=Completed"
+        - link "Closed" [ref=e154] [cursor=pointer]:
+          - /url: "?status=Closed"
+      - generic [ref=e155]:
+        - generic [ref=e157]:
+          - generic [ref=e158]:
+            - generic [ref=e159]:
+              - heading "โครงการป้องกันและแก้ไขปัญหาการกัดเซาะชายฝั่งทะเล บางขุนเทียน กรุงเทพมหานคร" [level=6] [ref=e160]
+              - generic [ref=e161]: Active
+            - generic [ref=e162]: P06691
+            - generic [ref=e163]:
+              - term [ref=e164]: Owner
+              - definition [ref=e165]: สำนักการระบายน้ำ กรุงเทพมหานคร
+              - term [ref=e166]: Contractor
+              - definition [ref=e167]: Italian-Thai Development PLC.
+              - term [ref=e168]: Contract Value
+              - definition [ref=e169]: 1,620,000,000 THB
+              - term [ref=e170]: Period
+              - definition [ref=e171]: 30/09/2568 - 19/09/2570
+          - generic [ref=e172]:
+            - link " View" [ref=e173] [cursor=pointer]:
+              - /url: /projects/3/
+              - generic [ref=e174]: 
+              - text: View
+            - link " Edit" [ref=e175] [cursor=pointer]:
+              - /url: /projects/3/edit/
+              - generic [ref=e176]: 
+              - text: Edit
+        - generic [ref=e178]:
+          - generic [ref=e179]:
+            - generic [ref=e180]:
+              - heading "Thai Tank Land Reclamation Chang Project" [level=6] [ref=e181]
+              - generic [ref=e182]: Active
+            - generic [ref=e183]: P06643
+            - generic [ref=e184]:
+              - term [ref=e185]: Owner
+              - definition [ref=e186]: Thai Tank Terminal Ltd.
+              - term [ref=e187]: Contractor
+              - definition [ref=e188]: Italian-Thai Development PLC.
+              - term [ref=e189]: Contract Value
+              - definition [ref=e190]: 500,000,000 THB
+              - term [ref=e191]: Period
+              - definition [ref=e192]: 01/05/2568 - 01/10/2569
+          - generic [ref=e193]:
+            - link " View" [ref=e194] [cursor=pointer]:
+              - /url: /projects/2/
+              - generic [ref=e195]: 
+              - text: View
+            - link " Edit" [ref=e196] [cursor=pointer]:
+              - /url: /projects/2/edit/
+              - generic [ref=e197]: 
+              - text: Edit

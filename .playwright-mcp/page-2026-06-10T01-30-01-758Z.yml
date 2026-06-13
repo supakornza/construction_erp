@@ -1,0 +1,34 @@
+- main [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e5]: 
+    - heading "Construction ERP" [level=1] [ref=e6]
+    - generic [ref=e7]: ระบบบริหารโครงการก่อสร้าง
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]: ชื่อผู้ใช้
+      - generic [ref=e12]:
+        - generic [ref=e14]: 
+        - textbox "ชื่อผู้ใช้" [active] [ref=e15]:
+          - /placeholder: กรอกชื่อผู้ใช้
+    - generic [ref=e16]:
+      - generic [ref=e17]: รหัสผ่าน
+      - generic [ref=e18]:
+        - generic [ref=e20]: 
+        - textbox "รหัสผ่าน" [ref=e21]:
+          - /placeholder: กรอกรหัสผ่าน
+        - button "แสดงรหัสผ่าน" [ref=e22] [cursor=pointer]:
+          - generic [ref=e23]: 
+    - generic [ref=e24]:
+      - generic [ref=e25] [cursor=pointer]:
+        - checkbox "จดจำฉัน (14 วัน)" [ref=e26]
+        - text: จดจำฉัน (14 วัน)
+      - link "ลืมรหัสผ่าน?" [ref=e27] [cursor=pointer]:
+        - /url: /accounts/password-reset/
+    - button "เข้าสู่ระบบ" [ref=e28] [cursor=pointer]:
+      - generic [ref=e29]: 
+      - text: เข้าสู่ระบบ
+  - generic [ref=e30]:
+    - generic [ref=e31]:
+      - generic [ref=e32]: 
+      - text: ระบบงานภาคสนามที่ปลอดภัย
+    - generic [ref=e33]: Construction ERP © 2026
