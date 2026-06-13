@@ -281,8 +281,12 @@ body.sidebar-collapsed .sidebar-collapse-btn { margin-left: auto; margin-right: 
   align-items: center;
   padding: 0 1rem;
   gap: .75rem;
+  /* flex-wrap:nowrap keeps the bar on one row on mobile.
+     Do NOT set overflow:hidden here — it clips the bell/user dropdown
+     menus (which render below the bar) to nothing. Horizontal spill is
+     prevented by truncation on the flex children + #main-content's
+     overflow-x:hidden, not by clipping the topbar. */
   flex-wrap: nowrap;
-  overflow: hidden;
 }
 
 .topbar-page-title {
