@@ -19,8 +19,8 @@
             <tr>
                 <th scope="col">ชื่อวัสดุ</th>
                 <th scope="col">หมวด</th>
-                <th scope="col">หน่วย</th>
-                <th scope="col">น้ำหนัก/หน่วย</th>
+                <th scope="col" class="d-none d-md-table-cell">หน่วย</th>
+                <th scope="col" class="d-none d-md-table-cell">น้ำหนัก/หน่วย</th>
                 <th scope="col"><span class="visually-hidden">การกระทำ</span></th>
             </tr>
         </thead>
@@ -29,8 +29,8 @@
         <tr>
             <td>{{ m.name }}</td>
             <td>{{ m.category }}</td>
-            <td>{{ m.unit }}</td>
-            <td>{{ m.unit_weight|default:'-' }}</td>
+            <td class="d-none d-md-table-cell">{{ m.unit }}</td>
+            <td class="d-none d-md-table-cell">{{ m.unit_weight|default:'-' }}</td>
             <td>
                 <a href="{% url 'materials:update' m.pk %}"
                    class="btn btn-outline-primary d-inline-flex align-items-center justify-content-center"

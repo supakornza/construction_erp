@@ -59,11 +59,11 @@
                     <tr>
                         <th>RFI No</th>
                         <th>Subject</th>
-                        <th>Project</th>
-                        <th>Drawing</th>
+                        <th class="d-none d-md-table-cell">Project</th>
+                        <th class="d-none d-md-table-cell">Drawing</th>
                         <th>Priority</th>
-                        <th>Submitted By</th>
-                        <th>Required By</th>
+                        <th class="d-none d-md-table-cell">Submitted By</th>
+                        <th class="d-none d-md-table-cell">Required By</th>
                         <th>Status</th>
                         <th></th>
                     </tr>
@@ -76,11 +76,11 @@
                            class="fw-semibold text-decoration-none">{{ rfi.rfi_no }}</a>
                     </td>
                     <td class="small">{{ rfi.subject|truncatechars:45 }}</td>
-                    <td class="small">{{ rfi.project.name|truncatechars:20 }}</td>
-                    <td class="small text-muted">{{ rfi.drawing.drawing_no|default:"—" }}</td>
+                    <td class="small d-none d-md-table-cell">{{ rfi.project.name|truncatechars:20 }}</td>
+                    <td class="small text-muted d-none d-md-table-cell">{{ rfi.drawing.drawing_no|default:"—" }}</td>
                     <td><span class="badge bg-{{ rfi.priority_color }}">{{ rfi.priority }}</span></td>
-                    <td class="small">{{ rfi.submitted_by|default:"—"|truncatechars:20 }}</td>
-                    <td class="small {% if rfi.is_overdue %}text-danger fw-bold{% endif %}">
+                    <td class="small d-none d-md-table-cell">{{ rfi.submitted_by|default:"—"|truncatechars:20 }}</td>
+                    <td class="small d-none d-md-table-cell {% if rfi.is_overdue %}text-danger fw-bold{% endif %}">
                         {{ rfi.response_required_date|default:"—" }}
                     </td>
                     <td><span class="badge bg-{{ rfi.status_color }}">{{ rfi.get_status_display }}</span></td>

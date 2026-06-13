@@ -38,9 +38,9 @@
             <thead class="table-light">
                 <tr>
                     <th scope="col">วันที่</th>
-                    <th scope="col">โครงการ</th>
-                    <th scope="col">อากาศ</th>
-                    <th scope="col">ผู้จัดทำ</th>
+                    <th scope="col" class="d-none d-md-table-cell">โครงการ</th>
+                    <th scope="col" class="d-none d-md-table-cell">อากาศ</th>
+                    <th scope="col" class="d-none d-md-table-cell">ผู้จัดทำ</th>
                     <th scope="col">สถานะ</th>
                     <th scope="col"><span class="visually-hidden">การกระทำ</span></th>
                 </tr>
@@ -49,9 +49,9 @@
             {% for r in reports %}
             <tr>
                 <td><a href="{% url 'daily_reports:detail' r.pk %}">{{ r.report_date|thai_be_date }}</a></td>
-                <td>{{ r.project.contract_no }}</td>
-                <td><i class="fas fa-sun text-warning me-1" aria-hidden="true"></i>{{ r.weather_morning }} / {{ r.weather_afternoon }}</td>
-                <td>{{ r.prepared_by.get_full_name|default:r.prepared_by.username|default:'-' }}</td>
+                <td class="d-none d-md-table-cell">{{ r.project.contract_no }}</td>
+                <td class="d-none d-md-table-cell"><i class="fas fa-sun text-warning me-1" aria-hidden="true"></i>{{ r.weather_morning }} / {{ r.weather_afternoon }}</td>
+                <td class="d-none d-md-table-cell">{{ r.prepared_by.get_full_name|default:r.prepared_by.username|default:'-' }}</td>
                 <td><span class="badge badge-{{ r.status|lower }}">{{ r.status }}</span></td>
                 <td>
                     <a href="{% url 'daily_reports:detail' r.pk %}"

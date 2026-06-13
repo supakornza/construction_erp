@@ -56,13 +56,13 @@
                 <thead class="table-dark">
                     <tr>
                         <th>CO No.</th>
-                        <th>Project</th>
+                        <th class="d-none d-md-table-cell">Project</th>
                         <th>Title</th>
-                        <th>Type</th>
+                        <th class="d-none d-md-table-cell">Type</th>
                         <th>Status</th>
                         <th class="text-end">Value Impact (THB)</th>
-                        <th class="text-center">Time (days)</th>
-                        <th>Date</th>
+                        <th class="text-center d-none d-md-table-cell">Time (days)</th>
+                        <th class="d-none d-md-table-cell">Date</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -70,17 +70,17 @@
                 {% for co in change_orders %}
                 <tr>
                     <td><a href="{% url 'change_orders:detail' co.pk %}" class="fw-semibold text-decoration-none">{{ co.co_no }}</a></td>
-                    <td><span class="text-muted small">{{ co.project.contract_no }}</span></td>
+                    <td class="d-none d-md-table-cell"><span class="text-muted small">{{ co.project.contract_no }}</span></td>
                     <td>{{ co.title|truncatechars:60 }}</td>
-                    <td><span class="badge bg-secondary">{{ co.get_type_display|truncatechars:20 }}</span></td>
+                    <td class="d-none d-md-table-cell"><span class="badge bg-secondary">{{ co.get_type_display|truncatechars:20 }}</span></td>
                     <td><span class="badge bg-{{ co.status_color }}">{{ co.get_status_display }}</span></td>
                     <td class="text-end {% if co.contract_value_impact > 0 %}text-success{% elif co.contract_value_impact < 0 %}text-danger{% endif %}">
                         {% if co.contract_value_impact > 0 %}+{% endif %}{{ co.contract_value_impact|floatformat:0|intcomma }}
                     </td>
-                    <td class="text-center {% if co.time_impact_days > 0 %}text-warning{% elif co.time_impact_days < 0 %}text-info{% endif %}">
+                    <td class="text-center d-none d-md-table-cell {% if co.time_impact_days > 0 %}text-warning{% elif co.time_impact_days < 0 %}text-info{% endif %}">
                         {% if co.time_impact_days > 0 %}+{% endif %}{{ co.time_impact_days }}
                     </td>
-                    <td class="small">{{ co.initiated_date }}</td>
+                    <td class="small d-none d-md-table-cell">{{ co.initiated_date }}</td>
                     <td>
                         <a href="{% url 'change_orders:detail' co.pk %}" class="btn btn-xs btn-outline-primary">
                             <i class="fas fa-eye"></i>

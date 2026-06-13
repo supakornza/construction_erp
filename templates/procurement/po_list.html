@@ -8,15 +8,15 @@
 </div>
 <div class="card"><div class="table-responsive">
     <table class="table table-hover mb-0">
-        <thead class="table-light"><tr><th>PO No</th><th>PR No</th><th>Supplier</th><th>Order Date</th><th>Delivery Date</th><th>Total</th><th>Status</th><th></th></tr></thead>
+        <thead class="table-light"><tr><th>PO No</th><th class="d-none d-md-table-cell">PR No</th><th>Supplier</th><th class="d-none d-md-table-cell">Order Date</th><th class="d-none d-md-table-cell">Delivery Date</th><th>Total</th><th>Status</th><th></th></tr></thead>
         <tbody>
         {% for po in pos %}
         <tr>
             <td><a href="{% url 'procurement:po_detail' po.pk %}">{{ po.po_no }}</a></td>
-            <td>{{ po.pr.pr_no }}</td>
+            <td class="d-none d-md-table-cell">{{ po.pr.pr_no }}</td>
             <td>{{ po.supplier.name }}</td>
-            <td>{{ po.order_date|thai_be_date }}</td>
-            <td>{{ po.delivery_date|thai_be_date }}</td>
+            <td class="d-none d-md-table-cell">{{ po.order_date|thai_be_date }}</td>
+            <td class="d-none d-md-table-cell">{{ po.delivery_date|thai_be_date }}</td>
             <td>{{ po.total_amount|floatformat:2|intcomma }}</td>
             <td><span class="badge bg-secondary">{{ po.status }}</span></td>
             <td><a href="{% url 'procurement:po_detail' po.pk %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a></td>

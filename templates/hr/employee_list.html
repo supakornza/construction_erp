@@ -45,11 +45,11 @@
                     <tr>
                         <th>EMP No</th>
                         <th>Name</th>
-                        <th>Company</th>
-                        <th>Position</th>
-                        <th>Category</th>
-                        <th>Project</th>
-                        <th>Type</th>
+                        <th class="d-none d-md-table-cell">Company</th>
+                        <th class="d-none d-md-table-cell">Position</th>
+                        <th class="d-none d-md-table-cell">Category</th>
+                        <th class="d-none d-md-table-cell">Project</th>
+                        <th class="d-none d-md-table-cell">Type</th>
                         <th>Status</th>
                         <th></th>
                     </tr>
@@ -64,11 +64,11 @@
                         </a>
                         {% if emp.nickname %}<small class="text-muted">({{ emp.nickname }})</small>{% endif %}
                     </td>
-                    <td class="small">{{ emp.company }}</td>
-                    <td class="small">{{ emp.position }}</td>
-                    <td class="small">{{ emp.category|default:'—' }}</td>
-                    <td class="small">{{ emp.project.contract_no|default:'—' }}</td>
-                    <td><span class="badge bg-secondary small">{{ emp.get_employment_type_display }}</span></td>
+                    <td class="small d-none d-md-table-cell">{{ emp.company }}</td>
+                    <td class="small d-none d-md-table-cell">{{ emp.position }}</td>
+                    <td class="small d-none d-md-table-cell">{{ emp.category|default:'—' }}</td>
+                    <td class="small d-none d-md-table-cell">{{ emp.project.contract_no|default:'—' }}</td>
+                    <td class="d-none d-md-table-cell"><span class="badge bg-secondary small">{{ emp.get_employment_type_display }}</span></td>
                     <td>
                         <span class="badge bg-{% if emp.status == 'Active' %}success{% elif emp.status == 'Inactive' %}warning{% else %}danger{% endif %}">
                             {{ emp.status }}

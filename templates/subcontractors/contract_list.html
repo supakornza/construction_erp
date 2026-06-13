@@ -55,11 +55,11 @@
                     <tr>
                         <th>Contract No</th>
                         <th>Title</th>
-                        <th>Project</th>
+                        <th class="d-none d-md-table-cell">Project</th>
                         <th>Subcontractor</th>
-                        <th>Type</th>
-                        <th>Value (฿)</th>
-                        <th>Progress</th>
+                        <th class="d-none d-md-table-cell">Type</th>
+                        <th class="d-none d-md-table-cell">Value (฿)</th>
+                        <th class="d-none d-md-table-cell">Progress</th>
                         <th>Status</th>
                         <th></th>
                     </tr>
@@ -72,11 +72,11 @@
                            class="fw-semibold text-decoration-none">{{ c.contract_no }}</a>
                     </td>
                     <td class="small">{{ c.title|truncatechars:35 }}</td>
-                    <td class="small">{{ c.project.name|truncatechars:20 }}</td>
+                    <td class="small d-none d-md-table-cell">{{ c.project.name|truncatechars:20 }}</td>
                     <td class="small">{{ c.subcontractor.name|truncatechars:25 }}</td>
-                    <td><span class="badge bg-secondary small">{{ c.get_contract_type_display }}</span></td>
-                    <td class="small">{{ c.contract_value|floatformat:0|intcomma }}</td>
-                    <td style="min-width:80px">
+                    <td class="d-none d-md-table-cell"><span class="badge bg-secondary small">{{ c.get_contract_type_display }}</span></td>
+                    <td class="small d-none d-md-table-cell">{{ c.contract_value|floatformat:0|intcomma }}</td>
+                    <td class="d-none d-md-table-cell" style="min-width:80px">
                         <div class="progress" style="height:6px">
                             <div class="progress-bar bg-success" style="width:{{ c.progress_pct }}%"></div>
                         </div>

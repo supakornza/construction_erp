@@ -15,9 +15,9 @@
         <thead class="table-light">
             <tr>
                 <th scope="col">วันที่</th>
-                <th scope="col">โครงการ</th>
+                <th scope="col" class="d-none d-md-table-cell">โครงการ</th>
                 <th scope="col">วัสดุ</th>
-                <th scope="col">พื้นที่ทำงาน</th>
+                <th scope="col" class="d-none d-md-table-cell">พื้นที่ทำงาน</th>
                 <th scope="col">ปริมาณ</th>
             </tr>
         </thead>
@@ -25,9 +25,9 @@
         {% for u in usages %}
         <tr>
             <td>{{ u.usage_date|thai_be_date }}</td>
-            <td>{{ u.project.contract_no }}</td>
+            <td class="d-none d-md-table-cell">{{ u.project.contract_no }}</td>
             <td>{{ u.material.name }}</td>
-            <td>{{ u.work_area|default:'-' }}</td>
+            <td class="d-none d-md-table-cell">{{ u.work_area|default:'-' }}</td>
             <td>{{ u.quantity|floatformat:3|intcomma }} {{ u.material.unit }}</td>
         </tr>
         {% empty %}

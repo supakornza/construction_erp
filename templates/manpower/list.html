@@ -135,12 +135,12 @@
             <thead class="table-primary">
                 <tr>
                     <th>วันที่</th>
-                    <th>โครงการ</th>
+                    <th class="d-none d-md-table-cell">โครงการ</th>
                     <th>ประเภทแรงงาน</th>
-                    <th class="text-muted small" style="font-weight:normal;">Position</th>
-                    <th>บริษัท/ผู้รับเหมา</th>
+                    <th class="text-muted small d-none d-md-table-cell" style="font-weight:normal;">Position</th>
+                    <th class="d-none d-md-table-cell">บริษัท/ผู้รับเหมา</th>
                     <th class="text-center">จำนวน<br><small class="fw-normal">(คน)</small></th>
-                    <th>หมายเหตุ</th>
+                    <th class="d-none d-md-table-cell">หมายเหตุ</th>
                     <th class="text-center" style="width:80px;">จัดการ</th>
                 </tr>
             </thead>
@@ -148,16 +148,16 @@
             {% for r in records %}
             <tr>
                 <td class="text-nowrap">{{ r.report_date|thai_be_date }}</td>
-                <td>
+                <td class="d-none d-md-table-cell">
                     <span class="badge bg-primary-subtle text-primary-emphasis fw-semibold">
                         {{ r.project.contract_no }}
                     </span>
                 </td>
                 <td class="fw-semibold">{{ r.category.display_th }}</td>
-                <td class="text-muted small">{{ r.category.get_name_display }}</td>
-                <td>{{ r.company }}</td>
+                <td class="text-muted small d-none d-md-table-cell">{{ r.category.get_name_display }}</td>
+                <td class="d-none d-md-table-cell">{{ r.company }}</td>
                 <td class="text-center fw-bold">{{ r.quantity|intcomma }}</td>
-                <td class="text-muted small">{{ r.remarks|default:"–" }}</td>
+                <td class="text-muted small d-none d-md-table-cell">{{ r.remarks|default:"–" }}</td>
                 <td class="text-center">
                     <a href="{% url 'manpower:update' r.pk %}"
                        class="btn btn-xs btn-outline-primary" title="แก้ไข">
