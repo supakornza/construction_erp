@@ -69,7 +69,7 @@
 
 <!-- Toolbar: view toggle + count -->
 <div class="d-flex justify-content-between align-items-center mb-2">
-  <div class="btn-group btn-group-sm" role="group" aria-label="เลือกมุมมองการแสดงผล">
+  <div class="btn-group btn-group-sm d-none d-md-inline-flex" role="group" aria-label="เลือกมุมมองการแสดงผล">
     <button type="button" onclick="setViewMode('table')"
       aria-pressed="{% if view_mode == 'table' %}true{% else %}false{% endif %}"
       class="btn {% if view_mode == 'table' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">
@@ -87,9 +87,61 @@
   </span>
 </div>
 
+<!-- ===== MOBILE CARD VIEW (xs–sm) ===== -->
+<div class="d-md-none">
+  {% for d in deliveries %}
+  <div class="card mb-2 shadow-sm">
+    <div class="card-body p-3">
+      <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+        <div class="min-width-0">
+          <div class="fw-semibold text-truncate">{{ d.material.name }}</div>
+          <div class="text-body-secondary small">
+            {{ d.project.contract_no }} · {{ d.delivery_date|thai_be_date }}{% if d.delivery_time %} <i class="fas fa-clock ms-1 me-1" aria-hidden="true"></i>{{ d.delivery_time|time:"H:i" }}{% endif %}
+          </div>
+        </div>
+        <div class="text-end flex-shrink-0">
+          <div class="fw-bold text-nowrap">{{ d.quantity|floatformat:3|intcomma }}</div>
+          <div class="text-body-secondary small">{{ d.material.unit }}</div>
+        </div>
+      </div>
+      <dl class="row g-0 mb-2 small">
+        <dt class="col-5 fw-normal text-body-secondary">แหล่งวัสดุ</dt>
+        <dd class="col-7 mb-1 text-end">{{ d.source_area.name|default:"—" }}{% if d.source %} <span class="text-body-secondary">({{ d.source }})</span>{% endif %}</dd>
+        <dt class="col-5 fw-normal text-body-secondary">ทะเบียนรถ</dt>
+        <dd class="col-7 mb-1 text-end">{{ d.truck_no|default:"—" }}</dd>
+        <dt class="col-5 fw-normal text-body-secondary">เลขที่ใบส่งของ</dt>
+        <dd class="col-7 mb-1 text-end">
+          {{ d.delivery_note_no|default:"—" }}
+          {% if d.delivery_note_no and d.project_id|stringformat:"s"|add:"|"|add:d.delivery_note_no in duplicate_dns_keys %}<span class="badge bg-warning text-dark">ซ้ำ<span class="visually-hidden">: เลขที่ใบส่งของนี้ถูกใช้ในรายการอื่นของโครงการเดียวกันแล้ว ตรวจสอบก่อน</span></span>{% endif %}
+          {% if d.delivery_image %} <a href="{{ d.delivery_image.url }}" target="_blank" rel="noopener" aria-label="ดูรูปตั๋วใบส่งของ (เปิดในแท็บใหม่)"><i class="fas fa-image text-success" aria-hidden="true"></i></a>{% endif %}
+        </dd>
+        <dt class="col-5 fw-normal text-body-secondary">ราคา/หน่วย</dt>
+        <dd class="col-7 mb-1 text-end">{{ d.unit_price|default:"—" }}</dd>
+        <dt class="col-5 fw-normal text-body-secondary">มูลค่า</dt>
+        <dd class="col-7 mb-0 text-end fw-semibold">{% if d.total_amount %}{{ d.total_amount|floatformat:2|intcomma }}{% else %}—{% endif %}</dd>
+        {% if d.remarks %}
+        <dt class="col-5 fw-normal text-body-secondary">หมายเหตุ</dt>
+        <dd class="col-7 mb-0 text-end text-body-secondary">{{ d.remarks }}</dd>
+        {% endif %}
+      </dl>
+      <div class="d-flex justify-content-end gap-2 border-top pt-2">
+        <a href="{% url 'materials:delivery_update' d.pk %}" class="btn btn-sm btn-outline-primary" style="min-height:38px" aria-label="แก้ไขรายการรับวัสดุของ {{ d.material.name }} วันที่ {{ d.delivery_date|thai_be_date }}"><i class="fas fa-edit me-1" aria-hidden="true"></i>แก้ไข</a>
+        {% if request.user.is_superuser or request.user.role == 'admin' %}
+        <form method="post" action="{% url 'materials:delivery_delete' d.pk %}" onsubmit="return confirm('ลบรายการนี้?')">
+          {% csrf_token %}<button type="submit" class="btn btn-sm btn-outline-danger" style="min-height:38px" aria-label="ลบรายการรับวัสดุของ {{ d.material.name }} วันที่ {{ d.delivery_date|thai_be_date }}"><i class="fas fa-trash me-1" aria-hidden="true"></i>ลบ</button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="card"><div class="card-body text-center text-body-secondary py-5" role="status">ไม่มีข้อมูลที่ตรงกับเงื่อนไข</div></div>
+  {% endfor %}
+</div>
+
 {% if view_mode == 'log' %}
 <!-- ===== LOG VIEW ===== -->
-<div class="card"><div class="table-responsive">
+<div class="card d-none d-md-block"><div class="table-responsive">
   <table class="table table-sm table-hover mb-0" style="font-size:.83rem"
     aria-label="รายการรับวัสดุ มุมมอง Log {% if is_paginated %}— หน้า {{ page_obj.number }} จาก {{ page_obj.paginator.num_pages }}{% endif %} (รวม {{ page_obj.paginator.count|intcomma }} รายการ)">
     <thead class="table-dark">
@@ -166,7 +218,7 @@
 
 {% else %}
 <!-- ===== TABLE VIEW ===== -->
-<div class="card"><div class="table-responsive">
+<div class="card d-none d-md-block"><div class="table-responsive">
   <table class="table table-hover mb-0"
     aria-label="รายการรับวัสดุ มุมมองตาราง {% if is_paginated %}— หน้า {{ page_obj.number }} จาก {{ page_obj.paginator.num_pages }}{% endif %} (รวม {{ page_obj.paginator.count|intcomma }} รายการ)">
     <thead class="table-light">
