@@ -714,11 +714,6 @@
             <option value="">No BOQ data</option>
             {% endfor %}
           </select>
-          <div class="exec-legend">
-            <span class="exec-legend-item"><i class="exec-dot" style="background:var(--exec-outline-variant)"></i>Planned</span>
-            <span class="exec-legend-item"><i class="exec-dot" style="background:var(--exec-primary)"></i>Actual</span>
-            <span class="exec-legend-item"><i class="exec-dot" style="background:#f59e0b;border-radius:0;height:2px;width:16px;"></i>Forecast</span>
-          </div>
         </div>
       </div>
 
@@ -750,6 +745,11 @@
         </div>
         <div id="scurve-nodata" class="position-absolute top-50 start-50 translate-middle text-muted small text-center" style="display:none;">
           <i class="fas fa-chart-line fa-2x mb-2 d-block opacity-25"></i>ไม่มีข้อมูล BOQ สำหรับโครงการนี้
+        </div>
+        <div class="exec-legend mt-2" style="justify-content:center;">
+          <span class="exec-legend-item"><i class="exec-dot" style="background:var(--exec-outline-variant)"></i>Planned</span>
+          <span class="exec-legend-item"><i class="exec-dot" style="background:var(--exec-primary)"></i>Actual</span>
+          <span class="exec-legend-item"><i class="exec-dot" style="background:#f59e0b;border-radius:0;height:2px;width:16px;"></i>Forecast</span>
         </div>
       </div>
     </section>
