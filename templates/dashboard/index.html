@@ -666,19 +666,7 @@
       <div class="exec-progress"><span style="width:{{ overall_progress_pct|default:0 }}%"></span></div>
     </section>
 
-    <section class="exec-card exec-kpi span-3">
-      <div class="exec-card-top">
-        <span class="exec-label">Total Contract Value</span>
-        <span class="exec-icon-pill"><span class="material-symbols-outlined" style="font-size:18px">account_balance</span></span>
-      </div>
-      <div class="exec-value exec-money">฿ {{ total_contract_value|floatformat:0|intcomma|default:0 }}</div>
-      <div class="exec-kpi-foot">
-        <span class="exec-muted">{{ active_projects_count|intcomma }} active project{{ active_projects_count|pluralize }}</span>
-        <span class="exec-chip exec-chip-primary">Contract</span>
-      </div>
-    </section>
-
-    <section class="exec-card exec-kpi span-3">
+<section class="exec-card exec-kpi span-3">
       <div class="exec-card-top">
         <span class="exec-label">Pending Actions</span>
         <span class="exec-icon-pill"><span class="material-symbols-outlined" style="font-size:18px">fact_check</span></span>
