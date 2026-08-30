@@ -25,6 +25,20 @@ A Django web application for managing construction site operations — daily rep
 
 ## Quick Start
 
+### Windows: double-click launcher
+
+For the simplest local startup on Windows, double-click:
+
+```text
+Construction-ERP-Windows.bat
+```
+
+The launcher checks Python and the virtual environment, installs missing application packages, validates the Django project, starts the server, and opens `http://127.0.0.1:8000/` in the default browser. Keep the launcher window open while using the application; press `Ctrl+C` or close it to stop the local server.
+
+It preserves an existing SQLite database. On a clean copy with no `db.sqlite3`, it creates the database by applying migrations but does not add demo users or demo data automatically.
+
+### Terminal setup
+
 ```bash
 # 1. Create and activate virtual environment
 python -m venv venv
